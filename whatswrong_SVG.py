@@ -72,8 +72,8 @@ class MyForm(QtGui.QMainWindow):
 
         instance = factory.create(l)
         instance.renderType = NLPInstance.RenderType.single
-        self.svgdraw(instance)
-        #navigator = CorpusNavigator(instance=instance, ui=self.ui)
+        #self.svgdraw(instance)
+        navigator = CorpusNavigator(instance=instance, ui=self.ui)
 
     def svgdraw(self, instance):
         scene = QtGui.QGraphicsScene()
