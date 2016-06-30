@@ -219,7 +219,9 @@ class TextToken:
         return len(self.text) * 6
 
 
-def colorstr(rgb): return "#%x%x%x" % (rgb[0]/16,rgb[1]/16,rgb[2]/16)
+def colorstr(rgb):
+    return "rgb(%d,%d,%d)" % (rgb[0],rgb[1],rgb[2])
+
 
 def test():
     scene = Scene("test")
@@ -233,7 +235,7 @@ def test():
     scene.add(Circle((300,200),30,(255,0,0),(0,0,0),1))
     scene.add(Circle((100,200),30,(255,255,0),(0,0,0),1))
     scene.add(Circle((200,100),30,(255,0,255),(0,0,0),1))
-    scene.add(Text(scene, (50,50),"Testing SVG2",24,(0,0,0)))
+    scene.add(Text(scene, (100,50),"Testing SVG2",24,(255,255,51)))
     scene.write_svg()
     scene.display()
     return
