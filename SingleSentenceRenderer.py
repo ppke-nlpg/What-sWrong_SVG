@@ -49,7 +49,7 @@ class SingleSentenceRenderer(object):
         self._startOfSpans = 0
 
 
-    def render(self, instance, scene):
+    def render(self, instance, scene, render_spans=True):
         tokens = instance.tokens
         dependencies = instance.getEdges(Edge.RenderType.dependency)
         spans = instance.getEdges(Edge.RenderType.span)
@@ -80,12 +80,12 @@ class SingleSentenceRenderer(object):
             width = dim[0]
 
         #add spans
-        scene.translate(0,dim[1])
-        dim = self._spanLayout.layoutEdges(spans, tokenXBounds, scene)
-
-        height += dim[1]
-        if dim[0] > width:
-            width = dim[0]
+        if render_spans:
+            scene.translate(0,dim[1])
+            dim = self._spanLayout.layoutEdges(spans, tokenXBounds, scene)
+            height += dim[1]
+            if dim[0] > width:
+                width = dim[0]
 
         return (width, height + 1)
 
