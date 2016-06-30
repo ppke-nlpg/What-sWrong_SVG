@@ -194,7 +194,7 @@ class Text:
     def strarray(self):
         return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-anchor=\"middle\" "
                 "alignment-baseline=\"central\" style=\"font-family: Consolas\" >\n" %\
-                (self.origin[0]+self.offsetx,self.origin[1]+self.offsetx,self.size,colorstr(self.color)),
+                (self.origin[0]+self.offsetx,self.origin[1]+self.offsety,self.size,colorstr(self.color)),
                 "   %s\n" % self.text,
                 "  </text>\n"]
     def getWidth(self):
