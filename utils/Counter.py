@@ -9,7 +9,7 @@
 class Counter:
 
     def __init__(self):
-        self._map ={}
+        self._map = {}
 
     def __getitem__(self, item):
         if item in self._map:

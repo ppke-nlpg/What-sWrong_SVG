@@ -2,19 +2,11 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 import sys
-import os
-from PyQt4 import QtCore, QtGui, QtSvg
-import PyQt4
-from SingleSentenceRenderer import SingleSentenceRenderer
+
+from PyQt4 import QtGui, QtSvg
 from CorpusNavigator import CorpusNavigator
-from SVGWriter import *
-from NLPInstance import *
-
-
 from GUI import Ui_MainWindow
-from ChooseFormat import Ui_ChooseFormat
-import os
-
+from GUI.ChooseFormat import Ui_ChooseFormat
 from TabProcessor import *
 
 
@@ -74,7 +66,7 @@ class MyForm(QtGui.QMainWindow):
 
         instance = factory.create(l)
         instance.renderType = NLPInstance.RenderType.single
-        #self.svgdraw(instance)
+        # self.svgdraw(instance)
         navigator = CorpusNavigator(instance=instance, ui=self.ui)
 
     def svgdraw(self, instance):

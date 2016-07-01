@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from AbstractEdgeLayout import AbstractEdgeLayout
-from Counter import Counter
-from HashMultiMapArrayList import HashMultiMapArrayList
-from PyQt4 import QtCore
-from SVGWriter import *
 import functools
 
+from AbstractEdgeLayout import AbstractEdgeLayout
+from utils.Counter import Counter
+from utils.HashMultiMapArrayList import HashMultiMapArrayList
+from SVGWriter import *
 
- # A DependencyLayout lays out edges in a dependency parse layout. Here the edge from head to modifier is represented as
+
+# A DependencyLayout lays out edges in a dependency parse layout. Here the edge from head to modifier is represented as
  # a directed edge that starts at the head, first goes up and then down to the modifier. The height depends on the
  # number of other edges between the head and the modifier.
  # <p/>

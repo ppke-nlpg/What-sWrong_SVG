@@ -48,8 +48,8 @@ class TokenProperty:
     # @return true iff the property names match.
 
     def __eq__(self, other):
-#        if other == self:
- #           return True
+        # if other == self:
+        #     return True
         if other is None or type(other) != type(self):
             return False
 

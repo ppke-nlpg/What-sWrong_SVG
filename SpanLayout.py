@@ -2,9 +2,8 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from AbstractEdgeLayout import AbstractEdgeLayout
-from PyQt4 import QtGui, QtCore
-from Counter import Counter
-from HashMultiMapArrayList import HashMultiMapArrayList
+from utils.Counter import Counter
+from utils.HashMultiMapArrayList import HashMultiMapArrayList
 from SVGWriter import *
 
 
