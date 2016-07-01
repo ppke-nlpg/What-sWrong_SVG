@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from Edge import Edge
 from SpanLayout import SpanLayout
 from DependencyLayout import DependencyLayout

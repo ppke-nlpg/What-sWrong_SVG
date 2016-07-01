@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from NLPCanvas import NLPCanvas
 from PyQt4 import QtGui, QtCore, QtSvg
 

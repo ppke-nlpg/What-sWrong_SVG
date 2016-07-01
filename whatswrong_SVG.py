@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 import sys
 import os
 from PyQt4 import QtCore, QtGui, QtSvg

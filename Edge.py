@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 # An Edge is a labelled and typed pair of tokens. It can represent dependencies edges as well as spans. Along with a
 # start and end (to and from) token an edge has the following three attributes: <ol> <li>Type: The type of a edge

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from abc import ABCMeta, abstractmethod
 
 # The CorpusFormat interface describes objects that can load a list of NLPInstances from a file. The Corpus can also

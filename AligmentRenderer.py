@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 from TokenLayout import TokenLayout
 from Edge import Edge
 from PyQt4 import QtGui, QtCore

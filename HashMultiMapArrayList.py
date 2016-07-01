@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
 # A HashMultiMapLinkedList is a mapping from keys to linked lists of associated values.
 
 # @author Sebastian Riedel
