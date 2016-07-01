@@ -657,23 +657,29 @@ class CoNLL2009:
     def supportOpen(self):
         return False
 
-
-# Loads Malt-TAB dependencies.
-
-# @author Sebastian Riedel
-
+"""
+ * Loads Malt-TAB dependencies.
+ *
+ * @author Sebastian Riedel
+"""
 class MaltTab:
 
-    # The name of the processor.
+    """
+     * The name of the processor.
+    """
     name = "Malt-Tab"
 
-    # Returns the name of this processor.
-
-    # @return the name of this processor.
+    """
+     * Returns the name of this processor.
+     *
+     * @return the name of this processor.
+    """
     def __str__(self):
         return MaltTab.name
 
-    # @see com.googlecode.whatswrong.io.TabProcessor#create(java.util.List<? extends java.util.List<String>>)
+    """
+     * @see com.googlecode.whatswrong.io.TabProcessor#create(java.util.List<? extends java.util.List<String>>)
+    """
     def create(self, rows):
         instance = NLPInstance()
         instance.addToken().addProperty("Word", "-Root-")
@@ -693,7 +699,7 @@ class MaltTab:
                 continue
             row = row.split()
             # dependency
-            try:
+            try:   # XXX Why not Edge? Str int conversion possibly wrong...
                 instance.addDependency(From=row[2], to=str(mod), label=row[3], type="dep")
             except:
                 print("Can't parse dependency")
@@ -702,10 +708,14 @@ class MaltTab:
             mod += 1
         return instance
 
-    # @see TabProcessor#createOpen(List<? extends List<String>>)
+    """
+     * @see com.googlecode.whatswrong.io.TabProcessor#createOpen(java.util.List<? extends java.util.List<String>>)
+    """
     def createOpen(self, rows):
         return None
 
-    # @see TabProcessor#createOpen(List<? extends List<String>>)
+    """
+     * @see com.googlecode.whatswrong.io.TabProcessor#supportsOpen()
+    """
     def supportOpen(self):
         return False

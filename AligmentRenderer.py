@@ -7,7 +7,12 @@ from PyQt4 import QtGui, QtCore
 from Bounds1D import Bounds1D
 from SVGWriter import *
 
-
+"""
+ * A SingleSentenceRenderer renders an NLPInstance as a single sentence with spans drawn below the tokens, and
+ * dependencies above the tokens.
+ *
+ * @author Sebastian Riedel
+"""
 class AligmentRenderer:
 
     @property
@@ -46,6 +51,15 @@ class AligmentRenderer:
         self._tokenLayout2.toSplitPoint = 0
         self._tokenLayout2.fromSplitPoint = 0
 
+    """
+     * Renders the given instance as a single sentence with spans drawn below tokens, and dependencies above tokens.
+     *
+     * @param instance   the instance to render
+     * @param graphics2D the graphics object to draw upon
+     * @return the width and height of the drawn object.
+     * @see com.googlecode.whatswrong.NLPCanvasRenderer#render(com.googlecode.whatswrong.NLPInstance,
+     *      java.awt.Graphics2D)
+    """
     def render(self,  instance, scene):
         tokenXBounds1 = self._tokenLayout1.estimateTokenBounds(instance, {}, scene)
         tokenXBounds2 = self._tokenLayout2.estimateTokenBounds(instance, {}, scene)
@@ -88,6 +102,11 @@ class AligmentRenderer:
 
         return (width, height + 1)
 
+    """
+     * Returns the margin between tokens.
+     *
+     * @return the margin between tokens.
+    """
     @property
     def margin(self):
          return self._tokenLayout1.margin()
@@ -100,8 +119,20 @@ class AligmentRenderer:
     def getEdgeAt(self, p, radius):
         return None
 
+    """
+     * Set the color for edges of a certain type.
+     *
+     * @param edgeType the type of the edges we want to change the color for.
+     * @param color    the color of the edges of the given type.
+    """
     def setEdgeTypeColor(self, edgeType, color):
         pass
 
+    """
+     * Sets the order/vertical layer in which the area of a certain type should be drawn.
+     *
+     * @param edgeType the type we want to change the order for.
+     * @param order    the order/vertical layer in which the area of the given type should be drawn.
+    """
     def setEdgeTypeOrder(self, edgeType, order):
         pass

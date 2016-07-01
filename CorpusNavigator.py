@@ -4,7 +4,15 @@
 from NLPCanvas import NLPCanvas
 from PyQt4 import QtGui, QtCore, QtSvg
 
-
+"""
+ * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
+ * (or one difference of two NLPInstance objects in terms of their edges). The CorpusNavigator also allows us to search
+ * a corpus for keywords by using the Lucene IR engine. The instances that match the user's query are presented in a
+ * list and one of them can then be picked to be rendered. The CorpusNavigator has also a spinner panel that allows to
+ * go through this corpus by index. This spinner is not part of the navigator panel and can be placed anywhere.
+ *
+ * @author Sebastian Riedel
+"""
 class CorpusNavigator:
     @property
     def guess(self):

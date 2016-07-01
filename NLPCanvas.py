@@ -7,7 +7,17 @@ from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
 from AligmentRenderer import AligmentRenderer
 
-
+"""
+ * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token
+ * layouts. In order to draw an NLPInstance clients have to first set the instance to draw by calling {@link
+ * com.googlecode.whatswrong.NLPCanvas#setNLPInstance(NLPInstance)} and then update the graphical representation by
+ * calling {@link NLPCanvas#updateNLPGraphics()}. The latter method should also be called whenever changes are made to
+ * the layout configuration (curved edges vs straight edges, antialiasing etc.).
+ *
+ * @author Sebastian Riedel
+ * @see com.googlecode.whatswrong.EdgeLayout
+ * @see com.googlecode.whatswrong.TokenLayout
+"""
 class NLPCanvas:
     def __init__(self, ui):
         self._ui = ui
@@ -32,6 +42,12 @@ class NLPCanvas:
         #self._ui.graphicsView.show()
         pass
 
+    """
+     * Sets the current NLP instance to draw. Note that this does not cause to canvas to be immediately updated. For this
+     * {@link NLPCanvas#updateNLPGraphics()} needs to be called.
+     *
+     * @param nlpInstance the new NLP instance.
+    """
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
         self._dependencies.clear()
@@ -43,8 +59,19 @@ class NLPCanvas:
         self._tokens.extend(self._nlpInstance.tokens)
         self._usedProperties.clear()
         for token in self._tokens:
-            self._usedProperties = self._usedProperties.union(token.getPropertyTypes())
+            self._usedProperties |= token.getPropertyTypes()
 
+    """
+     * Just calls the filter on the current instance.
+     *
+     * @return the filtered instance.
+    """
+    def filterInstance(self):
+        pass
+
+    """
+     * Updates the current graph. This takes into account all changes to the filter, NLP instance and drawing parameters.
+    """
     def updateNLPGraphics(self):
         #filtered = self.filterInstance()
         filtered = self._nlpInstance
@@ -57,6 +84,3 @@ class NLPCanvas:
         path = os.path.abspath("tmp.svg")
         print(path)
         return path
-
-    def filterInstance(self):
-        pass
