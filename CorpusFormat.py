@@ -8,6 +8,7 @@ from abc import ABCMeta, abstractmethod
 
 # @author Sebastian Riedel
 
+
 class CorpusFormat(metaclass=ABCMeta):
 
     # Returns the name of this format.

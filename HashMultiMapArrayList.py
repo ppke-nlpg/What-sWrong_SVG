@@ -5,7 +5,8 @@
 
 # @author Sebastian Riedel
 
-class HashMultiMapArrayList(object):
+
+class HashMultiMapArrayList:
 
     def __init__(self):
         self._map = {}

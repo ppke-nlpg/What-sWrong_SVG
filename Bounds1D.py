@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-class Bounds1D(object):
+
+class Bounds1D:
     @property
     def From(self):
         return self._From
@@ -26,4 +27,4 @@ class Bounds1D(object):
         return self._To - self._From
 
     def getMiddle(self):
-        return self._From + self.getWidth() / 2
+        return self._From + self.getWidth() // 2  # Integer division!

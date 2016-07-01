@@ -197,18 +197,4 @@ class SpanLayout(AbstractEdgeLayout):
             scene.color = (211, 211, 211)
             scene.add(Line(scene,(0, height), (maxWidth, height), color=scene.color))
 
-        return (maxWidth+scene.offsetx, maxHeight+scene.offsety)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return maxWidth+scene.offsetx, maxHeight+scene.offsety

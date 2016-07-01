@@ -4,7 +4,8 @@
 from NLPCanvas import NLPCanvas
 from PyQt4 import QtGui, QtCore, QtSvg
 
-class CorpusNavigator(object):
+
+class CorpusNavigator:
     @property
     def guess(self):
         return self._guess
@@ -121,7 +122,7 @@ class CorpusNavigator(object):
             for c in self._guessCorpora:
                 self.removeDiffCorpus(corpus, c)
 
-    class Result(object):
+    class Result:
         @property
         def text(self):
             return self._text
@@ -159,7 +160,6 @@ class CorpusNavigator(object):
 
         self.updateCanvas()
 
-
     def updateCanvas(self):
         #if self.gold.selected() is not None:
         #    if self.guess.selected() is None:
@@ -183,9 +183,3 @@ class CorpusNavigator(object):
         br = QtSvg.QGraphicsSvgItem(file)
         scene.addItem(br)
         self._ui.graphicsView.show()
-
-
-
-
-
-

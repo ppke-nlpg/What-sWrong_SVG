@@ -17,6 +17,7 @@ import os
 
 from TabProcessor import *
 
+
 class MyWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
@@ -47,8 +48,6 @@ class MyWindow(QtGui.QMainWindow):
 
         self.close()
         self._parent.choosen(instancefactory)
-
-
 
     def reject(self):
         self.close()

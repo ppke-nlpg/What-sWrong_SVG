@@ -6,7 +6,8 @@ from Edge import *
 
 from enum import Enum
 
-class NLPInstance(object):
+
+class NLPInstance:
     # todo: this class needs a redesign, in particular with respect to token identities.
 
     class RenderType(Enum):
@@ -277,7 +278,3 @@ class NLPInstance(object):
         for e in self._edges:
             value += str(e) + ", "
         return value
-
-
-
-

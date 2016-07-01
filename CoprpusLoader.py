@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-class CorpusLoader():
+
+class CorpusLoader:
 
     @property
     def selected(self):
@@ -62,7 +63,7 @@ class CorpusLoader():
     def accessory(self, value):
         self._accessory = value
 
-    class Listener(object):
+    class Listener:
         def corpusAdded(self, corpus, src):
             pass
         def corpusRemoved(self, corpus, src):
@@ -85,7 +86,7 @@ class CorpusLoader():
         for listener in self._changeListeners:
             listener.corpusSelected(corpus, self)
 
-    class LoadAccessory(object):
+    class LoadAccessory:
         @property
         def filetypeComboBox(self):
             return self._filetypeComboBox
@@ -158,6 +159,3 @@ class CorpusLoader():
         c.gridy = 0
         c.gridwidth = 2
         #self.add
-
-
-

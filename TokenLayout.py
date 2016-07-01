@@ -5,10 +5,12 @@ from PyQt4 import QtGui, QtCore
 from SVGWriter import *
 from Bounds1D import Bounds1D
 
-class TokenLayout():
+
+class TokenLayout:
     @property
     def textLayouts(self):
         return self._textLayouts
+
     @textLayouts.setter
     def textLayouts(self, value):
         self._textLayouts = value
@@ -16,6 +18,7 @@ class TokenLayout():
     @property
     def bounds(self):
         return self._bounds
+
     @bounds.setter
     def bounds(self, value):
         self._bounds = value
@@ -23,6 +26,7 @@ class TokenLayout():
     @property
     def rowHeight(self):
         return self._rowHeight
+
     @rowHeight.setter
     def rowHeight(self, value):
         self._rowHeight = value
@@ -30,6 +34,7 @@ class TokenLayout():
     @property
     def baseLine(self):
         return self._baseLine
+
     @baseLine.setter
     def baseLine(self, value):
         self._baseLine = value
@@ -37,6 +42,7 @@ class TokenLayout():
     @property
     def margin(self):
         return self._margin
+
     @margin.setter
     def margin(self, value):
         self._margin = value
@@ -44,6 +50,7 @@ class TokenLayout():
     @property
     def fromSplitPoint(self):
         return self._fromSplitPoint
+
     @fromSplitPoint.setter
     def fromSplitPoint(self, value):
         self._fromSplitPoint = value
@@ -51,6 +58,7 @@ class TokenLayout():
     @property
     def toSplitPoint(self):
         return self._toSplitPoint
+
     @toSplitPoint.setter
     def toSplitPoint(self, value):
         self._toSplitPoint = value
@@ -58,6 +66,7 @@ class TokenLayout():
     @property
     def width(self):
         return self._width
+
     @width.setter
     def width(self, value):
         self._width = value
@@ -65,6 +74,7 @@ class TokenLayout():
     @property
     def height(self):
         return self._height + 4
+
     @height.setter
     def height(self, value):
         self._height = value
@@ -104,9 +114,9 @@ class TokenLayout():
             lasty = self._baseLine + self._rowHeight
             for p in token.getSortedProperties():
                 property = token.getProperty(p)
-                labelwith = Text(scene,(0,0), property, 12, scene.color).getWidth()
+                labelwith = Text(scene, (0, 0), property, 12, scene.color).getWidth()
 
-                lasty+= self._rowHeight
+                lasty += self._rowHeight
                 if labelwith > maxX:
                     maxX = labelwith
             if token in tokenWidths:
@@ -127,12 +137,12 @@ class TokenLayout():
         if len(tokens) == 0:
             self._height = 1
             self._width = 1
-            return (self._height, self._width)
+            return self._height, self._width
         self._textLayouts.clear()
         lastx = 0
         self._height = 0
 
-        scene.color = (0,0,0) #BLACK
+        scene.color = (0, 0, 0)  # BLACK
 
         if self._fromSplitPoint == -1:
             fromToken = 0
@@ -168,19 +178,16 @@ class TokenLayout():
             if requiredWidth is not None and maxX < requiredWidth:
                 maxX = requiredWidth
             self._bounds[token] = Rectangle(scene,(lastx, self._baseLine),maxX, lasty-self._baseLine,(255,255,255),(0,0,0),1)
-            #(lastx, self._baseLine, maxX, lasty - self._baseLine)
+            # (lastx, self._baseLine, maxX, lasty - self._baseLine)
             lastx += maxX + self._margin
-            if (lasty - self._rowHeight > self._height):
+            if lasty - self._rowHeight > self._height:
                 self._height = lasty + self._rowHeight
 
         self._width = lastx - self._margin
-        return (self._width+scene.offsetx, self._height + 2 + scene.offsety)
+        return self._width+scene.offsetx, self._height + 2 + scene.offsety
 
     def getPropertyTextLayout(self, vertex, index):
         return self._textLayouts[(vertex, index)]
 
     def getBouns(self, vertex):
         return self._bounds[vertex]
-
-
-

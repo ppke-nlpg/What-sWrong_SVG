@@ -7,7 +7,8 @@ from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
 from AligmentRenderer import AligmentRenderer
 
-class NLPCanvas(object):
+
+class NLPCanvas:
     def __init__(self, ui):
         self._ui = ui
         self._scene = QtGui.QGraphicsScene()
@@ -20,10 +21,8 @@ class NLPCanvas(object):
         self._filter = None
         self._renderer = SingleSentenceRenderer()
         self._listeners = []
-        self._renderers = {}
-
-        self._renderers[NLPInstance.RenderType.single] = self._renderer
-        self._renderers[NLPInstance.RenderType.alignment] = AligmentRenderer()
+        self._renderers = {NLPInstance.RenderType.single: self._renderer,
+                           NLPInstance.RenderType.alignment: AligmentRenderer()}
 
     def updateCanvas(self):
         #self._ui.graphicsView.setScene(self._scene)
@@ -59,10 +58,5 @@ class NLPCanvas(object):
         print(path)
         return path
 
-
     def filterInstance(self):
         pass
-
-
-
-

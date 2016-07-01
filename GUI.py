@@ -23,7 +23,8 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(object):
+
+class Ui_MainWindow:
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
@@ -259,4 +260,3 @@ class Ui_MainWindow(object):
         self.actionImprt.setText(_translate("MainWindow", "Imprt", None))
         self.actionAddGold.setText(_translate("MainWindow", "AddGold", None))
         self.actionAddGold.setToolTip(_translate("MainWindow", "Add Gold File", None))
-

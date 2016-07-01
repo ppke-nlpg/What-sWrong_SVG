@@ -12,18 +12,21 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
+
     def _fromUtf8(s):
         return s
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_ChooseFormat(object):
+
+class Ui_ChooseFormat:
     def setupUi(self, ChooseFormat):
         ChooseFormat.setObjectName(_fromUtf8("ChooseFormat"))
         ChooseFormat.resize(474, 357)
@@ -77,4 +80,3 @@ class Ui_ChooseFormat(object):
         self.radioButton_2004.setText(_translate("ChooseFormat", "CoNLL 2004", None))
         self.radioButton_2003.setText(_translate("ChooseFormat", "CoNLL 2003", None))
         self.radioButton_2002.setText(_translate("ChooseFormat", "CoNLL 2002", None))
-

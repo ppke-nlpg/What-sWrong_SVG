@@ -9,6 +9,7 @@ from PyQt4 import QtGui, QtCore
 
 # @author Sebastian Riedel
 
+
 class AbstractEdgeLayout(metaclass=ABCMeta):
     # Where do we start to draw
     @property
@@ -223,8 +224,3 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
         self._shapes = {}
         self._selected = set()
         self._visible = set()
-
-
-
-
-

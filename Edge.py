@@ -14,11 +14,12 @@
 
 from enum import Enum
 
-def isinvalidEdge(From,to):
+
+def isinvalidEdge(From, to):
     pass
 
 
-class Edge(object):
+class Edge:
 
     # The RenderType enum can be used to specify how the edge should be rendered.
     class RenderType(Enum):

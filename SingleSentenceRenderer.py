@@ -7,7 +7,8 @@ from DependencyLayout import DependencyLayout
 from TokenLayout import TokenLayout
 from PyQt4 import QtCore
 
-class SingleSentenceRenderer(object):
+
+class SingleSentenceRenderer:
 
     @property
     def spanLayout(self):
@@ -51,7 +52,6 @@ class SingleSentenceRenderer(object):
         self._startOfTokens = 0
         self._startOfSpans = 0
 
-
     def render(self, instance, scene, render_spans=True):
         tokens = instance.tokens
         dependencies = instance.getEdges(Edge.RenderType.dependency)
@@ -90,7 +90,7 @@ class SingleSentenceRenderer(object):
             if dim[0] > width:
                 width = dim[0]
 
-        return (width, height + 1)
+        return width, height + 1
 
     def getEdgeAt(self, p, radius):
         if p.y < self._startOfTokens:
@@ -119,6 +119,3 @@ class SingleSentenceRenderer(object):
 
     def setEdgeTypeOrder(self, edgeType, order):
         self._spanLayout.setTypeOrder(edgeType, order)
-
-
-

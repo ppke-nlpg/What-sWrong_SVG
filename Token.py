@@ -5,7 +5,7 @@ from TokenProperty import *
 import re
 
 
-class Token(object):
+class Token:
     # The index of the token.
     # Returns the index of the token.
 
@@ -66,18 +66,18 @@ class Token(object):
 
     # @param value the value of the property.
     # @return a pointer to this token.
-    def addProperty(self, value = None, name = None, index = None, property = None ):
+    def addProperty(self, value=None, name=None, index=None, property=None):
         if name is not None and value is not None:
-            self._tokenProperties[TokenProperty(name = name, level = len(self._tokenProperties))] = value
+            self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
             return self
         if index is not None and value is not None:
-            self._tokenProperties[TokenProperty(level = self._tokenProperties[index])] = value
+            self._tokenProperties[TokenProperty(level=self._tokenProperties[index])] = value
             return self
         if property is not None and value is not None:
             self._tokenProperties[property] = value
             return self
         if value is not None:
-            self._tokenProperties[TokenProperty(level = self._tokenProperties[len(self._tokenProperties)])] = value
+            self._tokenProperties[TokenProperty(level=self._tokenProperties[len(self._tokenProperties)])] = value
             return self
 
     def getSortedProperties(self):
@@ -108,7 +108,7 @@ class Token(object):
             if substrings is not None and wholeWord is not None:
                 for property in self._tokenProperties.values():
                     for substr in substrings:
-                        if re.search("\d+-\d+", substr):
+                        if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
                             split = substr.rpartition("-")
                             From = split[0]
                             To = split[3]

@@ -6,7 +6,7 @@
 # @author Sebastian Riedel
 
 
-class Counter(object):
+class Counter:
 
     def __init__(self):
         self._map ={}
@@ -36,6 +36,7 @@ class Counter(object):
 
     def sorted(self, descending):
         sortedmap = self._map.items()
+
         def foo(entry1, entry2):
             if descending:
                 return entry2.value - entry1.value

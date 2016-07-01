@@ -196,7 +196,6 @@ class DependencyLayout(AbstractEdgeLayout):
                 maxWidth = p[0]
         return (maxWidth + self._arrowsize + 2, maxHeight)
 
-
     def createRectArrow(self, scene, p1, p2, p3, p4):
         scene.add(Line(scene,p1,p2,scene.color))
         scene.add(Line(scene,p2,p3,scene.color))
@@ -215,10 +214,4 @@ class DependencyLayout(AbstractEdgeLayout):
         scene.add(QuadraticBezierCurve(scene,start,c1,c1,(c1[0] + (c2[0]-c1[0]) / 2, c1[1]),scene.color))
         scene.add(QuadraticBezierCurve(scene,(c1[0]+(c2[0]-c1[0]) / 2 ,c1[1]), c2, c2 ,end,scene.color))
 
-        return ((p1[0], p1[1]), p2, p3, (p4[0], p4[1]))
-
-
-
-
-
-
+        return (p1[0], p1[1]), p2, p3, (p4[0], p4[1])

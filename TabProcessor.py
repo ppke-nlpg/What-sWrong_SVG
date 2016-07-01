@@ -13,7 +13,7 @@ class TabFormat(CorpusFormat):
 
     @accessory.setter
     def accessory(self, value):
-        self._accessory = value # TODO: JPanel
+        self._accessory = value  # TODO: JPanel
 
     @property
     def processors(self):
@@ -29,7 +29,7 @@ class TabFormat(CorpusFormat):
 
     @type.setter
     def type(self, value):
-        self._type = value # TODO: JComboBox
+        self._type = value  # TODO: JComboBox
 
     @property
     def open(self):
@@ -37,12 +37,11 @@ class TabFormat(CorpusFormat):
 
     @open.setter
     def open(self, value):
-        self._open = value # TODO: JCheckBox
+        self._open = value  # TODO: JCheckBox
 
     @property
     def name(self):
         return self._name
-
 
     def __init__(self, MainWindow):
 
@@ -50,14 +49,14 @@ class TabFormat(CorpusFormat):
 
         self._processors = {}
 
-        self.addProcessor(name = "CoNLL 2009", processor = CoNLL2009())
-        self.addProcessor(name = "CoNLL 2008", processor = CoNLL2008())
-        self.addProcessor(name = "CoNLL 2006", processor = CoNLL2006())
-        self.addProcessor(name = "CoNLL 2004", processor = CoNLL2004())
-        self.addProcessor(name = "CoNLL 2002", processor = CoNLL2002())
-        self.addProcessor(name = "CoNLL 2003", processor = CoNLL2003())
-        self.addProcessor(name = "CoNLL 2000", processor = CoNLL2000())
-        self.addProcessor(processor = MaltTab())
+        self.addProcessor(name="CoNLL 2009", processor=CoNLL2009())
+        self.addProcessor(name="CoNLL 2008", processor=CoNLL2008())
+        self.addProcessor(name="CoNLL 2006", processor=CoNLL2006())
+        self.addProcessor(name="CoNLL 2004", processor=CoNLL2004())
+        self.addProcessor(name="CoNLL 2002", processor=CoNLL2002())
+        self.addProcessor(name="CoNLL 2003", processor=CoNLL2003())
+        self.addProcessor(name="CoNLL 2000", processor=CoNLL2000())
+        self.addProcessor(processor=MaltTab())
 
         # TODO: grafikus rész
 
@@ -65,7 +64,7 @@ class TabFormat(CorpusFormat):
         self._type = MainWindow
         self._open = MainWindow
 
-    def addProcessor(self, processor, name = None):
+    def addProcessor(self, processor, name=None):
         if name is not None:
             self._processors[name] = processor
         else:
@@ -75,7 +74,7 @@ class TabFormat(CorpusFormat):
         return self._name
 
     def load(self, file, From, to):
-        processor = self._type.getSelectedItem() # TODO grafika
+        processor = self._type.getSelectedItem()  # TODO grafika
         result = self.loadTabs(file, From, to, processor, False)
         if self._open.isSelected():
             filename = file.name()[0, file.name.rfind('.')+".open"]
@@ -105,14 +104,13 @@ class TabFormat(CorpusFormat):
                     instnceNr += 1
                     if instnceNr < From:
                         continue
-                    rows.append(line.split("\\s+")) # TODO: rows.add(Arrays.asList(line.split("\\s+")));
+                    rows.append(line.split("\\s+"))  # TODO: rows.add(Arrays.asList(line.split("\\s+")));
         if len(rows) > 0:
             if open:
                 corpus.append(processor.createOpen(rows))
             else:
                 corpus.append(processor.create(rows))
         return corpus
-
 
     def setMonitor(self, monitor):
         self._monitor = monitor
@@ -126,7 +124,6 @@ class TabFormat(CorpusFormat):
     def longName(self):
         #  TODO: type
         return self._name + "(" + str(self._type.getSelectedItem()) + ")"
-
 
     def saveProperties(self, properties, prefix):
         properties.setProperty(prefix + ".tab.type", str(self._type.getSelectedItem()))
@@ -144,7 +141,7 @@ class TabFormat(CorpusFormat):
                 label = chunk[minus + 1, len(chunk)]
                 if inChunk:
                     # start a new chunk and finish old one
-                    if 'B' == bio or "I" == bio and label !=currentChunk:
+                    if 'B' == bio or "I" == bio and label != currentChunk:
                         instance.addSpan(begin, index -1, currentChunk, type)
                         begin = index
                         currentChunk = label
@@ -158,7 +155,7 @@ class TabFormat(CorpusFormat):
                         inChunk = False
             index += 1
         if inChunk:
-            instance.addSpan(begin, index -1, currentChunk, type)
+            instance.addSpan(begin, index-1, currentChunk, type)
 
     def extractSpan00(self, rows, column, type, instance):
         index = 0
@@ -204,7 +201,7 @@ class TabFormat(CorpusFormat):
 # @author Sebastian Riedel
 
 
-class CoNLL2000(object):
+class CoNLL2000:
 
     name = "CoNLL 2000"
 
@@ -224,14 +221,14 @@ class CoNLL2000(object):
             row = row.split()
             chunk = row[2]
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
-                addProperty(property = "Index", value = str(index))
+                addProperty(property="Word", value=row[0]).\
+                addProperty(property="Index", value=str(index))
             instance.addSpan(index, index, row[1], "pos")
             instance.addSpan(index, index, chunk, "Chunk (BIO)")
             index += 1
 
-        tabformat = TabFormat(object) # TODO: object = MainWindow?
-        tabformat.extractSpan00(rows = rows, column=2, type="chunk", instance=instance)
+        tabformat = TabFormat(object)  # TODO: object = MainWindow?
+        tabformat.extractSpan00(rows=rows, column=2, type="chunk", instance=instance)
 
         return instance
 
@@ -249,7 +246,7 @@ class CoNLL2000(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2002(object):
+class CoNLL2002:
 
     name = "CoNLL 2002"
 
@@ -267,13 +264,13 @@ class CoNLL2002(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
-                addProperty(property = "Index", value = str(index))
+                addProperty(property="Word", value=row[0]).\
+                addProperty(property="Index", value=str(index))
             instance.addSpan(index, index, row[1], "ner (BIO)")
             index += 1
 
-        tabformat = TabFormat(object) # TODO: object = MainWindow?
-        tabformat.extractSpan00(rows = rows, column=1, type="ner", instance=instance)
+        tabformat = TabFormat(object)  # TODO: object = MainWindow?
+        tabformat.extractSpan00(rows=rows, column=1, type="ner", instance=instance)
 
         return instance
 
@@ -291,7 +288,7 @@ class CoNLL2002(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2003(object):
+class CoNLL2003:
 
     name = "CoNLL 2003"
 
@@ -309,14 +306,14 @@ class CoNLL2003(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
-                addProperty(property = "Index", value = str(index))
+                addProperty(property="Word", value=row[0]).\
+                addProperty(property="Index", value=str(index))
             instance.addSpan(index, index, row[1], "pos")
             instance.addSpan(index, index, row[2], "chunk (BIO")
             instance.addSpan(index, index, row[3], "ner (BIO)")
             index += 1
 
-        tabformat = TabFormat(object) # TODO: object = MainWindow?
+        tabformat = TabFormat(object)  # TODO: object = MainWindow?
         tabformat.extractSpan03(rows=rows, column=2, type="chunk", instance=instance)
         tabformat.extractSpan03(rows=rows, column=3, type="ner", instance=instance)
 
@@ -336,7 +333,7 @@ class CoNLL2003(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2004(object):
+class CoNLL2004:
 
     name = "CoNLL 2004"
 
@@ -354,8 +351,8 @@ class CoNLL2004(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
-                addProperty(property = "Index", value = str(index))
+                addProperty(property="Word", value=row[0]).\
+                addProperty(property="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -367,10 +364,10 @@ class CoNLL2004(object):
                 sense = row[1]
                 instance.addSpan(index, index, sense, "sense")
 
-                tabformat = TabFormat(object) # TODO: object = MainWindow?
+                tabformat = TabFormat(object)  # TODO: object = MainWindow?
                 tabformat.extractSpan05(rows, 2 + predicateCount, "role", sense + ":", instance)
 
-                predicateCount = predicateCount + 1
+                predicateCount += 1
             index += 1
         return instance
 
@@ -388,7 +385,7 @@ class CoNLL2004(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2005(object):
+class CoNLL2005:
 
     name = "CoNLL 2005"
 
@@ -406,8 +403,8 @@ class CoNLL2005(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
-                addProperty(property = "Index", value = str(index))
+                addProperty(property="Word", value=row[0]).\
+                addProperty(property="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -415,11 +412,11 @@ class CoNLL2005(object):
             if row == "\n":
                 continue
             row = row.split()
-            if row[9] != "-": # TODO: nincs 9 szó ebben?
+            if row[9] != "-":  # TODO: nincs 9 szó ebben?
                 sense = row[10] + "." + row[9]
                 instance.addSpan(index, index, sense, "sense")
 
-                tabformat = TabFormat(object) # TODO: object = MainWindow?
+                tabformat = TabFormat(object)  # TODO: object = MainWindow?
                 tabformat.extractSpan05(rows, 11 + predicateCount, "role", sense + ":", instance)
 
                 predicateCount += 1
@@ -440,7 +437,7 @@ class CoNLL2005(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2006(object):
+class CoNLL2006:
 
     name = "CoNLL 2006"
 
@@ -458,12 +455,12 @@ class CoNLL2006(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[1]).\
-                addProperty(property = "Index", value = row[0]).\
-                addProperty(property = "Lemma", value = row[2]).\
-                addProperty(property = "CPos", value = row[3]).\
-                addProperty(property = "Pos", value = row[4]).\
-                addProperty(property = "Feats", value = row[5])
+                addProperty(property="Word", value=row[1]).\
+                addProperty(property="Index", value=row[0]).\
+                addProperty(property="Lemma", value=row[2]).\
+                addProperty(property="CPos", value=row[3]).\
+                addProperty(property="Pos", value=row[4]).\
+                addProperty(property="Feats", value=row[5])
         for row in rows:
             if row == "\n":
                 continue
@@ -471,7 +468,7 @@ class CoNLL2006(object):
             # dependency
             mod = row[0]
             try:
-                instance.addEdge(From = row[6], to = mod, label = row[7], type ="dep")
+                instance.addEdge(From=row[6], to=mod, label=row[7], type="dep")
             except:
                 print("Can't parse dependency")
                 instance.tokens[mod].addProperty("DepMissing", "missing")
@@ -493,7 +490,7 @@ class CoNLL2006(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2008(object):
+class CoNLL2008:
 
     # The name of the processor.
     name = "CoNLL 2008"
@@ -528,10 +525,10 @@ class CoNLL2008(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property="Word",value=row[1]).\
+                addProperty(property="Word", value=row[1]).\
                 addProperty(property="Index", value=row[0]).\
-                addProperty(property = "Lemma", value = row[2]).\
-                addProperty(property="Pos",value= row[3]).\
+                addProperty(property="Lemma", value = row[2]).\
+                addProperty(property="Pos", value=row[3]).\
                 addProperty(property="Split Form", value=row[5]).\
                 addProperty(property="Split Lemma", value=row(6)).\
                 addProperty(property="Split PoS", value=row[7])
@@ -553,7 +550,7 @@ class CoNLL2008(object):
                     pred = predicates[col-11]
                     arg = row[0]
                     # if arg != pred
-                    instance.addEdge(From = pred, to = arg, label = label, type = "role")
+                    instance.addEdge(From=pred, to=arg, label=label, type="role")
         return instance
 
     # @see TabProcessor#createOpen(List<? extends List<String>>)
@@ -567,14 +564,14 @@ class CoNLL2008(object):
             instance.addToken().\
                 addProperty(property=self.ne, value=row[0]).\
                 addProperty(property=self.bbn, value=row[1]).\
-                addProperty(property=self.wn, value= row[2])
+                addProperty(property=self.wn, value=row[2])
         index = 1
         for row in rows:
             if row == "\n":
                 continue
             row = row.split()
             #dependency
-            instance.addEdge(From = row[3], to = index, label = row[4], type = "malt")
+            instance.addEdge(From=row[3], to=index, label=row[4], type = "malt")
             index += 1
         return index
 
@@ -588,7 +585,7 @@ class CoNLL2008(object):
 # @author Sebastian Riedel
 
 
-class CoNLL2009(object):
+class CoNLL2009:
 
     # The name of the processor.
     name = "CoNLL 2009"
@@ -665,7 +662,7 @@ class CoNLL2009(object):
 
 # @author Sebastian Riedel
 
-class MaltTab(object):
+class MaltTab:
 
     # The name of the processor.
     name = "Malt-Tab"
@@ -686,7 +683,7 @@ class MaltTab(object):
                 continue
             row = row.split()
             instance.addToken().\
-                addProperty(property = "Word", value = row[0]).\
+                addProperty(property="Word", value=row[0]).\
                 addProperty(property="Index", value=str(index)).\
                 addProperty(property="Pos", value=row[1])
             index += 1
@@ -697,7 +694,7 @@ class MaltTab(object):
             row = row.split()
             # dependency
             try:
-                instance.addDependency(From = row[2], to = str(mod), label = row[3], type = "dep")
+                instance.addDependency(From=row[2], to=str(mod), label=row[3], type="dep")
             except:
                 print("Can't parse dependency")
                 instance.tokens[mod].addProperty("DepMissing", "missing")
@@ -712,4 +709,3 @@ class MaltTab(object):
     # @see TabProcessor#createOpen(List<? extends List<String>>)
     def supportOpen(self):
         return False
-

@@ -7,7 +7,8 @@ from PyQt4 import QtGui, QtCore
 from Bounds1D import Bounds1D
 from SVGWriter import *
 
-class AligmentRenderer(object):
+
+class AligmentRenderer:
 
     @property
     def tokenLayout1(self):
@@ -104,9 +105,3 @@ class AligmentRenderer(object):
 
     def setEdgeTypeOrder(self, edgeType, order):
         pass
-
-
-
-
-
-
