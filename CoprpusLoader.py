@@ -10,6 +10,7 @@ class CorpusLoader:
             return None
         else:
             return tuple(self.selected)
+
     @selected.setter
     def selected(self, value):
         self._selected = value
@@ -17,6 +18,7 @@ class CorpusLoader:
     @property
     def corpora(self):
         return self._corpora
+
     @corpora.setter
     def corpora(self, value):
         self._corpora = value
@@ -24,6 +26,7 @@ class CorpusLoader:
     @property
     def fileNames(self):
         return self._fileNames
+
     @fileNames.setter
     def fileNames(self, value):
         self._fileNames = value
@@ -31,6 +34,7 @@ class CorpusLoader:
     @property
     def formats(self):
         return self._formats
+
     @formats.setter
     def formats(self, value):
         self._formats = value
@@ -38,6 +42,7 @@ class CorpusLoader:
     @property
     def changeListeners(self):
         return self._changeListeners
+
     @changeListeners.setter
     def changeListeners(self, value):
         self._changeListeners = value
@@ -45,6 +50,7 @@ class CorpusLoader:
     @property
     def fileChooser(self):
         return self._fileChooser
+
     @fileChooser.setter
     def fileChooser(self, value):
         self._fileChooser = value
@@ -52,6 +58,7 @@ class CorpusLoader:
     @property
     def id(self):
         return self._id
+
     @id.setter
     def id(self, value):
         self._id = value
@@ -59,6 +66,7 @@ class CorpusLoader:
     @property
     def accessory(self):
         return self._accessory
+
     @accessory.setter
     def accessory(self, value):
         self._accessory = value
@@ -66,8 +74,10 @@ class CorpusLoader:
     class Listener:
         def corpusAdded(self, corpus, src):
             pass
+
         def corpusRemoved(self, corpus, src):
             pass
+
         def corpusSelected(self, corpus, src):
             pass
 
@@ -90,6 +100,7 @@ class CorpusLoader:
         @property
         def filetypeComboBox(self):
             return self._filetypeComboBox
+
         @filetypeComboBox.setter
         def filetypeComboBox(self, value):
             self._filetypeComboBox = value
@@ -97,6 +108,7 @@ class CorpusLoader:
         @property
         def start(self):
             return self._start
+
         @start.setter
         def start(self, value):
             self._start = value
@@ -104,6 +116,7 @@ class CorpusLoader:
         @property
         def end(self):
             return self._end
+
         @end.setter
         def end(self, value):
             self._end = value
@@ -111,6 +124,7 @@ class CorpusLoader:
         @property
         def accessoryCards(self):
             return self._accessoryCards
+
         @accessoryCards.setter
         def accessoryCards(self, value):
             self._accessoryCards = value
@@ -121,10 +135,11 @@ class CorpusLoader:
 
     def getFormat(self):
         pass
-        #self._filetypeCombobox.getSelectedItem()
+        # self._filetypeCombobox.getSelectedItem()
 
     def setDirectory(self, dir):
         pass
+
     def getDirectory(self):
         pass
 
@@ -136,26 +151,26 @@ class CorpusLoader:
         formatString = properties.getProperty(self.property("forat"), "TAB-separated")
         if formatString == "CoNLL":
             formatString = "TAB-separated"
-        #accessory.filetypeComboBox.setSelectedItem(formats.get(formatString))
+        # accessory.filetypeComboBox.setSelectedItem(formats.get(formatString))
         for format in self._formats.values():
             format.loadProperties(properties, self._id)
 
     def saveProperties(self, properties):
         properties.setProperty(self.property("dir"), self.getDirectory())
-        #properties.setProperty(self.property("format"), accessory.filetypeCombobox,getSelectedItem().toString())
+        # properties.setProperty(self.property("format"), accessory.filetypeCombobox,getSelectedItem().toString())
         for format in self.formats.values():
             format.saveProperties(properties, self.id)
 
     def __init__(self, title):
         self.id = title.replaceAll(" ", "_").toLowerCase()
-        #self.setLayout(GridLayout)
-        #self.setBorder()
+        # self.setLayout(GridLayout)
+        # self.setBorder()
         #        GridBagConstraints c = new GridBagConstraints();
         #        setUpFormats();
 
         self._corpora = []
-        c ={}
+        c = {}
         c.gridx = 0
         c.gridy = 0
         c.gridwidth = 2
-        #self.add
+        # self.add

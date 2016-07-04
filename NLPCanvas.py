@@ -18,6 +18,8 @@ from AligmentRenderer import AligmentRenderer
  * @see com.googlecode.whatswrong.EdgeLayout
  * @see com.googlecode.whatswrong.TokenLayout
 """
+
+
 class NLPCanvas:
     def __init__(self, ui):
         self._ui = ui
@@ -35,16 +37,16 @@ class NLPCanvas:
                            NLPInstance.RenderType.alignment: AligmentRenderer()}
 
     def updateCanvas(self):
-        #self._ui.graphicsView.setScene(self._scene)
-        #br = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/test.svg")
-        #text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
-        #self._scene.addItem(br)
-        #self._ui.graphicsView.show()
+        # self._ui.graphicsView.setScene(self._scene)
+        # br = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/test.svg")
+        # text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
+        # self._scene.addItem(br)
+        # self._ui.graphicsView.show()
         pass
 
     """
-     * Sets the current NLP instance to draw. Note that this does not cause to canvas to be immediately updated. For this
-     * {@link NLPCanvas#updateNLPGraphics()} needs to be called.
+     * Sets the current NLP instance to draw. Note that this does not cause to canvas to be immediately updated.
+     * For this {@link NLPCanvas#updateNLPGraphics()} needs to be called.
      *
      * @param nlpInstance the new NLP instance.
     """
@@ -70,15 +72,16 @@ class NLPCanvas:
         pass
 
     """
-     * Updates the current graph. This takes into account all changes to the filter, NLP instance and drawing parameters.
+     * Updates the current graph. This takes into account all changes to the filter,
+      NLP instance and drawing parameters.
     """
     def updateNLPGraphics(self):
-        #filtered = self.filterInstance()
+        # filtered = self.filterInstance()
         filtered = self._nlpInstance
-        self._SVGScene = Scene("svg", 800, 400)
+        self._SVGScene = Scene(width=800)
         renderer = self._renderers[filtered.renderType]
         dim = renderer.render(filtered, self._SVGScene)
-        self._SVGScene = Scene("svg", dim[0], dim[1])
+        self._SVGScene = Scene(width=dim[0], height=dim[1])
         renderer.render(filtered, self._SVGScene)
         self._SVGScene.write_svg("tmp.svg")
         path = os.path.abspath("tmp.svg")

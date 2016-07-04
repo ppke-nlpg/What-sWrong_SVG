@@ -13,11 +13,14 @@ from SVGWriter import *
  *
  * @author Sebastian Riedel
 """
+
+
 class AligmentRenderer:
 
     @property
     def tokenLayout1(self):
         return self._tokenLayout1
+
     @tokenLayout1.setter
     def tokenLayout1(self, value):
         self._tokenLayout1 = value
@@ -25,6 +28,7 @@ class AligmentRenderer:
     @property
     def tokenLayout2(self):
         return self._tokenLayout2
+
     @tokenLayout2.setter
     def tokenLayout2(self, value):
         self._tokenLayout2 = value
@@ -32,6 +36,7 @@ class AligmentRenderer:
     @property
     def heightFactor(self):
         return self._heightFactor / 4
+
     @heightFactor.setter
     def heightFactor(self, value):
         self._heightFactor = value * 4
@@ -39,6 +44,7 @@ class AligmentRenderer:
     @property
     def isCurved(self):
         return self._isCurved
+
     @isCurved.setter
     def isCurved(self, value):
         self._isCurved = value
@@ -74,14 +80,14 @@ class AligmentRenderer:
 
         for edge in instance.getEdges(Edge.RenderType.dependency):
             if edge.getTypePostfix() == "FP":
-                #painter.setBrush(QtGui.QColor(255,0,0))
+                # painter.setBrush(QtGui.QColor(255,0,0))
                 scene.color = (255, 0, 0)
             elif edge.getTypePostfix() == "FN":
-                #painter.setBrush(QtGui.QColor(0,0,255))
+                # painter.setBrush(QtGui.QColor(0,0,255))
                 scene.color = (0, 0, 255)
             else:
-                #painter.setBrush(QtGui.QColor(0,0,0))
-                scene.color = (0,0,0)
+                # painter.setBrush(QtGui.QColor(0,0,0))
+                scene.color = (0, 0, 0)
             bound1 = tokenXBounds1[edge.From]
             bound2 = tokenXBounds2[edge.To]
             if self._isCurved:
@@ -93,14 +99,14 @@ class AligmentRenderer:
                 x1 = (bound1.getMiddle(), height)
                 x2 = (bound2.getMiddle(), height + self._heightFactor)
                 scene.add(Line(x1, x2, scene.color))
-            #graphics2D.translate(0, dim.height + heightFactor);
+            # graphics2D.translate(0, dim.height + heightFactor);
 
         dim = self._tokenLayout2.layout(instance, {}, scene)
         height += dim[0] + self._heightFactor
         if dim[1] > width:
             width = dim[1]
 
-        return (width, height + 1)
+        return width, height + 1
 
     """
      * Returns the margin between tokens.
@@ -109,14 +115,15 @@ class AligmentRenderer:
     """
     @property
     def margin(self):
-         return self._tokenLayout1.margin()
+        return self._tokenLayout1.margin()
 
     @margin.setter
     def margin(self, value):
         self._tokenLayout1.margin = value
         self._tokenLayout2.margin = value
 
-    def getEdgeAt(self, p, radius):
+    @staticmethod
+    def getEdgeAt(*_):  # self, p, radius
         return None
 
     """

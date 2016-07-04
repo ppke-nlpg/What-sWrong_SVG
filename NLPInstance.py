@@ -155,7 +155,8 @@ class NLPInstance:
         # if self.isInvalidEdge(From, to):
         #     return
         if From in self._map and to in self._map:
-            self._edges.append(Edge(self._map[From], self._map[to], label, type, renderType=Edge.RenderType.span, description=description))
+            self._edges.append(Edge(self._map[From], self._map[to], label, type, renderType=Edge.RenderType.span,
+                                    description=description))
 
 #    def isInvalidEdge(self, From, to):
 #        fromToken = self._map[From]

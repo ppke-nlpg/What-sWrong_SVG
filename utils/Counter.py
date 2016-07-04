@@ -42,7 +42,7 @@ class Counter:
                 return entry2.value - entry1.value
             else:
                 return -1*(entry2.value - entry1.value)
-        return sorted(sortedmap, key = foo)
+        return sorted(sortedmap, key=foo)
 
     @staticmethod
     def loadFromFile(file):

@@ -133,14 +133,14 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
     def setStroke(self, type, stroke):
         self._strokes[type] = stroke
 
-    def getStroke(self,edge = None, type = None):
+    def getStroke(self, edge=None, type=None):
         if edge is not None:
             type = edge.type
             stroke = self.getStroke(type)
             if edge in self._selected:
-                # TODO:
-                #return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin()
-                #            , stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase())
+                # TODO:
+                # return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin()
+                #             , stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase())
                 pass
             return stroke
         else:
@@ -153,7 +153,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
         for substring in self._colors.keys():
             if substring in type:
                 return self._colors[substring]
-        return (0,0,0)
+        return 0, 0, 0
 
     def addToSelection(self, edge):
         self._selected.add(edge)
@@ -182,7 +182,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
         self._selected.add(edge)
 
     def getEdgeAt(self, point, radius):
-        #TODO
+        # TODO
         pass
 
     def calculateDepth(self, dominates, depth, root):

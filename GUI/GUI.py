@@ -17,6 +17,7 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -132,7 +133,7 @@ class Ui_MainWindow:
         self.gridLayout_6.setObjectName(_fromUtf8("gridLayout_6"))
         self.label_5 = QtGui.QLabel(self.tab_2)
         self.label_5.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_5.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.gridLayout_6.addWidget(self.label_5, 0, 0, 1, 1)
         self.lineEdit = QtGui.QLineEdit(self.tab_2)
@@ -140,7 +141,7 @@ class Ui_MainWindow:
         self.gridLayout_6.addWidget(self.lineEdit, 0, 1, 1, 1)
         self.label_6 = QtGui.QLabel(self.tab_2)
         self.label_6.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.label_6.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_6.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout_6.addWidget(self.label_6, 1, 0, 1, 1)
         self.lineEdit_2 = QtGui.QLineEdit(self.tab_2)

@@ -162,12 +162,12 @@ class TokenLayout:
             for p in token.getSortedProperties():
                 property = token.getProperty(p)
                 if index == 0:
-                    scene.color = (84, 84, 84) # GREY
+                    scene.color = (84, 84, 84)  # GREY
                 else:
-                    scene.color =(0,0,0) # BLACK
-                scene.add(TextToken(scene,(lastx,lasty), property, 12, scene.color))
+                    scene.color = (0, 0, 0)  # BLACK
+                scene.add(TextToken(scene, (lastx, lasty), property, 12, scene.color))
                 lasty += self._rowHeight
-                labelwidth = Text(scene,(0,0), property, 12, scene.color).getWidth()
+                labelwidth = Text(scene, (0, 0), property, 12, scene.color).getWidth()
                 if labelwidth > maxX:
                     maxX = labelwidth
                 self._textLayouts[(token, index+1)] = property
@@ -177,7 +177,8 @@ class TokenLayout:
                 requiredWidth = None
             if requiredWidth is not None and maxX < requiredWidth:
                 maxX = requiredWidth
-            self._bounds[token] = Rectangle(scene,(lastx, self._baseLine),maxX, lasty-self._baseLine,(255,255,255),(0,0,0),1)
+            self._bounds[token] = Rectangle(scene, (lastx, self._baseLine), maxX, lasty-self._baseLine,
+                                            (255, 255, 255), (0, 0, 0), 1)
             # (lastx, self._baseLine, maxX, lasty - self._baseLine)
             lastx += maxX + self._margin
             if lasty - self._rowHeight > self._height:

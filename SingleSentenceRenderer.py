@@ -13,6 +13,7 @@ class SingleSentenceRenderer:
     @property
     def spanLayout(self):
         return self._spanLayout
+
     @spanLayout.setter
     def spanLayout(self, value):
         self._spanLayout = value
@@ -20,6 +21,7 @@ class SingleSentenceRenderer:
     @property
     def dependencyLayout(self):
         return self._dependencyLayout
+
     @dependencyLayout.setter
     def dependencyLayout(self, value):
         self._dependencyLayout = value
@@ -27,6 +29,7 @@ class SingleSentenceRenderer:
     @property
     def tokenLayout(self):
         return self._tokenLayout
+
     @tokenLayout.setter
     def tokenLayout(self, value):
         self._tokenLayout = value
@@ -34,6 +37,7 @@ class SingleSentenceRenderer:
     @property
     def startOfTokens(self):
         return self._startOfTokens
+
     @startOfTokens.setter
     def startOfTokens(self, value):
         self._startOfTokens = value
@@ -41,6 +45,7 @@ class SingleSentenceRenderer:
     @property
     def startOfSpans(self):
         return self._startOfSpans
+
     @startOfSpans.setter
     def startOfSpans(self, value):
         self._startOfSpans = value
@@ -53,19 +58,19 @@ class SingleSentenceRenderer:
         self._startOfSpans = 0
 
     def render(self, instance, scene, render_spans=True):
-        tokens = instance.tokens
+        # tokens = instance.tokens
         dependencies = instance.getEdges(Edge.RenderType.dependency)
         spans = instance.getEdges(Edge.RenderType.span)
 
-        #get span required token widths
+        # get span required token widths
         widths = self._spanLayout.estimateRequiredTokenWidths(spans, scene)
-        #find token bounds
+        # find token bounds
         tokenXBounds = self._tokenLayout.estimateTokenBounds(instance, widths, scene)
 
         width = 0
         height = 0
 
-        #place dependencies on top
+        # place dependencies on top
 
         dim = self._dependencyLayout.layoutEdges(dependencies, tokenXBounds, scene)
         height += dim[1]
@@ -73,8 +78,8 @@ class SingleSentenceRenderer:
         if dim[0] > width:
             width = dim[0]
 
-        #add tokens
-        scene.translate(0,dim[1])
+        # add tokens
+        scene.translate(0, dim[1])
         dim = self._tokenLayout.layout(instance, widths, scene)
 
         height += dim[1]
@@ -82,9 +87,9 @@ class SingleSentenceRenderer:
         if dim[0] > width:
             width = dim[0]
 
-        #add spans
+        # add spans
         if render_spans:
-            scene.translate(0,dim[1])
+            scene.translate(0, dim[1])
             dim = self._spanLayout.layoutEdges(spans, tokenXBounds, scene)
             height += dim[1]
             if dim[0] > width:

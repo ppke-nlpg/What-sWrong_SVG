@@ -89,8 +89,8 @@ class CorpusFormat(metaclass=ABCMeta):
 
     """
      * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
-     * (exclusive). This method is required to call {@link com.googlecode.whatswrong.ioFormats.CorpusFormat.Monitor#progressed
-     (int)}
+     * (exclusive). This method is required to call {@link com.googlecode.whatswrong.ioFormats.CorpusFormat.Monitor#
+     progressed(int)}
      * after each instance that was processed.
      *
      * @param file the file to load the corpus from.
@@ -104,8 +104,8 @@ class CorpusFormat(metaclass=ABCMeta):
         pass
 
     """
-     * A Monitor monitors the progress of the {@link com.googlecode.whatswrong.ioFormats.CorpusFormat#load(java.ioFormats.File, int,
-     * int)} method.
+     * A Monitor monitors the progress of the {@link com.googlecode.whatswrong.ioFormats.CorpusFormat#load
+     (java.ioFormats.File, int, * int)} method.
     """
     class Monitor(metaclass=ABCMeta):
         """

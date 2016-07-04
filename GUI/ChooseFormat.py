@@ -37,7 +37,7 @@ class Ui_ChooseFormat:
         self.buttonBox.setEnabled(True)
         self.buttonBox.setGeometry(QtCore.QRect(6, 304, 164, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.radioButton_MalTab = QtGui.QRadioButton(ChooseFormat)
         self.radioButton_MalTab.setGeometry(QtCore.QRect(10, 261, 69, 20))

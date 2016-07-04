@@ -10,6 +10,8 @@ import re
  *
  * @author Sebastian Riedel
 """
+
+
 class Token:
     # The index of the token.
     # Returns the index of the token.
@@ -191,7 +193,6 @@ class Token:
     """
     def merge(self, token):
         self._tokenProperties.update(token.tokenProperties)
-
 
     """
      * Compares the indices of both tokens.

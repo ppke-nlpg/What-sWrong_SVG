@@ -573,7 +573,8 @@ class CoNLL2005:
         return instance
 
     """
-     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List<String>>)
+     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List
+     <String>>)
      * Create an NLPInstance from the given table (list of rows) of strings, assuming that the passed rows are from the
      * open dataset.
      *
@@ -865,7 +866,8 @@ class CoNLL2009:
         return instance
 
     """
-     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List<String>>)
+     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List
+     <String>>)
      * Create an NLPInstance from the given table (list of rows) of strings, assuming that the passed rows are from the
      * open dataset.
      *
@@ -944,7 +946,8 @@ class MaltTab:
         return instance
 
     """
-     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List<String>>)
+     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List
+     <String>>)
      * Create an NLPInstance from the given table (list of rows) of strings, assuming that the passed rows are from the
      * open dataset.
      *
@@ -1024,7 +1027,8 @@ class CCG:
         return instance
 
     """
-     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List<String>>)
+     * @see com.googlecode.whatswrong.ioFormats.TabProcessor#createOpen(java.util.List<? extends java.util.List
+     <String>>)
      * Create an NLPInstance from the given table (list of rows) of strings, assuming that the passed rows are from the
      * open dataset.
      *

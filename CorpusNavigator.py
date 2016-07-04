@@ -13,10 +13,13 @@ from PyQt4 import QtGui, QtCore, QtSvg
  *
  * @author Sebastian Riedel
 """
+
+
 class CorpusNavigator:
     @property
     def guess(self):
         return self._guess
+
     @guess.setter
     def guess(self, value):
         self._guess = value
@@ -24,6 +27,7 @@ class CorpusNavigator:
     @property
     def gold(self):
         return self._gold
+
     @gold.setter
     def gold(self, value):
         self._gold = value
@@ -31,6 +35,7 @@ class CorpusNavigator:
     @property
     def scene(self):
         return self._scene
+
     @scene.setter
     def scene(self, value):
         self._scene = value
@@ -38,6 +43,7 @@ class CorpusNavigator:
     @property
     def spinner(self):
         return self._spinner
+
     @spinner.setter
     def spinner(self, value):
         self._spinner = value
@@ -45,6 +51,7 @@ class CorpusNavigator:
     @property
     def numberModel(self):
         return self._numberModel
+
     @numberModel.setter
     def numberModel(self, value):
         self._numberModel = value
@@ -52,6 +59,7 @@ class CorpusNavigator:
     @property
     def indicies(self):
         return self._indicies
+
     @indicies.setter
     def indicies(self, value):
         self._indicies = value
@@ -59,6 +67,7 @@ class CorpusNavigator:
     @property
     def diffCorpora(self):
         return self._diffCorpora
+
     @diffCorpora.setter
     def diffCorpora(self, value):
         self._diffCorpora = value
@@ -66,6 +75,7 @@ class CorpusNavigator:
     @property
     def goldCorpora(self):
         return self._goldCorpora
+
     @goldCorpora.setter
     def goldCorpora(self, value):
         self._goldCorpora = value
@@ -73,6 +83,7 @@ class CorpusNavigator:
     @property
     def guessCorpora(self):
         return self._guessCorpora
+
     @guessCorpora.setter
     def guessCorpora(self, value):
         self._guessCorpora = value
@@ -80,6 +91,7 @@ class CorpusNavigator:
     @property
     def indexSearcher(self):
         return self._indexSearcher
+
     @indexSearcher.setter
     def indexSearcher(self, value):
         self._indexSearcher = value
@@ -87,6 +99,7 @@ class CorpusNavigator:
     @property
     def analyzer(self):
         return self._analyzer
+
     @analyzer.setter
     def analyzer(self, value):
         self._analyzer = value
@@ -94,6 +107,7 @@ class CorpusNavigator:
     @property
     def canvas(self):
         return self._canvas
+
     @canvas.setter
     def canvas(self, value):
         self._canvas = value
@@ -134,6 +148,7 @@ class CorpusNavigator:
         @property
         def text(self):
             return self._text
+
         @text.setter
         def text(self, value):
             self._text = value
@@ -141,6 +156,7 @@ class CorpusNavigator:
         @property
         def nr(self):
             return self._nr
+
         @nr.setter
         def nr(self, value):
             self._nr = value
@@ -152,7 +168,7 @@ class CorpusNavigator:
         def __str__(self):
             return self._text
 
-    def __init__(self, instance, ui, scene=None, goldLoader=None, guessLoader=None ):
+    def __init__(self, instance, ui, scene=None, goldLoader=None, guessLoader=None):
 
         self._guess = guessLoader
         self._gold = goldLoader
@@ -161,26 +177,26 @@ class CorpusNavigator:
         self._canvas = NLPCanvas(ui)
         self._ui = ui
 
-        #guessLoader.addChangeListener(this);
-        #goldLoader.addChangeListener(this);
+        # guessLoader.addChangeListener(this);
+        # goldLoader.addChangeListener(this);
 
         results = []
 
         self.updateCanvas()
 
     def updateCanvas(self):
-        #if self.gold.selected() is not None:
-        #    if self.guess.selected() is None:
-        #        maxIndex = len(self.gold.selected())
-        #TODO get selected
+        # if self.gold.selected() is not None:
+        #     if self.guess.selected() is None:
+        #         maxIndex = len(self.gold.selected())
+        # TODO get selected
 
-        #maxIndex = self._gold.getSelected().size() - 1
-        #index = min(self._spinner.getValue(), maxIndex)
-        #self._spinner.setValue(index)
-        #self._numberModel.setMaximum(maxIndex)
-        #ofHowMany.setText(" of " + maxIndex)
+        # maxIndex = self._gold.getSelected().size() - 1
+        # index = min(self._spinner.getValue(), maxIndex)
+        # self._spinner.setValue(index)
+        # self._numberModel.setMaximum(maxIndex)
+        # ofHowMany.setText(" of " + maxIndex)
 
-        #indexSearcher = self.getIndex(self._gold.getSelected())
+        # indexSearcher = self.getIndex(self._gold.getSelected())
 
         self._canvas.setNLPInstance(self._instance)
         file = self._canvas.updateNLPGraphics()

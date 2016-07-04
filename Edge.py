@@ -136,7 +136,7 @@ class Edge:
     # @param type       the type of the edge (say, 'semantic role').
     # @param renderType the render type.
     # @param description a description of the edge.
-    def __init__(self, From, To, label, Type, note = None, renderType = None, description = None):
+    def __init__(self, From, To, label, Type, note=None, renderType=None, description=None):
         self._From = From
         self._To = To
         self._label = label
@@ -259,24 +259,24 @@ class Edge:
     # @param edge the edge to compare with.
     # @return true iff this edge covers the given edge and exactly one of their tokens are equal.
     def coversSemi(self, edge):
-        return self.getMinIndex() < edge.getMinIndex() and self.getMaxIndex() == edge.getMaxIndex() or\
-        self.getMinIndex() == edge.getMinIndex() and self.getMaxIndex() > edge.getMaxIndex()
+        return self.getMinIndex() < edge.getMinIndex() and self.getMaxIndex() == edge.getMaxIndex() or \
+               self.getMinIndex() == edge.getMinIndex() and self.getMaxIndex() > edge.getMaxIndex()
 
     # Checks whether this edge overlaps the given edge.
     #
     # @param edge the edge to compare with.
     # @return true iff the edges overlapn.
     def overlaps(self, edge):
-        #return self.getMinIndex() <= edge.getMinIndex() <= self.getMaxIndex() <= edge.getMaxIndex() or\
-        #    self.getMinIndex() >= edge.getMinIndex() and\
-        #    self.getMaxIndex() <= edge.getMaxIndex() and\
-        #    self.getMaxIndex() <= edge.getMinIndex()
+        # return self.getMinIndex() <= edge.getMinIndex() <= self.getMaxIndex() <= edge.getMaxIndex() or\
+        #     self.getMinIndex() >= edge.getMinIndex() and\
+        #     self.getMaxIndex() <= edge.getMaxIndex() and\
+        #     self.getMaxIndex() <= edge.getMinIndex()
         return self.getMinIndex() <= edge.getMinIndex() and\
-            self.getMaxIndex() <= edge.getMaxIndex() and\
-            self.getMaxIndex() >= edge.getMinIndex() or\
-            self.getMinIndex() >= edge.getMinIndex() and\
-            self.getMaxIndex() <= edge.getMaxIndex() and\
-            self.getMaxIndex() <= edge.getMinIndex()
+               self.getMaxIndex() <= edge.getMaxIndex() and\
+               self.getMaxIndex() >= edge.getMinIndex() or\
+               self.getMinIndex() >= edge.getMinIndex() and\
+               self.getMaxIndex() <= edge.getMaxIndex() and\
+               self.getMaxIndex() <= edge.getMinIndex()
 
     # Checks whether the given edge is covered by this edge and at least one token is not aligned.
 
@@ -290,14 +290,14 @@ class Edge:
 
     # @return a string representation of this edge that shows label, type and the indices of the start and end tokens.
     def __str__(self):
-        return str(self.From.index) +'-'+ str(self.label) + '->' + str(self.To.index) + '(' + str(self.type) + ')'
+        return str(self.From.index) + '-' + str(self.label) + '->' + str(self.To.index) + '(' + str(self.type) + ')'
 
     # Checks whether the given edge crosses this edge.
 
     # @param edge the edge to compare to.
     # @return true iff this edge crosses the given edge.
     def crosses(self, edge):
-        #return edge.getMinIndex() < self.getMinIndex() < edge.getMaxIndex() < self.getMaxIndex() or \
+        # return edge.getMinIndex() < self.getMinIndex() < edge.getMaxIndex() < self.getMaxIndex() or \
         #       self.getMinIndex() < edge.getMinIndex() < self.getMaxIndex() < edge.getMaxIndex()
         return self.getMinIndex() > edge.getMinIndex() and\
             self.getMinIndex() < edge.getMaxIndex() and\
@@ -310,7 +310,7 @@ class Edge:
         if other is None or type(self) != type(other):
             return False
 
-        if (self.From is not None):
+        if self.From is not None:
             if self.From != other.From:
                 return False
         else:
