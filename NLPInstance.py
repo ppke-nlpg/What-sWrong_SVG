@@ -46,7 +46,7 @@ class NLPInstance:
     @property
     def tokens(self):
         return tuple(self._tokens)
-        #return self._tokens
+        # return self._tokens
 
     @tokens.setter
     def tokens(self, value):
@@ -102,7 +102,7 @@ class NLPInstance:
             self._renderType = renderType
         else:
             self._renderType = None
-        self._splitPoints =[]
+        self._splitPoints = []
         if splitPoints is not None:
             self._splitPoints.extend(splitPoints)
 
@@ -124,19 +124,19 @@ class NLPInstance:
     # Adds an edge.
 
     # @param edge the edge to add.
-    def addEdge(self, edge = None, From = None, to = None, label = None, type = None, renderType = None,
-                fromToken = None, toToken = None):
+    def addEdge(self, edge=None, From=None, to=None, label=None, type=None, renderType=None, fromToken=None,
+                toToken=None):
         if edge is not None:
             self._edges.append(Edge(self._map[edge.From.index], self._map[edge.to.index], edge.label, edge.note,
-                            edge.type, edge.renderType, edge.description))
+                               edge.type, edge.renderType, edge.description))
         else:
             if fromToken is not None and toToken is not None:
                 self._edges.append(Edge(self._map[fromToken.index], self._map[toToken.index], label, type,
                                         renderType))
             else:
-                #if self.isInvalidEdge(From, to):  # TODO ez így jó?
-                #    pass
-                #else:
+                # if self.isInvalidEdge(From, to):  # TODO ez így jó?
+                #     pass
+                # else:
                 if From in self._map and to in self._map:
                     self._edges.append(Edge(self._map[From], self._map[to], label, type, renderType))
 
@@ -151,9 +151,9 @@ class NLPInstance:
     # @param description the description of the span.
     # @see com.googlecode.whatswrong.Edge
 
-    def addSpan(self, From, to, label, type, description = None):
-        #if self.isInvalidEdge(From, to):
-        #    return
+    def addSpan(self, From, to, label, type, description=None):
+        # if self.isInvalidEdge(From, to):
+        #     return
         if From in self._map and to in self._map:
             self._edges.append(Edge(self._map[From], self._map[to], label, type, renderType=Edge.RenderType.span, description=description))
 
@@ -177,9 +177,9 @@ class NLPInstance:
     # @param description description of the edge
     # @see com.googlecode.whatswrong.Edge
 
-    def addDependency(self, From, to, label, type, description = None):
-        #if self.isInvalidEdge(From, to):
-        #    return
+    def addDependency(self, From, to, label, type, description=None):
+        # if self.isInvalidEdge(From, to):
+        #     return
         fromToken = self._map[From]
         toToken = self._map[to]
         edge = Edge(fromToken, toToken, label, type, renderType=Edge.RenderType.dependency)
@@ -226,7 +226,7 @@ class NLPInstance:
     # Adds a new token and returns it.
 
     # @return the token that was added.
-    def addToken(self, index = None):
+    def addToken(self, index=None):
         if index is None:
             vertex = Token(str(len(self._tokens)))
         else:
@@ -252,7 +252,7 @@ class NLPInstance:
 
     # @param renderType the render type of the edges to return.
     # @return all edges of this instance with the given render type. This list can be altered if needed.
-    def getEdges(self, renderType = None):
+    def getEdges(self, renderType=None):
         result = []
         if renderType is not None:
             for e in self._edges:
@@ -273,7 +273,7 @@ class NLPInstance:
             value += str(token) + ", "
         value += '\n'
         for v in self._map.values():
-            value +=  str(v) + ", "
+            value += str(v) + ", "
         value += '\n'
         for e in self._edges:
             value += str(e) + ", "

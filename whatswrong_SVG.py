@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import sys
-
 from PyQt4 import QtGui, QtSvg
+
 from CorpusNavigator import CorpusNavigator
-from GUI.GUI import Ui_MainWindow
 from GUI.ChooseFormat import Ui_ChooseFormat
-from TabProcessor import *
+from GUI.GUI import Ui_MainWindow
+from ioFormats.TabProcessor import *
 
 
 class MyWindow(QtGui.QMainWindow):
