@@ -5,7 +5,7 @@ import sys
 
 from PyQt4 import QtGui, QtSvg
 from CorpusNavigator import CorpusNavigator
-from GUI import Ui_MainWindow
+from GUI.GUI import Ui_MainWindow
 from GUI.ChooseFormat import Ui_ChooseFormat
 from TabProcessor import *
 

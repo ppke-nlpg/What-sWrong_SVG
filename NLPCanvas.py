@@ -59,7 +59,7 @@ class NLPCanvas:
         self._tokens.extend(self._nlpInstance.tokens)
         self._usedProperties.clear()
         for token in self._tokens:
-            self._usedProperties |= token.getPropertyTypes()
+            self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # XXX Tuple and set!
 
     """
      * Just calls the filter on the current instance.
