@@ -3,8 +3,8 @@
 
 from TokenLayout import TokenLayout
 from Edge import Edge
-from PyQt4 import QtGui, QtCore
-from Bounds1D import Bounds1D
+# from PyQt4 import QtGui, QtCore
+# from Bounds1D import Bounds1D
 from SVGWriter import *
 
 """
@@ -17,6 +17,9 @@ from SVGWriter import *
 
 class AligmentRenderer:
 
+    """
+     * The layout object for tokens.
+    """
     @property
     def tokenLayout1(self):
         return self._tokenLayout1
@@ -25,6 +28,9 @@ class AligmentRenderer:
     def tokenLayout1(self, value):
         self._tokenLayout1 = value
 
+    """
+     * The layout object for tokens.
+    """
     @property
     def tokenLayout2(self):
         return self._tokenLayout2
@@ -33,27 +39,23 @@ class AligmentRenderer:
     def tokenLayout2(self, value):
         self._tokenLayout2 = value
 
+    """
+     * Should lines be drawn using antialiasing.
+    """
     @property
-    def heightFactor(self):
-        return self._heightFactor / 4
+    def antiAliasing(self):
+        return self._antiAliasing
 
-    @heightFactor.setter
-    def heightFactor(self, value):
-        self._heightFactor = value * 4
-
-    @property
-    def isCurved(self):
-        return self._isCurved
-
-    @isCurved.setter
-    def isCurved(self, value):
-        self._isCurved = value
+    @antiAliasing.setter
+    def antiAliasing(self, value):
+        self._antiAliasing = value
 
     def __init__(self):
         self._tokenLayout1 = TokenLayout()
         self._tokenLayout2 = TokenLayout()
         self._heightFactor = 100
         self._isCurved = True
+        self._antiAliasing = True
         self._tokenLayout2.toSplitPoint = 0
         self._tokenLayout2.fromSplitPoint = 0
 
@@ -70,9 +72,14 @@ class AligmentRenderer:
         tokenXBounds1 = self._tokenLayout1.estimateTokenBounds(instance, {}, scene)
         tokenXBounds2 = self._tokenLayout2.estimateTokenBounds(instance, {}, scene)
 
+        """
+        if self._antiAliasing:
+            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        """
         width = 0
         height = 0
 
+        # place dependencies on top
         dim = self._tokenLayout1.layout(instance, {}, scene)
         height += dim[1]
         if dim[0] > width:
@@ -81,32 +88,41 @@ class AligmentRenderer:
         for edge in instance.getEdges(Edge.RenderType.dependency):
             if edge.getTypePostfix() == "FP":
                 # painter.setBrush(QtGui.QColor(255,0,0))
-                scene.color = (255, 0, 0)
+                scene.color = (255, 0, 0)  # Color.RED
             elif edge.getTypePostfix() == "FN":
                 # painter.setBrush(QtGui.QColor(0,0,255))
-                scene.color = (0, 0, 255)
+                scene.color = (0, 0, 255)  # Color.BLUE
             else:
                 # painter.setBrush(QtGui.QColor(0,0,0))
-                scene.color = (0, 0, 0)
+                scene.color = (0, 0, 0)  # Color.BLACK
             bound1 = tokenXBounds1[edge.From]
             bound2 = tokenXBounds2[edge.To]
-            if self._isCurved:
-                x1 = (bound1.getMiddle(), height)
-                x2 = ((bound2.getMiddle()-bound1.getMiddle()) / 2, height/2)
-                x3 = (bound2.getMiddle()-bound1.getMiddle, height)
-                scene.add(QuadraticBezierCurve(x1, x2, x3, scene.color))
+            if self._isCurved:  # XXX IS THIS OK?
+                start = (bound1.getMiddle(), height)
+                x1 = (bound1.getMiddle(), height + self._heightFactor // 2)  # INTEGER DIVISION!!!
+                x2 = (bound2.getMiddle(), height + self._heightFactor // 2)  # INTEGER DIVISION!!!
+                end = (bound2.getMiddle(), height + self._heightFactor)
+                scene.add(QuadraticBezierCurve(scene, start, x1, x2, end, scene.color))
             else:
                 x1 = (bound1.getMiddle(), height)
                 x2 = (bound2.getMiddle(), height + self._heightFactor)
-                scene.add(Line(x1, x2, scene.color))
-            # graphics2D.translate(0, dim.height + heightFactor);
+                scene.add(Line(scene, x1, x2, scene.color))
 
+        # add spans
+        # graphics2D.translate(0, dim.height + heightFactor);
         dim = self._tokenLayout2.layout(instance, {}, scene)
         height += dim[0] + self._heightFactor
         if dim[1] > width:
             width = dim[1]
 
         return width, height + 1
+
+    """
+     * Should anti-aliasing be used when drawing the graph.
+     *
+     * @param antiAliasing rue iff anti-aliasing should be used when drawing the graph.
+    """
+    # See the setter above...
 
     """
      * Returns the margin between tokens.
@@ -117,6 +133,11 @@ class AligmentRenderer:
     def margin(self):
         return self._tokenLayout1.margin()
 
+    """
+     * Sets the margin between tokens.
+     *
+     * @param margin the margin between tokens.
+    """
     @margin.setter
     def margin(self, value):
         self._tokenLayout1.margin = value
@@ -125,6 +146,44 @@ class AligmentRenderer:
     @staticmethod
     def getEdgeAt(*_):  # self, p, radius
         return None
+
+    """
+     * Returns an integer that reflects the height of the graph.
+     *
+     * @return an integer that reflects the height of the graph. The higher this value, the higher the graph.
+    """
+    @property
+    def heightFactor(self):
+        return self._heightFactor / 4
+
+    """
+     * Controls the height of the graph.
+     *
+     * @param heightFactor an integer that indicates how high the graph should be.
+    """
+    @heightFactor.setter
+    def heightFactor(self, value):
+        self._heightFactor = value * 4
+
+    """
+     * Returns whether the renderer draws a more curved graph or not.
+     *
+     * @return true iff the renderer draws a more curved graph.
+    """
+    @property
+    def isCurved(self):
+        return self._isCurved
+
+    """
+     * Controls whether the graph should be curved or rectangular. If curved the dependencies are drawn as curves
+     * instead of rectangular lines, and spans are drawn as rounded rectangles.
+     *
+     * @param isCurved should the graph be more curved.
+     * @see com.googlecode.whatswrong.NLPCanvasRenderer#setCurved(boolean)
+    """
+    @isCurved.setter
+    def isCurved(self, value):
+        self._isCurved = value
 
     """
      * Set the color for edges of a certain type.
@@ -143,3 +202,11 @@ class AligmentRenderer:
     """
     def setEdgeTypeOrder(self, edgeType, order):
         pass
+
+    """
+     * Should anti-aliasing be used when drawing the graph.
+     *
+     * @return true iff anti-aliasing should be used when drawing the graph.
+    """
+    def isAntiAliasing(self):
+        return self._antiAliasing
