@@ -7,8 +7,20 @@ from utils.HashMultiMapArrayList import HashMultiMapArrayList
 from SVGWriter import *
 
 
+"""
+ * A SpanLayouy lays out edges as rectangular blocks under or above the tokens that the edge covers. The label is
+ * written into these blocks. If there are multiple edge types then all spans of the same type appear in the same
+ * contiguous vertical area.
+ *
+ * @author Sebastian Riedel
+"""
+
+
 class SpanLayout(AbstractEdgeLayout):
 
+    """
+     * Should the graph be upside-down reverted.
+    """
     @property
     def revert(self):
         return self._revert
@@ -17,6 +29,9 @@ class SpanLayout(AbstractEdgeLayout):
     def revert(self, value):
         self._revert = value
 
+    """
+     * Should we draw separation lines between the areas for different span types.
+    """
     @property
     def separationLines(self):
         return self._separationLines
@@ -25,6 +40,9 @@ class SpanLayout(AbstractEdgeLayout):
     def separationLines(self, value):
         self._separationLines = value
 
+    """
+     * The order/vertical layer in which the area of a certain type should be drawn.
+    """
     @property
     def orders(self):
         return self._orders
@@ -33,6 +51,9 @@ class SpanLayout(AbstractEdgeLayout):
     def orders(self, value):
         self._orders = value
 
+    """
+     * How much space should at least be between the label of a span and the right and left edges of the span.
+    """
     @property
     def totalTextMargin(self):
         return self._totalTextMargin
@@ -41,6 +62,9 @@ class SpanLayout(AbstractEdgeLayout):
     def totalTextMargin(self, value):
         self._totalTextMargin = value
 
+    """
+     * Creates a new SpanLayout.
+    """
     def __init__(self):
         super().__init__()
         self._baseline = 1
@@ -49,43 +73,76 @@ class SpanLayout(AbstractEdgeLayout):
         self._orders = {}
         self._totalTextMargin = 6
 
+    """
+     * Sets the order/vertical layer in which the area of a certain type should be drawn.
+     *
+     * @param type  the type we want to change the order for.
+     * @param order the order/vertical layer in which the area of the given type should be drawn.
+    """
     def setTypeOrder(self, type, order):
         self._orders[type] = order
 
+    """
+     * Returns the order/vertical layer in which the area of a certain type should be drawn.
+     *
+     * @param type the type we want to get the order for.
+     * @return the order/vertical layer in which the area of the given type should be drawn.
+    """
     def getOrder(self, type):
         if type in self._orders:
             order = self._orders[type]
         else:
             order = None
-        if order is None:
-            return float('-inf')
-        else:
-            return order
+        return order
 
+    """
+     * Should we draw separation lines between the areas for different span types.
+     *
+     * @return true iff separation lines should be drawn.
+    """
+    def isSeparationLines(self):
+        return self._separationLines
+
+    """
+     * Should we draw separation lines between the areas for different span types.
+     *
+     * @param separationLines true iff separation lines should be drawn.
+    """
+    # See the setter above...
+
+    """
+     * For each token that has a self-loop we need the token to be wide enough. This method calculates the needed token
+     * width for a given set of edges. That is, for all self-loops in the set of edges we calculate how wide the
+     * corresponding token need to be.
+     *
+     * @param edges the set of edges that can contain self-loops.
+     * @param g2d   the graphics object needed to find out the actual width of text.
+     * @return A mapping from tokens with self-loops to pixel widths.
+    """
     def estimateRequiredTokenWidths(self, edges, scene):
         result = {}
         for edge in edges:
             if edge.From == edge.To:
-                # Font font = new Font(g2d.getFont().getName(), Font.PLAIN, 8);
-                # FontRenderContext frc = g2d.getFontRenderContext();
-                # TextLayout layout = new TextLayout(edge.getLabel(), font, frc);
-                # boundingrect = painter.boundingRect(text = edge.label)
-                labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()
+                labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontisze is 8
                 if edge.From in result:
-                    oldWith = result[edge.From]
+                    width = max(labelwith, result[edge.From])  # oldWith is result[...]
                 else:
-                    oldWith = None
-                if oldWith is None:
                     width = labelwith
-                else:
-                    width = max(labelwith, oldWith)
                 result[edge.From] = width + self._totalTextMargin
         return result
 
+    """
+     * Lays out the edges as spans (blocks) under or above the tokens they contain.
+     *
+     * @param edges  the edges to layout.
+     * @param bounds the bounds of the tokens the spans connect.
+     * @param g2d    the graphics object to draw on.
+     * @return the dimensions of the drawn graph.
+    """
     def layoutEdges(self, edges, bounds, scene):
         if len(self.visible) > 0:
-            edges = edges
-            edges = self._visible & edges  # TODO ???edges &= self._visible
+            edges = set(edges)
+            edges &= self._visible  # Intersection
 
         # find out height of each edge
         self._shapes.clear()
@@ -108,19 +165,22 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             self.calculateDepth(dominates, depth, edge)
 
+        # calculate maxHeight and maxWidth
         maxDepth = depth.getMaximum()
         if len(edges) > 0:
             maxHeight = (maxDepth + 1) * self._heightPerLevel + 3
         else:
             maxHeight = 1
+        # in case there are no edges that cover other edges (depth == 0) we need
+        # to increase the height slightly because loops on the same token
+        # have height of 1.5 levels
 
-        vertex2edges = HashMultiMapArrayList()
+        # build map from vertex to incoming/outgoing edges
+        vertex2edges = HashMultiMapArrayList()  # XXX NOT NOT LINKED LIST!
         for edge in edges:
             vertex2edges.add(edge.From, edge)
             vertex2edges.add(edge.To, edge)
-
-        # From = {}
-        # To = {}
+        # assign starting and end points of edges by sorting the edges per vertex
 
         maxWidth = 0
 
@@ -134,7 +194,7 @@ class SpanLayout(AbstractEdgeLayout):
             # prepare label (will be needed for spacing)
             labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()
 
-            # draw lins
+            # draw lines
             if self._revert:
                 spanLevel = maxDepth - depth[edge]
             else:
@@ -148,22 +208,20 @@ class SpanLayout(AbstractEdgeLayout):
             fromBounds = bounds[edge.From]
             toBounds = bounds[edge.To]
             minX = min(fromBounds.From, toBounds.From)
-            maxX = min(fromBounds.To, toBounds.To)
+            maxX = max(fromBounds.To, toBounds.To)
 
             if maxX > maxWidth:
                 maxWidth = maxX + 1
 
             if maxX - minX < labelwith + self._totalTextMargin:
-                middle = minX + (maxX - minX) / 2
+                middle = minX + (maxX - minX) // 2
                 textWidth = labelwith + self._totalTextMargin
-                minX = middle - textWidth / 2
-                maxX = middle + textWidth / 2
+                minX = middle - textWidth // 2
+                maxX = middle + textWidth // 2
 
             # connection
             if self.curve:
 
-                # scene.add(Rectangle((minX,height-buffer), maxX-minX, self._heightPerLevel -2 * buffer,
-                #  (255,255,255), (0,0,0), 1))
                 scene.add(Rectangle(scene, (minX, height-buffer), maxX-minX, self._heightPerLevel - 2 * buffer,
                                     (255, 255, 255), (0, 0, 0), 1))
 
@@ -172,35 +230,35 @@ class SpanLayout(AbstractEdgeLayout):
                 scene.add(Rectangle(scene, (minX, height-buffer), maxX-minX, self._heightPerLevel - 2 * buffer,
                                     (255, 255, 255), (0, 0, 0), 1))
 
-            labelx = minX + (maxX - minX) / 2 - labelwith / 2
-            labely = height + self._heightPerLevel / 2
+            # write label in the middle under
+            labelx = minX + (maxX - minX) // 2 - labelwith // 2
+            labely = height + self._heightPerLevel // 2
 
             scene.add(Text(scene, (labelx, labely), edge.getLabelWithNote(), 12, scene.color))
             scene.color = old
             self._shapes[(minX, height-buffer, maxX-minX, self._heightPerLevel - 2 * buffer)] = edge
 
+        # int maxWidth = 0;
         for bound in bounds.values():
             if bound.To > maxWidth:
                 maxWidth = bound.To
 
         if self._separationLines:
+            # find largest depth for each prefix type
             minDepths = {}
             for edge in edges:
                 edgeDepth = depth[edge]
-                if edge.getTypePrefix() in minDepths:
-                    typeDepth = minDepths[edge.getTypePrefix()]
-                else:
-                    typeDepth = None
+                typeDepth = minDepths.get(edge.getTypePrefix())
                 if typeDepth is None or typeDepth > edgeDepth:
                     typeDepth = edgeDepth
                     minDepths[edge.getTypePrefix()] = typeDepth
-            height = 0
+            height = self._baseline - 1
             for d in minDepths.values():
                 if not self._revert:
-                    height = self._baseline - 1 + (maxDepth - d) * self._heightPerLevel
+                    height += (maxDepth - d) * self._heightPerLevel
                 else:
-                    height = self._baseline - 1 + d * self._heightPerLevel
-            scene.color = (211, 211, 211)
+                    height += d * self._heightPerLevel
+            scene.color = (211, 211, 211)  # Color.LIGHT_GRAY
             scene.add(Line(scene, (0, height), (maxWidth, height), color=scene.color))
 
         return maxWidth+scene.offsetx, maxHeight+scene.offsety

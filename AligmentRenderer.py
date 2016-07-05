@@ -109,7 +109,7 @@ class AligmentRenderer:
                 scene.add(Line(scene, x1, x2, scene.color))
 
         # add spans
-        # graphics2D.translate(0, dim.height + heightFactor);
+        scene.translate(0, dim.height + self._heightFactor)
         dim = self._tokenLayout2.layout(instance, {}, scene)
         height += dim[0] + self._heightFactor
         if dim[1] > width:

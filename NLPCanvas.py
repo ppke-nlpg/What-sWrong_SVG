@@ -21,21 +21,100 @@ from AligmentRenderer import AligmentRenderer
 
 
 class NLPCanvas:
+
+    """
+     * Renderers for different render types.
+    """
+    @property
+    def renderers(self):
+        return self._renderers
+
+    @renderers.setter
+    def renderers(self, value):
+        self._renderers = value
+
+    """
+     * All tokens.
+    """
+    @property
+    def tokens(self):
+        return self._tokens
+
+    @tokens.setter
+    def tokens(self, value):
+        self._tokens = value
+
+    """
+     * All edges.
+    """
+    @property
+    def dependencies(self):
+        return self._dependencies
+
+    @dependencies.setter
+    def dependencies(self, value):
+        self._dependencies = value
+
+    """
+     * A collection of all edge types used in the current nlp instance.
+    """
+    @property
+    def usedTypes(self):
+        return self._usedTypes
+
+    @usedTypes.setter
+    def usedTypes(self, value):
+        self._usedTypes = value
+
+    """
+     * A collection of all token properties used in the current nlp instance.
+    """
+    @property
+    def usedProperties(self):
+        return self._usedProperties
+
+    @usedProperties.setter
+    def usedProperties(self, value):
+        self._usedProperties = value
+
+    """
+     * The filter that processes the current instance before it is drawn.
+    """
+    @property
+    def filter(self):
+        return self._filter
+
+    @filter.setter
+    def filter(self, value):
+        self._filter = value
+
+    """
+     * The renderer that draws the filtered NLPInstance to the canvas.
+    """
+    @property
+    def renderer(self):
+        return self.renderer
+
+    @renderer.setter
+    def renderer(self, value):
+        self._renderer = value
+
     def __init__(self, ui):
-        self._ui = ui
-        self._scene = QtGui.QGraphicsScene()
-        self._SVGScene = None
-        self._nlpInstance = None
-        self._dependencies = []
+        self._renderers = {NLPInstance.RenderType.single: self._renderer,
+                           NLPInstance.RenderType.alignment: AligmentRenderer()}
         self._tokens = []
+        self._dependencies = []
         self._usedTypes = set()
         self._usedProperties = set()
         self._filter = None
         self._renderer = SingleSentenceRenderer()
+        self._ui = ui
+        self._scene = QtGui.QGraphicsScene()
+        self._SVGScene = None
+        self._nlpInstance = None
         self._listeners = []
-        self._renderers = {NLPInstance.RenderType.single: self._renderer,
-                           NLPInstance.RenderType.alignment: AligmentRenderer()}
 
+    # XXX TO BE DELETED?
     def updateCanvas(self):
         # self._ui.graphicsView.setScene(self._scene)
         # br = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/test.svg")
@@ -43,6 +122,13 @@ class NLPCanvas:
         # self._scene.addItem(br)
         # self._ui.graphicsView.show()
         pass
+
+    """
+     * Return the renderer that draws the NLPInstance onto this canvas.
+     *
+     * @return the renderer that draws the NLPInstance onto this canvas.
+    """
+    # See the getter above...
 
     """
      * Sets the current NLP instance to draw. Note that this does not cause to canvas to be immediately updated.
@@ -56,12 +142,40 @@ class NLPCanvas:
         self._dependencies.extend(self._nlpInstance.edges)
         self._usedTypes.clear()
         for edge in self._dependencies:
-            self._usedTypes.add(edge.type)
+            self._usedTypes.add(edge.type)  # Union
         self._tokens.clear()
         self._tokens.extend(self._nlpInstance.tokens)
         self._usedProperties.clear()
         for token in self._tokens:
             self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # XXX Tuple and set!
+
+    """
+     * Returns the set of all token properties in the current nlp instance.
+     *
+     * @return the set of all token properties in the current nlp instance.
+    """
+    # See the getter above...
+
+    """
+     * Returns the set of all edge types in the current nlp instance.
+     *
+     * @return the set of all edge types in the current nlp instance.
+    """
+    # See the getter above...
+
+    """
+     * Returns the filter this canvas is applying to the nlp instance before it is drawn.
+     *
+     * @return the filter of this canvas.
+    """
+    # See the getter above...
+
+    """
+     * Sets the filter this canvas should apply to the nlp instance before it is drawn.
+     *
+     * @param filter the filter to use.
+    """
+    # See the setter above...
 
     """
      * Just calls the filter on the current instance.
@@ -87,3 +201,20 @@ class NLPCanvas:
         path = os.path.abspath("tmp.svg")
         print(path)
         return path
+
+    """
+     * Clears the current instance.
+    """
+    def clear(self):
+        self._tokens.clear()
+        self._dependencies.clear()
+        self._usedTypes.clear()
+        self._usedProperties.clear()
+
+    """
+     * Exports the current graph to EPS.
+     *
+     * @param file the eps file to export to.
+     * @throws IOException if IO goes wrong.
+    """
+    # Will be implemented in the far future...

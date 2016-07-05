@@ -307,9 +307,9 @@ class CorpusLoader:
     """
     def loadProperties(self, properties):
         self.setDirectory(properties.getProperty(self.property("dir"), ""))
-        formatString = properties.getProperty(self.property("format"), "TAB-separated")
-        if formatString == "CoNLL":
-            formatString = "TAB-separated"
+        # formatString = properties.getProperty(self.property("format"), "TAB-separated")
+        # if formatString == "CoNLL":
+        #     formatString = "TAB-separated"
         # accessory.filetypeComboBox.setSelectedItem(formats.get(formatString))
         for format in self._formats.values():
             format.loadProperties(properties, self._id)

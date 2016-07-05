@@ -52,9 +52,9 @@ class MyForm(QtGui.QMainWindow):
         self.ui.PushButtonAddGold.clicked.connect(self.browse_folder)
 
     def browse_folder(self):
-        app = QtGui.QMainWindow()
-        myapp = MyWindow(self)
-        myapp.show()
+        # app = QtGui.QMainWindow()
+        myapp2 = MyWindow(self)
+        myapp2.show()
 
     def choosen(self, factory):
 
@@ -66,13 +66,13 @@ class MyForm(QtGui.QMainWindow):
         instance = factory.create(l)
         instance.renderType = NLPInstance.RenderType.single
         # self.svgdraw(instance)
-        navigator = CorpusNavigator(instance=instance, ui=self.ui)
+        # navigator = CorpusNavigator(instance=instance, ui=self.ui)
 
-    def svgdraw(self, instance):
+    def svgdraw(self, _):  # instance
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem("/Users/Regina/Desktop/tmp1.svg")
-        text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
+        # text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
         scene.addItem(br)
         self.ui.graphicsView.show()
 

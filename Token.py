@@ -13,10 +13,10 @@ import re
 
 
 class Token:
-    # The index of the token.
-    # Returns the index of the token.
 
-    # @return the index of the token.
+    """
+     * The index of the token.
+    """
     @property
     def index(self):
         return self._index
@@ -30,7 +30,7 @@ class Token:
     """
     @property
     def tokenProperties(self):
-        return self._tokenProperties
+        return tuple(self._tokenProperties.values())
 
     @tokenProperties.setter
     def tokenProperties(self, value):
@@ -45,6 +45,12 @@ class Token:
         self._index = index
         self._tokenProperties = {}
 
+    """
+     * Returns the index of the token.
+     *
+     * @return the index of the token.
+    """
+    # See the getter above...
     """
      * Return all token properties (the property names). To get the value of a property use {@link
      * Token#getProperty(TokenProperty)}.
@@ -68,7 +74,7 @@ class Token:
      *
      * @param index the index of the property to remove.
 
-    # OR
+    OR
 
      * Remove the property value with the given name.
      *
@@ -87,14 +93,14 @@ class Token:
      * @param value the value of the property.
      * @return a pointer to this token.
 
-    # OR
+    OR
 
      * Add the property with name "Property [index]" and the given value.
      *
      * @param index    the index of the property
      * @param property the value of the property.
 
-    # OR
+    OR
 
      * Add a property with given value.
      *
@@ -129,13 +135,20 @@ class Token:
         return list(sorted(self._tokenProperties.keys()))
 
     """
+     * Returns a collection of all property values.
+     *
+     * @return a collection of all property values.
+    """
+    # See the getter above...
+
+    """
      * Check whether any of the property values contains the given string.
      *
      * @param substring the string to check whether it is contained in any property value of this token.
      * @return true iff there exists on property of this token for which <code>substring</code> is a substring of the
      *         corresponding property value.
 
-    # OR
+    OR
 
      * Check whether any of the property values of this token contains any of the strings in the given set of strings.
      *
@@ -158,7 +171,7 @@ class Token:
                     for substr in substrings:
                         if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
                             From, To = substr.split("-")
-                            if From <= property <= To:
+                            if int(From) <= property <= int(To):
                                 return True
                         elif (wholeWord and property == substr) or (not wholeWord and substr in property):
                             return True
@@ -172,10 +185,7 @@ class Token:
      * @return <code>index==((Token)o).index</code>
     """
     def __eq__(self, other):
-        if other is None or type(self) != type(other):
-            return False
-
-        return self._index == other.index
+        return other is not None and isinstance(other, self.__class__) and self._index == other.index
 
     """
      * Returns the index of the token.
@@ -209,7 +219,4 @@ class Token:
      * @return a string representation of this token.
     """
     def __str__(self):
-        value = str(self._index) + ":"
-        for prop in self._tokenProperties:
-            value += str(prop) + ", "
-        return value
+        return "{0}:{1}".format(self._index, ", ".join(str(prop) for prop in self._tokenProperties))

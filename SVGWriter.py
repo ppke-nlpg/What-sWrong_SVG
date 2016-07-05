@@ -29,8 +29,6 @@ class Scene:
         self.offsetx = 0
         self.offsety = 0
         self.svgname = None
-        sizey = height
-        return
 
     def translate(self, offx, offy):
         self.offsetx += offx
