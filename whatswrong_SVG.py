@@ -52,21 +52,23 @@ class MyForm(QtGui.QMainWindow):
         self.ui.PushButtonAddGold.clicked.connect(self.browse_folder)
 
     def browse_folder(self):
-        # app = QtGui.QMainWindow()
+        # app =
+        QtGui.QMainWindow()
         myapp2 = MyWindow(self)
         myapp2.show()
 
-    def choosen(self, factory):
-
-        directory = QtGui.QFileDialog.getOpenFileName(self)
-        print(directory)
-        f = open(directory)
-        l = list(f.readlines())
+    def choosen(self, factory, l=None):
+        if l is None:
+            directory = QtGui.QFileDialog.getOpenFileName(self)
+            print(directory)
+            f = open(directory)
+            l = list(f.readlines())
 
         instance = factory.create(l)
         instance.renderType = NLPInstance.RenderType.single
-        # self.svgdraw(instance)
-        # navigator = CorpusNavigator(instance=instance, ui=self.ui)
+        self.svgdraw(instance)
+        # navigator =
+        CorpusNavigator(instance=instance, ui=self.ui)
 
     def svgdraw(self, _):  # instance
         scene = QtGui.QGraphicsScene()
@@ -76,7 +78,23 @@ class MyForm(QtGui.QMainWindow):
         scene.addItem(br)
         self.ui.graphicsView.show()
 
+
+def test(f):
+    app = QtGui.QApplication(sys.argv)
+    myapp = MyForm()
+    myapp.choosen(MaltTab(), list(open(f).readlines()))
+    myapp.show()
+    myapp.raise_()
+
+    sys.exit(app.exec_())
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "DEBUG":
+        filename = "malt.txt"
+        if len(sys.argv) > 2:
+            filename = sys.argv[2]
+        test(filename)
+        exit(1)
     app = QtGui.QApplication(sys.argv)
     myapp = MyForm()
     myapp.show()

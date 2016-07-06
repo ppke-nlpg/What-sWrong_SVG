@@ -100,6 +100,7 @@ class NLPCanvas:
         self._renderer = value
 
     def __init__(self, ui):
+        self._renderer = SingleSentenceRenderer()
         self._renderers = {NLPInstance.RenderType.single: self._renderer,
                            NLPInstance.RenderType.alignment: AligmentRenderer()}
         self._tokens = []
@@ -107,7 +108,6 @@ class NLPCanvas:
         self._usedTypes = set()
         self._usedProperties = set()
         self._filter = None
-        self._renderer = SingleSentenceRenderer()
         self._ui = ui
         self._scene = QtGui.QGraphicsScene()
         self._SVGScene = None
@@ -139,7 +139,7 @@ class NLPCanvas:
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
         self._dependencies.clear()
-        self._dependencies.extend(self._nlpInstance.edges)
+        self._dependencies.extend(self._nlpInstance.getEdges())
         self._usedTypes.clear()
         for edge in self._dependencies:
             self._usedTypes.add(edge.type)  # Union
