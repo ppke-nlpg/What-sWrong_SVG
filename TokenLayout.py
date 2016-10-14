@@ -302,9 +302,9 @@ class TokenLayout:
             for p in token.getSortedProperties():
                 property = token.getProperty(p)
                 if index == 0:
-                    scene.color = (84, 84, 84)  # GREY
-                else:
                     scene.color = (0, 0, 0)  # BLACK
+                else:
+                    scene.color = (120, 120, 120)  # GREY
                 scene.add(TextToken(scene, (lastx, lasty), property, 12, scene.color))
                 lasty += self._rowHeight
                 labelwidth = Text(scene, (0, 0), property, 12, scene.color).getWidth()
