@@ -189,28 +189,30 @@ class NLPInstance:
     """
     def addEdge(self, edge=None, From=None, to=None, label=None, type=None, renderType=None, fromToken=None,
                 toToken=None):
-
-        if fromToken is not None and toToken is not None:
-            From = fromToken.index
-            to = toToken.index
-
-        if From is not None and to is not None:
-            if self.isInvalidEdge(From, to):
-                return
-            From = self._map[edge.index]
-            to = self._map[edge.index]
-            label = edge.label
-            note = edge.note
-            type = edge.type
-            renderType = edge.rederType
-            description = edge.description
+        if edge is not None:
+            self._edges.append(edge)
         else:
-            From = self._map[From]
-            to = self._map[to]
-            note = None
-            description = None
+            if fromToken is not None and toToken is not None:
+                From = fromToken.index
+                to = toToken.index
 
-        self._edges.append(Edge(From, to, label, note, type, renderType, description))
+            if From is not None and to is not None:
+                if self.isInvalidEdge(From, to):
+                    return
+                From = self._map[edge.index]
+                to = self._map[edge.index]
+                label = edge.label
+                note = edge.note
+                type = edge.type
+                renderType = edge.rederType
+                description = edge.description
+            else:
+                From = self._map[From]
+                to = self._map[to]
+                note = None
+                description = None
+
+            self._edges.append(Edge(From, to, label, note, type, renderType, description))
 
     def isInvalidEdge(self, From, to):
         fromToken = self._map[From]

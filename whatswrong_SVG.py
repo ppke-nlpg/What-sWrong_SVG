@@ -9,12 +9,14 @@ from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import *
 
 
+
 class MyWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, type=str):
         QtGui.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()
         self.ui.setupUi(self)
+        self.type = type
 
     def accept(self):
         instancefactory = None
@@ -38,7 +40,10 @@ class MyWindow(QtGui.QMainWindow):
             instancefactory = MaltTab()
 
         self.close()
-        self._parent.choosen(instancefactory)
+        if(self.type == "gold"):
+            self._parent.choosenGold(instancefactory)
+        if(self.type == "guess"):
+            self._parent.choosenGuess(instancefactory)
 
     def reject(self):
         self.close()
@@ -49,15 +54,25 @@ class MyForm(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.PushButtonAddGold.clicked.connect(self.browse_folder)
+        self.ui.PushButtonAddGold.clicked.connect(self.browse_gold_folder)
+        self.ui.PushButtonAddGuess.clicked.connect(self.browse_guess_folder)
+        self.gold=None
+        self.guess=None
 
-    def browse_folder(self):
+
+    def browse_gold_folder(self):
         # app =
         QtGui.QMainWindow()
-        myapp2 = MyWindow(self)
+        myapp2 = MyWindow(self, type="gold")
         myapp2.show()
 
-    def choosen(self, factory, l=None):
+    def browse_guess_folder(self):
+        # app =
+        QtGui.QMainWindow()
+        myapp2 = MyWindow(self, type="guess")
+        myapp2.show()
+
+    def choosenGold(self, factory, l=None):
         if l is None:
             directory = QtGui.QFileDialog.getOpenFileName(self)
             print(directory)
@@ -66,11 +81,30 @@ class MyForm(QtGui.QMainWindow):
 
         instance = factory.create(l)
         instance.renderType = NLPInstance.RenderType.single
-        self.svgdraw(instance)
-        # navigator =
-        CorpusNavigator(instance=instance, ui=self.ui)
 
-    def svgdraw(self, _):  # instance
+        self.gold = instance
+        self.createCorpusNavigator()
+
+    def choosenGuess(self, factory, l=None):
+        if l is None:
+            directory = QtGui.QFileDialog.getOpenFileName(self)
+            print(directory)
+            f = open(directory)
+            l = list(f.readlines())
+        instance = factory.create(l)
+        instance.renderType = NLPInstance.RenderType.single
+
+        self.guess = instance
+        self.createCorpusNavigator()
+
+    def createCorpusNavigator(self):
+
+        #self.svgdraw()
+        # navigator =
+        CorpusNavigator(instance=None, ui=self.ui, goldLoader=self.gold, guessLoader=self.guess)
+
+
+    def svgdraw(self):  # instance
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem("/Users/Regina/Desktop/tmp1.svg")

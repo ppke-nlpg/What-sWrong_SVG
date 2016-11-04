@@ -2,7 +2,10 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from NLPCanvas import NLPCanvas
+from NLPDiff import *
+from utils.Pair import *
 from PyQt4 import QtGui, QtCore, QtSvg
+
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
@@ -182,13 +185,14 @@ class CorpusNavigator:
      * @see com.googlecode.whatswrong.NLPDiff
     """
     def getDiffCorpus(self, gold, guess):
-        diffCorpus = self._diffCorpora[(gold, guess)]
-        if diffCorpus in None:
-            diffCorpus = []
-            self._diffCorpora[(gold, guess)] = diffCorpus
-        for i in range(0, min(len(gold)), len(guess)):
-            diffCorpus.append(self._diff.diff(gold[i], guess[i]))
-        return diffCorpus
+        # diffCorpus = self._diffCorpora[Pair(gold, guess)]
+        # if diffCorpus in None:
+        #     diffCorpus = []
+        #     self._diffCorpora[Pair(gold, guess)] = diffCorpus
+        # for i in range(0, min(len(gold)), len(guess)):
+        #     diffCorpus.append(self._diff.diff(gold[i], guess[i]))
+        # return diffCorpus
+        return self._diff.diff(gold, guess)
 
     """
      * Removes the difference corpus for the given corpus pair.
@@ -280,11 +284,11 @@ class CorpusNavigator:
         self._numberModel = None
         self._indicies = {}
         self._analyzer = None
-        self._diffCorpora = {}
+        self._diffCorpora = NLPDiff()
         self._goldCorpora = set()
         self._guessCorpora = set()
         self._indexSearcher = None
-        self._diff = None
+        self._diff = NLPDiff()
 
         self._guess = guessLoader
         self._gold = goldLoader
@@ -300,29 +304,26 @@ class CorpusNavigator:
 
         self.updateCanvas()
 
+
     """
      * Updates the canvas based on the current state of the navigator and the corpus loaders.
     """
     def updateCanvas(self):
-        # if self.gold.selected() is not None:
-        #     if self.guess.selected() is None:
-        #         maxIndex = len(self.gold.selected())
-        # TODO get selected
-
-        # maxIndex = self._gold.getSelected().size() - 1
-        # index = min(int(self._spinner.getValue()), maxIndex)
-        # self._spinner.setValue(index)
-        # self._numberModel.setMaximum(maxIndex)
-        # ofHowMany.setText(" of " + maxIndex)
-
-        # indexSearcher = self.getIndex(self._gold.getSelected())
+        if self._gold is not None:
+            if self._guess is None:
+                self._instance = self._gold
+            else:
+                self._instance = self.getDiffCorpus(self._gold, self._guess)
+        else:
+            pass
 
         self._canvas.setNLPInstance(self._instance)
-        file = self._canvas.updateNLPGraphics()
-
         scene = QtGui.QGraphicsScene()
+
+        file = self._canvas.updateNLPGraphics()
 
         self._ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem(file)
         scene.addItem(br)
         self._ui.graphicsView.show()
+
