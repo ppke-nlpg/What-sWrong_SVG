@@ -260,8 +260,8 @@ class CoNLL2000:
             row = row.strip().split()
             chunk = row[2]
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index))
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index))
             instance.addSpan(index, index, row[1], "pos")
             instance.addSpan(index, index, chunk, "chunk (BIO)")
             index += 1
@@ -332,8 +332,8 @@ class CoNLL2002:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index))
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index))
             instance.addSpan(index, index, row[1], "ner (BIO)")
             index += 1
 
@@ -402,8 +402,8 @@ class CoNLL2003:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index))
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index))
 
             instance.addSpan(index, index, row[1], "pos")
             instance.addSpan(index, index, row[2], "chunk (BIO")
@@ -476,8 +476,8 @@ class CoNLL2004:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index))
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -554,8 +554,8 @@ class CoNLL2005:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index))
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -633,12 +633,12 @@ class CoNLL2006:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[1]).\
-                addProperty(property="Index", value=row[0]).\
-                addProperty(property="Lemma", value=row[2]).\
-                addProperty(property="CPos", value=row[3]).\
-                addProperty(property="Pos", value=row[4]).\
-                addProperty(property="Feats", value=row[5])
+                addProperty(name="Word", value=row[1]).\
+                addProperty(name="Index", value=row[0]).\
+                addProperty(name="Lemma", value=row[2]).\
+                addProperty(name="CPos", value=row[3]).\
+                addProperty(name="Pos", value=row[4]).\
+                addProperty(name="Feats", value=row[5])
         for row in rows:
             row = row.strip().split()
             # dependency
@@ -724,13 +724,13 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[1]).\
-                addProperty(property="Index", value=row[0]).\
-                addProperty(property="Lemma", value=row[2]).\
-                addProperty(property="Pos", value=row[3]).\
-                addProperty(property="Split Form", value=row[5]).\
-                addProperty(property="Split Lemma", value=row(6)).\
-                addProperty(property="Split PoS", value=row[7])
+                addProperty(name="Word", value=row[1]).\
+                addProperty(name="Index", value=row[0]).\
+                addProperty(name="Lemma", value=row[2]).\
+                addProperty(name="Pos", value=row[3]).\
+                addProperty(name="Split Form", value=row[5]).\
+                addProperty(name="Split Lemma", value=row(6)).\
+                addProperty(name="Split PoS", value=row[7])
             if row[10] != "_":
                 index = int(row[0])
                 predicates.append(index)
@@ -764,9 +764,9 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property=self.ne, value=row[0]).\
-                addProperty(property=self.bbn, value=row[1]).\
-                addProperty(property=self.wn, value=row[2])
+                addProperty(name=self.ne, value=row[0]).\
+                addProperty(name=self.bbn, value=row[1]).\
+                addProperty(name=self.wn, value=row[2])
         index = 1
         for row in rows:
             row = row.strip().split()
@@ -831,19 +831,19 @@ class CoNLL2009:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().addProperty(property="Word", value="-Root-")
+        instance.addToken().addProperty(name="Word", value="-Root-")
         predicates = []
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[1]).\
-                addProperty(property="Index", value=row[0]).\
-                addProperty(property="Lemma", value=row[2]).\
-                addProperty(property="PLemma", value=row[3]).\
-                addProperty(property="PoS", value=row[4]).\
-                addProperty(property="PPoS", value=row[5]).\
-                addProperty(property="Feat", value=row[6]).\
-                addProperty(property="PFeat", value=row[7])
+                addProperty(name="Word", value=row[1]).\
+                addProperty(name="Index", value=row[0]).\
+                addProperty(name="Lemma", value=row[2]).\
+                addProperty(name="PLemma", value=row[3]).\
+                addProperty(name="PoS", value=row[4]).\
+                addProperty(name="PPoS", value=row[5]).\
+                addProperty(name="Feat", value=row[6]).\
+                addProperty(name="PFeat", value=row[7])
             if row[13] != "_":
                 index = int(row[0])
                 predicates.append(index)
@@ -922,14 +922,14 @@ class MaltTab:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().addProperty("Word", "-Root-")
+        instance.addToken().addProperty(name="Word", value="-Root-")
         index = 1
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(property="Word", value=row[0]).\
-                addProperty(property="Index", value=str(index)).\
-                addProperty(property="Pos", value=row[1])
+                addProperty(name="Word", value=row[0]).\
+                addProperty(name="Index", value=str(index)).\
+                addProperty(name="Pos", value=row[1])
             index += 1
         mod = 1
         for row in rows:
@@ -1007,10 +1007,10 @@ class CCG:
         for i in range(2, len(sentence)):
             w_t_c = sentence[i].split("|")  # In Python this is not regex
             instance.addToken().\
-                addProperty(property="Word", value=w_t_c[0]).\
-                addProperty(property="Tag", value=w_t_c[1]).\
-                addProperty(property="Category", value=w_t_c[2]).\
-                addProperty(property="Index", value=str(i-1))
+                addProperty(name="Word", value=w_t_c[0]).\
+                addProperty(name="Tag", value=w_t_c[1]).\
+                addProperty(name="Category", value=w_t_c[2]).\
+                addProperty(name="Index", value=str(i-1))
         # instance.addToken().addProperty("Word", "-Root-")
 
         mod = 1

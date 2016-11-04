@@ -3,6 +3,7 @@
 
 from TokenProperty import *
 import re
+from operator import attrgetter
 
 
 """
@@ -132,7 +133,8 @@ class Token:
      * @return a list of sorted token properties.
     """
     def getSortedProperties(self):
-        return list(sorted(self._tokenProperties.keys()))
+        sorted_properties = sorted(self._tokenProperties.keys(), key=attrgetter('level','name'))
+        return list(sorted_properties)
 
     """
      * Returns a collection of all property values.

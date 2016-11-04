@@ -74,11 +74,16 @@ class DependencyLayout(AbstractEdgeLayout):
         depth = Counter()
         offset = Counter()
         dominates = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
+        #----------------------------------------------------------------------------------------------------------------------
+        #sorted_edges_= sorted(edges_, key=lambda edge: edge.type )
+        #sorted_edges_= sorted(edges_, key=attrgetter('type', 'label', 'note'))
+        sorted_edges_ = sorted(edges_, key=lambda edge: edge.__str__())
+        #----------------------------------------------------------------------------------------------------------------------
 
-        for over in edges_:
-            for under in edges_:
+        for over in sorted_edges_:
+            for under in sorted_edges_:
                 if over != under and (over.covers(under) or over.coversSemi(under) or
-                   over.coversExactly(under) and over.lexicographicOrder(under) > 0):
+                                          over.coversExactly(under) and over.lexicographicOrder(under) > 0):
                     dominates[over] = under
 
         for edge in edges_:
@@ -100,6 +105,7 @@ class DependencyLayout(AbstractEdgeLayout):
         # have height of 1.5 levels
         if depth.getMaximum() == 0 and len(allLoops) > 0:
             maxHeight += self._heightPerLevel // 2
+
         # build map from vertex to incoming/outgoing edges
         vertex2edges = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
         for edge in edges_:
@@ -136,9 +142,7 @@ class DependencyLayout(AbstractEdgeLayout):
                         return diff
                     else:
                         return edge2.lexicographicOrder(edge1)
-
             connections = sorted(connections, key=functools.cmp_to_key(compare))
-
             # now put points along the token vertex wrt to ordering
             loopsOnVertex = loops[token]
             width = (bounds[token].getWidth() + self._vertexExtraSpace) //\
@@ -155,6 +159,7 @@ class DependencyLayout(AbstractEdgeLayout):
                 else:
                     To[edge] = point
                 x += width
+
             for loop in loopsOnVertex:
                 point = (x, self._baseline + self._maxHeight)
                 To[loop] = point
