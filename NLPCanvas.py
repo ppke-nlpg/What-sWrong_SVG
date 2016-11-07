@@ -93,7 +93,7 @@ class NLPCanvas:
     """
     @property
     def renderer(self):
-        return self.renderer
+        return self._renderer
 
     @renderer.setter
     def renderer(self, value):

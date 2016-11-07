@@ -8,6 +8,8 @@ from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import *
 
+from os.path import basename
+
 
 
 class MyWindow(QtGui.QMainWindow):
@@ -40,10 +42,7 @@ class MyWindow(QtGui.QMainWindow):
             instancefactory = MaltTab()
 
         self.close()
-        if(self.type == "gold"):
-            self._parent.choosenGold(instancefactory)
-        if(self.type == "guess"):
-            self._parent.choosenGuess(instancefactory)
+        self._parent.choosenFile(instancefactory, self.type)
 
     def reject(self):
         self.close()
@@ -56,9 +55,10 @@ class MyForm(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.PushButtonAddGold.clicked.connect(self.browse_gold_folder)
         self.ui.PushButtonAddGuess.clicked.connect(self.browse_guess_folder)
-        self.gold=None
-        self.guess=None
-
+        self.ui.ListViewSelectGold.itemSelectionChanged.connect(self.createCorpusNavigator)
+        self.ui.ListViewSelectGuess.itemSelectionChanged.connect(self.createCorpusNavigator)
+        self.goldMap = {}
+        self.guessMap = {}
 
     def browse_gold_folder(self):
         # app =
@@ -72,37 +72,43 @@ class MyForm(QtGui.QMainWindow):
         myapp2 = MyWindow(self, type="guess")
         myapp2.show()
 
-    def choosenGold(self, factory, l=None):
+    def choosenFile(self, factory, type, l=None):
         if l is None:
             directory = QtGui.QFileDialog.getOpenFileName(self)
             print(directory)
             f = open(directory)
             l = list(f.readlines())
 
-        instance = factory.create(l)
-        instance.renderType = NLPInstance.RenderType.single
+            item = QtGui.QListWidgetItem(basename(directory))
+            instance = factory.create(l)
+            instance.renderType = NLPInstance.RenderType.single
 
-        self.gold = instance
-        self.createCorpusNavigator()
+            if type == "gold":
+                self.ui.ListViewSelectGold.addItem(item)
+                self.goldMap[basename(directory)] = instance
+                self.ui.ListViewSelectGold.setItemSelected(item, True)
 
-    def choosenGuess(self, factory, l=None):
-        if l is None:
-            directory = QtGui.QFileDialog.getOpenFileName(self)
-            print(directory)
-            f = open(directory)
-            l = list(f.readlines())
-        instance = factory.create(l)
-        instance.renderType = NLPInstance.RenderType.single
 
-        self.guess = instance
-        self.createCorpusNavigator()
+            if type == "guess":
+                self.ui.ListViewSelectGuess.addItem(item)
+                self.guessMap[basename(directory)] = instance
+                self.ui.ListViewSelectGuess.setItemSelected(item, True)
 
     def createCorpusNavigator(self):
 
-        #self.svgdraw()
-        # navigator =
-        CorpusNavigator(instance=None, ui=self.ui, goldLoader=self.gold, guessLoader=self.guess)
+        selectedGold = self.ui.ListViewSelectGold.selectedItems()
+        gold = None
+        guess = None
+        if selectedGold:
+            gold = self.goldMap[str(selectedGold[0].text())]
+        selectedGuess = self.ui.ListViewSelectGuess.selectedItems()
+        if selectedGuess:
+            guess = self.guessMap[str(selectedGuess[0].text())]
+        if gold:
+            CorpusNavigator(instance=None, ui=self.ui, goldLoader=gold, guessLoader=guess)
 
+    def onItemChanged(self):
+        self.createCorpusNavigator()
 
     def svgdraw(self):  # instance
         scene = QtGui.QGraphicsScene()

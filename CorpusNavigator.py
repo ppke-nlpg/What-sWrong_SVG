@@ -314,6 +314,8 @@ class CorpusNavigator:
                 self._instance = self._gold
             else:
                 self._instance = self.getDiffCorpus(self._gold, self._guess)
+                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255))
+                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000))
         else:
             pass
 

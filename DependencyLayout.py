@@ -74,14 +74,9 @@ class DependencyLayout(AbstractEdgeLayout):
         depth = Counter()
         offset = Counter()
         dominates = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
-        #----------------------------------------------------------------------------------------------------------------------
-        #sorted_edges_= sorted(edges_, key=lambda edge: edge.type )
-        #sorted_edges_= sorted(edges_, key=attrgetter('type', 'label', 'note'))
-        sorted_edges_ = sorted(edges_, key=lambda edge: edge.__str__())
-        #----------------------------------------------------------------------------------------------------------------------
 
-        for over in sorted_edges_:
-            for under in sorted_edges_:
+        for over in edges_:
+            for under in edges_:
                 if over != under and (over.covers(under) or over.coversSemi(under) or
                                           over.coversExactly(under) and over.lexicographicOrder(under) > 0):
                     dominates[over] = under
