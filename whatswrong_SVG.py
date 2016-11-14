@@ -55,8 +55,8 @@ class MyForm(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.PushButtonAddGold.clicked.connect(self.browse_gold_folder)
         self.ui.PushButtonAddGuess.clicked.connect(self.browse_guess_folder)
-        self.ui.ListViewSelectGold.itemSelectionChanged.connect(self.createCorpusNavigator)
-        self.ui.ListViewSelectGuess.itemSelectionChanged.connect(self.createCorpusNavigator)
+        self.ui.ListWidgetSelectGold.itemSelectionChanged.connect(self.createCorpusNavigator)
+        self.ui.ListWidgetSelectGuess.itemSelectionChanged.connect(self.createCorpusNavigator)
         self.goldMap = {}
         self.guessMap = {}
 
@@ -84,24 +84,24 @@ class MyForm(QtGui.QMainWindow):
             instance.renderType = NLPInstance.RenderType.single
 
             if type == "gold":
-                self.ui.ListViewSelectGold.addItem(item)
+                self.ui.ListWidgetSelectGold.addItem(item)
                 self.goldMap[basename(directory)] = instance
-                self.ui.ListViewSelectGold.setItemSelected(item, True)
+                self.ui.ListWidgetSelectGold.setItemSelected(item, True)
 
 
             if type == "guess":
-                self.ui.ListViewSelectGuess.addItem(item)
+                self.ui.ListWidgetSelectGuess.addItem(item)
                 self.guessMap[basename(directory)] = instance
-                self.ui.ListViewSelectGuess.setItemSelected(item, True)
+                self.ui.ListWidgetSelectGuess.setItemSelected(item, True)
 
     def createCorpusNavigator(self):
 
-        selectedGold = self.ui.ListViewSelectGold.selectedItems()
+        selectedGold = self.ui.ListWidgetSelectGold.selectedItems()
         gold = None
         guess = None
         if selectedGold:
             gold = self.goldMap[str(selectedGold[0].text())]
-        selectedGuess = self.ui.ListViewSelectGuess.selectedItems()
+        selectedGuess = self.ui.ListWidgetSelectGuess.selectedItems()
         if selectedGuess:
             guess = self.guessMap[str(selectedGuess[0].text())]
         if gold:
