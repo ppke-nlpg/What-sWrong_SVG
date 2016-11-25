@@ -279,7 +279,7 @@ class CorpusNavigator:
      * @param edgeTypeFilter the EdgeTypeFilter we need when no corpus is selected and a example sentence is chosen and
      *                       passed to the NLPCanvas.
     """
-    def __init__(self, instance, ui, scene=None, goldLoader=None, guessLoader=None):
+    def __init__(self,  ui, canvas=NLPCanvas, scene=None, goldLoader=None, guessLoader=None, edgeTypeFilter=None):
         self._spinner = None
         self._numberModel = None
         self._indicies = {}
@@ -293,8 +293,11 @@ class CorpusNavigator:
         self._guess = guessLoader
         self._gold = goldLoader
         self._scene = scene
-        self._canvas = NLPCanvas(ui)
-        self._instance = instance
+        self._canvas = canvas
+        #self._canvas = NLPCanvas(ui)
+        self._edgeTypeFilter = edgeTypeFilter
+
+        self._instance = None
         self._ui = ui
 
         # guessLoader.addChangeListener(this);
@@ -318,14 +321,7 @@ class CorpusNavigator:
                 self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000))
         else:
             pass
-
         self._canvas.setNLPInstance(self._instance)
-        scene = QtGui.QGraphicsScene()
+        self._canvas.updateNLPGraphics()
 
-        file = self._canvas.updateNLPGraphics()
-
-        self._ui.graphicsView.setScene(scene)
-        br = QtSvg.QGraphicsSvgItem(file)
-        scene.addItem(br)
-        self._ui.graphicsView.show()
 

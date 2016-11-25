@@ -8,6 +8,15 @@ from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import *
 
+from TokenFilter import *
+from EdgeLabelFilter import *
+from EdgeTypeFilter import *
+from EdgeTokenFilter import *
+from FilterPipeline import *
+from NLPCanvas import *
+from EdgeTypeFilterPanel import *
+from DependencyFilterPanel import *
+
 from os.path import basename
 
 
@@ -55,8 +64,8 @@ class MyForm(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.PushButtonAddGold.clicked.connect(self.browse_gold_folder)
         self.ui.PushButtonAddGuess.clicked.connect(self.browse_guess_folder)
-        self.ui.ListWidgetSelectGold.itemSelectionChanged.connect(self.createCorpusNavigator)
-        self.ui.ListWidgetSelectGuess.itemSelectionChanged.connect(self.createCorpusNavigator)
+        self.ui.ListWidgetSelectGold.itemSelectionChanged.connect(self.refresh)
+        self.ui.ListWidgetSelectGuess.itemSelectionChanged.connect(self.refresh)
         self.goldMap = {}
         self.guessMap = {}
 
@@ -75,7 +84,6 @@ class MyForm(QtGui.QMainWindow):
     def choosenFile(self, factory, type, l=None):
         if l is None:
             directory = QtGui.QFileDialog.getOpenFileName(self)
-            print(directory)
             f = open(directory)
             l = list(f.readlines())
 
@@ -88,27 +96,43 @@ class MyForm(QtGui.QMainWindow):
                 self.goldMap[basename(directory)] = instance
                 self.ui.ListWidgetSelectGold.setItemSelected(item, True)
 
-
             if type == "guess":
                 self.ui.ListWidgetSelectGuess.addItem(item)
                 self.guessMap[basename(directory)] = instance
                 self.ui.ListWidgetSelectGuess.setItemSelected(item, True)
 
-    def createCorpusNavigator(self):
+    def refresh(self):
+
+        canvas = NLPCanvas(self.ui)
+
+        #create the filter pipeline
+        edgeTokenFilter = EdgeTokenFilter()
+        edgeLabelFilter = EdgeLabelFilter()
+        tokenFilter = TokenFilter()
+        edgeTypeFilter = EdgeTypeFilter()
+        filterPipeline = FilterPipeline(tokenFilter, edgeTypeFilter, edgeLabelFilter, edgeTokenFilter)
+
+        #set filter of canvas to be the pipeline
+        canvas.filter = filterPipeline
+
+        edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, canvas, edgeTypeFilter)
+        dependencyFilterPanel = DependencyFilterPanel (self.ui, canvas, edgeLabelFilter, edgeTokenFilter)
 
         selectedGold = self.ui.ListWidgetSelectGold.selectedItems()
         gold = None
         guess = None
         if selectedGold:
             gold = self.goldMap[str(selectedGold[0].text())]
+
         selectedGuess = self.ui.ListWidgetSelectGuess.selectedItems()
         if selectedGuess:
             guess = self.guessMap[str(selectedGuess[0].text())]
+
         if gold:
-            CorpusNavigator(instance=None, ui=self.ui, goldLoader=gold, guessLoader=guess)
+            CorpusNavigator(canvas=canvas, ui=self.ui, goldLoader=gold, guessLoader=guess, edgeTypeFilter=edgeTypeFilter)
 
     def onItemChanged(self):
-        self.createCorpusNavigator()
+        self.refresh()
 
     def svgdraw(self):  # instance
         scene = QtGui.QGraphicsScene()

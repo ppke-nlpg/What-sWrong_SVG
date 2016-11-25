@@ -3,6 +3,7 @@
 
 from NLPInstanceFilter import *
 from Token import *
+from NLPInstance import *
 
 class EdgeTokenFilter(NLPInstanceFilter):
 
@@ -107,19 +108,23 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and allows
      * all edges.
     """
-    def remove(self):
+    def clear(self):
         self._allowedProperties.clear()
 
-    """
-     * A Path represents a path of edges. Right it is simply a HashSet of edges.
-    """
     class Path(set):
-        pass
+        def __hash__(self):
+            value = 0
+            for e in self:
+                value += hash(e)
+            return value
 
     """
      * A Paths object is a mapping from token pairs to all paths between the corresponding tokens.
     """
-    class Paths(map):
+    class Paths():
+        def __init__(self):
+            self._map = {}
+
         """
          * Returns the set of paths between the given tokens.
          *
@@ -128,10 +133,10 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @return the set of paths between the tokens.
         """
         def getPaths(self, From=Token, to=Token):
-            paths = self[From]
-            if paths is None:
+            if From not in self._map:
                 return None
             else:
+                paths = self._map[From]
                 return paths[to]
 
         """
@@ -141,8 +146,8 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @return all tokens that have a paths that end in it and start at the provided token.
         """
         def getTos(self, From=Token):
-            result = self[From]
-            if result is not None:
+            if From in self._map:
+                result = self._map[From]
                 return result.keys()
             else:
                 return {}
@@ -154,16 +159,22 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param to   the end token.
          * @param path the path to add.
         """
-        def addPath(self, From=Token, to=Token, path=EdgeTokenFilter.Path):
-            paths = self[From]
-            if paths is None:
-                paths = {}
-                self[From] = paths
-            _set = paths[to]
-            if _set is None:
+        def addPath(self, From=Token, to=Token, path=None):
+            if From not in self._map:
+                self._map[From] = {}
+            paths = self._map[From]
+            if to not in paths:
                 _set = set()
                 paths[to] = _set
+            _set = paths[to]
             _set.add(path)
+
+        def __len__(self):
+            return len(self._map)
+
+        def keys(self):
+            return self._map.keys()
+
 
     """
      * Calculates all paths between all tokens of the provided edges.
@@ -202,12 +213,152 @@ class EdgeTokenFilter(NLPInstanceFilter):
             previous = paths
             if len(paths) == 0:
                 break
-            result = EdgeTokenFilter.Paths()
-            for p in pathsPerLength:
-                for From in p.keys():
-                    for to in p.getTos(From):
-                        for path in p.getPaths(From, to):
-                            result.addPath(From, to, path)
+        result = EdgeTokenFilter.Paths()
+        for p in pathsPerLength:
+            for From in p.keys():
+                for to in p.getTos(From):
+                    for path in p.getPaths(From, to):
+                        result.addPath(From, to, path)
+        return result
+    """
+     * If true at least one edge tokens must contain at least one property value that matches one of the allowed
+     * properties. If false it sufficient for the property values to contain an allowed property as substring.
+     *
+     * @return whether property values need to exactly match the allowed properties or can contain them as a substring.
+    """
+    @property
+    def wholeWords(self):
+        return self._wholeWords
+
+    """
+     * Sets whether the filter should check for whole word matches of properties.
+     *
+     * @param wholeWords true iff the filter should check for whold words.
+     * @see EdgeTokenFilter#isWholeWords()
+    """
+    @wholeWords.setter
+    def wholeWords(self, value):
+        self._wholeWords = value
+
+    """
+     * Filters out all edges that do not have at least one token with an allowed property value. If the set of allowed
+     * property values is empty this method just returns the original set and does nothing.
+     *
+     * @param original the input set of edges.
+     * @return the filtered out set of edges.
+    """
+    def filterEdges(self, original):
+        if len(self._allowedProperties) == 0:
+            return original
+        if (self._usePath):
+            paths = self.calculatePaths(original)
+            result = set()
+            for From in paths.keys():
+                if From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                    for to in paths.getTos(From):
+                        if to.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                            for path in paths.getPaths(From, to):
+                                result.update(path)
+            return result
+        else:
+            result = []
+            for edge in original:
+                if edge.From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
+                        edge.To.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                    result.append(edge)
             return result
 
-        #TODO
+    """
+     * Returns whether the given value is an allowed property value.
+     *
+     * @param propertyValue the value to test.
+     * @return whether the given value is an allowed property value.
+    """
+    def allows(self, propertyValue):
+        return propertyValue in self._allowedProperties
+
+    """
+     * First filters out edges and then filters out tokens without edges if {@link EdgeTokenFilter#isCollaps()} is true.
+     *
+     * @param original the original nlp instance.
+     * @return the filtered instance.
+     * @see NLPInstanceFilter#filter(NLPInstance)
+    """
+    def filter(self, original=NLPInstance):
+        edges = self.filterEdges(original.getEdges())
+        if not self._collaps:
+            return NLPInstance(tokens=original.tokens, edges=edges, renderType=original.renderType,
+                               splitPoints=original.splitPoints)
+        else:
+            tokens =  set()
+            for e in edges:
+                if e.renderType == Edge.RenderType.dependency:
+                    tokens.add(e.From)
+                    tokens.add(e.To)
+                else:
+                    if e.renderType == Edge.RenderType.span:
+                        for i in range(e.From.index, e.To.index + 1):
+                            tokens.add(original.getToken(index=i))
+
+            _sorted = sorted(tokens, key=attrgetter("int_index"))
+
+            for t in _sorted:
+                print(t.index)
+            updatedTokens = []
+            old2new = {}
+            new2old = {}
+            for t in _sorted:
+                newToken = Token(len(updatedTokens))
+                newToken.merge(original.tokens[int(t.index)])
+                old2new[t] = newToken
+                new2old[newToken] = t
+                updatedTokens.append(newToken)
+
+            updatedEdges = set()
+            for e in edges:
+                updatedEdges.add(Edge(From=old2new[e.From], To=old2new[e.To], label=e.label, note=e.note,
+                                      Type=e.type, renderType=e.renderType, description=e.description))
+            # find new split points
+            splitPoints = []
+            newTokenIndex = 0
+            for oldSplitPoint in original.splitPoints:
+                newToken = updatedTokens[newTokenIndex]
+                oldToken = new2old[newToken]
+                while newTokenIndex + 1 < len(tokens) and oldToken.index < oldSplitPoint:
+                    newTokenIndex += 1
+                    newToken = updatedTokens[newTokenIndex]
+                    oldToken = new2old[newToken]
+                splitPoints.append(newTokenIndex)
+
+            return NLPInstance(tokens=updatedTokens, edges=updatedEdges, renderType=original.renderType,
+                               splitPoints=splitPoints)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

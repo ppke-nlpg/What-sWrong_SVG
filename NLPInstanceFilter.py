@@ -6,6 +6,8 @@
  *
  * @author Sebastian Riedel
 """
+
+
 class NLPInstanceFilter():
     """
      * Filter the given instance.

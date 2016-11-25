@@ -6,6 +6,7 @@ from SVGWriter import *
 from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
 from AligmentRenderer import AligmentRenderer
+from NLPInstanceFilter import *
 
 """
  * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token
@@ -85,8 +86,17 @@ class NLPCanvas:
         return self._filter
 
     @filter.setter
-    def filter(self, value):
+    def filter(self, value=NLPInstanceFilter):
         self._filter = value
+
+    """
+     * Adds a new listener.
+     *
+     * @param listener the listener to add.
+    """
+
+    def addListener(self, listener):
+        self._listeners.append(listener)
 
     """
      * The renderer that draws the filtered NLPInstance to the canvas.
@@ -98,6 +108,7 @@ class NLPCanvas:
     @renderer.setter
     def renderer(self, value):
         self._renderer = value
+
 
     def __init__(self, ui):
         self._renderer = SingleSentenceRenderer()
@@ -113,6 +124,10 @@ class NLPCanvas:
         self._SVGScene = None
         self._nlpInstance = None
         self._listeners = []
+
+    def fireInstanceChanged(self):
+        for l in self._listeners:
+            l.instanceChanged()
 
     # XXX TO BE DELETED?
     def updateCanvas(self):
@@ -138,16 +153,17 @@ class NLPCanvas:
     """
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
-        self._dependencies.clear()
+        self._dependencies = []
         self._dependencies.extend(self._nlpInstance.getEdges())
         self._usedTypes.clear()
         for edge in self._dependencies:
             self._usedTypes.add(edge.type)  # Union
-        self._tokens.clear()
+        self._tokens = []
         self._tokens.extend(self._nlpInstance.tokens)
         self._usedProperties.clear()
         for token in self._tokens:
             self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # XXX Tuple and set!
+        self.fireInstanceChanged()
 
     """
      * Returns the set of all token properties in the current nlp instance.
@@ -183,24 +199,35 @@ class NLPCanvas:
      * @return the filtered instance.
     """
     def filterInstance(self):
-        pass
+        return self._filter.filter(NLPInstance(tokens=self._tokens, edges=self._dependencies,
+                                        renderType=self._nlpInstance.renderType,
+                                        splitPoints=self._nlpInstance.splitPoints))
 
     """
      * Updates the current graph. This takes into account all changes to the filter,
       NLP instance and drawing parameters.
     """
     def updateNLPGraphics(self):
-        # filtered = self.filterInstance()
-        filtered = self._nlpInstance
+        filtered = self.filterInstance()
+        print("Edges: " + str(len(filtered.getEdges())))
+        print("Tokens: " + str(len(filtered.tokens)))
         self._SVGScene = Scene(width=800)
+
         renderer = self._renderers[filtered.renderType]
+
         dim = renderer.render(filtered, self._SVGScene)
+
         self._SVGScene = Scene(width=dim[0], height=dim[1])
+
         renderer.render(filtered, self._SVGScene)
         self._SVGScene.write_svg("tmp.svg")
         path = os.path.abspath("tmp.svg")
-        print(path)
-        return path
+
+        scene = QtGui.QGraphicsScene()
+        self._ui.graphicsView.setScene(scene)
+        br = QtSvg.QGraphicsSvgItem(path)
+        scene.addItem(br)
+        self._ui.graphicsView.show()
 
     """
      * Clears the current instance.

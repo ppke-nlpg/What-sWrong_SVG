@@ -185,7 +185,7 @@ class Edge:
         if index == -1:
             return ""
         else:
-            return self._type[index+1:]
+                return self._type[index+1:]
 
     """
      * A description of the edge

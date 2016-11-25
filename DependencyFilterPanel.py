@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+
+from NLPCanvas import *
+from EdgeLabelFilter import *
+from EdgeTokenFilter import *
+
+"""
+ * A DependencyFilterPanel controls a EdgeLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after changes to
+ * the filters.
+ *
+ * @author Sebastian Riedel
+"""
+class DependencyFilterPanel:
+    """
+         * Creates a new DependencyFilterPanel.
+         *
+         * @param nlpCanvas       the NLPCanvas to update when the filters are changed through this panel.
+         * @param edgeLabelFilter The EdgeLabelFilter to control through this panel.
+         * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
+    """
+    def __init__(self, gui, nlpCanvas=NLPCanvas, edgeLabelFilter=EdgeLabelFilter, edgeTokenFilter=EdgeTokenFilter):
+        labelField = gui.lineEdit
+
+        def labelFieldChanged(text):
+            print("labelFieldChanged(")
+            edgeLabelFilter.clear()
+            split = text.split(",")
+            for label in split:
+                edgeLabelFilter.addAllowedLabel(label)
+            nlpCanvas.updateNLPGraphics()
+        labelField.textEdited.connect(labelFieldChanged)
+
+        tokenTextField = gui.lineEdit_2
+
+        def tokenTextFieldChanged(text):
+            print("tokenTextFieldChanged")
+            edgeTokenFilter.clear()
+            split = text.split(",")
+            for property in split:
+                edgeTokenFilter.addAllowedProperty(property)
+            nlpCanvas.updateNLPGraphics()
+        tokenTextField.textEdited.connect(tokenTextFieldChanged)
+
+        usePath = gui.checkBox_3
+
+        def usePathAction(value):
+            print("usePathAction")
+            edgeTokenFilter.usePath = value == 2 #checked
+            nlpCanvas.updateNLPGraphics()
+        usePath.stateChanged.connect(usePathAction)
+
+        collapse= gui.checkBox_4
+
+        def collapseAction(value):
+            print("collapseAction")
+            edgeTokenFilter.collaps = value == 2  # checked
+            nlpCanvas.updateNLPGraphics()
+        collapse.stateChanged.connect(collapseAction)
+
+        wholeWords = gui.checkBox_5
+
+        def wholeWordsAction(value):
+            print("wholeWordsAction")
+            edgeTokenFilter.wholeWords = value == 2  # checked
+            nlpCanvas.updateNLPGraphics()
+        wholeWords.stateChanged.connect(wholeWordsAction)

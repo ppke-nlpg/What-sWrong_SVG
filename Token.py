@@ -31,7 +31,7 @@ class Token:
     """
     @property
     def tokenProperties(self):
-        return tuple(self._tokenProperties.values())
+        return self._tokenProperties
 
     @tokenProperties.setter
     def tokenProperties(self, value):
@@ -195,7 +195,7 @@ class Token:
      * @return the index of the token.
     """
     def __hash__(self):
-        return hash(self._index)
+        return int(self.index)
 
     """
      * Inserts all properties and values of the other token into this token. In case of clashes the value of the other
@@ -222,3 +222,7 @@ class Token:
     """
     def __str__(self):
         return "{0}:{1}".format(self._index, ", ".join(str(prop) for prop in self._tokenProperties))
+
+    @property
+    def int_index(self):
+        return int(self._index)

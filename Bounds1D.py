@@ -56,3 +56,6 @@ class Bounds1D:
     """
     def getMiddle(self):
         return self._From + self.getWidth() // 2  # Integer division!
+
+    def __hash__(self):
+        return hash(str(self._From)) + 31 * hash(str(self._To))

@@ -207,7 +207,7 @@ class Rectangle:
 class Text:
     def __init__(self, scene, origin, text, size, color):
         self.origin = origin
-        self.text = text
+        self.text = str(text)
         self.size = size
         self.color = color
         self.offsetx = scene.offsetx
