@@ -59,7 +59,7 @@ class TokenFilter(NLPInstanceFilter):
     """
      * Remove all allowed strings. In this state the filter allows all tokens.
     """
-    def clearAllowedWords(self):
+    def clearAllowedStrings(self):
         self._allowedStrings.clear()
 
     """
@@ -76,7 +76,9 @@ class TokenFilter(NLPInstanceFilter):
      * @param name the name of the property to show again.
     """
     def removeForbiddenProperty(self, name=str):
-        self._forbiddenProperties.remove(name)
+        p = TokenProperty(name)
+        if p in self._forbiddenProperties:
+            self._forbiddenProperties.remove(p)
 
     """
      * Returns an unmodifiable view on the set of all allowed token properties.
@@ -129,7 +131,7 @@ class TokenFilter(NLPInstanceFilter):
                             break
                         # todo: this can surely be implemented in a nicer way (e.g. no reparsing of interval)
                         if property.name == "Index" and re.match("\d+-\d+", allowed):
-                            split = allowed.split("[-]")
+                            split = allowed.split("-")
                             From = int(split[0])
                             to = int(split[1])
                             for i in range(From, to+1):
@@ -142,19 +144,25 @@ class TokenFilter(NLPInstanceFilter):
                                     stopped = True
                                     break
                         else:
-                            newVertex = Token(len(tokens))
-                            newVertex.merge(t)
-                            tokens.append(newVertex)
-                            old2new[t] = newVertex
-                            new2old[newVertex] = t
-                            break
+                            if self._wholeWord:
+                                b = prop == allowed
+                            else:
+                                b= allowed in prop
+                            if b:
+                                newVertex = Token(len(tokens))
+                                newVertex.merge(t)
+                                tokens.append(newVertex)
+                                old2new[t] = newVertex
+                                new2old[newVertex] = t
+                                stopped = True
+                                break
             # update edges and remove those that have vertices not in the new vertex set
             edges = []
             for e in original.getEdges():
+                if e.From not in old2new or e.To not in old2new:
+                    continue
                 newFrom = old2new[e.From]
                 newTo = old2new[e.To]
-                if newFrom is None or newTo is None:
-                    continue
                 edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, Type=e.type,
                                    renderType=e.renderType, description=e.description)))
             # find new split points (have to be changed becouse instance has new token sequence)
@@ -167,7 +175,7 @@ class TokenFilter(NLPInstanceFilter):
                     newTokenIndex += 1
                     newToken = tokens[newTokenIndex]
                     oldToken = new2old[newToken]
-            return NLPInstance(tokens=self.filterTokens(original.tokens), edges=edges,
+            return NLPInstance(tokens=self.filterTokens(tokens), edges=edges,
                                renderType=original.renderType, splitPoints=splitPoints)
         else:
             filteredTokens = self.filterTokens(original.tokens)

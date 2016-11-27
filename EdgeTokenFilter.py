@@ -302,8 +302,6 @@ class EdgeTokenFilter(NLPInstanceFilter):
 
             _sorted = sorted(tokens, key=attrgetter("int_index"))
 
-            for t in _sorted:
-                print(t.index)
             updatedTokens = []
             old2new = {}
             new2old = {}

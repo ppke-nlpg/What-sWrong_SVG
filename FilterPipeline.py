@@ -19,7 +19,6 @@ class FilterPipeline(NLPInstanceFilter):
         # * The list of filters.
         self._filters = []
         self._filters.extend(list(filters))
-        print(self._filters)
 
     """
      * Applies the 1st filter to the original instance, the 2nd filter to the result of the 1st filter, and so on.
@@ -30,7 +29,6 @@ class FilterPipeline(NLPInstanceFilter):
      """
     def filter(self, original=NLPInstance):
         instance = original
-        print(self._filters)
         for filter in self._filters:
             instance = filter.filter(instance)
         return instance

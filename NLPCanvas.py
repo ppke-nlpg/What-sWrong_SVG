@@ -109,7 +109,9 @@ class NLPCanvas:
     def renderer(self, value):
         self._renderer = value
 
-
+    """
+         * Creates a new canvas with default size.
+    """
     def __init__(self, ui):
         self._renderer = SingleSentenceRenderer()
         self._renderers = {NLPInstance.RenderType.single: self._renderer,
@@ -124,7 +126,21 @@ class NLPCanvas:
         self._SVGScene = None
         self._nlpInstance = None
         self._listeners = []
+        self._changeListeners =[]
 
+    def addChangeListener(self, changeListener):
+        self._changeListeners.append(changeListener)
+
+    """
+     * Fired whenever this canvas is changed.
+    """
+    def fireChanged(self):
+        for changeListener in self._changeListeners:
+            changeListener.stateChanged()
+
+    """
+     * Notifies all listeners about an instance change event.
+    """
     def fireInstanceChanged(self):
         for l in self._listeners:
             l.instanceChanged()
@@ -209,8 +225,6 @@ class NLPCanvas:
     """
     def updateNLPGraphics(self):
         filtered = self.filterInstance()
-        print("Edges: " + str(len(filtered.getEdges())))
-        print("Tokens: " + str(len(filtered.tokens)))
         self._SVGScene = Scene(width=800)
 
         renderer = self._renderers[filtered.renderType]
@@ -228,6 +242,7 @@ class NLPCanvas:
         br = QtSvg.QGraphicsSvgItem(path)
         scene.addItem(br)
         self._ui.graphicsView.show()
+        self.fireChanged()
 
     """
      * Clears the current instance.

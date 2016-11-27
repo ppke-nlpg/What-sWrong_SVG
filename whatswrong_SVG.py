@@ -16,6 +16,7 @@ from FilterPipeline import *
 from NLPCanvas import *
 from EdgeTypeFilterPanel import *
 from DependencyFilterPanel import *
+from TokenFilterPanel import *
 
 from os.path import basename
 
@@ -93,7 +94,7 @@ class MyForm(QtGui.QMainWindow):
 
             if type == "gold":
                 self.ui.ListWidgetSelectGold.addItem(item)
-                self.goldMap[basename(directory)] = instance
+                self.goldMap[basename(directory)].append = instance
                 self.ui.ListWidgetSelectGold.setItemSelected(item, True)
 
             if type == "guess":
@@ -117,6 +118,7 @@ class MyForm(QtGui.QMainWindow):
 
         edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, canvas, edgeTypeFilter)
         dependencyFilterPanel = DependencyFilterPanel (self.ui, canvas, edgeLabelFilter, edgeTokenFilter)
+        tokenFilterPanel = TokenFilterPanel(self.ui, canvas, tokenFilter)
 
         selectedGold = self.ui.ListWidgetSelectGold.selectedItems()
         gold = None

@@ -19,6 +19,7 @@ class EdgeTypeFilterPanel:
         self._falsePositives = gui.checkBox_8
         self._falseNegatives = gui.checkBox_9
         self._justChanged = set()
+
         self._edgeTypeFilter = edgeTypeFilter
         self._nlpCanvas.addListener(listener=self)
         edgeTypeFilter.addListener(listener=self)
@@ -40,7 +41,6 @@ class EdgeTypeFilterPanel:
         self._types.itemSelectionChanged.connect(valueChanged)
 
         def matchActionPerformed(value):
-            print("Match action: " + str(value))
             #if self._matches.checkState() == 2: #Checked
             if value == 2: #Checked
                 self._edgeTypeFilter.addAllowedPostfixType("Match")
@@ -51,7 +51,6 @@ class EdgeTypeFilterPanel:
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
-            print("Negative action: " + str(value))
             if value == 2: #Checked
                 self._edgeTypeFilter.addAllowedPostfixType("FN")
             else:
@@ -61,7 +60,6 @@ class EdgeTypeFilterPanel:
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
-            print("Positive action: " + str(value))
             if value == 2:  # Checked
                 self._edgeTypeFilter.addAllowedPostfixType("FP")
             else:
@@ -93,7 +91,7 @@ class EdgeTypeFilterPanel:
         for index in range(0,len(self._types)):
             t = str(self._types.item(index))
             if self._edgeTypeFilter.allowsPrefix(t):
-                self._types.setItemSelected(index)
+                self._types.setItemSelected(self._types.item(index), True)
 
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.

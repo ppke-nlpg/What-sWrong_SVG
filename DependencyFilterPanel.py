@@ -45,7 +45,6 @@ class DependencyFilterPanel:
         usePath = gui.checkBox_3
 
         def usePathAction(value):
-            print("usePathAction")
             edgeTokenFilter.usePath = value == 2 #checked
             nlpCanvas.updateNLPGraphics()
         usePath.stateChanged.connect(usePathAction)
@@ -53,7 +52,6 @@ class DependencyFilterPanel:
         collapse= gui.checkBox_4
 
         def collapseAction(value):
-            print("collapseAction")
             edgeTokenFilter.collaps = value == 2  # checked
             nlpCanvas.updateNLPGraphics()
         collapse.stateChanged.connect(collapseAction)
@@ -61,7 +59,6 @@ class DependencyFilterPanel:
         wholeWords = gui.checkBox_5
 
         def wholeWordsAction(value):
-            print("wholeWordsAction")
             edgeTokenFilter.wholeWords = value == 2  # checked
             nlpCanvas.updateNLPGraphics()
         wholeWords.stateChanged.connect(wholeWordsAction)
