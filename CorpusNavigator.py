@@ -280,13 +280,13 @@ class CorpusNavigator:
      *                       passed to the NLPCanvas.
     """
     def __init__(self,  ui, canvas=NLPCanvas, scene=None, goldLoader=None, guessLoader=None, edgeTypeFilter=None):
-        self._spinner = None
+        self._spinner = ui.spinBox
         self._numberModel = None
         self._indicies = {}
         self._analyzer = None
         self._diffCorpora = NLPDiff()
-        self._goldCorpora = set()
-        self._guessCorpora = set()
+        self._goldCorpora = goldLoader
+        self._guessCorpora = guessLoader
         self._indexSearcher = None
         self._diff = NLPDiff()
 
@@ -305,6 +305,26 @@ class CorpusNavigator:
 
         # results = []
 
+        if self._goldCorpora is not None:
+            if self._guessCorpora is None:
+                index = len(self._goldCorpora)
+            else:
+                index = min(len(self._goldCorpora),len(self._guessCorpora))
+
+            self._spinner.setMaximum(index)
+            self._ui.label_12.setText("of " + str(index))
+            self._spinner.setValue(1)
+            self._spinner.setMinimum(1)
+        else:
+            self._spinner.setValue(0)
+            self._spinner.setMinimum(0)
+            self._ui.label_12.setText("of 0")
+
+        def indexChanged(index):
+            print("New index: " + str(index))
+            self.updateCanvas()
+        self._spinner.valueChanged.connect(indexChanged)
+
         self.updateCanvas()
 
 
@@ -312,13 +332,14 @@ class CorpusNavigator:
      * Updates the canvas based on the current state of the navigator and the corpus loaders.
     """
     def updateCanvas(self):
+        index = self._spinner.value() - 1
         if self._gold is not None:
             if self._guess is None:
-                self._instance = self._gold
+                self._instance = self._goldCorpora[index]
             else:
-                self._instance = self.getDiffCorpus(self._gold, self._guess)
-                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255))
-                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000))
+                self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
+                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255)) #Blue
+                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000)) #Red
         else:
             pass
         self._canvas.setNLPInstance(self._instance)

@@ -82,25 +82,44 @@ class MyForm(QtGui.QMainWindow):
         myapp2 = MyWindow(self, type="guess")
         myapp2.show()
 
-    def choosenFile(self, factory, type, l=None):
-        if l is None:
-            directory = QtGui.QFileDialog.getOpenFileName(self)
-            f = open(directory)
-            l = list(f.readlines())
+    def choosenFile(self, factory, type):
+        directory = QtGui.QFileDialog.getOpenFileName(self)
+        corpus = []
+        if type == "gold":
+            self.goldMap[basename(directory)] = corpus
+        if type == "guess":
+            self.guessMap[basename(directory)] = corpus
 
-            item = QtGui.QListWidgetItem(basename(directory))
-            instance = factory.create(l)
+        f = open(directory)
+        l = list(f.readlines())
+
+        item = QtGui.QListWidgetItem(basename(directory))
+
+        rows = []
+        instanceNr = 0
+        for line in l:
+            line = line.strip()
+            if line == "":
+                instanceNr+=1
+                instance = factory.create(rows)
+                instance.renderType = NLPInstance.RenderType.single
+                corpus.append(instance)
+                del rows[:]
+            else:
+                rows.append(line)
+        if len(rows) > 0:
+            instanceNr+=1
+            instance = factory.create(rows)
             instance.renderType = NLPInstance.RenderType.single
+            corpus.append(instance)
 
-            if type == "gold":
-                self.ui.ListWidgetSelectGold.addItem(item)
-                self.goldMap[basename(directory)].append = instance
-                self.ui.ListWidgetSelectGold.setItemSelected(item, True)
+        if type == "gold":
+            self.ui.ListWidgetSelectGold.addItem(item)
+            self.ui.ListWidgetSelectGold.setItemSelected(item, True)
 
-            if type == "guess":
-                self.ui.ListWidgetSelectGuess.addItem(item)
-                self.guessMap[basename(directory)] = instance
-                self.ui.ListWidgetSelectGuess.setItemSelected(item, True)
+        if type == "guess":
+            self.ui.ListWidgetSelectGuess.addItem(item)
+            self.ui.ListWidgetSelectGuess.setItemSelected(item, True)
 
     def refresh(self):
 

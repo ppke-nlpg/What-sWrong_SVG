@@ -22,7 +22,6 @@ class TokenFilterPanel():
         self._updating = False
 
         def itemActivated(item):
-            print("Item activated")
             if len(self._list) == 0 or len(self._listModel) == 0:
                 return
             for index in range(0,len(self._list)):
@@ -39,7 +38,6 @@ class TokenFilterPanel():
         self._allowed = gui.lineEdit_3
 
         def allowedChanged(text):
-            print("Allowed changed")
             self._tokenFilter.clearAllowedStrings()
             split = text.split(',')
             for property in split:
@@ -58,7 +56,6 @@ class TokenFilterPanel():
         self._wholeWords.stateChanged.connect(wholeWordActionPerformed)
 
     def valueChanged(self):
-        print("Item selection changed")
         if len(self._list) == 0 or len(self._listModel) == 0:
             return
         for index in range(0,len(self._list)):
