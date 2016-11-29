@@ -20,7 +20,7 @@ class DependencyFilterPanel:
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
     def __init__(self, gui, nlpCanvas=NLPCanvas, edgeLabelFilter=EdgeLabelFilter, edgeTokenFilter=EdgeTokenFilter):
-        labelField = gui.lineEdit
+        labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):
             print("labelFieldChanged(")
@@ -31,7 +31,7 @@ class DependencyFilterPanel:
             nlpCanvas.updateNLPGraphics()
         labelField.textEdited.connect(labelFieldChanged)
 
-        tokenTextField = gui.lineEdit_2
+        tokenTextField = gui.edgeFilterTokenLineEdit
 
         def tokenTextFieldChanged(text):
             print("tokenTextFieldChanged")
@@ -42,21 +42,21 @@ class DependencyFilterPanel:
             nlpCanvas.updateNLPGraphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 
-        usePath = gui.checkBox_3
+        usePath = gui.onlyPathCheckBox
 
         def usePathAction(value):
             edgeTokenFilter.usePath = value == 2 #checked
             nlpCanvas.updateNLPGraphics()
         usePath.stateChanged.connect(usePathAction)
 
-        collapse= gui.checkBox_4
+        collapse= gui.collapsCheckBox
 
         def collapseAction(value):
             edgeTokenFilter.collaps = value == 2  # checked
             nlpCanvas.updateNLPGraphics()
         collapse.stateChanged.connect(collapseAction)
 
-        wholeWords = gui.checkBox_5
+        wholeWords = gui.edgeFilterWholeWordsCheckBox
 
         def wholeWordsAction(value):
             edgeTokenFilter.wholeWords = value == 2  # checked

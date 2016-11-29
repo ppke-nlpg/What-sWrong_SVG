@@ -197,32 +197,32 @@ class NLPInstance:
                 to = toToken.index
 
             if From is not None and to is not None:
-                if self.isInvalidEdge(From, to):
-                    return
-                From = self._map[edge.index]
-                to = self._map[edge.index]
-                label = edge.label
-                note = edge.note
-                type = edge.type
-                renderType = edge.rederType
-                description = edge.description
+                #if self.isInvalidEdge(From, to):
+                #    return
+                From = self._map[From]
+                to = self._map[to]
+                label = label
+                type = type
+                renderType = renderType
             else:
                 From = self._map[From]
                 to = self._map[to]
-                note = None
-                description = None
 
-            self._edges.append(Edge(From, to, label, note, type, renderType, description))
-
+        self._edges.append(Edge(From=From, To=to, label=label, Type=type, renderType=renderType))
+    """
     def isInvalidEdge(self, From, to):
-        fromToken = self._map[From]
-        toToken = self._map[to]
-        if fromToken is None:
+        if TokenProperty(From) not in  self._map:
             print('There is no token at index: {0} for tokens {1}'.format(From, self._map))
-        if toToken is None:
+            fromToken = False
+        else:
+            fromToken = True
+        if TokenProperty(to) not in self._map:
             print('There is no token at index: {0} for tokens {1}'.format(to, self._map))
-        return toToken is None or fromToken is None
-
+            toToken = False
+        else:
+            toToken = True
+        return not toToken or not fromToken
+    """
     """
      * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#span}
      *
@@ -248,9 +248,9 @@ class NLPInstance:
      * @see com.googlecode.whatswrong.Edge
     """
     def addSpan(self, From, to, label, type, desc=None):
-        if self.isInvalidEdge(From, to):
-            return
-        edge = Edge(self._map[From], self._map[to], label, type, renderType=Edge.RenderType.span, description=desc)
+        #if self.isInvalidEdge(From, to):
+        #    return
+        edge = Edge(self._map[str(From)], self._map[str(to)], label, type, renderType=Edge.RenderType.span, description=desc)
         self._edges.append(edge)
 
     """
@@ -278,8 +278,8 @@ class NLPInstance:
      * @see com.googlecode.whatswrong.Edge
     """
     def addDependency(self, From, to, label, type, des=None):
-        if self.isInvalidEdge(From, to):
-            return
+        #if self.isInvalidEdge(From, to):
+            #return
         edge = Edge(self._map[From], self._map[to], label, type, renderType=Edge.RenderType.dependency, description=des)
         self._edges.append(edge)
 

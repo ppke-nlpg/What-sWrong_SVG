@@ -63,10 +63,10 @@ class MyForm(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.PushButtonAddGold.clicked.connect(self.browse_gold_folder)
-        self.ui.PushButtonAddGuess.clicked.connect(self.browse_guess_folder)
-        self.ui.ListWidgetSelectGold.itemSelectionChanged.connect(self.refresh)
-        self.ui.ListWidgetSelectGuess.itemSelectionChanged.connect(self.refresh)
+        self.ui.pushButtonAddGold.clicked.connect(self.browse_gold_folder)
+        self.ui.addGuessPushButton.clicked.connect(self.browse_guess_folder)
+        self.ui.selectGoldListWidget.itemSelectionChanged.connect(self.refresh)
+        self.ui.selectGuessListWidget.itemSelectionChanged.connect(self.refresh)
         self.goldMap = {}
         self.guessMap = {}
 
@@ -98,6 +98,8 @@ class MyForm(QtGui.QMainWindow):
         rows = []
         instanceNr = 0
         for line in l:
+            if instanceNr == 200:
+                break
             line = line.strip()
             if line == "":
                 instanceNr+=1
@@ -114,12 +116,12 @@ class MyForm(QtGui.QMainWindow):
             corpus.append(instance)
 
         if type == "gold":
-            self.ui.ListWidgetSelectGold.addItem(item)
-            self.ui.ListWidgetSelectGold.setItemSelected(item, True)
+            self.ui.selectGoldListWidget.addItem(item)
+            self.ui.selectGoldListWidget.setItemSelected(item, True)
 
         if type == "guess":
-            self.ui.ListWidgetSelectGuess.addItem(item)
-            self.ui.ListWidgetSelectGuess.setItemSelected(item, True)
+            self.ui.selectGuessListWidget.addItem(item)
+            self.ui.selectGuessListWidget.setItemSelected(item, True)
 
     def refresh(self):
 
@@ -139,13 +141,13 @@ class MyForm(QtGui.QMainWindow):
         dependencyFilterPanel = DependencyFilterPanel (self.ui, canvas, edgeLabelFilter, edgeTokenFilter)
         tokenFilterPanel = TokenFilterPanel(self.ui, canvas, tokenFilter)
 
-        selectedGold = self.ui.ListWidgetSelectGold.selectedItems()
+        selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
         guess = None
         if selectedGold:
             gold = self.goldMap[str(selectedGold[0].text())]
 
-        selectedGuess = self.ui.ListWidgetSelectGuess.selectedItems()
+        selectedGuess = self.ui.selectGuessListWidget.selectedItems()
         if selectedGuess:
             guess = self.guessMap[str(selectedGuess[0].text())]
 

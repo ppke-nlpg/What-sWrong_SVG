@@ -23,7 +23,6 @@ from ioFormats.CorpusFormat import *
  * @author Sebastian Riedel
 """
 
-
 class TabFormat(CorpusFormat):
 
     def __init__(self, MainWindow):
@@ -187,6 +186,7 @@ class TabFormat(CorpusFormat):
         begin = 0
         currentChunk = ""
         for row in rows:
+            row = row.split(' ')
             chunk = row[column]
             minus = chunk.find('-')
             if minus != -1:
@@ -257,13 +257,13 @@ class CoNLL2000:
         instance = NLPInstance()
         index = 0
         for row in rows:
-            row = row.strip().split()
+            row = row.strip().split(' ')
             chunk = row[2]
             instance.addToken().\
                 addProperty(name="Word", value=row[0]).\
                 addProperty(name="Index", value=str(index))
-            instance.addSpan(index, index, row[1], "pos")
-            instance.addSpan(index, index, chunk, "chunk (BIO)")
+            instance.addSpan(str(index), str(index), row[1], "pos")
+            instance.addSpan(str(index), str(index), chunk, "chunk (BIO)")
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
@@ -634,7 +634,7 @@ class CoNLL2006:
             row = row.strip().split()
             instance.addToken().\
                 addProperty(name="Word", value=row[1]).\
-                addProperty(name="Index", value=row[0]).\
+                addProperty(name="Index", value=str(row[0])).\
                 addProperty(name="Lemma", value=row[2]).\
                 addProperty(name="CPos", value=row[3]).\
                 addProperty(name="Pos", value=row[4]).\
@@ -644,7 +644,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.addEdge(From=int(row[6]), to=mod, label=row[7], type="dep")
+                instance.addEdge(From=str(row[6]), to=str(mod), label=row[7], type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].addProperty("DepMissing", "missing")

@@ -280,7 +280,7 @@ class CorpusNavigator:
      *                       passed to the NLPCanvas.
     """
     def __init__(self,  ui, canvas=NLPCanvas, scene=None, goldLoader=None, guessLoader=None, edgeTypeFilter=None):
-        self._spinner = ui.spinBox
+
         self._numberModel = None
         self._indicies = {}
         self._analyzer = None
@@ -289,6 +289,8 @@ class CorpusNavigator:
         self._guessCorpora = guessLoader
         self._indexSearcher = None
         self._diff = NLPDiff()
+
+        self._indicies = {}
 
         self._guess = guessLoader
         self._gold = goldLoader
@@ -304,29 +306,80 @@ class CorpusNavigator:
         # goldLoader.addChangeListener(this);
 
         # results = []
+        self._spinner = ui.spinBox
+
+        def indexChanged(index):
+            self.updateCanvas()
+        self._spinner.valueChanged.connect(indexChanged)
 
         if self._goldCorpora is not None:
             if self._guessCorpora is None:
                 index = len(self._goldCorpora)
             else:
                 index = min(len(self._goldCorpora),len(self._guessCorpora))
-
             self._spinner.setMaximum(index)
-            self._ui.label_12.setText("of " + str(index))
+            self._ui.SpinBoxLabel.setText("of " + str(index))
             self._spinner.setValue(1)
             self._spinner.setMinimum(1)
         else:
             self._spinner.setValue(0)
             self._spinner.setMinimum(0)
-            self._ui.label_12.setText("of 0")
+            self._ui.SpinBoxLabel.setText("of 0")
 
-        def indexChanged(index):
-            print("New index: " + str(index))
-            self.updateCanvas()
-        self._spinner.valueChanged.connect(indexChanged)
+        self._search = ui.searchCorpusLineEdit
+        self._searchResultDictModel = {}
+        self._searchResultListWidget = ui.searchResultLisWidget
+
+        def itemClicked(item):
+            i = self._searchResultListWidget.row(item)
+            self._spinner.setValue(self._searchResultDictModel[i+1])
+        self._searchResultListWidget.itemClicked.connect(itemClicked)
+
+        self._searchButton = ui.searchButton
+        self._searchButton.clicked.connect(self.searchCorpus)
+
+        self.canvas.renderer.setEdgeTypeOrder("pos", 0)
+        self.canvas.renderer.setEdgeTypeOrder("chunk (BIO)", 1)
+        self.canvas.renderer.setEdgeTypeOrder("chunk", 2)
+        self.canvas.renderer.setEdgeTypeOrder("ner (BIO)", 2)
+        self.canvas.renderer.setEdgeTypeOrder("ner", 3)
+        self.canvas.renderer.setEdgeTypeOrder("sense", 4)
+        self.canvas.renderer.setEdgeTypeOrder("role", 5)
+        self.canvas.renderer.setEdgeTypeOrder("phase", 5)
 
         self.updateCanvas()
 
+    """
+     * Searches the current corpus using the search terms in the search field.
+
+    """
+    def searchCorpus(self):
+        text = self._search.text()
+        self._searchResultListWidget.clear()
+        self._searchResultDictModel.clear()
+        counter = 1
+        if text == "":
+            self._searchResultListWidget.clear()
+            return
+        for index in range(self._spinner.minimum()-1, self._spinner.maximum()):
+            if index not in self._indicies:
+                if self._gold is not None:
+                    if self._guess is None:
+                        self._indicies[index] = self._goldCorpora[index]
+                    else:
+                        self._indicies[index] = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
+            instance = self._indicies[index]
+            sentence = ""
+            for token in instance.tokens:
+                word = token.getProperty(TokenProperty("Word"))
+                if sentence == "":
+                    sentence += " " + word
+                else:
+                    sentence += " " + word
+            if text in sentence:
+                self._searchResultDictModel[counter] = index+1
+                self._searchResultListWidget.addItem(str(index+1) + ":" + sentence)
+                counter += 1
 
     """
      * Updates the canvas based on the current state of the navigator and the corpus loaders.
@@ -335,13 +388,35 @@ class CorpusNavigator:
         index = self._spinner.value() - 1
         if self._gold is not None:
             if self._guess is None:
-                self._instance = self._goldCorpora[index]
+                if index in self._indicies:
+                    self._instance = self._indicies[index]
+                else:
+                    self._instance = self._goldCorpora[index]
+                    self._indicies[index] = self._instance
+
             else:
-                self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
+                if index in self._indicies:
+                    self._instance = self._indicies[index]
+                else:
+                    self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
+                    self._indicies[index] = self._instance
                 self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255)) #Blue
                 self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000)) #Red
         else:
-            pass
+            """
+            self._edgeTypeFilter.addAllowedPrefixType("dep")
+            self._edgeTypeFilter.addAllowedPrefixType("role")
+            self._edgeTypeFilter.addAllowedPrefixType("sense")
+            self._edgeTypeFilter.addAllowedPrefixType("ner")
+            self._edgeTypeFilter.addAllowedPrefixType("chunk")
+            self._edgeTypeFilter.addAllowedPrefixType("pos")
+            self._edgeTypeFilter.addAllowedPrefixType("align")
+            self._edgeTypeFilter.addAllowedPostfixType("FP")
+            self._edgeTypeFilter.addAllowedPostfixType("FN")
+            self._edgeTypeFilter.addAllowedPostfixType("Match")
+            """
+
+
         self._canvas.setNLPInstance(self._instance)
         self._canvas.updateNLPGraphics()
 

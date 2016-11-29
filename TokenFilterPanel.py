@@ -16,7 +16,7 @@ class TokenFilterPanel():
         self._canvas.addChangeListener(changeListener=self)
         self._tokenFilter = tokenFilter
 
-        self._list = gui.listWidget
+        self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.updateProperties()
         self._updating = False
@@ -35,7 +35,7 @@ class TokenFilterPanel():
 
         self._list.itemActivated.connect(itemActivated)
 
-        self._allowed = gui.lineEdit_3
+        self._allowed = gui.tokenFilterTokenLineEdit
 
         def allowedChanged(text):
             self._tokenFilter.clearAllowedStrings()
@@ -45,7 +45,7 @@ class TokenFilterPanel():
             self._canvas.updateNLPGraphics()
         self._allowed.textEdited.connect(allowedChanged)
 
-        self._wholeWords = gui.checkBox_6
+        self._wholeWords = gui.tokenFilterWholeWordsCheckBox
 
         def wholeWordActionPerformed(value):
             if value == 2:  # Checked

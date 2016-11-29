@@ -12,12 +12,12 @@ from PyQt4 import QtGui
 class EdgeTypeFilterPanel:
     def __init__(self, gui, canvas=NLPCanvas, edgeTypeFilter=EdgeTypeFilter):
         self._nlpCanvas = canvas
-        self._types = gui.listWidget_2
+        self._types = gui.edgeTypeListWidget
         self._types.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self._listModel = []
-        self._matches = gui.checkBox_7
-        self._falsePositives = gui.checkBox_8
-        self._falseNegatives = gui.checkBox_9
+        self._matches = gui.matchesCheckBox
+        self._falsePositives = gui.falsePositiveCheckBox
+        self._falseNegatives = gui.falseNegativeCheckBox
         self._justChanged = set()
 
         self._edgeTypeFilter = edgeTypeFilter
@@ -35,7 +35,7 @@ class EdgeTypeFilterPanel:
                 if self._types.isItemSelected(self._types.item(index)):
                     self._edgeTypeFilter.addAllowedPrefixType(t)
                 else:
-                    self._edgeTypeFilter.addAllowedPostfixType(t)
+                    self._edgeTypeFilter.addAllowedPrefixType(t)
             self._justChanged.clear()
             self._nlpCanvas.updateNLPGraphics()
         self._types.itemSelectionChanged.connect(valueChanged)
