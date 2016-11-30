@@ -65,6 +65,8 @@ class MyForm(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.ui.pushButtonAddGold.clicked.connect(self.browse_gold_folder)
         self.ui.addGuessPushButton.clicked.connect(self.browse_guess_folder)
+        self.ui.removeGoldPushButton.clicked.connect(self.remove_gold)
+        self.ui.removeGuessPushButton.clicked.connect(self.remove_guess)
         self.ui.selectGoldListWidget.itemSelectionChanged.connect(self.refresh)
         self.ui.selectGuessListWidget.itemSelectionChanged.connect(self.refresh)
         self.goldMap = {}
@@ -81,6 +83,19 @@ class MyForm(QtGui.QMainWindow):
         QtGui.QMainWindow()
         myapp2 = MyWindow(self, type="guess")
         myapp2.show()
+
+    def remove_gold(self):
+        if len(self.ui.selectGoldListWidget) != 1:
+            selectedGold = self.ui.selectGoldListWidget.selectedItems()
+            del self.goldMap[str(selectedGold[0].text())]
+            self.ui.selectGoldListWidget.takeItem(self.ui.selectGoldListWidget.row(selectedGold[0]))
+            self.refresh()
+
+    def remove_guess(self):
+        selectedGuess = self.ui.selectGuessListWidget.selectedItems()
+        del self.guessMap[str(selectedGuess[0].text())]
+        self.ui.selectGuessListWidget.takeItem(self.ui.selectGuessListWidget.row(selectedGuess[0]))
+        self.refresh()
 
     def choosenFile(self, factory, type):
         directory = QtGui.QFileDialog.getOpenFileName(self)

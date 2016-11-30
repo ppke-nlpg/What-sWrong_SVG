@@ -305,6 +305,15 @@ class CorpusNavigator:
         # guessLoader.addChangeListener(this);
         # goldLoader.addChangeListener(this);
 
+        self.canvas.renderer.setEdgeTypeOrder("pos", 0)
+        self.canvas.renderer.setEdgeTypeOrder("chunk (BIO)", 1)
+        self.canvas.renderer.setEdgeTypeOrder("chunk", 2)
+        self.canvas.renderer.setEdgeTypeOrder("ner (BIO)", 2)
+        self.canvas.renderer.setEdgeTypeOrder("ner", 3)
+        self.canvas.renderer.setEdgeTypeOrder("sense", 4)
+        self.canvas.renderer.setEdgeTypeOrder("role", 5)
+        self.canvas.renderer.setEdgeTypeOrder("phase", 5)
+
         # results = []
         self._spinner = ui.spinBox
 
@@ -338,14 +347,7 @@ class CorpusNavigator:
         self._searchButton = ui.searchButton
         self._searchButton.clicked.connect(self.searchCorpus)
 
-        self.canvas.renderer.setEdgeTypeOrder("pos", 0)
-        self.canvas.renderer.setEdgeTypeOrder("chunk (BIO)", 1)
-        self.canvas.renderer.setEdgeTypeOrder("chunk", 2)
-        self.canvas.renderer.setEdgeTypeOrder("ner (BIO)", 2)
-        self.canvas.renderer.setEdgeTypeOrder("ner", 3)
-        self.canvas.renderer.setEdgeTypeOrder("sense", 4)
-        self.canvas.renderer.setEdgeTypeOrder("role", 5)
-        self.canvas.renderer.setEdgeTypeOrder("phase", 5)
+
 
         self.updateCanvas()
 

@@ -96,8 +96,9 @@ class EdgeTypeFilter(EdgeFilter):
      * @param type the prefix type to disallow.
      """
     def removeAllowedPrefixType(self, Type=str):
-        self._allowedPrefixTypes.remove(Type)
-        self.fireChanged(Type)
+        if Type in self._allowedPrefixTypes:
+            self._allowedPrefixTypes.remove(Type)
+            self.fireChanged(Type)
 
     """
      * Disallows the given postfix type. This causes the filter to stop accepting edges with the given postfix type.
@@ -120,7 +121,7 @@ class EdgeTypeFilter(EdgeFilter):
         for edge in original:
             prefixAllowed = edge.getTypePrefix() == "" or edge.getTypePrefix() in self._allowedPrefixTypes
             postfixAllowed = edge.getTypePostfix() == "" or edge.getTypePostfix() in self._allowedPostfixTypes
-            if prefixAllowed or postfixAllowed:
+            if prefixAllowed and postfixAllowed:
                 result.append(edge)
         return result
 

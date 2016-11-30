@@ -156,7 +156,7 @@ class DependencyLayout(AbstractEdgeLayout):
                 x += width
 
             for loop in loopsOnVertex:
-                point = (x, self._baseline + self._maxHeight)
+                point = (x, self._baseline + maxHeight)
                 To[loop] = point
                 x += width
 
@@ -193,8 +193,8 @@ class DependencyLayout(AbstractEdgeLayout):
             # write label in the middle under
 
             # XXX Original fontsize is 8
-            labelwith = Text(scene, (0, 0), edge.getLabelWithNote(), 12, scene.color).getWidth()
-            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2 - labelwith // 2
+            labelwith = round(Text(scene, (0, 0), edge.getLabelWithNote(), 12, scene.color).getWidth() * 0.9)
+            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2# - labelwith // 2
             # labely = height + 1
             labely = height + 10 + 1  # XXX layout.getAscent()
             # XXX Original fontsize is 8

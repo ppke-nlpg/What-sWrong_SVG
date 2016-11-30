@@ -123,7 +123,7 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}
         for edge in edges:
             if edge.From == edge.To:
-                labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontisze is 8
+                labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontsize is 8
                 if edge.From in result:
                     width = max(labelwith, result[edge.From])  # oldWith is result[...]
                 else:
@@ -192,8 +192,7 @@ class SpanLayout(AbstractEdgeLayout):
             scene.color = self.getColor(edge.type)
 
             # prepare label (will be needed for spacing)
-            labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()
-
+            labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth() * 0
             # draw lines
             if self._revert:
                 spanLevel = maxDepth - depth[edge]

@@ -28,14 +28,15 @@ class EdgeTypeFilterPanel:
         self.updateSelection()
 
         def valueChanged():
+            print("Edge type widget selection changed")
             self._justChanged.clear()
             for index in range(0,len(self._types)):
-                t = str(self._types.item(index))
+                t = str(self._listModel[index])
                 self._justChanged.add(t)
                 if self._types.isItemSelected(self._types.item(index)):
                     self._edgeTypeFilter.addAllowedPrefixType(t)
                 else:
-                    self._edgeTypeFilter.addAllowedPrefixType(t)
+                    self._edgeTypeFilter.removeAllowedPrefixType(t)
             self._justChanged.clear()
             self._nlpCanvas.updateNLPGraphics()
         self._types.itemSelectionChanged.connect(valueChanged)

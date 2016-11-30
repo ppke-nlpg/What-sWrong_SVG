@@ -644,7 +644,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.addEdge(From=str(row[6]), to=str(mod), label=row[7], type="dep")
+                instance.addDependency(From=str(row[6]), to=str(mod), label=row[7], type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].addProperty("DepMissing", "missing")
@@ -725,7 +725,7 @@ class CoNLL2008:
             row = row.strip().split()
             instance.addToken().\
                 addProperty(name="Word", value=row[1]).\
-                addProperty(name="Index", value=row[0]).\
+                addProperty(name="Index", value=str(row[0])).\
                 addProperty(name="Lemma", value=row[2]).\
                 addProperty(name="Pos", value=row[3]).\
                 addProperty(name="Split Form", value=row[5]).\
@@ -734,12 +734,12 @@ class CoNLL2008:
             if row[10] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(index, index, row[10], "sense")
+                instance.addSpan(str(index), str(index), row[10], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addEdge(int(row[8]), int(row[0]), row[9], "dep")
+                instance.addDependency(str(row[8]), str(row[0]), row[9], "dep")
             # role
             for col in range(11, len(row)):
                 label = row[col]
@@ -847,14 +847,14 @@ class CoNLL2009:
             if row[13] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(index, index, row[13], "sense")
+                instance.addSpan(str(index), str(index), row[13], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(From=int(row[8]), to=int(row[0]), label=row[10], type="dep")
+                instance.addDependency(From=str(row[8]), to=str(row[0]), label=row[10], type="dep")
             if row[9] != "_":
-                instance.addDependency(From=int(row[9]), to=int(row[0]), label=row[11], type="pdep")
+                instance.addDependency(From=str(row[9]), to=str(row[0]), label=row[11], type="pdep")
             # role
             for col in range(14, len(row)):
                 label = row[col]
@@ -862,7 +862,7 @@ class CoNLL2009:
                     pred = predicates[col-14]
                     arg = int(row[0])
                     # if arg != pred:
-                    instance.addEdge(From=pred, to=arg, label=label, type="role")
+                    instance.addDependency(From=str(pred), to=str(arg), label=label, type="role")
         return instance
 
     """

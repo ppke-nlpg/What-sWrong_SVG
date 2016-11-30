@@ -208,7 +208,7 @@ class NLPInstance:
                 From = self._map[From]
                 to = self._map[to]
 
-        self._edges.append(Edge(From=From, To=to, label=label, Type=type, renderType=renderType))
+            self._edges.append(Edge(From=From, To=to, label=label, Type=type, renderType=renderType))
     """
     def isInvalidEdge(self, From, to):
         if TokenProperty(From) not in  self._map:
