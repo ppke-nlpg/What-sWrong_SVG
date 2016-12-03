@@ -244,6 +244,19 @@ class NLPCanvas:
         self._ui.graphicsView.show()
         self.fireChanged()
 
+    def exportNLPGraphics(self, filepath):
+        filtered = self.filterInstance()
+        self._SVGScene = Scene(width=800)
+
+        renderer = self._renderers[filtered.renderType]
+
+        dim = renderer.render(filtered, self._SVGScene)
+
+        self._SVGScene = Scene(width=dim[0], height=dim[1])
+
+        renderer.render(filtered, self._SVGScene)
+        self._SVGScene.write_svg(filepath)
+
     """
      * Clears the current instance.
     """

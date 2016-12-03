@@ -935,8 +935,7 @@ class MaltTab:
         for row in rows:
             row = row.strip().split()
             # dependency
-            try:  # XXX Why not Edge? Str int conversion possibly wrong...
-                # instance.addEdge(From=int(row[2]), to=mod, label=row[3], type="dep")
+            try:
                 instance.addDependency(From=row[2], to=str(mod), label=row[3], type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)

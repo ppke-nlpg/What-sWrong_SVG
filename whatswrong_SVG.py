@@ -72,6 +72,11 @@ class MyForm(QtGui.QMainWindow):
         self.goldMap = {}
         self.guessMap = {}
 
+        self.ui.actionExport.setShortcut("Ctrl+S")
+        self.ui.actionExport.setStatusTip('Export to SVG')
+        self.ui.actionExport.triggered.connect(self.file_save)
+        self.ui.actionExport.setEnabled(False)
+
     def browse_gold_folder(self):
         # app =
         QtGui.QMainWindow()
@@ -140,7 +145,8 @@ class MyForm(QtGui.QMainWindow):
 
     def refresh(self):
 
-        canvas = NLPCanvas(self.ui)
+        self.canvas = NLPCanvas(self.ui)
+        self.ui.actionExport.setEnabled(True)
 
         #create the filter pipeline
         edgeTokenFilter = EdgeTokenFilter()
@@ -150,11 +156,11 @@ class MyForm(QtGui.QMainWindow):
         filterPipeline = FilterPipeline(tokenFilter, edgeTypeFilter, edgeLabelFilter, edgeTokenFilter)
 
         #set filter of canvas to be the pipeline
-        canvas.filter = filterPipeline
+        self.canvas.filter = filterPipeline
 
-        edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, canvas, edgeTypeFilter)
-        dependencyFilterPanel = DependencyFilterPanel (self.ui, canvas, edgeLabelFilter, edgeTokenFilter)
-        tokenFilterPanel = TokenFilterPanel(self.ui, canvas, tokenFilter)
+        edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeFilter)
+        dependencyFilterPanel = DependencyFilterPanel (self.ui, self.canvas, edgeLabelFilter, edgeTokenFilter)
+        tokenFilterPanel = TokenFilterPanel(self.ui, self.canvas, tokenFilter)
 
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
@@ -167,7 +173,7 @@ class MyForm(QtGui.QMainWindow):
             guess = self.guessMap[str(selectedGuess[0].text())]
 
         if gold:
-            CorpusNavigator(canvas=canvas, ui=self.ui, goldLoader=gold, guessLoader=guess, edgeTypeFilter=edgeTypeFilter)
+            CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess, edgeTypeFilter=edgeTypeFilter)
 
     def onItemChanged(self):
         self.refresh()
@@ -180,6 +186,9 @@ class MyForm(QtGui.QMainWindow):
         scene.addItem(br)
         self.ui.graphicsView.show()
 
+    def file_save(self):
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        self.canvas.exportNLPGraphics(name)
 
 def test(f):
     app = QtGui.QApplication(sys.argv)

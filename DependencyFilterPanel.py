@@ -23,7 +23,6 @@ class DependencyFilterPanel:
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):
-            print("labelFieldChanged(")
             edgeLabelFilter.clear()
             split = text.split(",")
             for label in split:
