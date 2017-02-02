@@ -356,8 +356,8 @@ class CorpusLoader:
         #        GridBagConstraints c = new GridBagConstraints();
         #        setUpFormats();
 
-        self._corpora = []
-        c = {}
+        self._corpora = []  # ArrayList<List<NLPInstance>>()
+        c = {}  # GridBagConstraints()
         c.gridx = 0
         c.gridy = 0
         c.gridwidth = 2

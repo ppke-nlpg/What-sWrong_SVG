@@ -3,12 +3,22 @@
 
 from NLPInstance import *
 
-class NLPDiff():
+"""
+ * An NLPDiff object takes two NLPInstances, a gold and a guess instance, and compares the set of edges that both
+ * contain. The result is a new NLP instance that contains <ul> <li>all edges which are in both instances. These will
+ * have the type "type:Match" where "type" is the original type of the edges. <li>all edges which are only in the the
+ * guess instance. These will have the type "type:FP" <li>all edges which are only in the gold instance. These will have
+ * the type "type:FN". </ul>
+ *
+ * @author Sebastian Riedel
+"""
 
+
+class NLPDiff:
     """
          * This class defines the identity of an edge with respect to the diff operation.
     """
-    class EdgeIdentity():
+    class EdgeIdentity:
 
         @property
         def From(self):
@@ -92,36 +102,38 @@ class NLPDiff():
         for splitPoint in tuple(goldInstance.splitPoints):
             diff.splitPoints.append(splitPoint)
         diff.addTokens(goldInstance.tokens)
-        goldIdentities = set()
-        goldIdentities.update(self.createIdentities(goldInstance.getEdges()))
-        guessIdentities = set()
-        guessIdentities.update(self.createIdentities(guessInstance.getEdges()))
-        fn = set()
+        goldIdentities = set(self.createIdentities(goldInstance.getEdges()))
+        guessIdentities = set(self.createIdentities(guessInstance.getEdges()))
         fn = goldIdentities - guessIdentities
-        fp = set()
-        fp =  guessIdentities - goldIdentities
-        matches = set()
+        fp = guessIdentities - goldIdentities
         matches = goldIdentities & guessIdentities
         for edgeid in fn:
             edge = edgeid.edge
-            Type = edge.type +":FN"
+            Type = edge.type + ":FN"
             diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
                                    renderType=edge.renderType, description=edge.description))
         for edgeid in fp:
             edge = edgeid.edge
-            Type = edge.type +":FP"
+            Type = edge.type + ":FP"
             diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
                                    renderType=edge.renderType, description=edge.description))
 
         for edgeid in matches:
             edge = edgeid.edge
-            Type = edge.type +":Match"
+            Type = edge.type + ":Match"
             diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
                                    renderType=edge.renderType, description=edge.description))
         return diff
 
-    def createIdentities(self, edges):
-        result = set()
+    """
+     * Converts a collection of edges to their diff-based identities.
+     *
+     * @param edges the input edges
+     * @return the identities of the input edges.
+    """
+    @staticmethod
+    def createIdentities(edges):
+        result = set()  # HashSet<EdgeIdentity>()
         for edge in edges:
             result.add(NLPDiff.EdgeIdentity(edge))
         return result

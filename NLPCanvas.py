@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from PyQt4 import QtGui, QtCore, QtSvg
+from PyQt4 import QtGui, QtSvg
 from SVGWriter import *
 from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
@@ -126,8 +126,13 @@ class NLPCanvas:
         self._SVGScene = None
         self._nlpInstance = None
         self._listeners = []
-        self._changeListeners =[]
+        self._changeListeners = []
 
+    """
+     * Adds a change listener to this canvas.
+     *
+     * @param changeListener the listener to add.
+    """
     def addChangeListener(self, changeListener):
         self._changeListeners.append(changeListener)
 
@@ -216,8 +221,8 @@ class NLPCanvas:
     """
     def filterInstance(self):
         return self._filter.filter(NLPInstance(tokens=self._tokens, edges=self._dependencies,
-                                        renderType=self._nlpInstance.renderType,
-                                        splitPoints=self._nlpInstance.splitPoints))
+                                   renderType=self._nlpInstance.renderType,
+                                   splitPoints=self._nlpInstance.splitPoints))
 
     """
      * Updates the current graph. This takes into account all changes to the filter,
@@ -225,6 +230,7 @@ class NLPCanvas:
     """
     def updateNLPGraphics(self):
         filtered = self.filterInstance()
+
         self._SVGScene = Scene(width=800)
 
         renderer = self._renderers[filtered.renderType]

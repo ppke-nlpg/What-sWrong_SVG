@@ -3,8 +3,6 @@
 
 from NLPCanvas import NLPCanvas
 from NLPDiff import *
-from utils.Pair import *
-from PyQt4 import QtGui, QtCore, QtSvg
 
 
 """
@@ -281,7 +279,7 @@ class CorpusNavigator:
     """
     def __init__(self,  ui, canvas=NLPCanvas, scene=None, goldLoader=None, guessLoader=None, edgeTypeFilter=None):
 
-        self._numberModel = None
+        self._numberModel = None  # SpinnerNumberModel()
         self._indicies = {}
         self._analyzer = None
         self._diffCorpora = NLPDiff()
@@ -296,7 +294,7 @@ class CorpusNavigator:
         self._gold = goldLoader
         self._scene = scene
         self._canvas = canvas
-        #self._canvas = NLPCanvas(ui)
+        # self._canvas = NLPCanvas(ui)
         self._edgeTypeFilter = edgeTypeFilter
 
         self._instance = None
@@ -325,7 +323,7 @@ class CorpusNavigator:
             if self._guessCorpora is None:
                 index = len(self._goldCorpora)
             else:
-                index = min(len(self._goldCorpora),len(self._guessCorpora))
+                index = min(len(self._goldCorpora), len(self._guessCorpora))
             self._spinner.setMaximum(index)
             self._ui.SpinBoxLabel.setText("of " + str(index))
             self._spinner.setValue(1)
@@ -347,13 +345,10 @@ class CorpusNavigator:
         self._searchButton = ui.searchButton
         self._searchButton.clicked.connect(self.searchCorpus)
 
-
-
         self.updateCanvas()
 
     """
      * Searches the current corpus using the search terms in the search field.
-
     """
     def searchCorpus(self):
         text = self._search.text()
@@ -402,8 +397,8 @@ class CorpusNavigator:
                 else:
                     self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
                     self._indicies[index] = self._instance
-                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255)) #Blue
-                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000)) #Red
+                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255))  # Blue
+                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000))  # Red
         else:
             """
             self._edgeTypeFilter.addAllowedPrefixType("dep")
@@ -418,8 +413,5 @@ class CorpusNavigator:
             self._edgeTypeFilter.addAllowedPostfixType("Match")
             """
 
-
         self._canvas.setNLPInstance(self._instance)
         self._canvas.updateNLPGraphics()
-
-

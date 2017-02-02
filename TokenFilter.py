@@ -6,6 +6,14 @@ from NLPInstance import *
 from TokenProperty import *
 from Token import *
 
+"""
+ * A Tokenfilter removes certain properties from each token and removes tokens that do not contain certain property
+ * values. The filter also removes all edges that were connecting one or more removed tokens.
+ *
+ * @author Sebastian Riedel
+"""
+
+
 class TokenFilter(NLPInstanceFilter):
     """
      * Creates a new TokenFilter.
@@ -14,13 +22,13 @@ class TokenFilter(NLPInstanceFilter):
         """
          * The set of properties we should not see.
         """
-        self._forbiddenProperties = set()
+        self._forbiddenProperties = set()  # HashSet<TokenProperty>()
         """
          * A token needs to have at least one property value contained in this set (if {@link
-         * com.googlecode.whatswrong.TokenFilter#wholeWord} is true) or needs to have one value that contains a string in
-         * this set (otherwise).
+         * com.googlecode.whatswrong.TokenFilter#wholeWord} is true) or needs to have one value that contains a string
+         * in this set (otherwise).
         """
-        self._allowedStrings = set()
+        self._allowedStrings = set()  # HashSet<String>()
         """
          * Should tokens be allowed only if they have a property value that equals one of the allowed strings or is it
          * sufficient if one value contains one of the allowed strings.
@@ -97,7 +105,7 @@ class TokenFilter(NLPInstanceFilter):
      * @return the filtered set of tokens.
     """
     def filterTokens(self, original):
-        result = []
+        result = []  # ArrayList<Token>(original.size())
         for vertex in original:
             copy = Token(vertex.index)
             for property in vertex.getPropertyTypes():
@@ -114,12 +122,12 @@ class TokenFilter(NLPInstanceFilter):
      * @return the filtered nlp instance.
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
-    def filter(self, original = NLPInstance):
+    def filter(self, original=NLPInstance):
         if len(self._allowedStrings) > 0:
             # first filter out tokens not containing allowed strings
-            old2new = {}
-            new2old = {}
-            tokens = []
+            old2new = {}  # HashMap<Token, Token>()
+            new2old = {}  # HashMap<Token, Token>()
+            tokens = []  # ArrayList<Token>()
             for t in original.tokens:
                 stopped = False
                 for property in t.getPropertyTypes():
@@ -157,7 +165,7 @@ class TokenFilter(NLPInstanceFilter):
                                 stopped = True
                                 break
             # update edges and remove those that have vertices not in the new vertex set
-            edges = []
+            edges = []  # ArrayList<Edge>()
             for e in original.getEdges():
                 if e.From not in old2new or e.To not in old2new:
                     continue

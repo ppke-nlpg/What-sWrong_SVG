@@ -109,7 +109,7 @@ class SingleSentenceRenderer:
         # find token bounds
         tokenXBounds = self._tokenLayout.estimateTokenBounds(instance, widths, scene)
 
-        if self._antiAliasing:
+        if self._antiAliasing:  # XXX Do we need this?
             pass
 
         width = 0

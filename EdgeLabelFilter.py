@@ -10,6 +10,8 @@ from EdgeFilter import *
  *
  * @author Sebastian Riedel
 """
+
+
 class EdgeLabelFilter(EdgeFilter):
     """
      * Creates a new EdgeLabelFilter that allows the given label substrings.
@@ -58,7 +60,7 @@ class EdgeLabelFilter(EdgeFilter):
     def filterEdges(self, original):
         if len(self._allowedLabels) == 0:
             return original
-        result = []
+        result = []  # ArrayList<Edge>(original.size())
         for edge in original:
             for allowed in self._allowedLabels:
                 if allowed in edge.label:

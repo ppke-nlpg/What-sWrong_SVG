@@ -59,9 +59,9 @@ class DependencyLayout(AbstractEdgeLayout):
         # find out height of each edge
         self._shapes.clear()
 
-        loops = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
-        allLoops = set()
-        tokens = set()
+        loops = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
+        allLoops = set()  # HashSet<Edge>()
+        tokens = set()  # HashSet<Token>()
         for edge in edges_:
             tokens.add(edge.From)
             tokens.add(edge.To)
@@ -71,14 +71,14 @@ class DependencyLayout(AbstractEdgeLayout):
 
         edges_ -= allLoops
 
-        depth = Counter()
-        offset = Counter()
-        dominates = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
+        depth = Counter()   # Counter<Edge>()
+        offset = Counter()  # Counter<Edge>()
+        dominates = HashMultiMapArrayList()  # HashMultiMapLinkedList<Edge, Edge>()
 
         for over in edges_:
             for under in edges_:
                 if over != under and (over.covers(under) or over.coversSemi(under) or
-                                          over.coversExactly(under) and over.lexicographicOrder(under) > 0):
+                                      over.coversExactly(under) and over.lexicographicOrder(under) > 0):
                     dominates[over] = under
 
         for edge in edges_:
@@ -88,7 +88,7 @@ class DependencyLayout(AbstractEdgeLayout):
             for right in edges_:
                 if left != right and left.crosses(right) and depth[left] == depth[right]:
                     if offset[left] == 0 and offset[right] == 0:
-                        offset.increment(left, self._heightPerLevel // 2)
+                        offset[left] += self._heightPerLevel // 2
                     elif offset[left] == offset[right]:
                         offset[left] = self._heightPerLevel // 3
                         offset[right] = self._heightPerLevel * 2 // 3
@@ -102,13 +102,13 @@ class DependencyLayout(AbstractEdgeLayout):
             maxHeight += self._heightPerLevel // 2
 
         # build map from vertex to incoming/outgoing edges
-        vertex2edges = HashMultiMapArrayList()  # XXX THIS IS LINKED LIST NOT ARRAY LIST!
+        vertex2edges = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges_:
             vertex2edges[edge.From] = edge
             vertex2edges[edge.To] = edge
         # assign starting and end points of edges by sorting the edges per vertex
-        From = {}
-        To = {}
+        From = {}  # HashMap<Edge, Point>()
+        To = {}  # HashMap<Edge, Point>()
         for token in tokens:
             connections = vertex2edges[token]
 
@@ -194,7 +194,7 @@ class DependencyLayout(AbstractEdgeLayout):
 
             # XXX Original fontsize is 8
             labelwith = round(Text(scene, (0, 0), edge.getLabelWithNote(), 12, scene.color).getWidth() * 0.9)
-            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2# - labelwith // 2
+            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2  # - labelwith // 2
             # labely = height + 1
             labely = height + 10 + 1  # XXX layout.getAscent()
             # XXX Original fontsize is 8

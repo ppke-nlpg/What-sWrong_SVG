@@ -8,6 +8,8 @@ from NLPInstance import *
  *
  * @author Sebastian Riedel
 """
+
+
 class EdgeFilter(NLPInstanceFilter):
     """
      * Take a set of edges and return a subset of them.

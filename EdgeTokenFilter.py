@@ -2,23 +2,38 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from NLPInstanceFilter import *
-from Token import *
 from NLPInstance import *
 
-class EdgeTokenFilter(NLPInstanceFilter):
+"""
+ * An EdgeTokenFilter filters out edges based on the properties of their tokens. For example, we can filter out all
+ * edges that do not contain at least one token with the word "blah". The filter can also be configured to filter out
+ * all edges which are not on a path between tokens with certain properties. For example, we can filter out all edges
+ * that are not on the paths between a token with word "blah" and a token with word "blub".
+ * <p/>
+ * <p>This filter can also filter out the tokens for which all edges have been filtered out via the edge filtering
+ * process. This mode is called "collapsing" because the graph is collapsed to contain only connected components.
+ * <p/>
+ * <p>Note that if no allowed property values are defined ({@link com.googlecode.whatswrong.EdgeTokenFilter#
+ addAllowedProperty(String)})
+ * then the filter does nothing and keeps all edges.
+ *
+ * @author Sebastian Riedel
+"""
 
+
+class EdgeTokenFilter(NLPInstanceFilter):
     """
      * Creates a new filter with the given allowed property values.
      *
-     * @param allowedProperties A var array of allowed property values. An Edge will be filtered out if none of its tokens
-     *                          has a property with an allowed property value (or a property value that contains an
-     *                          allowed value, if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()} is
+     * @param allowedProperties A var array of allowed property values. An Edge will be filtered out if none of its
+     *                          tokens has a property with an allowed property value (or a property value that contains
+     *                          an allowed value, if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()} is
      *                          false).
      OR
      * @param allowedPropertyValues A set of allowed property values. An Edge will be filtered out if none of its tokens
      *                              has a property with an allowed property value (or a property value that contains an
-     *                              allowed value, if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()} is
-     *                              false).
+     *                              allowed value, if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()}
+     *                              is false).
     """
     def __init__(self, *allowedProperties):
         """
@@ -27,8 +42,8 @@ class EdgeTokenFilter(NLPInstanceFilter):
         self._usePath = False
 
         """
-         * If active this property will cause the filter to filter out all tokens for which all edges where filtered out in
-         * the edge filtering step.
+         * If active this property will cause the filter to filter out all tokens for which all edges where filtered out
+         * in  the edge filtering step.
         """
         self._collaps = False
 
@@ -39,8 +54,8 @@ class EdgeTokenFilter(NLPInstanceFilter):
         self._wholeWords = False
 
         """
-         * Set of property values that one of the tokens of an edge has to have so that the edge is not going to be filtered
-         * out.
+         * Set of property values that one of the tokens of an edge has to have so that the edge is not going to be
+         * filtered out.
         """
         self._allowedProperties = set()
 
@@ -105,12 +120,15 @@ class EdgeTokenFilter(NLPInstanceFilter):
         self._allowedProperties.remove(propertyValue)
 
     """
-     * Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and allows
-     * all edges.
+     * Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and
+     * allows all edges.
     """
     def clear(self):
         self._allowedProperties.clear()
 
+    """
+     * A Path represents a path of edges. Right it is simply a HashSet of edges.
+    """
     class Path(set):
         def __hash__(self):
             value = 0
@@ -121,9 +139,9 @@ class EdgeTokenFilter(NLPInstanceFilter):
     """
      * A Paths object is a mapping from token pairs to all paths between the corresponding tokens.
     """
-    class Paths():
+    class Paths:
         def __init__(self):
-            self._map = {}
+            self._map = {}  # HashMap<Token, HashMap<Token, HashSet<Path>>>
 
         """
          * Returns the set of paths between the given tokens.
@@ -148,9 +166,9 @@ class EdgeTokenFilter(NLPInstanceFilter):
         def getTos(self, From=Token):
             if From in self._map:
                 result = self._map[From]
-                return result.keys()
+                return set(result.keys())
             else:
-                return {}
+                return {}  # HashSet<Token>()
 
         """
          * Adds a path between the given tokens.
@@ -161,7 +179,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
         """
         def addPath(self, From=Token, to=Token, path=None):
             if From not in self._map:
-                self._map[From] = {}
+                self._map[From] = {}  # HashMap<Token, HashSet<Path>>()
             paths = self._map[From]
             if to not in paths:
                 _set = set()
@@ -175,17 +193,18 @@ class EdgeTokenFilter(NLPInstanceFilter):
         def keys(self):
             return self._map.keys()
 
-
     """
      * Calculates all paths between all tokens of the provided edges.
      *
      * @param edges the edges (graph) to use for getting all paths.
      * @return all paths defined through the provided edges.
     """
-    def calculatePaths(self, edges):
-        pathsPerLength = []
+    @staticmethod
+    def calculatePaths(edges):
+        pathsPerLength = []  # ArrayList<Paths>()
 
         paths = EdgeTokenFilter.Paths()
+        # initialize
         for edge in edges:
             path = EdgeTokenFilter.Path()
             path.add(edge)
@@ -202,7 +221,8 @@ class EdgeTokenFilter(NLPInstanceFilter):
                     for to in first.getTos():
                         for path1 in previous.getPaths(From, over):
                             for path2 in first.getPaths(over, to):
-                                if path2 not in path1 and iter(path1).next().getTypePrefix() == iter(path2).next().getTypePrefix():
+                                if path2 not in path1 and iter(path1).next().getTypePrefix() ==\
+                                        iter(path2).next().getTypePrefix():  # XXX IS THIS OK?!
                                     path = EdgeTokenFilter.Path()
                                     path.update(path1)
                                     path.update(path2)
@@ -250,9 +270,9 @@ class EdgeTokenFilter(NLPInstanceFilter):
     def filterEdges(self, original):
         if len(self._allowedProperties) == 0:
             return original
-        if (self._usePath):
+        if self._usePath:
             paths = self.calculatePaths(original)
-            result = set()
+            result = set()  # HashSet<Edge>()
             for From in paths.keys():
                 if From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     for to in paths.getTos(From):
@@ -261,7 +281,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
                                 result.update(path)
             return result
         else:
-            result = []
+            result = []  # ArrayList<Edge>(original.size())
             for edge in original:
                 if edge.From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
                         edge.To.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
@@ -290,7 +310,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
             return NLPInstance(tokens=original.tokens, edges=edges, renderType=original.renderType,
                                splitPoints=original.splitPoints)
         else:
-            tokens =  set()
+            tokens = set()  # HashSet<Token>()
             for e in edges:
                 if e.renderType == Edge.RenderType.dependency:
                     tokens.add(e.From)
@@ -302,9 +322,9 @@ class EdgeTokenFilter(NLPInstanceFilter):
 
             _sorted = sorted(tokens, key=attrgetter("int_index"))
 
-            updatedTokens = []
-            old2new = {}
-            new2old = {}
+            updatedTokens = []  # ArrayList<Token>()
+            old2new = {}  # HashMap<Token, Token>()
+            new2old = {}  # HashMap<Token, Token>()
             for t in _sorted:
                 newToken = Token(len(updatedTokens))
                 newToken.merge(original.tokens[int(t.index)])
@@ -312,12 +332,12 @@ class EdgeTokenFilter(NLPInstanceFilter):
                 new2old[newToken] = t
                 updatedTokens.append(newToken)
 
-            updatedEdges = set()
+            updatedEdges = set()  # HashSet<Edge>()
             for e in edges:
                 updatedEdges.add(Edge(From=old2new[e.From], To=old2new[e.To], label=e.label, note=e.note,
                                       Type=e.type, renderType=e.renderType, description=e.description))
             # find new split points
-            splitPoints = []
+            splitPoints = []  # ArrayList<Integer>()
             newTokenIndex = 0
             for oldSplitPoint in original.splitPoints:
                 newToken = updatedTokens[newTokenIndex]
@@ -330,33 +350,3 @@ class EdgeTokenFilter(NLPInstanceFilter):
 
             return NLPInstance(tokens=updatedTokens, edges=updatedEdges, renderType=original.renderType,
                                splitPoints=splitPoints)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

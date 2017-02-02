@@ -55,6 +55,7 @@ class AligmentRenderer:
         self._tokenLayout2 = TokenLayout()
         self._heightFactor = 100
         self._isCurved = True
+
         self._antiAliasing = True
         self._tokenLayout2.toSplitPoint = 0
         self._tokenLayout2.fromSplitPoint = 0

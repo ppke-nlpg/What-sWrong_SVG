@@ -83,9 +83,9 @@ class NLPInstance:
 
     """
      * Creates an empty NLPInstance without edges or tokens.
-    
+
     OR
-    
+
      * Creates a new NLPInstance with the given tokens and edges. The passed collections will be copied and not
      * changed.
      *
@@ -93,23 +93,23 @@ class NLPInstance:
      * @param edges       the edges of the sentence.
      * @param renderType  the render type for the instance.
      * @param splitPoints the points at which the instance can be split.
-    
+
     """
     def __init__(self, tokens=None, edges=None, renderType=None, splitPoints=None):
-        self._tokens = []
-        self._map = {}
+        self._tokens = []  # ArrayList<Token>()
+        self._map = {}  # HashMap<Integer, Token>()
         if tokens is not None:
             self._tokens.extend(tokens)
             for t in tokens:
                 self._map[t.index] = t
-        self._edges = []
+        self._edges = []  # ArrayList<Edge>()
         if edges is not None:
             self._edges.extend(edges)
         if renderType is not None:
             self._renderType = renderType
         else:
             self._renderType = None
-        self._splitPoints = []
+        self._splitPoints = []  # ArrayList<Integer>()
         if splitPoints is not None:
             self._splitPoints.extend(splitPoints)
 
@@ -233,9 +233,9 @@ class NLPInstance:
      * @param label the label of the edge.
      * @param type  the type of edge.
      * @see com.googlecode.whatswrong.Edge
-     
+
      OR
-     
+
      * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#span}
      *
      * @param from        index of the token the edge should start at. The token at the given index must already exist
@@ -382,9 +382,9 @@ class NLPInstance:
      * Returns all edges of this instance.
      *
      * @return all edges of this instance as unmodifiable list.
-     
+
      OR
-     
+
      * Returns all edges of this instance with the given render type.
      *
      * @param renderType the render type of the edges to return.
@@ -392,7 +392,7 @@ class NLPInstance:
     """
     def getEdges(self, renderType=None):
         if renderType is not None:
-            result = []
+            result = []  # ArrayList<Edge>(edges.size())
             for e in self._edges:
                 if e.renderType == renderType:
                     result.append(e)

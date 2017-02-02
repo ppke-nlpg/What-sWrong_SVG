@@ -70,7 +70,7 @@ class SpanLayout(AbstractEdgeLayout):
         self._baseline = 1
         self._revert = True
         self._separationLines = True
-        self._orders = {}
+        self._orders = {}  # HashMap<String, Integer>()
         self._totalTextMargin = 6
 
     """
@@ -79,8 +79,8 @@ class SpanLayout(AbstractEdgeLayout):
      * @param type  the type we want to change the order for.
      * @param order the order/vertical layer in which the area of the given type should be drawn.
     """
-    def setTypeOrder(self, type, order):
-        self._orders[type] = order
+    def setTypeOrder(self, curr_type, order):
+        self._orders[curr_type] = order
 
     """
      * Returns the order/vertical layer in which the area of a certain type should be drawn.
@@ -88,12 +88,8 @@ class SpanLayout(AbstractEdgeLayout):
      * @param type the type we want to get the order for.
      * @return the order/vertical layer in which the area of the given type should be drawn.
     """
-    def getOrder(self, type):
-        if type in self._orders:
-            order = self._orders[type]
-        else:
-            order = None
-        return order
+    def getOrder(self, curr_type):
+        return self._orders.get(curr_type, None)  # XXX Integer min value
 
     """
      * Should we draw separation lines between the areas for different span types.
@@ -120,7 +116,7 @@ class SpanLayout(AbstractEdgeLayout):
      * @return A mapping from tokens with self-loops to pixel widths.
     """
     def estimateRequiredTokenWidths(self, edges, scene):
-        result = {}
+        result = {}  # HashMap<Token, Integer>()
         for edge in edges:
             if edge.From == edge.To:
                 labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontsize is 8
@@ -147,9 +143,9 @@ class SpanLayout(AbstractEdgeLayout):
         # find out height of each edge
         self._shapes.clear()
 
-        depth = Counter()
-        offset = Counter()
-        dominates = HashMultiMapArrayList()
+        depth = Counter()  # Counter<Edge>()
+        offset = Counter()  # Counter<Edge>()
+        dominates = HashMultiMapArrayList()  # HashMultiMapLinkedList<Edge, Edge>()
 
         for over in edges:
             for under in edges:
@@ -176,7 +172,7 @@ class SpanLayout(AbstractEdgeLayout):
         # have height of 1.5 levels
 
         # build map from vertex to incoming/outgoing edges
-        vertex2edges = HashMultiMapArrayList()  # XXX NOT NOT LINKED LIST!
+        vertex2edges = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges:
             vertex2edges.add(edge.From, edge)
             vertex2edges.add(edge.To, edge)
@@ -186,7 +182,6 @@ class SpanLayout(AbstractEdgeLayout):
 
         # draw each edge
         for edge in edges:
-
             # set Color and remember old color
             old = scene.color
             scene.color = self.getColor(edge.type)
@@ -244,7 +239,7 @@ class SpanLayout(AbstractEdgeLayout):
 
         if self._separationLines:
             # find largest depth for each prefix type
-            minDepths = {}
+            minDepths = {}  # HashMap<String, Integer>()
             for edge in edges:
                 edgeDepth = depth[edge]
                 typeDepth = minDepths.get(edge.getTypePrefix())

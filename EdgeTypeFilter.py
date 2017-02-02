@@ -9,6 +9,8 @@ from EdgeFilter import *
  *
  * @author Sebastian Riedel
 """
+
+
 class EdgeTypeFilter(EdgeFilter):
 
     """
@@ -28,13 +30,19 @@ class EdgeTypeFilter(EdgeFilter):
      * @param allowedPrefixTypes the allowed prefix types.
      """
     def __init__(self, *allowedPrefixTypes):
-        # * If an edge has a prefix-type in this set it can pass.
-        self._allowedPrefixTypes = set()
+        """
+         * If an edge has a prefix-type in this set it can pass.
+        """
+        self._allowedPrefixTypes = set()  # HashSet<String>()
         self._allowedPrefixTypes.update(list(allowedPrefixTypes))
-        # * If an edge has a postfix-type in this set it can pass.
-        self._allowedPostfixTypes = set()
-        # * The list of listeners of this filter.
-        self._listeners = []
+        """
+         * If an edge has a postfix-type in this set it can pass.
+        """
+        self._allowedPostfixTypes = set()    # HashSet<String>()
+        """
+         * The list of listeners of this filter.
+        """
+        self._listeners = []  # ArrayList<Listener>()
 
     """
      * Adds a listener.
@@ -51,7 +59,7 @@ class EdgeTypeFilter(EdgeFilter):
     """
     @property
     def allowedPrefixType(self):
-        return set(self._allowedPrefixTypes)
+        return set(self._allowedPrefixTypes)  # XXX Collections.unmodifiableSet()
 
     """
      * Returns the set of allowed postfix types for edges.
@@ -60,8 +68,7 @@ class EdgeTypeFilter(EdgeFilter):
     """
     @property
     def allowedPostfixType(self):
-        return self._allowedPostfixTypes
-
+        return set(self._allowedPostfixTypes)  # XXX Collections.unmodifiableSet()
 
     """
      * Creates a new EdgeTypeFilter with the given allowed edge prefix types.
@@ -71,6 +78,16 @@ class EdgeTypeFilter(EdgeFilter):
     def fireChanged(self, Type=str):
         for l in self._listeners:
             l.changed(Type)
+
+    """
+     * Notifies every listener that the allow/disallow state of a type has changed.
+     *
+     * @param type the type which allow/disallow state has changed.
+    """
+    """
+    private void fireChanged(final String type) {
+        for (Listener l : listeners) l.changed(type);  # XXX
+    """
 
     """
      * Adds an allowed prefix type. This causes the filter to accept edges with the given prefix type.
@@ -110,6 +127,16 @@ class EdgeTypeFilter(EdgeFilter):
         self.fireChanged(Type)
 
     """
+     * Creates a new EdgeTypeFilter with the given allowed edge prefix types.
+     *
+     * @param allowedPrefixTypes the allowed prefix types.
+    """
+    """
+    public EdgeTypeFilter(final Set<String> allowedPrefixTypes) {  # XXX
+        this.allowedPrefixTypes.addAll(allowedPrefixTypes);
+    }
+    """
+    """
      * Filters out all edges that don't have an allowed prefix and postfix type.
      *
      * @param original the original set of edges.
@@ -117,7 +144,7 @@ class EdgeTypeFilter(EdgeFilter):
      * @see EdgeFilter#filterEdges(Collection<Edge>)
     """
     def filterEdges(self, original):
-        result = []
+        result = []  # ArrayList<Edge>(original.size())
         for edge in original:
             prefixAllowed = edge.getTypePrefix() == "" or edge.getTypePrefix() in self._allowedPrefixTypes
             postfixAllowed = edge.getTypePostfix() == "" or edge.getTypePostfix() in self._allowedPostfixTypes

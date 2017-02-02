@@ -117,6 +117,8 @@ class TokenProperty:
         else:
             if self._name > other.name:
                 return 1
-            else:
+            elif self._name < other.name:
                 return -1
-            # return self._name.compareTo(other.name) TODO: Ez így nem lesz jó
+            else:
+                return 0  # XXX ÍGY MÁR JÓ LESZ!
+                # return self._name.compareTo(other.name) # TODO: Ez így nem lesz jó

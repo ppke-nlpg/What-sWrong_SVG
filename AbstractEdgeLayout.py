@@ -2,7 +2,6 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from abc import ABCMeta, abstractmethod
-from PyQt4 import QtGui, QtCore
 
 """
  * An AbstractEdgeLayout serves as a base class for edge layout classes. It mostly stores properties associated with

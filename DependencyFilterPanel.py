@@ -11,6 +11,8 @@ from EdgeTokenFilter import *
  *
  * @author Sebastian Riedel
 """
+
+
 class DependencyFilterPanel:
     """
          * Creates a new DependencyFilterPanel.
@@ -44,11 +46,11 @@ class DependencyFilterPanel:
         usePath = gui.onlyPathCheckBox
 
         def usePathAction(value):
-            edgeTokenFilter.usePath = value == 2 #checked
+            edgeTokenFilter.usePath = value == 2  # checked
             nlpCanvas.updateNLPGraphics()
         usePath.stateChanged.connect(usePathAction)
 
-        collapse= gui.collapsCheckBox
+        collapse = gui.collapsCheckBox
 
         def collapseAction(value):
             edgeTokenFilter.collaps = value == 2  # checked

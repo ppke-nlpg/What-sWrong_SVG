@@ -9,6 +9,8 @@ from NLPInstance import *
  *
  * @author Sebastian Riedel
 """
+
+
 class FilterPipeline(NLPInstanceFilter):
     """
      * Creates a new filter pipeline with the given filters.
@@ -17,8 +19,8 @@ class FilterPipeline(NLPInstanceFilter):
     """
     def __init__(self, *filters):
         # * The list of filters.
-        self._filters = []
-        self._filters.extend(list(filters))
+        self._filters = []  # ArrayList<NLPInstanceFilter>()
+        self._filters.extend(filters)
 
     """
      * Applies the 1st filter to the original instance, the 2nd filter to the result of the 1st filter, and so on.
@@ -29,6 +31,6 @@ class FilterPipeline(NLPInstanceFilter):
      """
     def filter(self, original=NLPInstance):
         instance = original
-        for filter in self._filters:
-            instance = filter.filter(instance)
+        for curr_filter in self._filters:
+            instance = curr_filter.filter(instance)
         return instance

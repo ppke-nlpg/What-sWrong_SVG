@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
-
+# tuple-nek hívják... No usage!
 
 """
  * A Pair is a typed pair of objects.
  *
  * @author Sebastian Riedel
 """
+
+
 class Pair:
 
     """
@@ -26,7 +28,7 @@ class Pair:
      * @return true iff both arguments are equal.
     """
     def __eq__(self, other):
-        if(other is None or self.__class__() != other.__class__()):
+        if other is None or self.__class__() != other.__class__():
             return False
         if self.arg1 is not None and self.arg1 != other.arg1:
             return False
@@ -55,4 +57,4 @@ class Pair:
      * @return the string "([arg1],[arg2])".
     """
     def __str__(self):
-        return "(" + self.arg1 + ", " + self.arg2 +")"
+        return "(" + self.arg1 + ", " + self.arg2 + ")"

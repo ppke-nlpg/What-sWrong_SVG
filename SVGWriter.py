@@ -18,7 +18,6 @@ This is an enhanced Version of Rick Muller's Code from
 import os
 display_prog = "display"
 
-import copy
 
 class Scene:
     def __init__(self, name="svg", width=400, height=400):

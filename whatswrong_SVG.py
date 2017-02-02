@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from PyQt4 import QtGui, QtSvg
 
 from CorpusNavigator import CorpusNavigator
 from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import *
 
-from TokenFilter import *
-from EdgeLabelFilter import *
-from EdgeTypeFilter import *
-from EdgeTokenFilter import *
 from FilterPipeline import *
-from NLPCanvas import *
 from EdgeTypeFilterPanel import *
 from DependencyFilterPanel import *
 from TokenFilterPanel import *
@@ -21,14 +15,13 @@ from TokenFilterPanel import *
 from os.path import basename
 
 
-
 class MyWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None, type=str):
+    def __init__(self, parent=None, corp_type=str):
         QtGui.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()
         self.ui.setupUi(self)
-        self.type = type
+        self.type = corp_type
 
     def accept(self):
         instancefactory = None
@@ -76,17 +69,18 @@ class MyForm(QtGui.QMainWindow):
         self.ui.actionExport.setStatusTip('Export to SVG')
         self.ui.actionExport.triggered.connect(self.file_save)
         self.ui.actionExport.setEnabled(False)
+        self.canvas = None
 
     def browse_gold_folder(self):
         # app =
         QtGui.QMainWindow()
-        myapp2 = MyWindow(self, type="gold")
+        myapp2 = MyWindow(self, corp_type="gold")
         myapp2.show()
 
     def browse_guess_folder(self):
         # app =
         QtGui.QMainWindow()
-        myapp2 = MyWindow(self, type="guess")
+        myapp2 = MyWindow(self, corp_type="guess")
         myapp2.show()
 
     def remove_gold(self):
@@ -102,12 +96,12 @@ class MyForm(QtGui.QMainWindow):
         self.ui.selectGuessListWidget.takeItem(self.ui.selectGuessListWidget.row(selectedGuess[0]))
         self.refresh()
 
-    def choosenFile(self, factory, type):
+    def choosenFile(self, factory, corp_type):
         directory = QtGui.QFileDialog.getOpenFileName(self)
         corpus = []
-        if type == "gold":
+        if corp_type == "gold":
             self.goldMap[basename(directory)] = corpus
-        if type == "guess":
+        if corp_type == "guess":
             self.guessMap[basename(directory)] = corpus
 
         f = open(directory)
@@ -122,7 +116,7 @@ class MyForm(QtGui.QMainWindow):
                 break
             line = line.strip()
             if line == "":
-                instanceNr+=1
+                instanceNr += 1
                 instance = factory.create(rows)
                 instance.renderType = NLPInstance.RenderType.single
                 corpus.append(instance)
@@ -130,16 +124,16 @@ class MyForm(QtGui.QMainWindow):
             else:
                 rows.append(line)
         if len(rows) > 0:
-            instanceNr+=1
+            instanceNr += 1
             instance = factory.create(rows)
             instance.renderType = NLPInstance.RenderType.single
             corpus.append(instance)
 
-        if type == "gold":
+        if corp_type == "gold":
             self.ui.selectGoldListWidget.addItem(item)
             self.ui.selectGoldListWidget.setItemSelected(item, True)
 
-        if type == "guess":
+        if corp_type == "guess":
             self.ui.selectGuessListWidget.addItem(item)
             self.ui.selectGuessListWidget.setItemSelected(item, True)
 
@@ -148,14 +142,14 @@ class MyForm(QtGui.QMainWindow):
         self.canvas = NLPCanvas(self.ui)
         self.ui.actionExport.setEnabled(True)
 
-        #create the filter pipeline
+        # create the filter pipeline
         edgeTokenFilter = EdgeTokenFilter()
         edgeLabelFilter = EdgeLabelFilter()
         tokenFilter = TokenFilter()
         edgeTypeFilter = EdgeTypeFilter()
         filterPipeline = FilterPipeline(tokenFilter, edgeTypeFilter, edgeLabelFilter, edgeTokenFilter)
 
-        #set filter of canvas to be the pipeline
+        # set filter of canvas to be the pipeline
         self.canvas.filter = filterPipeline
 
         edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeFilter)
@@ -173,7 +167,8 @@ class MyForm(QtGui.QMainWindow):
             guess = self.guessMap[str(selectedGuess[0].text())]
 
         if gold:
-            CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess, edgeTypeFilter=edgeTypeFilter)
+            CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess,
+                            edgeTypeFilter=edgeTypeFilter)
 
     def onItemChanged(self):
         self.refresh()
@@ -190,14 +185,15 @@ class MyForm(QtGui.QMainWindow):
         name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
         self.canvas.exportNLPGraphics(name)
 
-def test(f):
-    app = QtGui.QApplication(sys.argv)
-    myapp = MyForm()
-    myapp.choosen(MaltTab(), list(open(f).readlines()))
-    myapp.show()
-    myapp.raise_()
 
-    sys.exit(app.exec_())
+def test(f):
+    testapp = QtGui.QApplication(sys.argv)
+    mytestapp = MyForm()
+    mytestapp.choosen(MaltTab(), list(open(f).readlines()))
+    mytestapp.show()
+    mytestapp.raise_()
+
+    sys.exit(testapp.exec_())
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "DEBUG":

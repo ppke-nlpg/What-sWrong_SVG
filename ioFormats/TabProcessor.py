@@ -23,13 +23,14 @@ from ioFormats.CorpusFormat import *
  * @author Sebastian Riedel
 """
 
+
 class TabFormat(CorpusFormat):
 
     def __init__(self, MainWindow):
 
         self._name = "TAB-separated"
         self._monitor = None
-        self._processors = {}
+        self._processors = {}  # TreeMap<String, TabProcessor>()
 
         self.addProcessor(name="CCG", processor=CCG())
         self.addProcessor(name="CoNLL 2009", processor=CoNLL2009())
@@ -120,9 +121,9 @@ class TabFormat(CorpusFormat):
                 result[i].merge(openCorpus[i])
         return result
 
-    def loadTabs(self, file, From, to, processor, open):
-        corpus = []
-        rows = []
+    def loadTabs(self, file, From, to, processor, can_open):
+        corpus = []  # ArrayList<NLPInstance>()
+        rows = []  # ArrayList<List<String>>()
         instnceNr = 0
         for line in file:
             if instnceNr >= to:
@@ -133,7 +134,7 @@ class TabFormat(CorpusFormat):
                 instnceNr += 1
                 if instnceNr <= From:  # Equals because ++instnceNr expression
                     continue
-                if open:
+                if can_open:
                     instance = processor.createOpen(rows)
                 else:
                     instance = processor.create(rows)
@@ -144,7 +145,7 @@ class TabFormat(CorpusFormat):
                     continue
                 rows.append(line.split("\\s+"))  # TODO: rows.add(Arrays.asList(line.split("\\s+")));
         if len(rows) > 0:
-            if open:
+            if can_open:
                 corpus.append(processor.createOpen(rows))
             else:
                 corpus.append(processor.create(rows))
@@ -165,7 +166,7 @@ class TabFormat(CorpusFormat):
                 if inChunk:
                     # start a new chunk and finish old one
                     if "B" == bio or "I" == bio and label != currentChunk:
-                        instance.addSpan(begin, index-1, currentChunk, type)
+                        instance.addSpan(begin, index - 1, currentChunk, type)
                         begin = index
                         currentChunk = label
                 else:
@@ -173,11 +174,11 @@ class TabFormat(CorpusFormat):
                     begin = index
                     currentChunk = label
             elif inChunk:
-                    instance.addSpan(begin, index-1, currentChunk, type)
+                    instance.addSpan(begin, index - 1, currentChunk, type)
                     inChunk = False
             index += 1
         if inChunk:
-            instance.addSpan(begin, index-1, currentChunk, type)
+            instance.addSpan(begin, index - 1, currentChunk, type)
 
     @staticmethod
     def extractSpan00(rows, column, type, instance):
@@ -194,12 +195,12 @@ class TabFormat(CorpusFormat):
                 label = chunk[minus+1:]
                 if "B" == bio:
                     if inChunk:
-                        instance.addSpan(begin, index-1, currentChunk, type)
+                        instance.addSpan(begin, index - 1, currentChunk, type)
                     begin = index
                     currentChunk = label
                     inChunk = True
             elif inChunk:
-                    instance.addSpan(begin, index-1, currentChunk, type)
+                    instance.addSpan(begin, index - 1, currentChunk, type)
                     inChunk = False
             index += 1
 
@@ -720,7 +721,7 @@ class CoNLL2008:
     def create(rows):
         instance = NLPInstance()
         instance.addToken().addProperty("Word", "-Root-")
-        predicates = []
+        predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
@@ -832,7 +833,7 @@ class CoNLL2009:
     def create(rows):
         instance = NLPInstance()
         instance.addToken().addProperty(name="Word", value="-Root-")
-        predicates = []
+        predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
             instance.addToken().\

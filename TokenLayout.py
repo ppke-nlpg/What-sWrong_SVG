@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from PyQt4 import QtGui, QtCore
 from SVGWriter import *
 from Bounds1D import Bounds1D
 
@@ -203,8 +202,8 @@ class TokenLayout:
         self._margin = 20
         self._fromSplitPoint = -1
         self._toSplitPoint = -1
-        self._textLayouts = {}
-        self._bounds = {}
+        self._textLayouts = {}  # HashMap<Pair<Token, Integer>, TextLayout>()
+        self._bounds = {}  # HashMap<Token, Rectangle2D>()
         self._width = 0
         self._height = 0
 
@@ -322,7 +321,7 @@ class TokenLayout:
                 self._height = lasty + self._rowHeight
 
         self._width = lastx - self._margin
-        return self._width+scene.offsetx, self._height + 2 + scene.offsety
+        return self._width + scene.offsetx, self._height + 2 + scene.offsety
 
     """
      * Returns the text layout for a given property and property index in the stack.

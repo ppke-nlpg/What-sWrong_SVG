@@ -8,7 +8,7 @@
 """
 
 
-class NLPInstanceFilter():
+class NLPInstanceFilter:
     """
      * Filter the given instance.
      *

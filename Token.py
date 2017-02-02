@@ -44,7 +44,7 @@ class Token:
     """
     def __init__(self, index):
         self._index = index
-        self._tokenProperties = {}
+        self._tokenProperties = {}  # HashMap<TokenProperty, String>()
 
     """
      * Returns the index of the token.
@@ -67,8 +67,8 @@ class Token:
      * @param property the property to get the value for.
      * @return the value of the given property.
     """
-    def getProperty(self, property):
-        return self._tokenProperties[property]
+    def getProperty(self, token_property):
+        return self._tokenProperties[token_property]
 
     """
      * Remove the property value with given index.
@@ -113,7 +113,7 @@ class Token:
      *
      * @param value the value of the property.
      """
-    def addProperty(self, value=None, name=None, index=None, property=None):
+    def addProperty(self, value: str=None, name=None, index=None, property=None):
         if name is not None and value is not None:
             self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
             return self
@@ -133,8 +133,8 @@ class Token:
      * @return a list of sorted token properties.
     """
     def getSortedProperties(self):
-        sorted_properties = sorted(self._tokenProperties.keys(), key=attrgetter('level','name'))
-        return list(sorted_properties)
+        sorted_properties = list(sorted(self._tokenProperties.keys(), key=attrgetter('level', 'name')))
+        return sorted_properties
 
     """
      * Returns a collection of all property values.
@@ -222,7 +222,3 @@ class Token:
     """
     def __str__(self):
         return "{0}:{1}".format(self._index, ", ".join(str(prop) for prop in self._tokenProperties))
-
-    @property
-    def int_index(self):
-        return int(self._index)
