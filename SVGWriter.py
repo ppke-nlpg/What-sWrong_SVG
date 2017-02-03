@@ -42,7 +42,8 @@ class Scene:
     def color(self, value):
         self._color = value
 
-    def add(self, item): self.items.append(item)
+    def add(self, item):
+        self.items.append(item)
 
     def strarray(self):
         var = ["<?xml version=\"1.0\"?>\n",

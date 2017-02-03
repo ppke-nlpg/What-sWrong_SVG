@@ -242,8 +242,8 @@ class TokenLayout:
             maxX = 0
             lasty = self._baseLine + self._rowHeight
             for p in token.getSortedProperties():
-                property = token.getProperty(p)
-                labelwith = Text(scene, (0, 0), property, 12, scene.color).getWidth()
+                curr_property = token.getProperty(p)
+                labelwith = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 lasty += self._rowHeight
                 if labelwith > maxX:
                     maxX = labelwith
@@ -271,7 +271,7 @@ class TokenLayout:
      * @param g2d         the graphics object to draw to.
      * @return the dimension of the drawn graph.
     """
-    def layout(self, instance, tokenWidths: dict, scene):
+    def layout(self, instance, tokenWidths: dict, scene: Scene):
         tokens = instance.tokens
         if len(tokens) == 0:
             self._height = 1
@@ -299,17 +299,17 @@ class TokenLayout:
             lasty = self._baseLine + self._rowHeight
             maxX = 0
             for p in token.getSortedProperties():
-                property = token.getProperty(p)
+                curr_property = token.getProperty(p)
                 if index == 0:
                     scene.color = (0, 0, 0)  # BLACK
                 else:
                     scene.color = (120, 120, 120)  # GREY
-                scene.add(TextToken(scene, (lastx, lasty), property, 12, scene.color))
+                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, scene.color))
                 lasty += self._rowHeight
-                labelwidth = Text(scene, (0, 0), property, 12, scene.color).getWidth()
+                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 if labelwidth > maxX:
                     maxX = labelwidth
-                self._textLayouts[(token, index+1)] = property
+                self._textLayouts[(token, index+1)] = curr_property  # XXX layout
                 index += 1
             requiredWidth = tokenWidths.get(token)
             if requiredWidth is not None and maxX < requiredWidth:

@@ -135,7 +135,7 @@ class SpanLayout(AbstractEdgeLayout):
      * @param g2d    the graphics object to draw on.
      * @return the dimensions of the drawn graph.
     """
-    def layoutEdges(self, edges, bounds, scene):
+    def layoutEdges(self, edges, bounds, scene: Scene):
         if len(self.visible) > 0:
             edges = set(edges)
             edges &= self._visible  # Intersection

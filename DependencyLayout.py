@@ -51,7 +51,7 @@ class DependencyLayout(AbstractEdgeLayout):
      * @param g2d    the graphics object to draw on.
      * @return the dimensions of the drawn graph.
     """
-    def layoutEdges(self, edges, bounds, scene):
+    def layoutEdges(self, edges, bounds, scene: Scene):
         edges_ = set(edges)
         if len(self._visible) > 0:
             edges_ &= self._visible  # Intersection

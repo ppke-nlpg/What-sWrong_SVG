@@ -109,7 +109,7 @@ class EdgeTypeFilterPanel:
      * @param postfixTypes the target set for postfix types.
      """
     @staticmethod
-    def separateTypes(usedTypes, prefixTypes, postfixTypes):
+    def separateTypes(usedTypes, prefixTypes: set, postfixTypes: set):
         for t in usedTypes:
             index = t.find(':')
             if index == -1:

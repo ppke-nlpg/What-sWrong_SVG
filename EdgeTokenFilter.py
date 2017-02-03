@@ -3,6 +3,7 @@
 
 from NLPInstanceFilter import *
 from NLPInstance import *
+from Token import Token
 
 """
  * An EdgeTokenFilter filters out edges based on the properties of their tokens. For example, we can filter out all
@@ -177,15 +178,13 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param to   the end token.
          * @param path the path to add.
         """
-        def addPath(self, From=Token, to=Token, path=None):
+        def addPath(self, From: Token, to: Token, path):
             if From not in self._map:
                 self._map[From] = {}  # HashMap<Token, HashSet<Path>>()
             paths = self._map[From]
             if to not in paths:
-                _set = set()
-                paths[to] = _set
-            _set = paths[to]
-            _set.add(path)
+                paths[to] = set()
+            paths[to].add(path)  # self._map[From][to].add(path)
 
         def __len__(self):
             return len(self._map)

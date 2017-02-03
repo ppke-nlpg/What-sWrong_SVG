@@ -38,8 +38,8 @@ class DependencyFilterPanel:
             print("tokenTextFieldChanged")
             edgeTokenFilter.clear()
             split = text.split(",")
-            for property in split:
-                edgeTokenFilter.addAllowedProperty(property)
+            for token_property in split:
+                edgeTokenFilter.addAllowedProperty(token_property)
             nlpCanvas.updateNLPGraphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 

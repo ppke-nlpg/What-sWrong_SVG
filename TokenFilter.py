@@ -3,7 +3,6 @@
 
 from NLPInstanceFilter import *
 from NLPInstance import *
-from TokenProperty import *
 from Token import *
 
 """
