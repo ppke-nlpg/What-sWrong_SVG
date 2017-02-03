@@ -281,8 +281,8 @@ class CorpusLoader:
      *
      * @param format the format to add.
     """
-    def addFormat(self, format):
-        self._formats[format.getName()] = format
+    def addFormat(self, corpus_format):
+        self._formats[corpus_format.getName()] = corpus_format
 
     """
      * Sets the directory to use in the file dialog.
@@ -311,8 +311,8 @@ class CorpusLoader:
         # if formatString == "CoNLL":
         #     formatString = "TAB-separated"
         # accessory.filetypeComboBox.setSelectedItem(formats.get(formatString))
-        for format in self._formats.values():
-            format.loadProperties(properties, self._id)
+        for corpus_format in self._formats.values():
+            corpus_format.loadProperties(properties, self._id)
 
     """
      * Returns a qualified version of the given name to be used as keys in {@link Properties} objects.
@@ -331,8 +331,8 @@ class CorpusLoader:
     def saveProperties(self, properties):
         properties.setProperty(self.property("dir"), self.getDirectory())
         # properties.setProperty(self.property("format"), accessory.filetypeCombobox,getSelectedItem().toString())
-        for format in self.formats.values():
-            format.saveProperties(properties, self.id)
+        for corpus_format in self.formats.values():
+            corpus_format.saveProperties(properties, self.id)
 
     """
      * Creates a new CorpusLoader with the given title. The title is used to derive an id from.

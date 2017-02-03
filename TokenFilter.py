@@ -108,9 +108,9 @@ class TokenFilter(NLPInstanceFilter):
         result = []  # ArrayList<Token>(original.size())
         for vertex in original:
             copy = Token(vertex.index)
-            for property in vertex.getPropertyTypes():
-                if property not in self._forbiddenProperties:
-                    copy.addProperty(property=property, value=vertex.getProperty(property))
+            for curr_property in vertex.getPropertyTypes():
+                if curr_property not in self._forbiddenProperties:
+                    copy.addProperty(token_property=curr_property, value=vertex.getProperty(curr_property))
             result.append(copy)
         return result
 

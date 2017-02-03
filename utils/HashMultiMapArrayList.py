@@ -45,7 +45,7 @@ class HashMultiMapArrayList:
      *
      * @return A deep copy of this mapping.
     """
-    def deepcopy(self):  # XXX copy.deepcopy(...)
+    def deepcopy(self):  # XXX copy.deepcopy(...) No usage
         result = HashMultiMapArrayList()
         for key, value in self._map.items():
             result.add(key, value)
@@ -57,7 +57,8 @@ class HashMultiMapArrayList:
      * @param o the key to get the values for.
      * @return a list of values for the given keys or the empty list of no such value exist.
     """
-    def get(self, obj):   # XXX collections.defaultdict(list)
+    def get(self, obj):   # XXX collections.defaultdict(list) No usage
+        """
         if obj in self._map:
             result = self._map[obj]
         else:
@@ -66,9 +67,11 @@ class HashMultiMapArrayList:
             return self._emptyList
         else:
             return result
+        """
+        return self._map.get(obj, self._emptyList)
 
     def __getitem__(self, item):
-        return self.get(item)
+        return self._map.get(item, self._emptyList)
 
     def __setitem__(self, key, value):
         self.add(key, value)

@@ -217,7 +217,7 @@ class TokenLayout:
      * @param g2d         The graphics object to render to.
      * @return Map<Token, Bounds1D> A mapping from tokens to estimated horizontal bounds in the layout.
     """
-    def estimateTokenBounds(self, instance, tokenWidths, scene):
+    def estimateTokenBounds(self, instance, tokenWidths: dict, scene):
         result = {}
         self._height = 0
 
@@ -271,7 +271,7 @@ class TokenLayout:
      * @param g2d         the graphics object to draw to.
      * @return the dimension of the drawn graph.
     """
-    def layout(self, instance, tokenWidths, scene):
+    def layout(self, instance, tokenWidths: dict, scene):
         tokens = instance.tokens
         if len(tokens) == 0:
             self._height = 1

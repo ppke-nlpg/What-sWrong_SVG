@@ -25,6 +25,7 @@ class Counter:
      * @return the count of object o. If no count for o has specified zero is returned.
     """
     def __getitem__(self, item):  # OOB works
+        """
         if item in self._map:
             original = self._map[item]
         else:
@@ -33,6 +34,8 @@ class Counter:
             return 0
         else:
             return original
+        """
+        return self._map.get(item, 0)
 
     def __setitem__(self, key, value):
         self._map[key] = value
@@ -43,7 +46,7 @@ class Counter:
      * @param value   the object to increment the count for.
      * @param howmuch how much the count should be incremented.
     """
-    def increment(self, value, howmuch):  # XXX [...] += howmuch
+    def increment(self, value, howmuch):  # XXX [...] += howmuch No usage
         if value in self._map:
             old = self._map[value]
         else:
@@ -61,7 +64,7 @@ class Counter:
      * @throws IOException if I/O goes wrong.
     """
     @staticmethod
-    def loadFromFile(file):
+    def loadFromFile(file):  # No usage
         result = Counter()
         for line in file:
             if line.trim() != "":
@@ -76,7 +79,7 @@ class Counter:
      * @return a list of map entries ordered by count.
     """
     # XXX collections.counter.most_common() or collections.counter.most_common().reverse()
-    def sorted(self, descending):
+    def sorted(self, descending):  # No usage
         sortedmap = self._map.items()
 
         def foo(entry1, entry2):
@@ -91,7 +94,7 @@ class Counter:
      *
      * @param outputStream the output stream to print to.
     """
-    def save(self, output):  # XXX Iterator writelines
+    def save(self, output):  # XXX Iterator writelines No usage
         for key, value in self._map.items():
             output.write(key + '\t' + value)
 

@@ -69,7 +69,7 @@ class AligmentRenderer:
      * @see com.googlecode.whatswrong.NLPCanvasRenderer#render(com.googlecode.whatswrong.NLPInstance,
      *      java.awt.Graphics2D)
     """
-    def render(self,  instance, scene):
+    def render(self,  instance, scene: Scene):
         tokenXBounds1 = self._tokenLayout1.estimateTokenBounds(instance, {}, scene)
         tokenXBounds2 = self._tokenLayout2.estimateTokenBounds(instance, {}, scene)
 
