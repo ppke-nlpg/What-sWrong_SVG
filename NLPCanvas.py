@@ -6,7 +6,7 @@ from SVGWriter import *
 from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
 from AligmentRenderer import AligmentRenderer
-from NLPInstanceFilter import *
+from NLPInstanceFilter import NLPInstanceFilter
 
 """
  * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token

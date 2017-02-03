@@ -24,15 +24,17 @@ class EdgeLabelFilter(EdgeFilter):
         """
         * Set of allowed label substrings.
         """
-        self._allowedLabels = set()
-        self._allowedLabels.update(list(allowedLabels))
+        if len(allowedLabels) != 1 or not isinstance(allowedLabels[0], set):
+            self._allowedLabels = set(allowedLabels)
+        else:
+            self._allowedLabels = allowedLabels[0]
 
     """
      * Adds an allowed label substring.
      *
      * @param label the label that should be allowed
     """
-    def addAllowedLabel(self, label=str):
+    def addAllowedLabel(self, label: str):
         self._allowedLabels.add(label)
 
     """
@@ -40,7 +42,7 @@ class EdgeLabelFilter(EdgeFilter):
      *
      * @param label the label substring to disallow.
     """
-    def removeAllowedLabel(self, label):
+    def removeAllowedLabel(self, label: str):
         self._allowedLabels.remove(label)
 
     """
@@ -57,7 +59,7 @@ class EdgeLabelFilter(EdgeFilter):
      * @return a filtered version of the original edge collection.
      * @see EdgeFilter#filterEdges(Collection<Edge>)
     """
-    def filterEdges(self, original):
+    def filterEdges(self, original: list) -> list:
         if len(self._allowedLabels) == 0:
             return original
         result = []  # ArrayList<Edge>(original.size())
@@ -74,5 +76,5 @@ class EdgeLabelFilter(EdgeFilter):
      * @param label the label substring we want to check whether the filter allows it.
      * @return true iff the filter allows the given label substring.
     """
-    def allows(self, label=str):
+    def allows(self, label: str):
         return label in self._allowedLabels

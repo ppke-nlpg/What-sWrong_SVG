@@ -58,9 +58,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * Set of property values that one of the tokens of an edge has to have so that the edge is not going to be
          * filtered out.
         """
-        self._allowedProperties = set()
-
-        self._allowedProperties.update(list(allowedProperties))
+        self._allowedProperties = set(allowedProperties)
 
     """
      * If active this property will cause the filter to filter out all tokens for which all edges where filtered out in
@@ -109,7 +107,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      *
      * @param propertyValue the property value to allow.
     """
-    def addAllowedProperty(self, propertyValue=str):
+    def addAllowedProperty(self, propertyValue: str):
         self._allowedProperties.add(propertyValue)
 
     """
@@ -117,7 +115,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      *
      * @param propertyValue the property value to remove from the set of allowed property values.
     """
-    def removeAllowedProperty(self, propertyValue=str):
+    def removeAllowedProperty(self, propertyValue: str):
         self._allowedProperties.remove(propertyValue)
 
     """

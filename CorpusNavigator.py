@@ -3,7 +3,7 @@
 
 from NLPCanvas import NLPCanvas
 from NLPDiff import *
-
+from CorpusLoader import CorpusLoader
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
@@ -21,22 +21,22 @@ class CorpusNavigator:
      * The loader for guess instances.
     """
     @property
-    def guess(self):
+    def guess(self) -> CorpusLoader:
         return self._guess
 
     @guess.setter
-    def guess(self, value):
+    def guess(self, value: CorpusLoader):
         self._guess = value
 
     """
      * The loader for gold instances.
     """
     @property
-    def gold(self):
+    def gold(self) -> CorpusLoader:
         return self._gold
 
     @gold.setter
-    def gold(self, value):
+    def gold(self, value: CorpusLoader):
         self._gold = value
 
     # XXX WHAT IS THIS?
@@ -182,7 +182,7 @@ class CorpusNavigator:
      * @return the difference corpus.
      * @see com.googlecode.whatswrong.NLPDiff
     """
-    def getDiffCorpus(self, gold, guess):
+    def getDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]):  # XXX
         # diffCorpus = self._diffCorpora[Pair(gold, guess)]
         # if diffCorpus in None:
         #     diffCorpus = []
@@ -198,7 +198,7 @@ class CorpusNavigator:
      * @param gold  the gold corpus.
      * @param guess the guess corpus.
     """
-    def removeDiffCorpus(self, gold, guess):
+    def removeDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]):
         pair = (gold, guess)
         diffCorpus = self._diffCorpora[pair]
         if diffCorpus is not None:

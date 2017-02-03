@@ -363,3 +363,6 @@ class CorpusLoader:
         c.gridwidth = 2
         # self.add
         # XXX CORPUS LOADER NOT IMPLEMENTED!
+
+    def __len__(self):
+        return len(self._corpora)

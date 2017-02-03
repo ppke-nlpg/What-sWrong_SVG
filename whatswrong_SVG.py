@@ -16,7 +16,7 @@ from os.path import basename
 
 
 class MyWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None, corp_type=str):
+    def __init__(self, parent=None, corp_type: str=None):
         QtGui.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()

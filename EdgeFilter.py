@@ -22,6 +22,6 @@ class EdgeFilter(NLPInstanceFilter):
     """
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
-    def filter(self, original=NLPInstance):
+    def filter(self, original: NLPInstance):
         return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
                            renderType=original.renderType, splitPoints=original.splitPoints)
