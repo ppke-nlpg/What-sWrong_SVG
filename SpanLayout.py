@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from collections import defaultdict
+
 from AbstractEdgeLayout import AbstractEdgeLayout
 from utils.Counter import Counter
-from utils.HashMultiMapArrayList import HashMultiMapArrayList
 from SVGWriter import *
 
 
@@ -145,7 +146,7 @@ class SpanLayout(AbstractEdgeLayout):
 
         depth = Counter()  # Counter<Edge>()
         offset = Counter()  # Counter<Edge>()
-        dominates = HashMultiMapArrayList()  # HashMultiMapLinkedList<Edge, Edge>()
+        dominates = defaultdict(list)  # HashMultiMapLinkedList<Edge, Edge>()
 
         for over in edges:
             for under in edges:
@@ -156,7 +157,7 @@ class SpanLayout(AbstractEdgeLayout):
                     over.coversExactly(under) and
                     over.lexicographicOrder(under) > 0 or
                     over.overlaps(under) and over.getMinIndex() < under.getMinIndex()):
-                    dominates.add(over, under)
+                    dominates[over].append(under)
 
         for edge in edges:
             self.calculateDepth(dominates, depth, edge)
@@ -172,10 +173,10 @@ class SpanLayout(AbstractEdgeLayout):
         # have height of 1.5 levels
 
         # build map from vertex to incoming/outgoing edges
-        vertex2edges = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
+        vertex2edges = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges:
-            vertex2edges.add(edge.From, edge)
-            vertex2edges.add(edge.To, edge)
+            vertex2edges[edge.From].append(edge)
+            vertex2edges[edge.To].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
 
         maxWidth = 0

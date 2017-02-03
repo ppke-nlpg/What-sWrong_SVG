@@ -4,11 +4,10 @@
 import functools
 import itertools
 import operator
-
+from collections import defaultdict
 
 from AbstractEdgeLayout import AbstractEdgeLayout
 from utils.Counter import Counter
-from utils.HashMultiMapArrayList import HashMultiMapArrayList
 from SVGWriter import *
 
 
@@ -59,27 +58,27 @@ class DependencyLayout(AbstractEdgeLayout):
         # find out height of each edge
         self._shapes.clear()
 
-        loops = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
+        loops = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
         allLoops = set()  # HashSet<Edge>()
         tokens = set()  # HashSet<Token>()
         for edge in edges_:
             tokens.add(edge.From)
             tokens.add(edge.To)
             if edge.From == edge.To:
-                loops[edge.From] = edge
+                loops[edge.From].append(edge)
                 allLoops.add(edge)
 
         edges_ -= allLoops
 
         depth = Counter()   # Counter<Edge>()
         offset = Counter()  # Counter<Edge>()
-        dominates = HashMultiMapArrayList()  # HashMultiMapLinkedList<Edge, Edge>()
+        dominates = defaultdict(list)  # HashMultiMapLinkedList<Edge, Edge>()
 
         for over in edges_:
             for under in edges_:
                 if over != under and (over.covers(under) or over.coversSemi(under) or
                                       over.coversExactly(under) and over.lexicographicOrder(under) > 0):
-                    dominates[over] = under
+                    dominates[over].append(under)
 
         for edge in edges_:
             self.calculateDepth(dominates, depth, edge)
@@ -102,10 +101,10 @@ class DependencyLayout(AbstractEdgeLayout):
             maxHeight += self._heightPerLevel // 2
 
         # build map from vertex to incoming/outgoing edges
-        vertex2edges = HashMultiMapArrayList()  # HashMultiMapLinkedList<Token, Edge>()
+        vertex2edges = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges_:
-            vertex2edges[edge.From] = edge
-            vertex2edges[edge.To] = edge
+            vertex2edges[edge.From].append(edge)
+            vertex2edges[edge.To].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
         From = {}  # HashMap<Edge, Point>()
         To = {}  # HashMap<Edge, Point>()
@@ -216,7 +215,7 @@ class DependencyLayout(AbstractEdgeLayout):
      * @return an a path over the given points.
     """
     @staticmethod
-    def createRectArrow(scene, p1, p2, p3, p4):
+    def createRectArrow(scene: Scene, p1, p2, p3, p4):
         scene.add(Line(scene, p1, p2, scene.color))
         scene.add(Line(scene, p2, p3, scene.color))
         scene.add(Line(scene, p3, p4, scene.color))
@@ -233,7 +232,7 @@ class DependencyLayout(AbstractEdgeLayout):
      * @return an a path over the given points.
     """
     @staticmethod
-    def createCurveArrow(scene, p1, p2, p3, p4):
+    def createCurveArrow(scene: Scene, p1, p2, p3, p4):
         start = (p1[0], p1[1])
         # y = (p2[0] - p1.x(), p2[1]-p1.y())
         # z = (p2[0]+(p3[0]-p2[0]) / 2 -p1.x(), p2[1]-p1.y())

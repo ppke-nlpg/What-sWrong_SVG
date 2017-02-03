@@ -74,4 +74,4 @@ class HashMultiMapArrayList:
         return self._map.get(item, self._emptyList)
 
     def __setitem__(self, key, value):
-        self.add(key, value)
+        self[key].append(value)
