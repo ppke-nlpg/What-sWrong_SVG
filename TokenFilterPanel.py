@@ -12,7 +12,7 @@ from PyQt4 import QtGui
 
 
 class TokenFilterPanel:
-    def __init__(self, gui, canvas=NLPCanvas, tokenFilter=TokenFilter):
+    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: TokenFilter):
         self._listModel = []  # DefaultListModel()
         self._canvas = canvas
         self._canvas.addChangeListener(changeListener=self)
@@ -23,7 +23,7 @@ class TokenFilterPanel:
         self.updateProperties()
         self._updating = False
 
-        def itemActivated(item):
+        def itemActivated(_):  # item
             if len(self._list) == 0 or len(self._listModel) == 0:
                 return
             for index in range(0, len(self._list)):
@@ -62,10 +62,11 @@ class TokenFilterPanel:
             return
         for index in range(0, len(self._list)):
             t = str(self._listModel[index])
-            if self._list.isItemSelected(self._list.item(index)):
+            if self._list.isItemSelected(self._list.item(index)):  # ok
                 self._tokenFilter.removeForbiddenProperty(name=t)
             else:
                 self._tokenFilter.addForbiddenProperty(name=t)
+        # self.canvas.updateNLPGraphics()  # Updated elsewhere
 
     """
      * Updates the list of available token properties.

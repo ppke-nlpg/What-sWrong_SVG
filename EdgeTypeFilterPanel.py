@@ -17,7 +17,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas=NLPCanvas, edgeTypeFilter=EdgeTypeFilter):
+    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: EdgeTypeFilter):
         """
          * The canvas to request the update after the filter has been changed.
         """
@@ -61,7 +61,7 @@ class EdgeTypeFilterPanel:
         def valueChanged():
             print("Edge type widget selection changed")
             self._justChanged.clear()
-            for index in range(0, len(self._types)):
+            for index in range(0, len(self._types)):  # ok
                 t = str(self._listModel[index])
                 self._justChanged.add(t)
                 if self._types.isItemSelected(self._types.item(index)):
@@ -122,10 +122,10 @@ class EdgeTypeFilterPanel:
     """
     def updateSelection(self):
         # TODO: deselecting items?
-        for index in range(0, len(self._types)):
+        for index in range(0, len(self._types)):  # ok
             t = str(self._types.item(index))
             if self._edgeTypeFilter.allowsPrefix(t):
-                self._types.setItemSelected(self._types.item(index), True)
+                self._types.setItemSelected(self._types.item(index), True)  # ok
 
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.

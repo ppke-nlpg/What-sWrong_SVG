@@ -88,8 +88,8 @@ class SpanLayout(AbstractEdgeLayout):
      * @param type the type we want to get the order for.
      * @return the order/vertical layer in which the area of the given type should be drawn.
     """
-    def getOrder(self, curr_type):
-        return self._orders.get(curr_type, None)  # XXX Integer min value
+    def getOrder(self, curr_type) -> int:
+        return self._orders.get(curr_type, -999999999)  # Integer min value
 
     """
      * Should we draw separation lines between the areas for different span types.
@@ -119,11 +119,8 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}  # HashMap<Token, Integer>()
         for edge in edges:
             if edge.From == edge.To:
-                labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontsize is 8
-                if edge.From in result:
-                    width = max(labelwith, result[edge.From])  # oldWith is result[...]
-                else:
-                    width = labelwith
+                labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontsize is 8
+                width = max(labelwidth, result.get(edge.From, labelwidth))  # oldWith is result[...]
                 result[edge.From] = width + self._totalTextMargin
         return result
 
@@ -155,7 +152,7 @@ class SpanLayout(AbstractEdgeLayout):
                     over.covers(under) or over.coversSemi(under) or
                     over.coversExactly(under) and
                     over.lexicographicOrder(under) > 0 or
-                    over.overlaps(under) and over.getMinIndex() < under.getMinIndex()):
+                        over.overlaps(under) and over.getMinIndex() < under.getMinIndex()):
                     dominates[over].append(under)
 
         for edge in edges:
@@ -191,7 +188,7 @@ class SpanLayout(AbstractEdgeLayout):
             scene.color = self.getColor(edge.type)
 
             # prepare label (will be needed for spacing)
-            labelwith = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth() * 0
+            labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # layout
             # draw lines
             if self._revert:
                 spanLevel = maxDepth - depth[edge]
@@ -211,9 +208,9 @@ class SpanLayout(AbstractEdgeLayout):
             if maxX > maxWidth:
                 maxWidth = maxX + 1
 
-            if maxX - minX < labelwith + self._totalTextMargin:
+            if maxX - minX < labelwidth + self._totalTextMargin:
                 middle = minX + (maxX - minX) // 2
-                textWidth = labelwith + self._totalTextMargin
+                textWidth = labelwidth + self._totalTextMargin
                 minX = middle - textWidth // 2
                 maxX = middle + textWidth // 2
 
@@ -229,7 +226,7 @@ class SpanLayout(AbstractEdgeLayout):
                                     (255, 255, 255), (0, 0, 0), 1))
 
             # write label in the middle under
-            labelx = minX + (maxX - minX) // 2 - labelwith // 2
+            labelx = minX + (maxX - minX) // 2 - labelwidth // 2
             labely = height + self._heightPerLevel // 2
 
             scene.add(Text(scene, (labelx, labely), edge.getLabelWithNote(), 12, scene.color))

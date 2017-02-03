@@ -150,15 +150,6 @@ class NLPCanvas:
         for l in self._listeners:
             l.instanceChanged()
 
-    # XXX TO BE DELETED?
-    def updateCanvas(self):
-        # self._ui.graphicsView.setScene(self._scene)
-        # br = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/test.svg")
-        # text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
-        # self._scene.addItem(br)
-        # self._ui.graphicsView.show()
-        pass
-
     """
      * Return the renderer that draws the NLPInstance onto this canvas.
      *
@@ -183,7 +174,7 @@ class NLPCanvas:
         self._tokens.extend(self._nlpInstance.tokens)
         self._usedProperties.clear()
         for token in self._tokens:
-            self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # XXX Tuple and set!
+            self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # Tuple and set!
         self.fireInstanceChanged()
 
     """
@@ -229,18 +220,7 @@ class NLPCanvas:
       NLP instance and drawing parameters.
     """
     def updateNLPGraphics(self):
-        filtered = self.filterInstance()
-
-        self._SVGScene = Scene(width=800)
-
-        renderer = self._renderers[filtered.renderType]
-
-        dim = renderer.render(filtered, self._SVGScene)
-
-        self._SVGScene = Scene(width=dim[0], height=dim[1])
-
-        renderer.render(filtered, self._SVGScene)
-        self._SVGScene.write_svg("tmp.svg")
+        self.exportNLPGraphics("tmp.svg")  # XXX Omit file creation
         path = os.path.abspath("tmp.svg")
 
         scene = QtGui.QGraphicsScene()
@@ -252,7 +232,7 @@ class NLPCanvas:
 
     def exportNLPGraphics(self, filepath):
         filtered = self.filterInstance()
-        self._SVGScene = Scene(width=800)
+        self._SVGScene = Scene(width=800)  # XXX WHY 800?
 
         renderer = self._renderers[filtered.renderType]
 
@@ -278,4 +258,4 @@ class NLPCanvas:
      * @param file the eps file to export to.
      * @throws IOException if IO goes wrong.
     """
-    # Will be implemented in the far future...
+    # XXX Will be implemented in the far future...

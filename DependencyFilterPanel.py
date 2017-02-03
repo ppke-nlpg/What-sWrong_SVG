@@ -21,7 +21,7 @@ class DependencyFilterPanel:
          * @param edgeLabelFilter The EdgeLabelFilter to control through this panel.
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
-    def __init__(self, gui, nlpCanvas=NLPCanvas, edgeLabelFilter=EdgeLabelFilter, edgeTokenFilter=EdgeTokenFilter):
+    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: EdgeLabelFilter, edgeTokenFilter: EdgeTokenFilter):
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):

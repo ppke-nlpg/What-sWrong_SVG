@@ -128,19 +128,14 @@ class EdgeTokenFilter(NLPInstanceFilter):
     """
      * A Path represents a path of edges. Right it is simply a HashSet of edges.
     """
-    class Path(set):
-        def __hash__(self):
-            value = 0
-            for e in self:
-                value += hash(e)
-            return value
+    # Just a set()  # HashSet<Edge>
 
     """
      * A Paths object is a mapping from token pairs to all paths between the corresponding tokens.
     """
     class Paths:
         def __init__(self):
-            self._map = {}  # HashMap<Token, HashMap<Token, HashSet<Path>>>
+            self._map = {}  # XXX EXTENDS HashMap<Token, HashMap<Token, HashSet<Path>>>
 
         """
          * Returns the set of paths between the given tokens.
@@ -149,12 +144,11 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param to   the end token.
          * @return the set of paths between the tokens.
         """
-        def getPaths(self, From=Token, to=Token):
+        def getPaths(self, From=Token, to=Token) -> set():
             if From not in self._map:
-                return None
+                return set()
             else:
-                paths = self._map[From]
-                return paths[to]
+                return self._map[From][to]
 
         """
          * Get all tokens with paths that end in this token and start at the given from token.
@@ -203,7 +197,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
         paths = EdgeTokenFilter.Paths()
         # initialize
         for edge in edges:
-            path = EdgeTokenFilter.Path()
+            path = set()  # HashSet<Edge>
             path.add(edge)
             paths.addPath(edge.From, edge.To, path)
             paths.addPath(edge.To, edge.From, path)
@@ -214,13 +208,13 @@ class EdgeTokenFilter(NLPInstanceFilter):
             paths = EdgeTokenFilter.Paths()
             # go over each paths of the previous length and increase their size by one
             for From in previous.keys():
-                for over in previous.getTos():
-                    for to in first.getTos():
+                for over in previous.getTos(From):  # XXX IS IT OK?!
+                    for to in first.getTos(over):
                         for path1 in previous.getPaths(From, over):
                             for path2 in first.getPaths(over, to):
-                                if path2 not in path1 and iter(path1).next().getTypePrefix() ==\
-                                        iter(path2).next().getTypePrefix():  # XXX IS THIS OK?!
-                                    path = EdgeTokenFilter.Path()
+                                if path2 not in path1 and next(iter(path1)).getTypePrefix() == \
+                                        next(iter(path2)).getTypePrefix():
+                                    path = set()  # HashSet<Edge>
                                     path.update(path1)
                                     path.update(path2)
                                     paths.addPath(From, to, path)
@@ -301,7 +295,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @return the filtered instance.
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
-    def filter(self, original=NLPInstance):
+    def filter(self, original: NLPInstance):
         edges = self.filterEdges(original.getEdges())
         if not self._collaps:
             return NLPInstance(tokens=original.tokens, edges=edges, renderType=original.renderType,

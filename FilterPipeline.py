@@ -17,10 +17,9 @@ class FilterPipeline(NLPInstanceFilter):
      *
      * @param filters the filters of the pipeline. The first filter will be applied first, the last filter last.
     """
-    def __init__(self, *filters):
+    def __init__(self, *filters: [NLPInstanceFilter]):
         # * The list of filters.
-        self._filters = []  # ArrayList<NLPInstanceFilter>()
-        self._filters.extend(filters)
+        self._filters = filters  # ArrayList<NLPInstanceFilter>()
 
     """
      * Applies the 1st filter to the original instance, the 2nd filter to the result of the 1st filter, and so on.
