@@ -4,10 +4,9 @@
 import functools
 import itertools
 import operator
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from AbstractEdgeLayout import AbstractEdgeLayout
-from utils.Counter import Counter
 from SVGWriter import *
 
 
@@ -93,11 +92,16 @@ class DependencyLayout(AbstractEdgeLayout):
                         offset[right] = self._heightPerLevel * 2 // 3
 
         # calculate maxHeight and maxWidth
-        maxHeight = (depth.getMaximum() + 1) * self._heightPerLevel + 3
+        most_common = depth.most_common(1)
+        if len(most_common) == 0:
+            max_depth = 0
+        else:
+            max_depth = most_common[0][1]
+        maxHeight = (max_depth + 1) * self._heightPerLevel + 3
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
-        if depth.getMaximum() == 0 and len(allLoops) > 0:
+        if max_depth == 0 and len(allLoops) > 0:
             maxHeight += self._heightPerLevel // 2
 
         # build map from vertex to incoming/outgoing edges

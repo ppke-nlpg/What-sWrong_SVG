@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from AbstractEdgeLayout import AbstractEdgeLayout
-from utils.Counter import Counter
 from SVGWriter import *
 
 
@@ -163,7 +162,11 @@ class SpanLayout(AbstractEdgeLayout):
             self.calculateDepth(dominates, depth, edge)
 
         # calculate maxHeight and maxWidth
-        maxDepth = depth.getMaximum()
+        most_common = depth.most_common(1)
+        if len(most_common) == 0:
+            maxDepth = 0
+        else:
+            maxDepth = most_common[0][1]
         if len(edges) > 0:
             maxHeight = (maxDepth + 1) * self._heightPerLevel + 3
         else:
