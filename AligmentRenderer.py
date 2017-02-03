@@ -3,9 +3,7 @@
 
 from TokenLayout import TokenLayout
 from Edge import Edge
-# from PyQt4 import QtGui, QtCore
-# from Bounds1D import Bounds1D
-from SVGWriter import *
+from SVGWriter import Line, Scene, QuadraticBezierCurve
 
 """
  * A SingleSentenceRenderer renders an NLPInstance as a single sentence with spans drawn below the tokens, and

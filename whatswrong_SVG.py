@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+import sys
+from os.path import basename
+from PyQt4 import QtGui
 
 from CorpusNavigator import CorpusNavigator
 from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
-from ioFormats.TabProcessor import *
-
-from FilterPipeline import *
-from EdgeTypeFilterPanel import *
-from DependencyFilterPanel import *
-from TokenFilterPanel import *
-
-from os.path import basename
+from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008,\
+    CoNLL2009, MaltTab
+from FilterPipeline import FilterPipeline
+from EdgeTypeFilterPanel import EdgeTypeFilterPanel
+from EdgeTypeFilter import EdgeTypeFilter
+from EdgeTokenFilter import EdgeTokenFilter
+from EdgeLabelFilter import EdgeLabelFilter
+from DependencyFilterPanel import DependencyFilterPanel
+from NLPInstance import NLPInstance
+from NLPCanvas import NLPCanvas
+from TokenFilter import TokenFilter
+from TokenFilterPanel import TokenFilterPanel
 
 
 class MyWindow(QtGui.QMainWindow):
@@ -176,9 +183,9 @@ class MyForm(QtGui.QMainWindow):
     def svgdraw(self):  # instance
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
-        br = QtSvg.QGraphicsSvgItem("/Users/Regina/Desktop/tmp1.svg")
+        # br = QtSvg.QGraphicsSvgItem("/Users/Regina/Desktop/tmp1.svg")
         # text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
-        scene.addItem(br)
+        # scene.addItem(br)
         self.ui.graphicsView.show()
 
     def file_save(self):

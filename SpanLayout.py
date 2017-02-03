@@ -4,7 +4,7 @@
 from collections import Counter, defaultdict
 
 from AbstractEdgeLayout import AbstractEdgeLayout
-from SVGWriter import *
+from SVGWriter import Line, Rectangle, Scene, Text
 
 
 """

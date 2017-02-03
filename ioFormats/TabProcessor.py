@@ -6,9 +6,11 @@
 # TabProcessor interface class is omited...
 
 import sys
+import re
 
-from NLPInstance import *
-from ioFormats.CorpusFormat import *
+from NLPInstance import NLPInstance
+from TokenProperty import TokenProperty
+from ioFormats.CorpusFormat import CorpusFormat
 
 """
  * A TabFormat loads data from text files where token properties are represented as white-space/tab separated values.

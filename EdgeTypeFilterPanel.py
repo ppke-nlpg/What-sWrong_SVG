@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPCanvas import *
-from EdgeTypeFilter import *
+from PyQt4 import QtGui
+
+from NLPCanvas import NLPCanvas
+from EdgeTypeFilter import EdgeTypeFilter
 
 """
  * An EdgeTypeFilterPanel controls an EdgeTypeFilter and requests an update for an NLPCanvas whenever the filter is

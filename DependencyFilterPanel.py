@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPCanvas import *
-from EdgeLabelFilter import *
-from EdgeTokenFilter import *
+from NLPCanvas import NLPCanvas
+from EdgeLabelFilter import EdgeLabelFilter
+from EdgeTokenFilter import EdgeTokenFilter
 
 """
  * A DependencyFilterPanel controls a EdgeLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after changes to

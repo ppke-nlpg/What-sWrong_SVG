@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstanceFilter import *
-from NLPInstance import *
-from Token import *
+import re
+
+from NLPInstanceFilter import NLPInstanceFilter
+from NLPInstance import NLPInstance
+from Token import Token
+from TokenProperty import TokenProperty
+from Edge import Edge
 
 """
  * A Tokenfilter removes certain properties from each token and removes tokens that do not contain certain property

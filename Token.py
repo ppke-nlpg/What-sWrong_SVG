@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from TokenProperty import *
+
+from TokenProperty import TokenProperty
 import re
 from operator import attrgetter
 

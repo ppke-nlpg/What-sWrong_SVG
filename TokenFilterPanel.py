@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPCanvas import *
-from TokenFilter import *
+from operator import attrgetter
+
+from NLPCanvas import NLPCanvas
+from TokenFilter import TokenFilter
 from PyQt4 import QtGui
 """
  * A TokenFilterPanel controls a TokenFilter and updates a NLPCanvas whenever the filter has been changed.

@@ -2,8 +2,10 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from NLPCanvas import NLPCanvas
-from NLPDiff import *
+from NLPDiff import NLPDiff
 from CorpusLoader import CorpusLoader
+from NLPInstance import NLPInstance
+from TokenProperty import TokenProperty
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw

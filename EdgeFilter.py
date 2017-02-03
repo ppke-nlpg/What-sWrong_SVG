@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstanceFilter import *
-from NLPInstance import *
+from NLPInstanceFilter import NLPInstanceFilter
+from NLPInstance import NLPInstance
 """
  * An EdgeFilter is a NLPInstanceFilter that only filters out edges.
  *

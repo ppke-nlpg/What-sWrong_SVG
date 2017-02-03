@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from SVGWriter import *
+from SVGWriter import Rectangle, Scene, Text, TextToken
 from Bounds1D import Bounds1D
 
 """

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from Token import *
-from Edge import *
+from Token import Token
+from Edge import Edge
 
 from enum import Enum
 

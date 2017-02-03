@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from EdgeFilter import *
+from EdgeFilter import EdgeFilter
 
 """
  * An EdgeLabelFilter filters out edges with a label that contains one of a set of allowed label substrings.

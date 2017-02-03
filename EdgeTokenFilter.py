@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstanceFilter import *
-from NLPInstance import *
+from operator import attrgetter
+
+from NLPInstanceFilter import NLPInstanceFilter
+from NLPInstance import Edge, NLPInstance
 from Token import Token
 
 """

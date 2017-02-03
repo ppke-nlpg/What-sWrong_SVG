@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstance import *
+from NLPInstance import NLPInstance
+from Edge import Edge
 
 """
  * An NLPDiff object takes two NLPInstances, a gold and a guess instance, and compares the set of edges that both
@@ -96,7 +97,7 @@ class NLPDiff:
      * @param guessInstance the (system) guess instance.
      * @return An NLPInstance with Matches, False Negatives and False Positives of the difference.
     """
-    def diff(self, goldInstance=NLPInstance, guessInstance=NLPInstance):
+    def diff(self, goldInstance: NLPInstance, guessInstance: NLPInstance):
         diff = NLPInstance()
         diff.renderType = goldInstance.renderType
         for splitPoint in tuple(goldInstance.splitPoints):
