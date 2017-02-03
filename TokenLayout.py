@@ -243,10 +243,10 @@ class TokenLayout:
             lasty = self._baseLine + self._rowHeight
             for p in token.getSortedProperties():
                 curr_property = token.getProperty(p)
-                labelwith = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
+                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 lasty += self._rowHeight
-                if labelwith > maxX:
-                    maxX = labelwith
+                if labelwidth > maxX:
+                    maxX = labelwidth
             requiredWidth = tokenWidths.get(token)
             if requiredWidth is not None and maxX < requiredWidth:
                 maxX = requiredWidth

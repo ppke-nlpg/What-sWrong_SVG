@@ -22,7 +22,7 @@ class EdgeTypeFilter(EdgeFilter):
          *
          * @param type the type string that was added or removed from the filter.
         """
-        def changed(self, _type=str):
+        def changed(self, _type: str):
             pass
     """
      * Creates a new EdgeTypeFilter with the given allowed edge prefix types.
@@ -38,7 +38,7 @@ class EdgeTypeFilter(EdgeFilter):
         """
          * If an edge has a postfix-type in this set it can pass.
         """
-        self._allowedPostfixTypes = set()    # HashSet<String>()
+        self._allowedPostfixTypes = set()  # HashSet<String>()
         """
          * The list of listeners of this filter.
         """
@@ -59,7 +59,7 @@ class EdgeTypeFilter(EdgeFilter):
     """
     @property
     def allowedPrefixType(self):
-        return set(self._allowedPrefixTypes)  # XXX Collections.unmodifiableSet()
+        return frozenset(self._allowedPrefixTypes)
 
     """
      * Returns the set of allowed postfix types for edges.
@@ -68,7 +68,7 @@ class EdgeTypeFilter(EdgeFilter):
     """
     @property
     def allowedPostfixType(self):
-        return set(self._allowedPostfixTypes)  # XXX Collections.unmodifiableSet()
+        return frozenset(self._allowedPostfixTypes)
 
     """
      * Creates a new EdgeTypeFilter with the given allowed edge prefix types.

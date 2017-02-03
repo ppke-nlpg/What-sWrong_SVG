@@ -60,7 +60,7 @@ class TokenFilter(NLPInstanceFilter):
      *
      * @param string the allowed property value.
     """
-    def addAllowedString(self, string=str):
+    def addAllowedString(self, string: str):
         self._allowedStrings.add(string)
 
     """
@@ -74,7 +74,7 @@ class TokenFilter(NLPInstanceFilter):
      *
      * @param name the name of the property to forbid.
     """
-    def addForbiddenProperty(self, name=str):
+    def addForbiddenProperty(self, name: str):
         self._forbiddenProperties.add(TokenProperty(name))
 
     """
@@ -82,7 +82,7 @@ class TokenFilter(NLPInstanceFilter):
      *
      * @param name the name of the property to show again.
     """
-    def removeForbiddenProperty(self, name=str):
+    def removeForbiddenProperty(self, name: str):
         p = TokenProperty(name)
         if p in self._forbiddenProperties:
             self._forbiddenProperties.remove(p)
@@ -94,7 +94,7 @@ class TokenFilter(NLPInstanceFilter):
     """
     @property
     def forbiddenProperties(self):
-        return self._forbiddenProperties
+        return frozenset(self._forbiddenProperties)
 
     """
      * Filter a set of tokens by removing property values and individual tokens according to the set of allowed strings
@@ -121,7 +121,7 @@ class TokenFilter(NLPInstanceFilter):
      * @return the filtered nlp instance.
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
-    def filter(self, original=NLPInstance):
+    def filter(self, original: NLPInstance):
         if len(self._allowedStrings) > 0:
             # first filter out tokens not containing allowed strings
             old2new = {}  # HashMap<Token, Token>()

@@ -292,7 +292,6 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @param edge the edge to select.
     """
     def select(self, edge):
-        # self._selected.clear()
         self._selected = set(edge)
 
     """
