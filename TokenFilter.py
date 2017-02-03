@@ -127,28 +127,18 @@ class TokenFilter(NLPInstanceFilter):
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             tokens = []  # ArrayList<Token>()
-            for t in original.tokens:
+            for t in original.tokens:  # XXX THIS COULD BE BETTER
                 stopped = False
                 for curr_property in t.getPropertyTypes():
                     if stopped:
                         break
-                    prop = t.getProperty(curr_property)
+                    prop = t.getProperty(curr_property)  # String that represents an int...
                     for allowed in self._allowedStrings:
-                        if stopped:
-                            break
+                        split = allowed.split("-")  # Split either way maybe not used...
                         # todo: this can surely be implemented in a nicer way (e.g. no reparsing of interval)
-                        if curr_property.name == "Index" and re.match("\d+-\d+$", allowed):  # WHOLE STRING MATCH
-                            split = allowed.split("-")
-                            From = int(split[0])
-                            to = int(split[1])
-                            if From <= int(prop) <= to:
-                                newVertex = Token(len(tokens))
-                                newVertex.merge(t)
-                                tokens.append(newVertex)
-                                old2new[t] = newVertex
-                                new2old[newVertex] = t
-                                stopped = True
-                        elif self._wholeWord and prop == allowed or allowed in prop:
+                        if ((curr_property.name == "Index" and re.match("\d+-\d+$", allowed) and  # WHOLE STRING MATCH
+                                int(split[0]) <= int(prop) <= int(split[1])) or  # From <= prop <= to
+                                (self._wholeWord and prop == allowed or allowed in prop)):  # XXX Why in prop ?
                             newVertex = Token(len(tokens))
                             newVertex.merge(t)
                             tokens.append(newVertex)
