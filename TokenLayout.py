@@ -24,11 +24,11 @@ class TokenLayout:
      * Mapping from token and property index to the text layout of the corresponding property value.
     """
     @property
-    def textLayouts(self):
+    def textLayouts(self) -> dict:
         return self._textLayouts
 
     @textLayouts.setter
-    def textLayouts(self, value):
+    def textLayouts(self, value: dict):
         self._textLayouts = value
 
     """
@@ -198,7 +198,7 @@ class TokenLayout:
 
     def __init__(self):
         self._rowHeight = 14
-        self._baseLine = 14
+        self._baseLine = 0
         self._margin = 20
         self._fromSplitPoint = -1
         self._toSplitPoint = -1
@@ -309,7 +309,7 @@ class TokenLayout:
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 if labelwidth > maxX:
                     maxX = labelwidth
-                self._textLayouts[(token, index+1)] = curr_property  # XXX layout
+                self._textLayouts[(token, index+1)] = curr_property  # curr_property -> layout (Not used...)
                 index += 1
             requiredWidth = tokenWidths.get(token)
             if requiredWidth is not None and maxX < requiredWidth:
@@ -318,7 +318,7 @@ class TokenLayout:
                                             (255, 255, 255), (0, 0, 0), 1)
             lastx += maxX + self._margin
             if lasty - self._rowHeight > self._height:
-                self._height = lasty + self._rowHeight
+                self._height = lasty - self._rowHeight
 
         self._width = lastx - self._margin
         return self._width + scene.offsetx, self._height + 2 + scene.offsety

@@ -129,40 +129,33 @@ class TokenFilter(NLPInstanceFilter):
             tokens = []  # ArrayList<Token>()
             for t in original.tokens:
                 stopped = False
-                for property in t.getPropertyTypes():
+                for curr_property in t.getPropertyTypes():
                     if stopped:
                         break
-                    prop = t.getProperty(property)
+                    prop = t.getProperty(curr_property)
                     for allowed in self._allowedStrings:
                         if stopped:
                             break
                         # todo: this can surely be implemented in a nicer way (e.g. no reparsing of interval)
-                        if property.name == "Index" and re.match("\d+-\d+", allowed):
+                        if curr_property.name == "Index" and re.match("\d+-\d+$", allowed):  # WHOLE STRING MATCH
                             split = allowed.split("-")
                             From = int(split[0])
                             to = int(split[1])
-                            for i in range(From, to+1):
-                                if(prop == str(i)):
-                                    newVertex = Token(len(tokens))
-                                    newVertex.merge(t)
-                                    tokens.append(newVertex)
-                                    old2new[t] = newVertex
-                                    new2old[newVertex] = t
-                                    stopped = True
-                                    break
-                        else:
-                            if self._wholeWord:
-                                b = prop == allowed
-                            else:
-                                b= allowed in prop
-                            if b:
+                            if From <= int(prop) <= to:
                                 newVertex = Token(len(tokens))
                                 newVertex.merge(t)
                                 tokens.append(newVertex)
                                 old2new[t] = newVertex
                                 new2old[newVertex] = t
                                 stopped = True
-                                break
+                        elif self._wholeWord and prop == allowed or allowed in prop:
+                            newVertex = Token(len(tokens))
+                            newVertex.merge(t)
+                            tokens.append(newVertex)
+                            old2new[t] = newVertex
+                            new2old[newVertex] = t
+                            stopped = True
+                            break
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
             for e in original.getEdges():
