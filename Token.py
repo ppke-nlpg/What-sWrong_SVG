@@ -19,11 +19,11 @@ class Token:
      * The index of the token.
     """
     @property
-    def index(self):
+    def index(self) -> int:
         return self._index
 
     @index.setter
-    def index(self, value):
+    def index(self, value: int):
         self._index = value
 
     """
@@ -67,7 +67,7 @@ class Token:
      * @param property the property to get the value for.
      * @return the value of the given property.
     """
-    def getProperty(self, token_property):
+    def getProperty(self, token_property) -> str:
         return self._tokenProperties[token_property]
 
     """
@@ -81,7 +81,7 @@ class Token:
      *
      * @param name the name of the property to remove.
     """
-    def removeProperty(self, name=None, index=None):
+    def removeProperty(self, name: str=None, index: int=None):
         if index is not None:
             del self._tokenProperties[TokenProperty(name=name)]
         if name is not None:
@@ -113,15 +113,15 @@ class Token:
      *
      * @param value the value of the property.
      """
-    def addProperty(self, value: str=None, name=None, index=None, property=None):
+    def addProperty(self, value: str=None, name: str=None, index: int=None, token_property=None):
         if name is not None and value is not None:
             self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
             return self
-        if index is not None and property is not None:
-            self._tokenProperties[TokenProperty(level=self._tokenProperties[index])] = property
+        if index is not None and token_property is not None:
+            self._tokenProperties[TokenProperty(level=self._tokenProperties[index])] = token_property
             return None  # !!
-        if property is not None and value is not None:
-            self._tokenProperties[property] = value
+        if token_property is not None and value is not None:
+            self._tokenProperties[token_property] = value
             return self
         if value is not None:
             self._tokenProperties[TokenProperty(level=self._tokenProperties[len(self._tokenProperties)])] = value
@@ -132,7 +132,7 @@ class Token:
      *
      * @return a list of sorted token properties.
     """
-    def getSortedProperties(self):
+    def getSortedProperties(self) -> list:
         sorted_properties = list(sorted(self._tokenProperties.keys(), key=attrgetter('level', 'name')))
         return sorted_properties
 
@@ -163,19 +163,19 @@ class Token:
     """
     def propertiesContain(self, substring=None, substrings=None, wholeWord=None):
         if substring is not None:
-            for property in self._tokenProperties.values():
-                if substring in property:
+            for curr_property in self._tokenProperties.values():
+                if substring in curr_property:
                     return True
             return False
         else:
             if substrings is not None and wholeWord is not None:
-                for property in self._tokenProperties.values():
+                for curr_property in self._tokenProperties.values():
                     for substr in substrings:
                         if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
                             From, To = substr.split("-")
-                            if int(From) <= property <= int(To):
+                            if int(From) <= curr_property <= int(To):
                                 return True
-                        elif (wholeWord and property == substr) or (not wholeWord and substr in property):
+                        elif (wholeWord and curr_property == substr) or substr in curr_property:
                             return True
             return False
 

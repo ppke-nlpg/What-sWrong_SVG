@@ -16,22 +16,22 @@ class TokenProperty:
      * The name of the property.
     """
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @name.setter
-    def name(self, value):
+    def name(self, value: str):
         self._name = value
 
     """
      * The level of the property.
     """
     @property
-    def level(self):
+    def level(self) -> int:
         return self._level
 
     @level.setter
-    def level(self, value):
+    def level(self, value: int):
         self._level = value
 
     """
@@ -54,7 +54,7 @@ class TokenProperty:
      * @param level the level of the property.
 
     """
-    def __init__(self, name=None, level=0):
+    def __init__(self, name: str=None, level: int=0):
         if name is None:
             name = "Property {0}".format(level)
         self._name = name
@@ -120,5 +120,4 @@ class TokenProperty:
             elif self._name < other.name:
                 return -1
             else:
-                return 0  # XXX ÍGY MÁR JÓ LESZ!
-                # return self._name.compareTo(other.name) # TODO: Ez így nem lesz jó
+                return 0

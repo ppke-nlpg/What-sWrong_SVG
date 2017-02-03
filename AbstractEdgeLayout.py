@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 """
  * An AbstractEdgeLayout serves as a base class for edge layout classes. It mostly stores properties associated with
@@ -179,8 +179,8 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @param type  the type of the edges we want to change the color for.
      * @param color the color of the edges of the given type.
     """
-    def setColor(self, type, color):
-        self._colors[type] = color
+    def setColor(self, color_type, color):
+        self._colors[color_type] = color
 
     """
      * Set the stroke type for edges of a certain type.
@@ -188,8 +188,8 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @param type   the type to change the stroke for.
      * @param stroke the stroke for edges of the given type.
     """
-    def setStroke(self, type, stroke):
-        self._strokes[type] = stroke
+    def setStroke(self, stroke_type, stroke):
+        self._strokes[stroke_type] = stroke
 
     """
      * Get the stroke for a given edge.
@@ -204,7 +204,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @param type the type of edges to get the stroke for.
      * @return the stroke for the given type.
     """
-    def getStroke(self, edge=None, type=None):
+    def getStroke(self, edge=None, stroke_type=None):
         if edge is not None:
             stroke = self.getStroke(edge.type)
             if edge in self._selected:
@@ -215,7 +215,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
             return stroke
         else:
             for substring in self._strokes.keys():
-                if substring in type:
+                if substring in stroke_type:
                     return self._strokes[substring]
             return self._defaultStroke
 
@@ -225,9 +225,9 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @param type the type for which we want the color for.
      * @return the color for the given edge type.
     """
-    def getColor(self, type):
+    def getColor(self, color_type):
         for substring in self._colors.keys():
-            if substring in type:
+            if substring in color_type:
                 return self._colors[substring]
         return 0, 0, 0  # Color.BLACK
 
@@ -329,13 +329,13 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
             return depth[root]
         if len(dominates[root]) == 0:
             return 0
-        max = 0
+        maximum = 0
         for children in dominates[root]:
             current = self.calculateDepth(dominates, depth, children)
-            if current > max:
-                max = current
-        depth[root] = max + 1
-        return max + 1
+            if current > maximum:
+                maximum = current
+        depth[root] = maximum + 1
+        return maximum + 1
 
     """
      * Return the point at the start of the given edge.
@@ -436,13 +436,13 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
         self._heightPerLevel = 15
         self._vertexExtraSpace = 12
         self._curve = True
-        self._colors = {}
-        self._strokes = {}
-        self._defaultStroke = None
-        self._From = {}
-        self._To = {}
-        self._shapes = {}
-        self._selected = set()
-        self._visible = set()
+        self._colors = {}  # HashMap<String, Color>()
+        self._strokes = {}  # new HashMap<String, BasicStroke>()
+        self._defaultStroke = None  # BasicStroke()
+        self._From = {}  # HashMap<Edge, Point>
+        self._To = {}  # HashMap<Edge, Point> to
+        self._shapes = {}  # HashMap<Shape, Edge>()
+        self._selected = set()  # HashSet<Edge>()
+        self._visible = set()   # HashSet<Edge>()
         self._maxWidth = 0
         self._maxHeight = 0

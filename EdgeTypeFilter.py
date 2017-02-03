@@ -75,7 +75,7 @@ class EdgeTypeFilter(EdgeFilter):
      *
      * @param allowedPrefixTypes the allowed prefix types.
     """
-    def fireChanged(self, Type=str):
+    def fireChanged(self, Type: str):
         for l in self._listeners:
             l.changed(Type)
 
@@ -94,7 +94,7 @@ class EdgeTypeFilter(EdgeFilter):
      *
      * @param type the allowed prefix type.
     """
-    def addAllowedPrefixType(self, Type=str):
+    def addAllowedPrefixType(self, Type: str):
         self._allowedPrefixTypes.add(Type)
         self.fireChanged(Type)
 
@@ -103,7 +103,7 @@ class EdgeTypeFilter(EdgeFilter):
      *
      * @param type the allowed postfix type.
     """
-    def addAllowedPostfixType(self, Type=str):
+    def addAllowedPostfixType(self, Type: str):
         self._allowedPostfixTypes.add(Type)
         self.fireChanged(Type)
 
@@ -111,8 +111,8 @@ class EdgeTypeFilter(EdgeFilter):
      * Disallows the given prefix type. This causes the filter to stop accepting edges with the given prefix type.
      *
      * @param type the prefix type to disallow.
-     """
-    def removeAllowedPrefixType(self, Type=str):
+    """
+    def removeAllowedPrefixType(self, Type: str):
         if Type in self._allowedPrefixTypes:
             self._allowedPrefixTypes.remove(Type)
             self.fireChanged(Type)
@@ -122,8 +122,8 @@ class EdgeTypeFilter(EdgeFilter):
      *
      * @param type the postfix type to disallow.
     """
-    def removeAllowedPostfixType(self, Type):
-        self._allowedPostfixTypes.remove((Type))
+    def removeAllowedPostfixType(self, Type: str):
+        self._allowedPostfixTypes.remove(Type)
         self.fireChanged(Type)
 
     """
@@ -158,7 +158,7 @@ class EdgeTypeFilter(EdgeFilter):
      * @param type the type to check whether it is allowed as prefix.
      * @return true iff the given type is allowed as prefix.
     """
-    def allowsPrefix(self, Type=str):
+    def allowsPrefix(self, Type: str):
         return Type in self._allowedPrefixTypes
 
     """
@@ -167,5 +167,5 @@ class EdgeTypeFilter(EdgeFilter):
      * @param type the type to check whether it is allowed as postfix.
      * @return true iff the given type is allowed as postfix.
     """
-    def allowsPostfix(self, Type=str):
+    def allowsPostfix(self, Type: str):
         return Type in self._allowedPostfixTypes
