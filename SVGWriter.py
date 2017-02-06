@@ -66,6 +66,9 @@ class Scene:
         file.close()
         return
 
+    def write_bytes(self):
+        return '\n'.join(self.strarray()).encode('UTF-8')
+
     def display(self, prog=display_prog):
         os.system("%s %s" % (prog, self.svgname))
         return

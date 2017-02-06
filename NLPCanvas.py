@@ -222,17 +222,16 @@ class NLPCanvas:
       NLP instance and drawing parameters.
     """
     def updateNLPGraphics(self):
-        self.exportNLPGraphics("tmp.svg")  # XXX Omit file creation
-        path = os.path.abspath("tmp.svg")
-
         scene = QtGui.QGraphicsScene()
         self._ui.graphicsView.setScene(scene)
-        br = QtSvg.QGraphicsSvgItem(path)
+        br = QtSvg.QGraphicsSvgItem()
+        rr = QtSvg.QSvgRenderer(self.exportNLPGraphics())
+        br.setSharedRenderer(rr)
         scene.addItem(br)
         self._ui.graphicsView.show()
         self.fireChanged()
 
-    def exportNLPGraphics(self, filepath):
+    def exportNLPGraphics(self, filepath=None):
         filtered = self.filterInstance()
         self._SVGScene = Scene(width=800)  # XXX WHY 800?
 
@@ -243,7 +242,10 @@ class NLPCanvas:
         self._SVGScene = Scene(width=dim[0], height=dim[1])
 
         renderer.render(filtered, self._SVGScene)
-        self._SVGScene.write_svg(filepath)
+        if filepath is not None:
+            self._SVGScene.write_svg(filepath)
+        else:
+            return self._SVGScene.write_bytes()
 
     """
      * Clears the current instance.
