@@ -69,7 +69,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @return true if the filter collapses the graph and removes tokens without edge.
     """
     @property
-    def collaps(self):
+    def collaps(self) -> bool:
         return self._collaps
 
     """
@@ -79,7 +79,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @param collaps true if the filter should collapse the graph and remove tokens without edge.
     """
     @collaps.setter
-    def collaps(self, value):
+    def collaps(self, value: bool):
         self._collaps = value
 
     """
@@ -89,7 +89,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      *
      * @return true if the filter uses paths."""
     @property
-    def usePath(self):
+    def usePath(self) -> bool:
         return self._usePath
 
     """
@@ -99,7 +99,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @see EdgeTokenFilter#isUsePaths()
     """
     @usePath.setter
-    def usePath(self, value):
+    def usePath(self, value: bool):
         self._usePath = value
 
     """
@@ -146,7 +146,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param to   the end token.
          * @return the set of paths between the tokens.
         """
-        def getPaths(self, From=Token, to=Token) -> set():
+        def getPaths(self, From: Token, to: Token) -> set:
             if From not in self._map:
                 return set()
             else:
@@ -158,12 +158,12 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param from the token the paths should start at.
          * @return all tokens that have a paths that end in it and start at the provided token.
         """
-        def getTos(self, From=Token):
+        def getTos(self, From: Token) -> set:
             if From in self._map:
                 result = self._map[From]
                 return set(result.keys())
             else:
-                return {}  # HashSet<Token>()
+                return set()  # HashSet<Token>()
 
         """
          * Adds a path between the given tokens.
@@ -172,7 +172,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
          * @param to   the end token.
          * @param path the path to add.
         """
-        def addPath(self, From: Token, to: Token, path):
+        def addPath(self, From: Token, to: Token, path: set):
             if From not in self._map:
                 self._map[From] = {}  # HashMap<Token, HashSet<Path>>()
             paths = self._map[From]
@@ -193,7 +193,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @return all paths defined through the provided edges.
     """
     @staticmethod
-    def calculatePaths(edges):
+    def calculatePaths(edges: frozenset) -> Paths:
         pathsPerLength = []  # ArrayList<Paths>()
 
         paths = EdgeTokenFilter.Paths()
@@ -240,7 +240,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @return whether property values need to exactly match the allowed properties or can contain them as a substring.
     """
     @property
-    def wholeWords(self):
+    def wholeWords(self) -> bool:
         return self._wholeWords
 
     """
@@ -250,7 +250,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @see EdgeTokenFilter#isWholeWords()
     """
     @wholeWords.setter
-    def wholeWords(self, value):
+    def wholeWords(self, value: bool):
         self._wholeWords = value
 
     """
@@ -260,7 +260,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @param original the input set of edges.
      * @return the filtered out set of edges.
     """
-    def filterEdges(self, original):
+    def filterEdges(self, original: frozenset) -> frozenset:
         if len(self._allowedProperties) == 0:
             return original
         if self._usePath:
@@ -272,14 +272,14 @@ class EdgeTokenFilter(NLPInstanceFilter):
                         if to.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                             for path in paths.getPaths(From, to):
                                 result.update(path)
-            return result
+            return frozenset(result)
         else:
-            result = []  # ArrayList<Edge>(original.size())
+            result = set()  # ArrayList<Edge>(original.size())
             for edge in original:
                 if edge.From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
                         edge.To.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
-                    result.append(edge)
-            return result
+                    result.add(edge)
+            return frozenset(result)
 
     """
      * Returns whether the given value is an allowed property value.
@@ -287,7 +287,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @param propertyValue the value to test.
      * @return whether the given value is an allowed property value.
     """
-    def allows(self, propertyValue):
+    def allows(self, propertyValue: str) -> bool:
         return propertyValue in self._allowedProperties
 
     """
@@ -297,7 +297,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
      * @return the filtered instance.
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
-    def filter(self, original: NLPInstance):
+    def filter(self, original: NLPInstance) -> NLPInstance:
         edges = self.filterEdges(original.getEdges())
         if not self._collaps:
             return NLPInstance(tokens=original.tokens, edges=edges, renderType=original.renderType,
@@ -320,7 +320,7 @@ class EdgeTokenFilter(NLPInstanceFilter):
             new2old = {}  # HashMap<Token, Token>()
             for t in _sorted:
                 newToken = Token(len(updatedTokens))
-                newToken.merge(original.tokens[int(t.index)])
+                newToken.merge(original.tokens[t.index])
                 old2new[t] = newToken
                 new2old[newToken] = t
                 updatedTokens.append(newToken)

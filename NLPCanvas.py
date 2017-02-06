@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-import os
-
 from PyQt4 import QtGui, QtSvg
 from SVGWriter import Scene
 from SingleSentenceRenderer import SingleSentenceRenderer

@@ -22,38 +22,38 @@ class NLPDiff:
     class EdgeIdentity:
 
         @property
-        def From(self):
+        def From(self) -> int:
             return self._From
 
         @From.setter
-        def From(self, value):
+        def From(self, value: int):
             self._From = value
 
         @property
-        def To(self):
+        def To(self) -> int:
             return self._To
 
         @To.setter
-        def To(self, value):
+        def To(self, value: int):
             self._To = value
 
         @property
-        def type(self):
+        def type(self) -> str:
             return self._type
 
         @type.setter
-        def type(self, value):
+        def type(self, value: str):
             self._type = value
 
         @property
-        def label(self):
+        def label(self) -> str:
             return self._label
 
         @label.setter
         def label(self, value):
             self._label = value
 
-        def __init__(self, edge):
+        def __init__(self, edge: Edge):
             self.edge = edge
             self._From = edge.From.index
             self._To = edge.To.index
@@ -83,8 +83,8 @@ class NLPDiff:
             return True
 
         def __hash__(self):
-            result = int(self._From)
-            result = 31*result + int(self._To)
+            result = self._From
+            result = 31*result + self._To
             if self._type is not None:
                 result = 31*result + hash(self._type)
             if self._label is not None:
@@ -97,7 +97,7 @@ class NLPDiff:
      * @param guessInstance the (system) guess instance.
      * @return An NLPInstance with Matches, False Negatives and False Positives of the difference.
     """
-    def diff(self, goldInstance: NLPInstance, guessInstance: NLPInstance):
+    def diff(self, goldInstance: NLPInstance, guessInstance: NLPInstance) -> NLPInstance:
         diff = NLPInstance()
         diff.renderType = goldInstance.renderType
         for splitPoint in tuple(goldInstance.splitPoints):
@@ -133,7 +133,7 @@ class NLPDiff:
      * @return the identities of the input edges.
     """
     @staticmethod
-    def createIdentities(edges):
+    def createIdentities(edges: list) -> set:
         result = set()  # HashSet<EdgeIdentity>()
         for edge in edges:
             result.add(NLPDiff.EdgeIdentity(edge))

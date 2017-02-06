@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-
 from TokenProperty import TokenProperty
 import re
 from operator import attrgetter
@@ -43,7 +42,7 @@ class Token:
      *
      * @param index the index of the token.
     """
-    def __init__(self, index):
+    def __init__(self, index: int):
         self._index = index
         self._tokenProperties = {}  # HashMap<TokenProperty, String>()
 
@@ -164,7 +163,7 @@ class Token:
      *         (wholeword=true) or b) if there is a property value that contains one of the strings in
      *         <code>substrings</code> (wholeword=false).
     """
-    def propertiesContain(self, substring=None, substrings=None, wholeWord=None):
+    def propertiesContain(self, substring: str=None, substrings: set=None, wholeWord: bool=None) -> bool:
         if substring is not None:
             for curr_property in self._tokenProperties.values():
                 if substring in curr_property:
@@ -198,7 +197,7 @@ class Token:
      * @return the index of the token.
     """
     def __hash__(self):
-        return int(self.index)
+        return self.index
 
     """
      * Inserts all properties and values of the other token into this token. In case of clashes the value of the other

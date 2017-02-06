@@ -279,7 +279,8 @@ class CorpusNavigator:
      * @param edgeTypeFilter the EdgeTypeFilter we need when no corpus is selected and a example sentence is chosen and
      *                       passed to the NLPCanvas.
     """
-    def __init__(self,  ui, canvas=NLPCanvas, scene=None, goldLoader=None, guessLoader=None, edgeTypeFilter=None):
+    def __init__(self,  ui, canvas: NLPCanvas, scene=None, goldLoader: CorpusLoader=None,
+                 guessLoader: CorpusLoader=None, edgeTypeFilter=None):
 
         self._numberModel = None  # SpinnerNumberModel()
         self._indicies = {}

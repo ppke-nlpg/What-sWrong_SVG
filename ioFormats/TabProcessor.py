@@ -87,11 +87,11 @@ class TabFormat(CorpusFormat):
     def name(self):
         return self._name
 
-    def addProcessor(self, processor, name=None):  # XXX Arguments reversed to be able to use defaults...
+    def addProcessor(self, processor, name: str=None):  # Arguments reversed to be able to use defaults
         if name is not None:
             self._processors[name] = processor
         else:
-            self._processors[str(processor)] = property
+            self._processors[str(processor)] = processor
 
     def __str__(self):
         return self._name
@@ -104,15 +104,15 @@ class TabFormat(CorpusFormat):
     def setMonitor(self, monitor):
         self._monitor = monitor
 
-    def loadProperties(self, properties, prefix):
+    def loadProperties(self, properties, prefix: str):
         yearString = properties.getProperty(prefix + ".tay.type", "CoNLL 2008")
         self._type.setSelectedItem(self._processors[yearString])
         # TODO: grafika
 
-    def saveProperties(self, properties, prefix):
+    def saveProperties(self, properties, prefix: str):
         properties.setProperty(prefix + ".tab.type", str(self._type.getSelectedItem()))
 
-    def load(self, file, From, to):
+    def load(self, file, From: int, to: int):
         processor = self._type.getSelectedItem()  # TODO grafika
         result = self.loadTabs(file, From, to, processor, False)
         if self._open.isSelected():
@@ -123,7 +123,7 @@ class TabFormat(CorpusFormat):
                 result[i].merge(openCorpus[i])
         return result
 
-    def loadTabs(self, file, From, to, processor, can_open):
+    def loadTabs(self, file, From: int, to: int, processor, can_open: bool):
         corpus = []  # ArrayList<NLPInstance>()
         rows = []  # ArrayList<List<String>>()
         instnceNr = 0
@@ -145,7 +145,7 @@ class TabFormat(CorpusFormat):
             else:
                 if instnceNr < From:
                     continue
-                rows.append(line.split("\\s+"))  # TODO: rows.add(Arrays.asList(line.split("\\s+")));
+                rows.append(re.split("\\s+", line))  # rows.add(Arrays.asList(line.split("\\s+")));
         if len(rows) > 0:
             if can_open:
                 corpus.append(processor.createOpen(rows))
@@ -154,7 +154,7 @@ class TabFormat(CorpusFormat):
         return corpus
 
     @staticmethod
-    def extractSpan03(rows, column, type, instance):
+    def extractSpan03(rows: list, column: int, field_type: str, instance: NLPInstance):
         index = 0
         inChunk = False
         begin = 0
@@ -168,7 +168,7 @@ class TabFormat(CorpusFormat):
                 if inChunk:
                     # start a new chunk and finish old one
                     if "B" == bio or "I" == bio and label != currentChunk:
-                        instance.addSpan(begin, index - 1, currentChunk, type)
+                        instance.addSpan(begin, index - 1, currentChunk, field_type)
                         begin = index
                         currentChunk = label
                 else:
@@ -176,14 +176,14 @@ class TabFormat(CorpusFormat):
                     begin = index
                     currentChunk = label
             elif inChunk:
-                    instance.addSpan(begin, index - 1, currentChunk, type)
+                    instance.addSpan(begin, index - 1, currentChunk, field_type)
                     inChunk = False
             index += 1
         if inChunk:
-            instance.addSpan(begin, index - 1, currentChunk, type)
+            instance.addSpan(begin, index - 1, currentChunk, field_type)
 
     @staticmethod
-    def extractSpan00(rows, column, type, instance):
+    def extractSpan00(rows: list, column: int, field_type: str, instance: NLPInstance):
         index = 0
         inChunk = False
         begin = 0
@@ -197,17 +197,17 @@ class TabFormat(CorpusFormat):
                 label = chunk[minus+1:]
                 if "B" == bio:
                     if inChunk:
-                        instance.addSpan(begin, index - 1, currentChunk, type)
+                        instance.addSpan(begin, index - 1, currentChunk, field_type)
                     begin = index
                     currentChunk = label
                     inChunk = True
             elif inChunk:
-                    instance.addSpan(begin, index - 1, currentChunk, type)
+                    instance.addSpan(begin, index - 1, currentChunk, field_type)
                     inChunk = False
             index += 1
 
     @staticmethod
-    def extractSpan05(rows, column, type, prefix, instance):
+    def extractSpan05(rows: list, column: int, field_type: str, prefix: str, instance: NLPInstance):
         index = 0
         begin = 0
         currentChunk = ""
@@ -220,7 +220,7 @@ class TabFormat(CorpusFormat):
                 currentChunk = chunk[1:end]
                 begin = index
             if chunk.endswith(")"):
-                instance.addSpan(begin, index, prefix + currentChunk, type)
+                instance.addSpan(begin, index, prefix + currentChunk, field_type)
             index += 1
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -265,12 +265,12 @@ class CoNLL2000:
             instance.addToken().\
                 addProperty(name="Word", value=row[0]).\
                 addProperty(name="Index", value=str(index))
-            instance.addSpan(str(index), str(index), row[1], "pos")
-            instance.addSpan(str(index), str(index), chunk, "chunk (BIO)")
+            instance.addSpan(index, index, row[1], "pos")
+            instance.addSpan(index, index, chunk, "chunk (BIO)")
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
-        tabformat.extractSpan00(rows=rows, column=2, type="chunk", instance=instance)
+        tabformat.extractSpan00(rows=rows, column=2, field_type="chunk", instance=instance)
 
         return instance
 
@@ -341,7 +341,7 @@ class CoNLL2002:
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
-        tabformat.extractSpan00(rows=rows, column=1, type="ner", instance=instance)
+        tabformat.extractSpan00(rows=rows, column=1, field_type="ner", instance=instance)
 
         return instance
 
@@ -414,8 +414,8 @@ class CoNLL2003:
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
-        tabformat.extractSpan03(rows=rows, column=2, type="chunk", instance=instance)
-        tabformat.extractSpan03(rows=rows, column=3, type="ner", instance=instance)
+        tabformat.extractSpan03(rows=rows, column=2, field_type="chunk", instance=instance)
+        tabformat.extractSpan03(rows=rows, column=3, field_type="ner", instance=instance)
 
         return instance
 
@@ -637,7 +637,7 @@ class CoNLL2006:
             row = row.strip().split()
             instance.addToken().\
                 addProperty(name="Word", value=row[1]).\
-                addProperty(name="Index", value=str(row[0])).\
+                addProperty(name="Index", value=row[0]).\
                 addProperty(name="Lemma", value=row[2]).\
                 addProperty(name="CPos", value=row[3]).\
                 addProperty(name="Pos", value=row[4]).\
@@ -647,7 +647,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.addDependency(From=str(row[6]), to=str(mod), label=row[7], type="dep")
+                instance.addDependency(From=int(row[6]), to=mod, label=row[7], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].addProperty("DepMissing", "missing")
@@ -728,7 +728,7 @@ class CoNLL2008:
             row = row.strip().split()
             instance.addToken().\
                 addProperty(name="Word", value=row[1]).\
-                addProperty(name="Index", value=str(row[0])).\
+                addProperty(name="Index", value=row[0]).\
                 addProperty(name="Lemma", value=row[2]).\
                 addProperty(name="Pos", value=row[3]).\
                 addProperty(name="Split Form", value=row[5]).\
@@ -737,12 +737,12 @@ class CoNLL2008:
             if row[10] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(str(index), str(index), row[10], "sense")
+                instance.addSpan(index, index, row[10], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(str(row[8]), str(row[0]), row[9], "dep")
+                instance.addDependency(int(row[8]), int(row[0]), row[9], "dep")
             # role
             for col in range(11, len(row)):
                 label = row[col]
@@ -750,7 +750,7 @@ class CoNLL2008:
                     pred = predicates[col-11]
                     arg = int(row[0])
                     # if arg != pred
-                    instance.addEdge(From=pred, to=arg, label=label, type="role")
+                    instance.addEdge(From=pred, to=arg, label=label, edge_type="role")
         return instance
 
     """
@@ -774,7 +774,7 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             # dependency
-            instance.addEdge(From=int(row[3]), to=index, label=row[4], type="malt")
+            instance.addEdge(From=int(row[3]), to=index, label=row[4], edge_type="malt")
             index += 1
         return index
 
@@ -850,14 +850,14 @@ class CoNLL2009:
             if row[13] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(str(index), str(index), row[13], "sense")
+                instance.addSpan(index, index, row[13], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(From=str(row[8]), to=str(row[0]), label=row[10], type="dep")
+                instance.addDependency(From=int(row[8]), to=int(row[0]), label=row[10], dep_type="dep")
             if row[9] != "_":
-                instance.addDependency(From=str(row[9]), to=str(row[0]), label=row[11], type="pdep")
+                instance.addDependency(From=int(row[9]), to=int(row[0]), label=row[11], dep_type="pdep")
             # role
             for col in range(14, len(row)):
                 label = row[col]
@@ -865,7 +865,7 @@ class CoNLL2009:
                     pred = predicates[col-14]
                     arg = int(row[0])
                     # if arg != pred:
-                    instance.addDependency(From=str(pred), to=str(arg), label=label, type="role")
+                    instance.addDependency(From=pred, to=arg, label=label, dep_type="role")
         return instance
 
     """
@@ -939,7 +939,7 @@ class MaltTab:
             row = row.strip().split()
             # dependency
             try:
-                instance.addDependency(From=row[2], to=str(mod), label=row[3], type="dep")
+                instance.addDependency(From=int(row[2]), to=mod, label=row[3], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].addProperty("DepMissing", "missing")
@@ -1021,7 +1021,7 @@ class CCG:
             if row[0] != "<s>" and not re.match("<\\s>$", row[0]):
                 # dependency
                 try:
-                    instance.addEdge(From=int(row[1]), to=int(row[0]), label=row[2] + "_" + row[3], type="dep")
+                    instance.addEdge(From=int(row[1]), to=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
                 except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                     print("Can't parse dependency", file=sys.stderr)
                     instance.tokens[mod].addProperty("DepMissing", "missing")
