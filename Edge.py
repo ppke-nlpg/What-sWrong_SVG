@@ -317,7 +317,7 @@ class Edge:
      * @param token the token to compare to
      * @return true iff both tokens of this edge are to the left of the given token.
     """
-    def leftOf(self, token):
+    def leftOf(self, token) -> bool:
         return self._From.index <= token.index and self._To.index <= token.index
 
     """

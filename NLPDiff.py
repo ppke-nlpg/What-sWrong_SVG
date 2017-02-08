@@ -133,7 +133,7 @@ class NLPDiff:
      * @return the identities of the input edges.
     """
     @staticmethod
-    def createIdentities(edges: list) -> set:
+    def createIdentities(edges: frozenset) -> set:
         result = set()  # HashSet<EdgeIdentity>()
         for edge in edges:
             result.add(NLPDiff.EdgeIdentity(edge))

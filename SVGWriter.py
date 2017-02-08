@@ -148,12 +148,10 @@ class HalfCircle:
         clip = "<clipPath id=\"cut-off-bottom%d\"> \n <rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" /> \n" \
                " </clipPath>" % (self.id, self.center[0]-self.radius, self.center[1], self.radius*2,
                                  self.radius)
-        circle = "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" clip-path=\"url(#cut-off-bottom%d)\" style=\"stroke:%s;stroke-width:%dfill-opacity: 1\"/>" %\
+        circle = "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" clip-path=\"url(#cut-off-bottom%d)\"" \
+                 " style=\"stroke:%s;stroke-width:%dfill-opacity: 1\"/>" %\
                  (self.center[0], self.center[1], self.radius, self.id, colorstr(self.line_color), self.line_width)
-        return clip + "\n" + circle
-        # return ["  <circle cx=\"%d\" cy=\"%d\" r=\"%d\"\n" %
-        #        (self.center[0],self.center[1],self.radius),
-        #        "    style=\"fill:%s;stroke:%s;stroke-width:%d\"  />\n" % (colorstr(self.fill_color),colorstr(self.line_color),self.line_width)]
+        return [clip + "\n" + circle]
 
 
 class Ellipse:

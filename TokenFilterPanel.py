@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# Todo implement, test...
 
 from operator import attrgetter
 
@@ -15,49 +16,21 @@ from PyQt4 import QtGui
 
 class TokenFilterPanel:
     def __init__(self, gui, canvas: NLPCanvas, tokenFilter: TokenFilter):
-        self._listModel = []  # DefaultListModel()
+        self._tokenFilter = tokenFilter
         self._canvas = canvas
         self._canvas.addChangeListener(changeListener=self)
-        self._tokenFilter = tokenFilter
-
+        self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.updateProperties()
         self._updating = False
 
-        def itemActivated(_):  # item
-            if len(self._list) == 0 or len(self._listModel) == 0:
-                return
-            for index in range(0, len(self._list)):
-                t = str(self._listModel[index])
-                if self._list.isItemSelected(self._list.item(index)):
-                    self._tokenFilter.removeForbiddenProperty(name=t)
-                else:
-                    self._tokenFilter.addForbiddenProperty(name=t)
-            if not self._updating:
-                self._canvas.updateNLPGraphics()
-
-        self._list.itemActivated.connect(itemActivated)
-
         self._allowed = gui.tokenFilterTokenLineEdit
+        self._allowed.textEdited.connect(self.allowedChanged)
 
-        def allowedChanged(text):
-            self._tokenFilter.clearAllowedStrings()
-            split = text.split(',')
-            for curr_property in split:
-                self._tokenFilter.addAllowedString(curr_property)
-            self._canvas.updateNLPGraphics()
-        self._allowed.textEdited.connect(allowedChanged)
+        self._list.itemActivated.connect(self.itemActivated)
 
         self._wholeWords = gui.tokenFilterWholeWordsCheckBox
-
-        def wholeWordActionPerformed(value):
-            if value == 2:  # Checked
-                self._tokenFilter.wholeWord = True
-            else:  # Unchecked
-                self._tokenFilter.wholeWord = False
-            self._canvas.updateNLPGraphics()
-        self._wholeWords.stateChanged.connect(wholeWordActionPerformed)
 
     def valueChanged(self):
         if len(self._list) == 0 or len(self._listModel) == 0:
@@ -68,7 +41,34 @@ class TokenFilterPanel:
                 self._tokenFilter.removeForbiddenProperty(name=t)
             else:
                 self._tokenFilter.addForbiddenProperty(name=t)
-        # self.canvas.updateNLPGraphics()  # Updated elsewhere
+                # self.canvas.updateNLPGraphics()  # Updated elsewhere
+
+    def itemActivated(self, _):  # item
+        if len(self._list) == 0 or len(self._listModel) == 0:
+            return
+        for index in range(0, len(self._list)):
+            t = str(self._listModel[index])
+            if self._list.isItemSelected(self._list.item(index)):
+                self._tokenFilter.removeForbiddenProperty(name=t)
+            else:
+                self._tokenFilter.addForbiddenProperty(name=t)
+        if not self._updating:
+            self._canvas.updateNLPGraphics()
+
+    def allowedChanged(self, text):
+        self._tokenFilter.clearAllowedStrings()
+        split = text.split(',')
+        for curr_property in split:
+            self._tokenFilter.addAllowedString(curr_property)
+        self._canvas.updateNLPGraphics()
+
+        def wholeWordActionPerformed(value):
+            if value == 2:  # Checked
+                self._tokenFilter.wholeWord = True
+            else:  # Unchecked
+                self._tokenFilter.wholeWord = False
+            self._canvas.updateNLPGraphics()
+        self._wholeWords.stateChanged.connect(wholeWordActionPerformed)
 
     """
      * Updates the list of available token properties.
@@ -76,7 +76,7 @@ class TokenFilterPanel:
     def updateProperties(self):
         self._updating = True
         selectableItems = []
-        _sorted = sorted(list(self._canvas.usedProperties), key=attrgetter("name"))  # TODO
+        _sorted = sorted(self._canvas.usedProperties, key=attrgetter("name"))  # XXX TODO getUsedProperties()
         index = 0
         self._listModel.clear()
         self._list.clear()

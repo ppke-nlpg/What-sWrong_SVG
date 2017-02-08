@@ -104,7 +104,7 @@ class MyForm(QtGui.QMainWindow):
         self.refresh()
 
     def choosenFile(self, factory, corp_type):
-        directory = QtGui.QFileDialog.getOpenFileName(self)
+        directory = QtGui.QFileDialog.getOpenFileName(QtGui.QFileDialog())  # todo ok like this?
         corpus = []
         if corp_type == "gold":
             self.goldMap[basename(directory)] = corpus
@@ -159,9 +159,9 @@ class MyForm(QtGui.QMainWindow):
         # set filter of canvas to be the pipeline
         self.canvas.filter = filterPipeline
 
-        edgeTypeFilterPanel = EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeFilter)
-        dependencyFilterPanel = DependencyFilterPanel (self.ui, self.canvas, edgeLabelFilter, edgeTokenFilter)
-        tokenFilterPanel = TokenFilterPanel(self.ui, self.canvas, tokenFilter)
+        EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeFilter)
+        DependencyFilterPanel(self.ui, self.canvas, edgeLabelFilter, edgeTokenFilter)
+        TokenFilterPanel(self.ui, self.canvas, tokenFilter)
 
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
@@ -183,13 +183,10 @@ class MyForm(QtGui.QMainWindow):
     def svgdraw(self):  # instance
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
-        # br = QtSvg.QGraphicsSvgItem("/Users/Regina/Desktop/tmp1.svg")
-        # text = QtSvg.QGraphicsSvgItem("/Users/Regina/Documents/Pázmány/Onallo_labor/Project/Python/What'sWrong_SVG/szoveg.svg")
-        # scene.addItem(br)
         self.ui.graphicsView.show()
 
     def file_save(self):
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtGui.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')  # todo ok like this?
         self.canvas.exportNLPGraphics(name)
 
 

@@ -116,18 +116,19 @@ class Token:
     def addProperty(self, value: str=None, name: str=None, index: int=None, token_property: str=None):
         if name is not None and value is not None:
             self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
-            return self
+            # return self  # No need for this...
         elif index is not None and token_property is not None:
             self._tokenProperties[TokenProperty(level=self._tokenProperties[index])] = token_property
-            return None  # !!
+            # return None  # !! No need for this...
         elif token_property is not None and value is not None:
             self._tokenProperties[token_property] = value
-            return self
+            # return self  # No need for this...
         elif value is not None:
             self._tokenProperties[TokenProperty(level=self._tokenProperties[len(self._tokenProperties)])] = value
-            return None  # !!
+            # return None  # !! No need for this...
         else:
             raise Exception("addPropertyException")
+        return self
 
     """
      * Sorts the properties by property level and name.

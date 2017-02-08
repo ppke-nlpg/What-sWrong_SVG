@@ -231,7 +231,7 @@ class NLPCanvas:
 
     def exportNLPGraphics(self, filepath=None):
         filtered = self.filterInstance()
-        self._SVGScene = Scene(width=800)  # XXX WHY 800?
+        self._SVGScene = Scene()
 
         renderer = self._renderers[filtered.renderType]
 
@@ -260,4 +260,4 @@ class NLPCanvas:
      * @param file the eps file to export to.
      * @throws IOException if IO goes wrong.
     """
-    # XXX Will be implemented in the far future...
+    # XXX Will be implemented in the far future... PDF IS MORE IMPORTANT! Cairo? SVGlib?
