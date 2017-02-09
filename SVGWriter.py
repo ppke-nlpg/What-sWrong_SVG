@@ -187,7 +187,7 @@ class Polygon:
 
 
 class Rectangle:
-    def __init__(self, scene, origin, width, height, fill_color, line_color, line_width):
+    def __init__(self, scene, origin, width, height, fill_color, line_color, line_width, rx=None, ry= None):
         self.origin = origin
         self.height = height
         self.width = width
@@ -196,13 +196,16 @@ class Rectangle:
         self.line_width = line_width
         self.offsetx = scene.offsetx
         self.offsety = scene.offsety
+        self.rounded = ""
+        if rx is not None and ry is not None:
+            self.rounded = " rx=\"%d\" ry=\"%d\"" % (rx, ry)
         return
 
     def strarray(self):
         return ["  <rect x=\"%d\" y=\"%d\" height=\"%d\"\n" %
                 (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.height),
-                "    width=\"%d\" style=\"fill:%s;stroke:%s;stroke-width:%d\" />\n" %
-                (self.width, colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
+                "    width=\"%d\"%s style=\"fill:%s;stroke:%s;stroke-width:%d\" />\n" %
+                (self.width, self.rounded, colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
 class Text:
