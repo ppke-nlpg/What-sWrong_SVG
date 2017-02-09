@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from EdgeFilter import EdgeFilter
+from NLPInstance import NLPInstance
 
 
 """
@@ -11,7 +11,7 @@ from EdgeFilter import EdgeFilter
 """
 
 
-class EdgeTypeFilter(EdgeFilter):
+class EdgeTypeFilter:
 
     """
      * Am EdgeTypeFilter.Listener is notified of changes to the set of allowed edge type strings.
@@ -169,3 +169,10 @@ class EdgeTypeFilter(EdgeFilter):
     """
     def allowsPostfix(self, Type: str):
         return Type in self._allowedPostfixTypes
+
+    """
+     * @see NLPInstanceFilter#filter(NLPInstance)
+    """
+    def filter(self, original: NLPInstance):
+        return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
+                           renderType=original.renderType, splitPoints=original.splitPoints)

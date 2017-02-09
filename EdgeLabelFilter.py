@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from EdgeFilter import EdgeFilter
+from NLPInstance import NLPInstance
 
 """
  * An EdgeLabelFilter filters out edges with a label that contains one of a set of allowed label substrings.
@@ -12,7 +12,7 @@ from EdgeFilter import EdgeFilter
 """
 
 
-class EdgeLabelFilter(EdgeFilter):
+class EdgeLabelFilter:
     """
      * Creates a new EdgeLabelFilter that allows the given label substrings.
      *
@@ -59,7 +59,7 @@ class EdgeLabelFilter(EdgeFilter):
      * @return a filtered version of the original edge collection.
      * @see EdgeFilter#filterEdges(Collection<Edge>)
     """
-    def filterEdges(self, original: list) -> list:
+    def filterEdges(self, original: frozenset) -> frozenset:
         if len(self._allowedLabels) == 0:
             return original
         result = []  # ArrayList<Edge>(original.size())
@@ -68,7 +68,7 @@ class EdgeLabelFilter(EdgeFilter):
                 if allowed in edge.label:
                     result.append(edge)
                     break
-        return result
+        return frozenset(result)
 
     """
      * Checks whether the filter allows the given label substring.
@@ -78,3 +78,10 @@ class EdgeLabelFilter(EdgeFilter):
     """
     def allows(self, label: str):
         return label in self._allowedLabels
+
+    """
+     * @see NLPInstanceFilter#filter(NLPInstance)
+    """
+    def filter(self, original: NLPInstance):
+        return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
+                           renderType=original.renderType, splitPoints=original.splitPoints)
