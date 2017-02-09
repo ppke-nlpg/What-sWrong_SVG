@@ -145,25 +145,23 @@ class TokenFilter(NLPInstanceFilter):
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
             for e in original.getEdges():
-                if e.From not in old2new or e.To not in old2new:
-                    continue
-                newFrom = old2new[e.From]
-                newTo = old2new[e.To]
-                edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, Type=e.type,
-                                   renderType=e.renderType, description=e.description)))
+                if not (e.From in old2new and e.To in old2new):
+                    newFrom = old2new[e.From]
+                    newTo = old2new[e.To]
+                    edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, Type=e.type,
+                                       renderType=e.renderType, description=e.description)))
             # find new split points (have to be changed becouse instance has new token sequence)
             splitPoints = []
             newTokenIndex = 0
             for oldSplitPoint in original.splitPoints:
                 newToken = tokens[newTokenIndex]
                 oldToken = new2old[newToken]
-                while newTokenIndex + 1 < len(tokens)and oldToken.index < oldSplitPoint:
+                while newTokenIndex + 1 < len(tokens) and oldToken.index < oldSplitPoint:
                     newTokenIndex += 1
                     newToken = tokens[newTokenIndex]
                     oldToken = new2old[newToken]
-            return NLPInstance(tokens=self.filterTokens(tokens), edges=edges,
-                               renderType=original.renderType, splitPoints=splitPoints)
+            return NLPInstance(tokens=self.filterTokens(tokens), edges=edges, renderType=original.renderType,
+                               splitPoints=splitPoints)
         else:
             filteredTokens = self.filterTokens(original.tokens)
-            return NLPInstance(tokens=filteredTokens, edges=original.getEdges(),
-                               renderType=original.renderType)
+            return NLPInstance(tokens=filteredTokens, edges=original.getEdges(), renderType=original.renderType)
