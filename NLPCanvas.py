@@ -6,7 +6,6 @@ from SVGWriter import Scene
 from SingleSentenceRenderer import SingleSentenceRenderer
 from NLPInstance import NLPInstance
 from AligmentRenderer import AligmentRenderer
-from NLPInstanceFilter import NLPInstanceFilter
 
 """
  * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token
@@ -86,7 +85,7 @@ class NLPCanvas:
         return self._filter
 
     @filter.setter
-    def filter(self, value=NLPInstanceFilter):
+    def filter(self, value):
         self._filter = value
 
     """

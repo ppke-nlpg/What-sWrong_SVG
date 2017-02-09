@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstanceFilter import NLPInstanceFilter
 from NLPInstance import NLPInstance
 
 """
@@ -11,13 +10,13 @@ from NLPInstance import NLPInstance
 """
 
 
-class FilterPipeline(NLPInstanceFilter):
+class FilterPipeline:
     """
      * Creates a new filter pipeline with the given filters.
      *
      * @param filters the filters of the pipeline. The first filter will be applied first, the last filter last.
     """
-    def __init__(self, *filters: [NLPInstanceFilter]):
+    def __init__(self, *filters):
         # * The list of filters.
         self._filters = filters  # ArrayList<NLPInstanceFilter>()
 

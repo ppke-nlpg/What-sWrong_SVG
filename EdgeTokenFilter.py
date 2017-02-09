@@ -3,7 +3,6 @@
 
 from operator import attrgetter
 
-from NLPInstanceFilter import NLPInstanceFilter
 from NLPInstance import Edge, NLPInstance
 from Token import Token
 
@@ -24,7 +23,7 @@ from Token import Token
 """
 
 
-class EdgeTokenFilter(NLPInstanceFilter):
+class EdgeTokenFilter:
     """
      * Creates a new filter with the given allowed property values.
      *

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
-from NLPInstanceFilter import NLPInstanceFilter
 from NLPInstance import NLPInstance
 from Token import Token
 from TokenProperty import TokenProperty
@@ -15,7 +14,7 @@ from Edge import Edge
 """
 
 
-class TokenFilter(NLPInstanceFilter):
+class TokenFilter:
     """
      * Creates a new TokenFilter.
     """
