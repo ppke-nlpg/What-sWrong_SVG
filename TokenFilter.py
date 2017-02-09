@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
-# Todo better implementation?
-
-import re
 
 from NLPInstanceFilter import NLPInstanceFilter
 from NLPInstance import NLPInstance
@@ -132,25 +129,19 @@ class TokenFilter(NLPInstanceFilter):
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             tokens = []  # ArrayList<Token>()
-            for t in original.tokens:  # XXX THIS COULD BE BETTER
-                stopped = False
-                for curr_property in t.getPropertyTypes():
-                    if stopped:
+            for t in original.tokens:  # Linear search: For every property x For every allowed 'string'
+                for prop, prop_name, allowed in ((t.getProperty(p), p.name, allowed) for p in t.getPropertyTypes()
+                                                 for allowed in self._allowedStrings):
+                    # Index poperty is in range or full or partial stringmatch
+                    if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
+                            (not isinstance(allowed, range) and (self._wholeWord and prop == allowed or
+                                                                 not self._wholeWord and allowed in prop)):
+                        newVertex = Token(len(tokens))
+                        newVertex.merge(t)
+                        tokens.append(newVertex)
+                        old2new[t] = newVertex
+                        new2old[newVertex] = t
                         break
-                    prop = t.getProperty(curr_property)  # String that represents an int...
-                    for allowed in self._allowedStrings:
-                        split = allowed.split("-")  # Split either way maybe not used...
-                        # todo: this can surely be implemented in a nicer way (e.g. no reparsing of interval)
-                        if ((curr_property.name == "Index" and re.match("\d+-\d+$", allowed) and  # WHOLE STRING MATCH
-                                int(split[0]) <= int(prop) <= int(split[1])) or  # From <= prop <= to
-                                (self._wholeWord and prop == allowed or allowed in prop)):  # XXX Why in prop ?
-                            newVertex = Token(len(tokens))
-                            newVertex.merge(t)
-                            tokens.append(newVertex)
-                            old2new[t] = newVertex
-                            new2old[newVertex] = t
-                            stopped = True
-                            break
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
             for e in original.getEdges():

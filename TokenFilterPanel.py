@@ -2,16 +2,20 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 # Todo implement, test...
 
+import re
 from operator import attrgetter
+from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
-from PyQt4 import QtGui
+
 """
  * A TokenFilterPanel controls a TokenFilter and updates a NLPCanvas whenever the filter has been changed.
  *
  * @author Sebastian Riedel
 """
+
+interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class TokenFilterPanel:
@@ -57,9 +61,12 @@ class TokenFilterPanel:
 
     def allowedChanged(self, text):
         self._tokenFilter.clearAllowedStrings()
-        split = text.split(',')
-        for curr_property in split:
-            self._tokenFilter.addAllowedString(curr_property)
+        for curr_property in text.split(','):
+            if len(curr_property) > 0:
+                m = interval.match(curr_property)
+                if m:
+                    curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
+                self._tokenFilter.addAllowedString(curr_property)
         self._canvas.updateNLPGraphics()
 
         def wholeWordActionPerformed(value):
