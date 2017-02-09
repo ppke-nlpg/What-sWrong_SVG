@@ -10,7 +10,6 @@ from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008,\
     CoNLL2009, MaltTab
-from FilterPipeline import FilterPipeline
 from EdgeTypeFilterPanel import EdgeTypeFilterPanel
 from EdgeTypeFilter import EdgeTypeFilter
 from EdgeTokenFilter import EdgeTokenFilter
@@ -154,10 +153,9 @@ class MyForm(QtGui.QMainWindow):
         edgeLabelFilter = EdgeLabelFilter()
         tokenFilter = TokenFilter()
         edgeTypeFilter = EdgeTypeFilter()
-        filterPipeline = FilterPipeline(tokenFilter, edgeTypeFilter, edgeLabelFilter, edgeTokenFilter)
 
         # set filter of canvas to be the pipeline
-        self.canvas.filter = filterPipeline
+        self.canvas.filters = (tokenFilter, edgeTypeFilter, edgeLabelFilter, edgeTokenFilter)
 
         EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeFilter)
         DependencyFilterPanel(self.ui, self.canvas, edgeLabelFilter, edgeTokenFilter)

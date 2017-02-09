@@ -81,12 +81,12 @@ class NLPCanvas:
      * The filter that processes the current instance before it is drawn.
     """
     @property
-    def filter(self):
-        return self._filter
+    def filters(self):
+        return self._filters
 
-    @filter.setter
-    def filter(self, value):
-        self._filter = value
+    @filters.setter
+    def filters(self, value):
+        self._filters = value
 
     """
      * Adds a new listener.
@@ -119,7 +119,7 @@ class NLPCanvas:
         self._dependencies = []
         self._usedTypes = set()
         self._usedProperties = set()
-        self._filter = None
+        self._filters = None
         self._ui = ui
         self._scene = QtGui.QGraphicsScene()
         self._SVGScene = None
@@ -210,9 +210,12 @@ class NLPCanvas:
      * @return the filtered instance.
     """
     def filterInstance(self):
-        return self._filter.filter(NLPInstance(tokens=self._tokens, edges=self._dependencies,
-                                   renderType=self._nlpInstance.renderType,
-                                   splitPoints=self._nlpInstance.splitPoints))
+
+        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, renderType=self._nlpInstance.renderType,
+                               splitPoints=self._nlpInstance.splitPoints)
+        for curr_filter in self._filters:
+            instance = curr_filter.filter(instance)
+        return instance
 
     """
      * Updates the current graph. This takes into account all changes to the filter,
