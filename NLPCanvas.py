@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# Todo: Export to PDF, EPS, etc.
 
 from PyQt4 import QtGui, QtSvg
 from SVGWriter import Scene
@@ -164,16 +165,10 @@ class NLPCanvas:
     """
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
-        self._dependencies = []
-        self._dependencies.extend(self._nlpInstance.getEdges())
-        self._usedTypes.clear()
-        for edge in self._dependencies:
-            self._usedTypes.add(edge.type)  # Union
-        self._tokens = []
-        self._tokens.extend(self._nlpInstance.tokens)
-        self._usedProperties.clear()
-        for token in self._tokens:
-            self._usedProperties = self._usedProperties.union(token.getPropertyTypes())  # Tuple and set!
+        self._dependencies = self._nlpInstance.getEdges()
+        self._usedTypes = {edge.type for edge in self._dependencies}  # Union
+        self._tokens = self._nlpInstance.tokens
+        self._usedProperties = {prop for token in self._tokens for prop in token.getPropertyTypes()}  # UnionAll
         self.fireInstanceChanged()
 
     """
