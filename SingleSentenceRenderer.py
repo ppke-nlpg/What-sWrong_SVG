@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from PyQt4 import QtCore
 from Edge import Edge
 from SpanLayout import SpanLayout
 from DependencyLayout import DependencyLayout
 from TokenLayout import TokenLayout
-from PyQt4 import QtCore
 
 """
  * A SingleSentenceRenderer renders an NLPInstance as a single sentence with spans drawn below the tokens, and
@@ -109,8 +109,7 @@ class SingleSentenceRenderer:
         # find token bounds
         tokenXBounds = self._tokenLayout.estimateTokenBounds(instance, widths, scene)
 
-        if self._antiAliasing:  # XXX Do we need this?
-            pass
+        scene.antialiasing = self._antiAliasing
 
         width = 0
         height = 0

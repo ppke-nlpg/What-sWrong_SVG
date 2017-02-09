@@ -20,7 +20,7 @@ display_prog = "display"
 
 
 class Scene:
-    def __init__(self, name="svg", width=400, height=400):
+    def __init__(self, name="svg", width=400, height=400, antialiassing=True):
         self.name = name
         self.items = []
         self.height = height
@@ -29,6 +29,7 @@ class Scene:
         self.offsetx = 0
         self.offsety = 0
         self.svgname = None
+        self.antialiasing = antialiassing
 
     def translate(self, offx, offy):
         self.offsetx += offx
@@ -46,8 +47,13 @@ class Scene:
         self.items.append(item)
 
     def strarray(self):
+        rendering = "auto"
+        if self.antialiasing:
+            rendering = "geometricPrecision"
         var = ["<?xml version=\"1.0\"?>\n",
-               "<svg height=\"%d\" width=\"%d\" xmlns=\"http://www.w3.org/2000/svg\">\n" % (self.height, self.width),
+               "<svg height=\"%d\" width=\"%d\" shape-rendering=\"%s\" text-rendering=\"%s\""
+               " xmlns=\"http://www.w3.org/2000/svg\">\n" %
+               (self.height, self.width, rendering, rendering),
                " <g style=\"fill-opacity:1.0; stroke:black;\n",
                "  stroke-width:1;\">\n"]
         for item in self.items:
@@ -85,7 +91,8 @@ class Line:
         return
 
     def strarray(self):
-        return ["  <line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:%s;stroke-width:%d\"/>\n" %
+        return ["  <line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" shape-rendering=\"inherit\""
+                " style=\"stroke:%s;stroke-width:%d\"/>\n" %
                 (self.start[0]+self.offsetx, self.start[1]+self.offsety, self.end[0]+self.offsetx,
                  self.end[1]+self.offsety, colorstr(self.color), self.width)]
 
@@ -108,7 +115,8 @@ class QuadraticBezierCurve:
         return
 
     def strarray(self):
-        return ["  <path d=\"M %d %d C %d %d %d %d %d %d\" style=\"stroke:%s;stroke-width:%d\" fill=\"none\" />\n" %
+        return ["  <path d=\"M %d %d C %d %d %d %d %d %d\" shape-rendering=\"inherit\""
+                " style=\"stroke:%s;stroke-width:%d\" fill=\"none\" />\n" %
                 (self.start[0]+self.offsetx, self.start[1]+self.offsety, self.control1[0]+self.offsetx,
                  self.control1[1]+self.offsety, self.control2[0]+self.offsetx, self.control2[1]+self.offsety,
                  self.end[0]+self.offsetx, self.end[1]+self.offsety, colorstr(self.color), self.width)]
@@ -126,7 +134,7 @@ class Circle:
         return
 
     def strarray(self):
-        return ["  <circle cx=\"%d\" cy=\"%d\" r=\"%d\"\n" %
+        return ["  <circle cx=\"%d\" cy=\"%d\" r=\"%d\" shape-rendering=\"inherit\"\n" %
                 (self.center[0], self.center[1], self.radius),
                 "    style=\"fill:%s;stroke:%s;stroke-width:%d\"  />\n" %
                 (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
@@ -145,11 +153,12 @@ class HalfCircle:
         return
 
     def strarray(self):
-        clip = "<clipPath id=\"cut-off-bottom%d\"> \n <rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" /> \n" \
+        clip = "<clipPath id=\"cut-off-bottom%d\"> \n <rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\"" \
+               " shape-rendering=\"inherit\" /> \n" \
                " </clipPath>" % (self.id, self.center[0]-self.radius, self.center[1], self.radius*2,
                                  self.radius)
-        circle = "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" clip-path=\"url(#cut-off-bottom%d)\"" \
-                 " style=\"stroke:%s;stroke-width:%dfill-opacity: 1\"/>" %\
+        circle = "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" shape-rendering=\"inherit\"" \
+                 " clip-path=\"url(#cut-off-bottom%d)\" style=\"stroke:%s;stroke-width:%dfill-opacity: 1\"/>" %\
                  (self.center[0], self.center[1], self.radius, self.id, colorstr(self.line_color), self.line_width)
         return [clip + "\n" + circle]
 
@@ -164,7 +173,7 @@ class Ellipse:
         self.line_width = line_width
 
     def strarray(self):
-        return ["  <ellipse cx=\"%d\" cy=\"%d\" rx=\"%d\" ry=\"%d\"\n" %
+        return ["  <ellipse cx=\"%d\" cy=\"%d\" rx=\"%d\" ry=\"%d\" shape-rendering=\"inherit\"\n" %
                 (self.center[0], self.center[1], self.radiusx, self.radiusy),
                 "    style=\"fill:%s;stroke:%s;stroke-width:%d\"/>\n" %
                 (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
@@ -182,7 +191,7 @@ class Polygon:
         for point in self.points:
             polygon += " %d,%d" % (point[0], point[1])
         return [polygon,
-                "\" \nstyle=\"fill:%s;stroke:%s;stroke-width:%d\"/>\n" %
+                "\" \nshape-rendering=\"inherit\" style=\"fill:%s;stroke:%s;stroke-width:%d\"/>\n" %
                 (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
@@ -204,7 +213,7 @@ class Rectangle:
     def strarray(self):
         return ["  <rect x=\"%d\" y=\"%d\" height=\"%d\"\n" %
                 (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.height),
-                "    width=\"%d\"%s style=\"fill:%s;stroke:%s;stroke-width:%d\" />\n" %
+                "    width=\"%d\"%s shape-rendering=\"inherit\" style=\"fill:%s;stroke:%s;stroke-width:%d\" />\n" %
                 (self.width, self.rounded, colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
@@ -220,7 +229,7 @@ class Text:
 
     def strarray(self):
         return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-anchor=\"middle\" "
-                "alignment-baseline=\"central\" style=\"font-family: Consolas\" >\n" %
+                "alignment-baseline=\"central\" text-rendering=\"inherit\" style=\"font-family: Consolas\" >\n" %
                 (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
                 "   %s\n" % self.text,
                 "  </text>\n"]
@@ -240,7 +249,8 @@ class TextToken:
         return
 
     def strarray(self):
-        return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" style=\"font-family: Consolas\">\n" %
+        return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-rendering=\"inherit\""
+                " style=\"font-family: Consolas\">\n" %
                 (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
                 "   %s\n" % self.text,
                 "  </text>\n"]
