@@ -201,10 +201,7 @@ class Edge:
      * @return the mimimal index of both tokens in this edge.
     """
     def getMinIndex(self) -> int:
-        if self._From.index < self._To.index:
-            return self._From.index
-        else:
-            return self._To.index
+        return min(self._From.index, self._To.index)
 
     """
      * Returns the maximal index of both tokens in this edge.
@@ -212,10 +209,7 @@ class Edge:
      * @return the maximal index of both tokens in this edge.
     """
     def getMaxIndex(self) -> int:
-        if self._From.index > self._To.index:
-            return self._From.index
-        else:
-            return self._To.index
+        return max(self._From.index, self._To.index)
 
     """
      * Returns the render type of this edge. For example, if this edge should be drawn as span it would return {@link
@@ -417,15 +411,11 @@ class Edge:
         if other is None or not isinstance(other, self.__class__):
             return False
 
-        if self.From is not None and self.From != other.From or self.From is None and other.From is not None:
-            return False
-        if self.label is not None and self.label != other.label or self.label is None and other.label is not None:
-            return False
-        if self.To is not None and self.To != other.To or self.To is None and other.To is not None:
-            return False
-        if self.type is not None and self.type != other.type or self.type is None and other.type is not None:
-            return False
-        if self.note is not None and self.note != other.note or self.note is None and other.note is not None:
+        if ((self.From is not None and self.From != other.From or self.From is None and other.From is not None) or
+            (self.label is not None and self.label != other.label or self.label is None and other.label is not None) or
+            (self.To is not None and self.To != other.To or self.To is None and other.To is not None) or
+            (self.type is not None and self.type != other.type or self.type is None and other.type is not None) or
+                (self.note is not None and self.note != other.note or self.note is None and other.note is not None)):
             return False
 
         return True

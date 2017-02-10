@@ -61,25 +61,11 @@ class NLPDiff:
             self._label = edge.label
 
         def __eq__(self, other):
-            if other is None or type(self) != type(other):
+            if (other is None or not isinstance(self, type(other)) or self._From != other.From or self._To != other.To
+                or (self._label is not None and self._label != other.label) or other.label is not None or
+                    (self._type is not None and self._type != other.type) or
+                    (self._type is None and other.type is not None)):
                 return False
-
-            if self._From != other.From:
-                return False
-            if self._To != other.To:
-                return False
-            if self._label is not None:
-                if self._label != other.label:
-                    return False
-            else:
-                if other.label is not None:
-                    return False
-            if self._type is not None:
-                if self._type != other.type:
-                    return False
-            else:
-                if other.type is not None:
-                    return False
             return True
 
         def __hash__(self):
@@ -134,7 +120,4 @@ class NLPDiff:
     """
     @staticmethod
     def createIdentities(edges: frozenset) -> set:
-        result = set()  # HashSet<EdgeIdentity>()
-        for edge in edges:
-            result.add(NLPDiff.EdgeIdentity(edge))
-        return result
+        return {NLPDiff.EdgeIdentity(edge) for edge in edges}  # HashSet<EdgeIdentity>()

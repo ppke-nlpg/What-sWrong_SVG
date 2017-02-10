@@ -340,7 +340,7 @@ class TokenLayout:
      * @param vertex the token for which to get the bounds for.
      * @return a bounding box around the stack of property values for the given token.
     """
-    def getBouns(self, vertex):
+    def getBounds(self, vertex):
         return self._bounds[vertex]
 
     """

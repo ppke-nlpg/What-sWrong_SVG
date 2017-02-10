@@ -26,7 +26,7 @@ class EdgeLabelFilter:
         """
         if len(allowedLabels) != 1 or not isinstance(allowedLabels[0], set):
             self._allowedLabels = set(allowedLabels)
-        else:
+        elif isinstance(allowedLabels[0], set):
             self._allowedLabels = allowedLabels[0]
 
     """
