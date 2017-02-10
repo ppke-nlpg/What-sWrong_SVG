@@ -144,7 +144,7 @@ class TokenFilter:
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
             for e in original.getEdges():
-                if not (e.From in old2new and e.To in old2new):
+                if e.From in old2new and e.To in old2new:
                     newFrom = old2new[e.From]
                     newTo = old2new[e.To]
                     edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, Type=e.type,
