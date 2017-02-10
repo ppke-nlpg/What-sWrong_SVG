@@ -4,7 +4,7 @@
 from enum import Enum
 
 from Token import Token
-from Edge import RenderType, Edge
+from Edge import EdgeRenderType, Edge
 
 """
  * An NLPInstance represents a sentence or any other kind of utterance and some of its (NLP) properties. Properties of
@@ -16,18 +16,19 @@ from Edge import RenderType, Edge
 """
 
 
+class RenderType(Enum):
+    """
+     * Show as single sentence with dependencies and spans
+    """
+    single = 'single',
+    """
+     * Show two aligned sentences, on top of each other
+    """
+    alignment = 'alignment'
+
+
 class NLPInstance:
     # todo: this class needs a redesign, in particular with respect to token identities.
-
-    class RenderType(Enum):
-        """
-         * Show as single sentence with dependencies and spans
-        """
-        single = 'single',
-        """
-         * Show two aligned sentences, on top of each other
-        """
-        alignment = 'alignment'
 
     """
      * How to render this instance.
@@ -188,7 +189,7 @@ class NLPInstance:
      * @see com.googlecode.whatswrong.Edge
     """
     def addEdge(self, edge: Edge=None, From: int=None, to: int=None, label: str=None, edge_type: str=None,
-                renderType: RenderType=None, fromToken: Token=None, toToken: Token=None):
+                renderType: EdgeRenderType=None, fromToken: Token=None, toToken: Token=None):
         if edge is not None:
             From = self._map[edge.From.index]
             to = self._map[edge.To.index]
@@ -224,7 +225,7 @@ class NLPInstance:
         return not(toToken and fromToken)
 
     """
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#span}
+     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#span}
      *
      * @param from  index of the token the edge should start at. The token at the given index must already exist in the
      *              sentence.
@@ -236,7 +237,7 @@ class NLPInstance:
 
      OR
 
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#span}
+     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#span}
      *
      * @param from        index of the token the edge should start at. The token at the given index must already exist
      *                    in the sentence.
@@ -249,12 +250,12 @@ class NLPInstance:
     """
     def addSpan(self, From: int, to: int, label: str, span_type: str, desc: str=None):
         if self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, span_type, renderType=RenderType.span,
+            edge = Edge(self._map[From], self._map[to], label, span_type, renderType=EdgeRenderType.span,
                         description=desc)
             self._edges.append(edge)
 
     """
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#dependency}
+     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}
      *
      * @param from  index of the token the edge should start at. The token at the given index must already exist in the
      *              sentence.
@@ -266,7 +267,7 @@ class NLPInstance:
 
      OR
 
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.RenderType#dependency}
+     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}
      *
      * @param from        index of the token the edge should start at. The token at the given index must already exist
      *                    in the sentence.
@@ -279,7 +280,7 @@ class NLPInstance:
     """
     def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None):
         if not self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, dep_type, renderType=RenderType.dependency,
+            edge = Edge(self._map[From], self._map[to], label, dep_type, renderType=EdgeRenderType.dependency,
                         description=des)
             self._edges.append(edge)
 

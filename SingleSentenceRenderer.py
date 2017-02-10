@@ -3,7 +3,7 @@
 
 from PyQt4 import QtCore
 
-from Edge import RenderType
+from Edge import EdgeRenderType
 from SpanLayout import SpanLayout
 from DependencyLayout import DependencyLayout
 from TokenLayout import TokenLayout
@@ -101,8 +101,8 @@ class SingleSentenceRenderer:
      * @see NLPCanvasRenderer#render(NLPInstance, Graphics2D)
     """
     def render(self, instance, scene, render_spans=True):
-        dependencies = instance.getEdges(RenderType.dependency)
-        spans = instance.getEdges(RenderType.span)
+        dependencies = instance.getEdges(EdgeRenderType.dependency)
+        spans = instance.getEdges(EdgeRenderType.span)
 
         # get span required token widths
         widths = self._spanLayout.estimateRequiredTokenWidths(spans, scene)

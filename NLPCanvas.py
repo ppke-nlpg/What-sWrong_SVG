@@ -5,7 +5,7 @@
 from PyQt4 import QtGui, QtSvg
 from SVGWriter import Scene
 from SingleSentenceRenderer import SingleSentenceRenderer
-from NLPInstance import NLPInstance
+from NLPInstance import NLPInstance, RenderType
 from AligmentRenderer import AligmentRenderer
 
 """
@@ -114,8 +114,8 @@ class NLPCanvas:
     """
     def __init__(self, ui):
         self._renderer = SingleSentenceRenderer()
-        self._renderers = {NLPInstance.RenderType.single: self._renderer,
-                           NLPInstance.RenderType.alignment: AligmentRenderer()}
+        self._renderers = {RenderType.single: self._renderer,
+                           RenderType.alignment: AligmentRenderer()}
         self._tokens = []
         self._dependencies = []
         self._usedTypes = set()

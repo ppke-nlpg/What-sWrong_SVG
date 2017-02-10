@@ -15,7 +15,7 @@ from EdgeTypeFilter import EdgeTypeFilter
 from EdgeTokenFilter import EdgeTokenFilter
 from EdgeLabelFilter import EdgeLabelFilter
 from DependencyFilterPanel import DependencyFilterPanel
-from NLPInstance import NLPInstance
+from NLPInstance import RenderType
 from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
 from TokenFilterPanel import TokenFilterPanel
@@ -124,7 +124,7 @@ class MyForm(QtGui.QMainWindow):
             if line == "":
                 instanceNr += 1
                 instance = factory.create(rows)
-                instance.renderType = NLPInstance.RenderType.single
+                instance.renderType = RenderType.single
                 corpus.append(instance)
                 del rows[:]
             else:
@@ -132,7 +132,7 @@ class MyForm(QtGui.QMainWindow):
         if len(rows) > 0:
             instanceNr += 1
             instance = factory.create(rows)
-            instance.renderType = NLPInstance.RenderType.single
+            instance.renderType = RenderType.single
             corpus.append(instance)
 
         if corp_type == "gold":

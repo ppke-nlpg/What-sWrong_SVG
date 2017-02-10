@@ -4,7 +4,7 @@
 from collections import defaultdict
 from operator import attrgetter
 
-from Edge import RenderType, Edge
+from Edge import EdgeRenderType, Edge
 from NLPInstance import NLPInstance
 from Token import Token
 
@@ -257,10 +257,10 @@ class EdgeTokenFilter:
         else:
             tokens = set()  # HashSet<Token>()
             for e in edges:
-                if e.renderType == RenderType.dependency:
+                if e.renderType == EdgeRenderType.dependency:
                     tokens.add(e.From)
                     tokens.add(e.To)
-                elif e.renderType == RenderType.span:
+                elif e.renderType == EdgeRenderType.span:
                         for i in range(e.From.index, e.To.index + 1):
                             tokens.add(original.getToken(index=i))
 

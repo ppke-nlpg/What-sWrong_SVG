@@ -9,7 +9,7 @@ from enum import Enum
  * denotes the type of information the edge represents. For example, the type could be "dep" for edges that represent
  * syntactic dependencies, or "role" for edges that represent semantic roles (a la CoNLL 2008).</li> <li>Render Type:
  * The render type of an edge controls how the edge will be rendered. For example, both "dep" and "role" edges could
- * have the render type {@link com.googlecode.whatswrong.Edge.RenderType#dependency}</li>. Then they are both drawn as
+ * have the render type {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}</li>. Then they are both drawn as
  * directed edges in a dependency style graph. <li>Label: This attribute classifies edges within a certain type. For
  * example, in the case of "dep" edges we could use the label "SUBJ" to denote subject dependencies. </li> </ol>
  *
@@ -17,11 +17,11 @@ from enum import Enum
 """
 
 """
- * The RenderType enum can be used to specify how the edge should be rendered.
+ * The EdgeRenderType enum can be used to specify how the edge should be rendered.
 """
 
 
-class RenderType(Enum):
+class EdgeRenderType(Enum):
     """
      * Draw edge as a span.
     """
@@ -104,11 +104,11 @@ class Edge:
      * How to render the edge
     """
     @property
-    def renderType(self) -> RenderType:
+    def renderType(self) -> EdgeRenderType:
         return self._renderType
 
     @renderType.setter
-    def renderType(self, value: RenderType):
+    def renderType(self, value: EdgeRenderType):
         self._renderType = value
 
     """
@@ -153,7 +153,7 @@ class Edge:
      * @param type  the type of the edge.
 
     """
-    def __init__(self, From, To, label: str, Type, note: str=None, renderType: RenderType=RenderType.dependency,
+    def __init__(self, From, To, label: str, Type, note: str=None, renderType: EdgeRenderType=EdgeRenderType.dependency,
                  description: str="No Description"):
         self._From = From
         self._To = To
@@ -214,7 +214,7 @@ class Edge:
 
     """
      * Returns the render type of this edge. For example, if this edge should be drawn as span it would return {@link
-     * com.googlecode.whatswrong.Edge.RenderType#span}.
+     * com.googlecode.whatswrong.Edge.EdgeRenderType#span}.
      *
      * @return the render type of this edge.
     """
@@ -222,7 +222,7 @@ class Edge:
 
     """
      * Sets the render type of this edge. For example, if this edge should be drawn as span it should be {@link
-     * com.googlecode.whatswrong.Edge.RenderType#span}.
+     * com.googlecode.whatswrong.Edge.EdgeRenderType#span}.
      *
      * @param renderType the render type of this edge.
     """
