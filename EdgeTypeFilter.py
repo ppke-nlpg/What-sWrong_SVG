@@ -10,20 +10,13 @@ from NLPInstance import NLPInstance
  * @author Sebastian Riedel
 """
 
+"""
+ * Am EdgeTypeFilter.Listener is notified of changes to the set of allowed edge type strings.
+"""
+
 
 class EdgeTypeFilter:
-
-    """
-     * Am EdgeTypeFilter.Listener is notified of changes to the set of allowed edge type strings.
-    """
-    class Listener:
-        """
-         * Called when a type string was added or removed from the filter.
-         *
-         * @param type the type string that was added or removed from the filter.
-        """
-        def changed(self, _type: str):
-            pass
+    # Listener was eliminated, as it was not used
     """
      * Creates a new EdgeTypeFilter with the given allowed edge prefix types.
      *
@@ -75,19 +68,16 @@ class EdgeTypeFilter:
      *
      * @param allowedPrefixTypes the allowed prefix types.
     """
-    def fireChanged(self, Type: str):
-        for l in self._listeners:
-            l.changed(Type)
+    # See __init__() above...
 
     """
      * Notifies every listener that the allow/disallow state of a type has changed.
      *
      * @param type the type which allow/disallow state has changed.
     """
-    """
-    private void fireChanged(final String type) {
-        for (Listener l : listeners) l.changed(type);  # XXX
-    """
+    def fireChanged(self, Type: str):
+        for l in self._listeners:
+            l.changed(Type)
 
     """
      * Adds an allowed prefix type. This causes the filter to accept edges with the given prefix type.
@@ -131,11 +121,8 @@ class EdgeTypeFilter:
      *
      * @param allowedPrefixTypes the allowed prefix types.
     """
-    """
-    public EdgeTypeFilter(final Set<String> allowedPrefixTypes) {  # XXX
-        this.allowedPrefixTypes.addAll(allowedPrefixTypes);
-    }
-    """
+    # See __init__() above...
+
     """
      * Filters out all edges that don't have an allowed prefix and postfix type.
      *
@@ -143,14 +130,10 @@ class EdgeTypeFilter:
      * @return the filtered set of edges.
      * @see EdgeFilter#filterEdges(Collection<Edge>)
     """
-    def filterEdges(self, original):
-        result = []  # ArrayList<Edge>(original.size())
-        for edge in original:
-            prefixAllowed = edge.getTypePrefix() == "" or edge.getTypePrefix() in self._allowedPrefixTypes
-            postfixAllowed = edge.getTypePostfix() == "" or edge.getTypePostfix() in self._allowedPostfixTypes
-            if prefixAllowed and postfixAllowed:
-                result.append(edge)
-        return result
+    def filterEdges(self, original: frozenset) -> list:
+        return [edge for edge in original if
+                (edge.getTypePrefix() == "" or edge.getTypePrefix() in self._allowedPrefixTypes) and  # Allowed prefixes
+                (edge.getTypePostfix() == "" or edge.getTypePostfix() in self._allowedPostfixTypes)]  # and postfixes
 
     """
      * Does the filter allow the given prefix.

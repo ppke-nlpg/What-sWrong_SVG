@@ -209,11 +209,12 @@ class EdgeTokenFilter:
             paths = EdgeTokenFilter.Paths()
             # go over each paths of the previous length and increase their size by one
             for From in previous.keys():
-                for over in previous.getTos(From):  # XXX IS IT OK?!
+                for over in previous.getTos(From):
                     for to in first.getTos(over):
                         for path1 in previous.getPaths(From, over):
                             for path2 in first.getPaths(over, to):
-                                if path2 not in path1 and next(iter(path1)).getTypePrefix() == \
+                                # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
+                                if not path2.issubset(path1) and next(iter(path1)).getTypePrefix() == \
                                         next(iter(path2)).getTypePrefix():
                                     path = set()  # HashSet<Edge>
                                     path.update(path1)
@@ -262,23 +263,22 @@ class EdgeTokenFilter:
     def filterEdges(self, original: frozenset) -> frozenset:
         if len(self._allowedProperties) == 0:
             return original
+        result = set()  # ArrayList<Edge>()
         if self._usePath:
             paths = self.calculatePaths(original)
-            result = set()  # HashSet<Edge>()
             for From in paths.keys():
                 if From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     for to in paths.getTos(From):
                         if to.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                             for path in paths.getPaths(From, to):
                                 result.update(path)
-            return frozenset(result)
         else:
-            result = set()  # ArrayList<Edge>(original.size())
+
             for edge in original:
                 if edge.From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
                         edge.To.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     result.add(edge)
-            return frozenset(result)
+        return frozenset(result)
 
     """
      * Returns whether the given value is an allowed property value.
@@ -307,12 +307,11 @@ class EdgeTokenFilter:
                 if e.renderType == Edge.RenderType.dependency:
                     tokens.add(e.From)
                     tokens.add(e.To)
-                else:
-                    if e.renderType == Edge.RenderType.span:
+                elif e.renderType == Edge.RenderType.span:
                         for i in range(e.From.index, e.To.index + 1):
                             tokens.add(original.getToken(index=i))
 
-            _sorted = sorted(tokens, key=attrgetter("int_index"))
+            _sorted = sorted(tokens, key=attrgetter("index"))
 
             updatedTokens = []  # ArrayList<Token>()
             old2new = {}  # HashMap<Token, Token>()
