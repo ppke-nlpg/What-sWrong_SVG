@@ -153,8 +153,8 @@ class EdgeTokenFilter:
         for edge in edges:
             path = set()  # HashSet<Edge>
             path.add(edge)
-            paths[edge.From][edge.To].add(path)
-            paths[edge.To][edge.From].add(path)
+            paths[edge.From][edge.To].add(frozenset(path))
+            paths[edge.To][edge.From].add(frozenset(path))
         pathsPerLength.append(paths)
         previous = paths
         first = paths
@@ -172,8 +172,8 @@ class EdgeTokenFilter:
                                     path = set()  # HashSet<Edge>
                                     path.update(path1)
                                     path.update(path2)
-                                    paths[From][to].add(path)
-                                    paths[to][From].add(path)
+                                    paths[From][to].add(frozenset(path))
+                                    paths[to][From].add(frozenset(path))
             if len(paths) == 0:
                 pathsPerLength.append(paths)
             previous = paths
