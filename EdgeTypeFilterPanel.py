@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# Detangle GUI stuff...
 
 from PyQt4 import QtGui
 
@@ -140,26 +141,35 @@ class EdgeTypeFilterPanel:
         allTypes.extend(prefixTypes)
 
         self._falseNegatives.setEnabled("FP" in postfixTypes)
-        if self._edgeTypeFilter.allowsPostfix("FP"):
+        self._edgeTypeFilter.addAllowedPostfixType("FP")
+        if self._falseNegatives.isEnabled() and self._edgeTypeFilter.allowsPostfix("FP"):
             self._falseNegatives.setCheckState(2)  # Checked
         else:
             self._falseNegatives.setCheckState(0)  # Unchecked
         self._falsePositives.setEnabled("FN" in postfixTypes)
-        if self._edgeTypeFilter.allowsPostfix("FN"):
+        self._edgeTypeFilter.addAllowedPostfixType("FN")
+        if self._falsePositives.isEnabled() and self._edgeTypeFilter.allowsPostfix("FN"):
             self._falsePositives.setCheckState(2)  # Checked
         else:
             self._falsePositives.setCheckState(0)  # Unchecked
         self._matches.setEnabled("Match" in postfixTypes)
-        if self._edgeTypeFilter.allowsPostfix("Match"):
+        self._edgeTypeFilter.addAllowedPostfixType("Match")
+        if self._matches.isEnabled() and self._edgeTypeFilter.allowsPostfix("Match"):
             self._matches.setCheckState(2)  # Checked
         else:
             self._matches.setCheckState(0)  # Unchecked
 
         self._listModel = []
+        for index in range(self._types.count()):
+            self._listModel.append(self._types.item(index))
+
         self._types.clear()
         for t in allTypes:
             self._listModel.append(t)
             self._types.addItem(t)
+        for i in range(len(self._types)):
+            self._types.item(i).setSelected(True)
+
     """
      * Updates the type list and the selection. Afterwards request for repaint is issued.
     """
