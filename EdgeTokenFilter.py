@@ -135,50 +135,7 @@ class EdgeTokenFilter:
     """
      * A Paths object is a mapping from token pairs to all paths between the corresponding tokens.
     """
-    class Paths:
-        def __init__(self):  # XXX EXTENDS HashMap<Token, HashMap<Token, HashSet<Path>>>
-            self._map = defaultdict(lambda: defaultdict(set))
-
-        """
-         * Returns the set of paths between the given tokens.
-         *
-         * @param from the start token.
-         * @param to   the end token.
-         * @return the set of paths between the tokens.
-        """
-        def getPaths(self, From: Token, to: Token) -> set:
-            if From not in self._map:
-                return set()
-            else:
-                return self._map[From][to]
-
-        """
-         * Get all tokens with paths that end in this token and start at the given from token.
-         *
-         * @param from the token the paths should start at.
-         * @return all tokens that have a paths that end in it and start at the provided token.
-        """
-        def getTos(self, From: Token) -> set:
-            if From in self._map:
-                return set(self._map[From].keys())
-            else:
-                return set()  # HashSet<Token>()
-
-        """
-         * Adds a path between the given tokens.
-         *
-         * @param from the start token.
-         * @param to   the end token.
-         * @param path the path to add.
-        """
-        def addPath(self, From: Token, to: Token, path: set):
-            self._map[From][to].add(path)
-
-        def __len__(self):
-            return len(self._map)
-
-        def keys(self):
-            return self._map.keys()
+    # Paths is just a defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
 
     """
      * Calculates all paths between all tokens of the provided edges.
@@ -187,46 +144,46 @@ class EdgeTokenFilter:
      * @return all paths defined through the provided edges.
     """
     @staticmethod
-    def calculatePaths(edges: frozenset) -> Paths:
+    def calculatePaths(edges: frozenset) -> defaultdict:
         pathsPerLength = []  # ArrayList<Paths>()
 
-        paths = EdgeTokenFilter.Paths()
+        paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         # initialize
         for edge in edges:
             path = set()  # HashSet<Edge>
             path.add(edge)
-            paths.addPath(edge.From, edge.To, path)
-            paths.addPath(edge.To, edge.From, path)
+            paths[edge.From][edge.To].add(path)
+            paths[edge.To][edge.From].add(path)
         pathsPerLength.append(paths)
         previous = paths
         first = paths
         while True:
-            paths = EdgeTokenFilter.Paths()
+            paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
             # go over each paths of the previous length and increase their size by one
             for From in previous.keys():
-                for over in previous.getTos(From):
-                    for to in first.getTos(over):
-                        for path1 in previous.getPaths(From, over):
-                            for path2 in first.getPaths(over, to):
+                for over in previous[From].keys():
+                    for to in first[over].keys():
+                        for path1 in previous[From][over]:
+                            for path2 in first[over][to]:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
                                 if not path2.issubset(path1) and next(iter(path1)).getTypePrefix() == \
                                         next(iter(path2)).getTypePrefix():
                                     path = set()  # HashSet<Edge>
                                     path.update(path1)
                                     path.update(path2)
-                                    paths.addPath(From, to, path)
-                                    paths.addPath(to, From, path)
+                                    paths[From][to].add(path)
+                                    paths[to][From].add(path)
             if len(paths) == 0:
                 pathsPerLength.append(paths)
             previous = paths
             if len(paths) == 0:
                 break
-        result = EdgeTokenFilter.Paths()
+        result = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         for p in pathsPerLength:
             for From in p.keys():
-                for to in p.getTos(From):
-                    for path in p.getPaths(From, to):
-                        result.addPath(From, to, path)
+                for to in p[From].keys():
+                    for path in p[From][to]:
+                        result[From][to].add(path)
         return result
     """
      * If true at least one edge tokens must contain at least one property value that matches one of the allowed
@@ -263,9 +220,9 @@ class EdgeTokenFilter:
             paths = self.calculatePaths(original)
             for From in paths.keys():
                 if From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
-                    for to in paths.getTos(From):
+                    for to in paths[From].keys():
                         if to.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
-                            for path in paths.getPaths(From, to):
+                            for path in paths[From][to]:
                                 result.update(path)
         else:
 
