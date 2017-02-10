@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# todo: further redesign when all part is implemented eg: merge addDependency and addSpan
 
 from enum import Enum
 
@@ -28,8 +29,6 @@ class RenderType(Enum):
 
 
 class NLPInstance:
-    # todo: this class needs a redesign, in particular with respect to token identities.
-
     """
      * How to render this instance.
     """
@@ -188,30 +187,13 @@ class NLPInstance:
      * @param renderType the render type of the edge.
      * @see com.googlecode.whatswrong.Edge
     """
-    def addEdge(self, edge: Edge=None, From: int=None, to: int=None, label: str=None, edge_type: str=None,
-                renderType: EdgeRenderType=None, fromToken: Token=None, toToken: Token=None):
-        if edge is not None:
-            From = self._map[edge.From.index]
-            to = self._map[edge.To.index]
-            label = edge.label
-            edge_type = edge.type
-            renderType = edge.renderType
-            desc = edge.description
-            self._edges.append(Edge(From=From, To=to, label=label, Type=edge_type, renderType=renderType,
-                                    description=desc))
-            return
-        elif fromToken is not None and toToken is not None:
-            From = fromToken.index
-            to = toToken.index
+    def addEdge(self, From: int=None, to: int=None, label: str=None, edge_type: str=None,
+                renderType: EdgeRenderType=None, desc=None, note: str=None):
+        if self.isValidEdge(From, to):
+            self._edges.append(Edge(From=self._map[From], To=self._map[to], label=label, Type=edge_type,
+                                    renderType=renderType, description=desc, note=note))
 
-        if self.isInvalidEdge(From, to):
-            return
-
-        From = self._map[From]
-        to = self._map[to]
-        self._edges.append(Edge(From=From, To=to, label=label, Type=edge_type, renderType=renderType))
-
-    def isInvalidEdge(self, From, to):
+    def isValidEdge(self, From, to):
         if From not in self._map:
             print('There is no token at index: {0} for tokens {1}'.format(From, self._map))
             fromToken = False
@@ -222,7 +204,7 @@ class NLPInstance:
             toToken = False
         else:
             toToken = True
-        return not(toToken and fromToken)
+        return toToken and fromToken
 
     """
      * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#span}
@@ -249,10 +231,9 @@ class NLPInstance:
      * @see com.googlecode.whatswrong.Edge
     """
     def addSpan(self, From: int, to: int, label: str, span_type: str, desc: str=None):
-        if self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, span_type, renderType=EdgeRenderType.span,
-                        description=desc)
-            self._edges.append(edge)
+        if self.isValidEdge(From, to):
+            self._edges.append(Edge(self._map[From], self._map[to], label, span_type, renderType=EdgeRenderType.span,
+                                    description=desc))
 
     """
      * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}
@@ -279,10 +260,9 @@ class NLPInstance:
      * @see com.googlecode.whatswrong.Edge
     """
     def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None):
-        if not self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, dep_type, renderType=EdgeRenderType.dependency,
-                        description=des)
-            self._edges.append(edge)
+        if self.isValidEdge(From, to):
+            self._edges.append(Edge(self._map[From], self._map[to], label, dep_type,
+                                    renderType=EdgeRenderType.dependency, description=des))
 
     """
      * Adds the given collection of tokens to this instance.
@@ -314,7 +294,8 @@ class NLPInstance:
         for i in range(0, min(len(self._tokens), len(nlp.tokens))):
             self._tokens[i].merge(nlp.tokens(i))
         for edge in nlp.edges():
-            self.addEdge(edge.From().index(), edge.to().index(), edge.label(), edge.type(), edge.renderType())
+            self.addEdge(From=edge.From.index, to=edge.to.index, label=edge.label, edge_type=edge.type,
+                         renderType=edge.renderType, note=edge.note)
 
     """
      * Adds token that has the provided properties with default property names.

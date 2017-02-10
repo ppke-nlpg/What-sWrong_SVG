@@ -154,7 +154,9 @@ class Edge:
 
     """
     def __init__(self, From, To, label: str, Type, note: str=None, renderType: EdgeRenderType=EdgeRenderType.dependency,
-                 description: str="No Description"):
+                 description: str=None):
+        if description is None:
+            description = "No Description"
         self._From = From
         self._To = To
         self._label = label

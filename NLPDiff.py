@@ -2,7 +2,6 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
 from NLPInstance import NLPInstance
-from Edge import Edge
 
 """
  * An NLPDiff object takes two NLPInstances, a gold and a guess instance, and compares the set of edges that both
@@ -42,17 +41,17 @@ class NLPDiff:
         matches = goldIdentities & guessIdentities
         for edge in fn:
             Type = edge.type + ":FN"
-            diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
-                                   renderType=edge.renderType, description=edge.description))
+            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+                         renderType=edge.renderType, desc=edge.description)
         for edge in fp:
             Type = edge.type + ":FP"
-            diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
-                                   renderType=edge.renderType, description=edge.description))
+            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+                         renderType=edge.renderType, desc=edge.description)
 
         for edge in matches:
             Type = edge.type + ":Match"
-            diff.addEdge(edge=Edge(From=edge.From, To=edge.To, label=edge.label, note=edge.note, Type=Type,
-                                   renderType=edge.renderType, description=edge.description))
+            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+                         renderType=edge.renderType, desc=edge.description)
         return diff
 
     """
