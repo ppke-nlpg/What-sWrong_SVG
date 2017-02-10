@@ -16,22 +16,23 @@ from enum import Enum
  * @author Sebastian Riedel
 """
 
+"""
+ * The RenderType enum can be used to specify how the edge should be rendered.
+"""
+
+
+class RenderType(Enum):
+    """
+     * Draw edge as a span.
+    """
+    span = "span",
+    """
+     * Draw edge as a dependency
+    """
+    dependency = "dependency"
+
 
 class Edge:
-
-    """
-     * The RenderType enum can be used to specify how the edge should be rendered.
-    """
-    class RenderType(Enum):
-        """
-         * Draw edge as a span.
-        """
-        span = "span",
-        """
-         * Draw edge as a dependency
-        """
-        dependency = "dependency"
-
     """
      * The start token.
     """
@@ -152,7 +153,7 @@ class Edge:
      * @param type  the type of the edge.
 
     """
-    def __init__(self, From, To, label: str, Type, note: str=None, renderType: RenderType=None,
+    def __init__(self, From, To, label: str, Type, note: str=None, renderType: RenderType=RenderType.dependency,
                  description: str="No Description"):
         self._From = From
         self._To = To
@@ -356,11 +357,8 @@ class Edge:
      * @return true iff this edge covers the given edge and exactly one of their tokens are equal.
     """
     def coversSemi(self, edge) -> bool:
-        # return edge.getMaxIndex() == self.getMaxIndex() >= self.getMinIndex() < edge.getMinIndex() or \
-        #       self.getMinIndex() == edge.getMinIndex() <= edge.getMaxIndex() < self.getMaxIndex()
-
-        return self.getMinIndex() < edge.getMinIndex() and self.getMaxIndex() == edge.getMaxIndex() or \
-               self.getMinIndex() == edge.getMinIndex() and self.getMaxIndex() > edge.getMaxIndex()
+        return self.getMinIndex() < edge.getMinIndex() <= edge.getMaxIndex() == self.getMaxIndex() or \
+               self.getMinIndex() == edge.getMinIndex() <= edge.getMaxIndex() < self.getMaxIndex()
 
     """
      * Checks whether this edge overlaps the given edge.
@@ -408,10 +406,8 @@ class Edge:
      * @return true if both edges have the same type, label, note and the same from and to tokens.
     """
     def __eq__(self, other):
-        if other is None or not isinstance(other, self.__class__):
-            return False
-
-        if ((self.From is not None and self.From != other.From or self.From is None and other.From is not None) or
+        if (other is None or not isinstance(other, self.__class__) or
+            (self.From is not None and self.From != other.From or self.From is None and other.From is not None) or
             (self.label is not None and self.label != other.label or self.label is None and other.label is not None) or
             (self.To is not None and self.To != other.To or self.To is None and other.To is not None) or
             (self.type is not None and self.type != other.type or self.type is None and other.type is not None) or

@@ -129,10 +129,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
     """
     @property
     def selected(self):
-        selected = set()
-        for item in self._selected:
-            selected.add(item)
-        return selected
+        return {item for item in self._selected}
 
     @selected.setter
     def selected(self, value):
@@ -328,11 +325,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
             return depth[root]
         if len(dominates[root]) == 0:
             return 0
-        maximum = 0
-        for children in dominates[root]:
-            current = self.calculateDepth(dominates, depth, children)
-            if current > maximum:
-                maximum = current
+        maximum = max(self.calculateDepth(dominates, depth, children) for children in dominates[root])
         depth[root] = maximum + 1
         return maximum + 1
 

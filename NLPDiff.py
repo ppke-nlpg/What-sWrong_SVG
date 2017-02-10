@@ -61,7 +61,7 @@ class NLPDiff:
             self._label = edge.label
 
         def __eq__(self, other):
-            if (other is None or not isinstance(self, type(other)) or self._From != other.From or self._To != other.To
+            if (other is None or not isinstance(other, self.__class__) or self._From != other.From or self._To != other.To
                 or (self._label is not None and self._label != other.label) or other.label is not None or
                     (self._type is not None and self._type != other.type) or
                     (self._type is None and other.type is not None)):

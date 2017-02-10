@@ -71,10 +71,8 @@ class AligmentRenderer:
         tokenXBounds1 = self._tokenLayout1.estimateTokenBounds(instance, {}, scene)
         tokenXBounds2 = self._tokenLayout2.estimateTokenBounds(instance, {}, scene)
 
-        """
-        if self._antiAliasing:
-            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        """
+        scene.antialiasing = self._antiAliasing
+
         width = 0
         height = 0
 
@@ -86,17 +84,14 @@ class AligmentRenderer:
 
         for edge in instance.getEdges(Edge.RenderType.dependency):
             if edge.getTypePostfix() == "FP":
-                # painter.setBrush(QtGui.QColor(255,0,0))
                 scene.color = (255, 0, 0)  # Color.RED
             elif edge.getTypePostfix() == "FN":
-                # painter.setBrush(QtGui.QColor(0,0,255))
                 scene.color = (0, 0, 255)  # Color.BLUE
             else:
-                # painter.setBrush(QtGui.QColor(0,0,0))
-                scene.color = (0, 0, 0)  # Color.BLACK
+                scene.color = (0, 0, 0)    # Color.BLACK
             bound1 = tokenXBounds1[edge.From]
             bound2 = tokenXBounds2[edge.To]
-            if self._isCurved:  # XXX IS THIS OK?
+            if self._isCurved:
                 start = (bound1.getMiddle(), height)
                 x1 = (bound1.getMiddle(), height + self._heightFactor // 2)  # INTEGER DIVISION!!!
                 x2 = (bound2.getMiddle(), height + self._heightFactor // 2)  # INTEGER DIVISION!!!

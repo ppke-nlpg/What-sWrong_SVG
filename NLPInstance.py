@@ -4,7 +4,7 @@
 from enum import Enum
 
 from Token import Token
-from Edge import Edge
+from Edge import RenderType, Edge
 
 """
  * An NLPInstance represents a sentence or any other kind of utterance and some of its (NLP) properties. Properties of
@@ -249,7 +249,7 @@ class NLPInstance:
     """
     def addSpan(self, From: int, to: int, label: str, span_type: str, desc: str=None):
         if self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, span_type, renderType=Edge.RenderType.span,
+            edge = Edge(self._map[From], self._map[to], label, span_type, renderType=RenderType.span,
                         description=desc)
             self._edges.append(edge)
 
@@ -279,7 +279,7 @@ class NLPInstance:
     """
     def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None):
         if not self.isInvalidEdge(From, to):
-            edge = Edge(self._map[From], self._map[to], label, dep_type, renderType=Edge.RenderType.dependency,
+            edge = Edge(self._map[From], self._map[to], label, dep_type, renderType=RenderType.dependency,
                         description=des)
             self._edges.append(edge)
 

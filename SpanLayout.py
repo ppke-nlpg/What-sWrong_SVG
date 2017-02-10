@@ -233,7 +233,7 @@ class SpanLayout(AbstractEdgeLayout):
             self._shapes[(minX, height-buffer, maxX-minX, self._heightPerLevel - 2 * buffer)] = edge
 
         # int maxWidth = 0;
-        maxWidth = max(bound.To for bound in bounds.values())
+        maxWidth = max((bound.To for bound in bounds.values()), default=0)
 
         if self._separationLines:
             # find largest depth for each prefix type
