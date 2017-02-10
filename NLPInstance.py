@@ -51,7 +51,6 @@ class NLPInstance:
     @property
     def tokens(self) -> tuple:
         return tuple(self._tokens)
-        # return self._tokens
 
     @tokens.setter
     def tokens(self, value: list):
@@ -74,8 +73,8 @@ class NLPInstance:
      * language (for alignment).
     """
     @property
-    def splitPoints(self) -> list:  # XXX Is this ok?
-        return self._splitPoints  # Tuple in JAVA!
+    def splitPoints(self) -> tuple:
+        return tuple(self._splitPoints)
 
     @splitPoints.setter
     def splitPoints(self, value: list):
@@ -96,7 +95,7 @@ class NLPInstance:
 
     """
     def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None, renderType: RenderType=None,
-                 splitPoints: list=None):
+                 splitPoints: tuple or list=None):
         self._tokens = []  # ArrayList<Token>()
         self._map = {}  # HashMap<Integer, Token>()
         if tokens is not None:

@@ -3,6 +3,7 @@
 
 from SVGWriter import Rectangle, Scene, Text, TextToken
 from Bounds1D import Bounds1D
+from NLPInstance import NLPInstance
 
 """
  * A TokenLayout object lays out a collection of tokens in sequence by placing a stack of property values of each token
@@ -217,7 +218,7 @@ class TokenLayout:
      * @param g2d         The graphics object to render to.
      * @return Map<Token, Bounds1D> A mapping from tokens to estimated horizontal bounds in the layout.
     """
-    def estimateTokenBounds(self, instance, tokenWidths: dict, scene):
+    def estimateTokenBounds(self, instance: NLPInstance, tokenWidths: dict, scene):
         result = {}
         self._height = 0
 
@@ -231,11 +232,11 @@ class TokenLayout:
         if self._fromSplitPoint == -1:
             fromToken = 0
         else:
-            fromToken = instance.splitPoints()[self._fromSplitPoint]
+            fromToken = instance.splitPoints[self._fromSplitPoint]
         if self._toSplitPoint == -1:
             toToken = len(tokens)
         else:
-            toToken = instance.splitPoints()[self._toSplitPoint]
+            toToken = instance.splitPoints[self._toSplitPoint]
 
         for tokenIndex in range(fromToken, toToken):
             token = tokens[tokenIndex]
@@ -271,7 +272,7 @@ class TokenLayout:
      * @param g2d         the graphics object to draw to.
      * @return the dimension of the drawn graph.
     """
-    def layout(self, instance, tokenWidths: dict, scene: Scene):
+    def layout(self, instance: NLPInstance, tokenWidths: dict, scene: Scene):
         tokens = instance.tokens
         if len(tokens) == 0:
             self._height = 1
@@ -286,12 +287,12 @@ class TokenLayout:
         if self._fromSplitPoint == -1:
             fromToken = 0
         else:
-            fromToken = instance.splitPoints()[self._fromSplitPoint]
+            fromToken = instance.splitPoints[self._fromSplitPoint]
 
         if self._toSplitPoint == -1:
             toToken = len(tokens)
         else:
-            toToken = instance.splitPoints()[self._toSplitPoint]
+            toToken = instance.splitPoints[self._toSplitPoint]
 
         for tokenIndex in range(fromToken, toToken):
             token = tokens[tokenIndex]
