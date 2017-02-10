@@ -113,7 +113,7 @@ class Token:
      *
      * @param value the value of the property.
      """
-    def addProperty(self, value: str=None, name: str=None, index: int=None, token_property: str=None):
+    def addProperty(self, value: str=None, name: str=None, index: int=None, token_property: TokenProperty=None):
         if name is not None and value is not None:
             self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
             # return self  # No need for this...

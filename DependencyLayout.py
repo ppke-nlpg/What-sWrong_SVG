@@ -111,7 +111,7 @@ class DependencyLayout(AbstractEdgeLayout):
             vertex2edges[edge.To].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
         From = {}  # HashMap<Edge, Point>()
-        To = {}  # HashMap<Edge, Point>()
+        To = {}    # HashMap<Edge, Point>()
         for token in tokens:
             connections = vertex2edges[token]
 
@@ -188,8 +188,8 @@ class DependencyLayout(AbstractEdgeLayout):
                 shape = self.createRectArrow(scene, p1, p2, p3, p4)
 
             x = (p4[0] - self._arrowsize, p4[1] - self._arrowsize)
-            y = (p4[0], p4[1])
             z = (p4[0] + self._arrowsize, p4[1] - self._arrowsize)
+            y = (p4[0], p4[1])
             scene.add(Line(scene, x, y, scene.color))
             scene.add(Line(scene, z, y, scene.color))
 

@@ -767,9 +767,9 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             instance.addToken().\
-                addProperty(name=self.ne, value=row[0]).\
-                addProperty(name=self.bbn, value=row[1]).\
-                addProperty(name=self.wn, value=row[2])
+                addProperty(token_property=self.ne, value=row[0]).\
+                addProperty(token_property=self.bbn, value=row[1]).\
+                addProperty(token_property=self.wn, value=row[2])
         index = 1
         for row in rows:
             row = row.strip().split()
@@ -805,15 +805,15 @@ class CoNLL2009:
     name = "CoNLL 2009"
 
     @property
-    def ne(self):
+    def ne(self) -> TokenProperty:
         return TokenProperty("Named Entity", 10)
 
     @property
-    def bbn(self):
+    def bbn(self) -> TokenProperty:
         return TokenProperty("NamedEntity BBN", 11)
 
     @property
-    def wn(self):
+    def wn(self) -> TokenProperty:
         return TokenProperty("WordNet", 12)
 
     """
