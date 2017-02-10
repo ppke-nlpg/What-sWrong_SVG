@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+from collections import defaultdict
 from operator import attrgetter
 
 from NLPInstance import Edge, NLPInstance
@@ -135,8 +136,8 @@ class EdgeTokenFilter:
      * A Paths object is a mapping from token pairs to all paths between the corresponding tokens.
     """
     class Paths:
-        def __init__(self):
-            self._map = {}  # XXX EXTENDS HashMap<Token, HashMap<Token, HashSet<Path>>>
+        def __init__(self):  # XXX EXTENDS HashMap<Token, HashMap<Token, HashSet<Path>>>
+            self._map = defaultdict(lambda: defaultdict(set))
 
         """
          * Returns the set of paths between the given tokens.
@@ -159,8 +160,7 @@ class EdgeTokenFilter:
         """
         def getTos(self, From: Token) -> set:
             if From in self._map:
-                result = self._map[From]
-                return set(result.keys())
+                return set(self._map[From].keys())
             else:
                 return set()  # HashSet<Token>()
 
@@ -172,12 +172,7 @@ class EdgeTokenFilter:
          * @param path the path to add.
         """
         def addPath(self, From: Token, to: Token, path: set):
-            if From not in self._map:
-                self._map[From] = {}  # HashMap<Token, HashSet<Path>>()
-            paths = self._map[From]
-            if to not in paths:
-                paths[to] = set()
-            paths[to].add(path)  # self._map[From][to].add(path)
+            self._map[From][to].add(path)
 
         def __len__(self):
             return len(self._map)
