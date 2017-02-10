@@ -191,14 +191,15 @@ class NLPInstance:
     def addEdge(self, edge: Edge=None, From: int=None, to: int=None, label: str=None, edge_type: str=None,
                 renderType: RenderType=None, fromToken: Token=None, toToken: Token=None):
         if edge is not None:
-            From = self._map[edge.From]
-            to = self._map[edge.To]
+            From = self._map[edge.From.index]
+            to = self._map[edge.To.index]
             label = edge.label
             edge_type = edge.type
             renderType = edge.renderType
             desc = edge.description
             self._edges.append(Edge(From=From, To=to, label=label, Type=edge_type, renderType=renderType,
                                     description=desc))
+            return
         elif fromToken is not None and toToken is not None:
             From = fromToken.index
             to = toToken.index
@@ -390,15 +391,8 @@ class NLPInstance:
      * @param renderType the render type of the edges to return.
      * @return all edges of this instance with the given render type. This list can be altered if needed.
     """
-    def getEdges(self, renderType: RenderType=None) -> frozenset:
-        if renderType is not None:
-            result = set()  # ArrayList<Edge>(edges.size())
-            for e in self._edges:
-                if e.renderType == renderType:
-                    result.add(e)
-        else:
-            result = frozenset(self._edges)
-        return frozenset(result)
+    def getEdges(self, renderType: RenderType=None) -> frozenset:  # ArrayList<Edge>(edges.size())
+        return frozenset({e for e in self._edges if e.renderType == renderType or renderType is None})
 
     """
      * Returns the token at the given index.
