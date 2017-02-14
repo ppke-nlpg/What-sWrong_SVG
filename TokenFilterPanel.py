@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
-# Untangle GUI stuff...
+# Todo implement, test...
 
-from PyQt4 import QtGui
 import re
 from operator import attrgetter
+from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
@@ -21,25 +21,33 @@ interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 class TokenFilterPanel:
     def __init__(self, gui, canvas: NLPCanvas, tokenFilter: TokenFilter):
         self._tokenFilter = tokenFilter
-
         self._canvas = canvas
         self._canvas.addChangeListener(changeListener=self)
-
         self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        self._list.itemSelectionChanged.connect(self.valueChanged)
+        self.updateProperties()
+        self._updating = False
 
         self._allowed = gui.tokenFilterTokenLineEdit
         self._allowed.textEdited.connect(self.allowedChanged)
 
-        self._wholeWords = gui.tokenFilterWholeWordsCheckBox
-        self._wholeWords.stateChanged.connect(self.wholeWordActionPerformed)
+        self._list.itemActivated.connect(self.itemActivated)
 
-        self.updateProperties()
-        self._updating = False
+        self._wholeWords = gui.tokenFilterWholeWordsCheckBox
 
     def valueChanged(self):
+        if len(self._list) == 0 or len(self._listModel) == 0:
+            return
+        for index in range(0, len(self._list)):
+            t = str(self._listModel[index])
+            if self._list.isItemSelected(self._list.item(index)):  # ok
+                self._tokenFilter.removeForbiddenProperty(name=t)
+            else:
+                self._tokenFilter.addForbiddenProperty(name=t)
+                # self.canvas.updateNLPGraphics()  # Updated elsewhere
+
+    def itemActivated(self, _):  # item
         if len(self._list) == 0 or len(self._listModel) == 0:
             return
         for index in range(0, len(self._list)):
@@ -48,9 +56,10 @@ class TokenFilterPanel:
                 self._tokenFilter.removeForbiddenProperty(name=t)
             else:
                 self._tokenFilter.addForbiddenProperty(name=t)
-                # self._canvas.updateNLPGraphics()  # XXX UPDATE NOT WORKING
+        if not self._updating:
+            self._canvas.updateNLPGraphics()
 
-    def allowedChanged(self, text):  # keyReleased
+    def allowedChanged(self, text):
         self._tokenFilter.clearAllowedStrings()
         for curr_property in text.split(','):
             if len(curr_property) > 0:
@@ -60,26 +69,36 @@ class TokenFilterPanel:
                 self._tokenFilter.addAllowedString(curr_property)
         self._canvas.updateNLPGraphics()
 
-    def wholeWordActionPerformed(self, value):
-        self._tokenFilter.wholeWord = value == 2  # Checked == True
-        self._canvas.updateNLPGraphics()
+        def wholeWordActionPerformed(value):
+            if value == 2:  # Checked
+                self._tokenFilter.wholeWord = True
+            else:  # Unchecked
+                self._tokenFilter.wholeWord = False
+            self._canvas.updateNLPGraphics()
+        self._wholeWords.stateChanged.connect(wholeWordActionPerformed)
 
     """
      * Updates the list of available token properties.
     """
     def updateProperties(self):
         self._updating = True
+        selectableItems = []
+        _sorted = sorted(self._canvas.usedProperties, key=attrgetter("name"))  # XXX TODO getUsedProperties()
+        index = 0
         self._listModel.clear()
         self._list.clear()
-        for index, p in enumerate(sorted(self._canvas.usedProperties, key=attrgetter("name"))):
+        for p in _sorted:
             self._listModel.append(p)
             self._list.addItem(p.name)
             if p not in self._tokenFilter.forbiddenProperties and \
                     not self._list.isItemSelected(self._list.item(index)):
-                self._list.setItemSelected(self._list.item(index), True)
-            else:
-                self._list.setItemSelected(self._list.item(index), False)  # Explicitly unselect
+                selectableItems.append(self._list.item(index))
+                # self._list.setItemSelected(self._list.item(index), True)
+            index += 1
+        for e in selectableItems:
+            self._list.setItemSelected(e, True)
         self._updating = False
+        self.valueChanged()
 
     """
      * Updates available properties and requests a redraw of the panel.

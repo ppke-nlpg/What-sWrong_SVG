@@ -23,48 +23,44 @@ class DependencyFilterPanel:
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
     def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: EdgeLabelFilter, edgeTokenFilter: EdgeTokenFilter):
-        self.nlpCanvas = nlpCanvas
-        self.edgeLabelFilter = edgeLabelFilter
-        self.edgeTokenFilter = edgeTokenFilter
-
         labelField = gui.labelLineEdit
-        labelField.textEdited.connect(self.labelFieldChanged)
+
+        def labelFieldChanged(text):
+            edgeLabelFilter.clear()
+            split = text.split(",")
+            for label in split:
+                edgeLabelFilter.addAllowedLabel(label)
+            nlpCanvas.updateNLPGraphics()
+        labelField.textEdited.connect(labelFieldChanged)
 
         tokenTextField = gui.edgeFilterTokenLineEdit
-        tokenTextField.textEdited.connect(self.tokenTextFieldChanged)
+
+        def tokenTextFieldChanged(text):
+            print("tokenTextFieldChanged")
+            edgeTokenFilter.clear()
+            split = text.split(",")
+            for token_property in split:
+                edgeTokenFilter.addAllowedProperty(token_property)
+            nlpCanvas.updateNLPGraphics()
+        tokenTextField.textEdited.connect(tokenTextFieldChanged)
 
         usePath = gui.onlyPathCheckBox
-        usePath.stateChanged.connect(self.usePathAction)
+
+        def usePathAction(value):
+            edgeTokenFilter.usePath = value == 2  # checked
+            nlpCanvas.updateNLPGraphics()
+        usePath.stateChanged.connect(usePathAction)
 
         collapse = gui.collapsCheckBox
-        collapse.stateChanged.connect(self.collapseAction)
+
+        def collapseAction(value):
+            edgeTokenFilter.collaps = value == 2  # checked
+            nlpCanvas.updateNLPGraphics()
+        collapse.stateChanged.connect(collapseAction)
 
         wholeWords = gui.edgeFilterWholeWordsCheckBox
-        wholeWords.stateChanged.connect(self.wholeWordsAction)
 
-    def labelFieldChanged(self, text):
-        self.edgeLabelFilter.clear()
-        split = text.split(",")
-        for label in split:
-            self.edgeLabelFilter.addAllowedLabel(label)
-        self.nlpCanvas.updateNLPGraphics()
-
-    def tokenTextFieldChanged(self, text):
-        print("tokenTextFieldChanged")
-        self.edgeTokenFilter.clear()
-        split = text.split(",")
-        for token_property in split:
-            self.edgeTokenFilter.addAllowedProperty(token_property)
-        self.nlpCanvas.updateNLPGraphics()
-
-    def usePathAction(self, value):
-        self.edgeTokenFilter.usePath = value == 2  # checked
-        self.nlpCanvas.updateNLPGraphics()
-
-    def collapseAction(self, value):
-        self.edgeTokenFilter.collaps = value == 2  # checked
-        self.nlpCanvas.updateNLPGraphics()
-
-    def wholeWordsAction(self, value):
-        self.edgeTokenFilter.wholeWords = value == 2  # checked
-        self.nlpCanvas.updateNLPGraphics()
+        def wholeWordsAction(value):
+            edgeTokenFilter.wholeWords = value == 2  # checked
+            nlpCanvas.updateNLPGraphics()
+        wholeWords.stateChanged.connect(wholeWordsAction)
