@@ -400,8 +400,8 @@ class CorpusNavigator:
                 else:
                     self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
                     self._indicies[index] = self._instance
-                self._canvas.renderer.setEdgeTypeColor("FN", (000,000,255))  # Blue
-                self._canvas.renderer.setEdgeTypeColor("FP", (255,000,000))  # Red
+                self._canvas.renderer.setEdgeTypeColor("FN", (000, 000, 255))  # Blue
+                self._canvas.renderer.setEdgeTypeColor("FP", (255, 000, 000))  # Red
         else:
             """
             self._edgeTypeFilter.addAllowedPrefixType("dep")

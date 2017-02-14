@@ -26,8 +26,7 @@ class EdgeTypeFilter:
         """
          * If an edge has a prefix-type in this set it can pass.
         """
-        self._allowedPrefixTypes = set()  # HashSet<String>()
-        self._allowedPrefixTypes.update(list(allowedPrefixTypes))
+        self._allowedPrefixTypes = set(allowedPrefixTypes)  # HashSet<String>()
         """
          * If an edge has a postfix-type in this set it can pass.
         """
@@ -51,7 +50,7 @@ class EdgeTypeFilter:
      * @return an unmodifiable set of allowed prefix types for edges.
     """
     @property
-    def allowedPrefixType(self):
+    def allowedPrefixTypes(self):
         return frozenset(self._allowedPrefixTypes)
 
     """
@@ -60,7 +59,7 @@ class EdgeTypeFilter:
      * @return an unmodifiable set of allowed postfix types for edges.
     """
     @property
-    def allowedPostfixType(self):
+    def allowedPostfixTypes(self):
         return frozenset(self._allowedPostfixTypes)
 
     """
@@ -75,46 +74,46 @@ class EdgeTypeFilter:
      *
      * @param type the type which allow/disallow state has changed.
     """
-    def fireChanged(self, Type: str):
+    def fireChanged(self, t: str):
         for l in self._listeners:
-            l.changed(Type)
+            l.changed(t)
 
     """
      * Adds an allowed prefix type. This causes the filter to accept edges with the given prefix type.
      *
      * @param type the allowed prefix type.
     """
-    def addAllowedPrefixType(self, Type: str):
-        self._allowedPrefixTypes.add(Type)
-        self.fireChanged(Type)
+    def addAllowedPrefixType(self, t: str):
+        self._allowedPrefixTypes.add(t)
+        self.fireChanged(t)
 
     """
      * Adds an allowed prefix type. This causes the filter to accept edges with the given postfix type.
      *
      * @param type the allowed postfix type.
     """
-    def addAllowedPostfixType(self, Type: str):
-        self._allowedPostfixTypes.add(Type)
-        self.fireChanged(Type)
+    def addAllowedPostfixType(self, t: str):
+        self._allowedPostfixTypes.add(t)
+        self.fireChanged(t)
 
     """
      * Disallows the given prefix type. This causes the filter to stop accepting edges with the given prefix type.
      *
      * @param type the prefix type to disallow.
     """
-    def removeAllowedPrefixType(self, Type: str):
-        if Type in self._allowedPrefixTypes:
-            self._allowedPrefixTypes.remove(Type)
-            self.fireChanged(Type)
+    def removeAllowedPrefixType(self, t: str):
+        if t in self._allowedPrefixTypes:
+            self._allowedPrefixTypes.remove(t)
+            self.fireChanged(t)
 
     """
      * Disallows the given postfix type. This causes the filter to stop accepting edges with the given postfix type.
      *
      * @param type the postfix type to disallow.
     """
-    def removeAllowedPostfixType(self, Type: str):
-        self._allowedPostfixTypes.remove(Type)
-        self.fireChanged(Type)
+    def removeAllowedPostfixType(self, t: str):
+        self._allowedPostfixTypes.remove(t)
+        self.fireChanged(t)
 
     """
      * Creates a new EdgeTypeFilter with the given allowed edge prefix types.
@@ -141,8 +140,8 @@ class EdgeTypeFilter:
      * @param type the type to check whether it is allowed as prefix.
      * @return true iff the given type is allowed as prefix.
     """
-    def allowsPrefix(self, Type: str):
-        return Type in self._allowedPrefixTypes
+    def allowsPrefix(self, t: str):
+        return t in self._allowedPrefixTypes
 
     """
      * Does the filter allow the given postfix.
@@ -150,8 +149,8 @@ class EdgeTypeFilter:
      * @param type the type to check whether it is allowed as postfix.
      * @return true iff the given type is allowed as postfix.
     """
-    def allowsPostfix(self, Type: str):
-        return Type in self._allowedPostfixTypes
+    def allowsPostfix(self, t: str):
+        return t in self._allowedPostfixTypes
 
     """
      * @see NLPInstanceFilter#filter(NLPInstance)
