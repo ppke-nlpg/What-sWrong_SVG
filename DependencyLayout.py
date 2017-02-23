@@ -169,6 +169,9 @@ class DependencyLayout(AbstractEdgeLayout):
             # set Color and remember old color
             old = scene.color
             scene.color = self.getColor(edge.type)
+            # FIXME: do that more properly!
+            if not edge.is_final:
+                scene.color = (255, 0, 0)  # Red
             # draw lines
             height = self._baseline + maxHeight - (depth[edge] + 1) * self._heightPerLevel + offset[edge]
             if edge.From == edge.To:

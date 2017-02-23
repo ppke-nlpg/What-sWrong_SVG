@@ -9,8 +9,8 @@ from enum import Enum
  * denotes the type of information the edge represents. For example, the type could be "dep" for edges that represent
  * syntactic dependencies, or "role" for edges that represent semantic roles (a la CoNLL 2008).</li> <li>Render Type:
  * The render type of an edge controls how the edge will be rendered. For example, both "dep" and "role" edges could
- * have the render type {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}</li>. Then they are both drawn as
- * directed edges in a dependency style graph. <li>Label: This attribute classifies edges within a certain type. For
+ * have the render type {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}</li>. Then they are both drawn
+ * as directed edges in a dependency style graph. <li>Label: This attribute classifies edges within a certain type. For
  * example, in the case of "dep" edges we could use the label "SUBJ" to denote subject dependencies. </li> </ol>
  *
  * @author Sebastian Riedel
@@ -119,6 +119,7 @@ class Edge:
      * @param label      the label of the edge
      * @param type       the type of the edge (say, 'semantic role').
      * @param renderType the render type.
+     * @param is_final a Boolean indicating whether the edge is final
      
      OR
      
@@ -130,7 +131,8 @@ class Edge:
      * @param note       the note to add to the edge
      * @param type       the type of the edge (say, 'semantic role').
      * @param renderType the render type.
-     
+     * @param is_final a Boolean indicating whether the edge is final
+
      OR
      
      * Create new edge.
@@ -142,7 +144,8 @@ class Edge:
      * @param type        the type of the edge (say, 'semantic role').
      * @param renderType  the render type.
      * @param description a description of the edge.
-     
+     * @param is_final a Boolean indicating whether the edge is final
+
      OR
      
      * Creates a new edge with default render type (dependency).
@@ -151,10 +154,11 @@ class Edge:
      * @param to    to token.
      * @param label the label of the edge.
      * @param type  the type of the edge.
+     * @param is_final a Boolean indicating whether the edge is final
 
     """
     def __init__(self, From, To, label: str, Type, note: str=None, renderType: EdgeRenderType=EdgeRenderType.dependency,
-                 description: str=None):
+                 description: str=None, is_final: bool=True):
         if description is None:
             description = "No Description"
         self._From = From
@@ -164,6 +168,7 @@ class Edge:
         self._type = Type
         self._renderType = renderType
         self._description = description
+        self.is_final = is_final
 
     """
      * If the type of label is qualified with a "qualifier:" prefix this method returns "qualifier". Else it returns the

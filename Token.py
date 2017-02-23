@@ -14,7 +14,6 @@ from operator import attrgetter
 
 
 class Token:
-
     """
      * The index of the token.
     """
@@ -42,9 +41,10 @@ class Token:
      *
      * @param index the index of the token.
     """
-    def __init__(self, index: int):
+    def __init__(self, index: int, is_actual: bool=False):
         self._index = index
         self._tokenProperties = {}  # HashMap<TokenProperty, String>()
+        self.is_actual = is_actual
 
     """
      * Returns the index of the token.

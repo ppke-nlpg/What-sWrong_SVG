@@ -259,10 +259,10 @@ class NLPInstance:
      * @param description description of the edge
      * @see com.googlecode.whatswrong.Edge
     """
-    def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None):
+    def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
         if self.isValidEdge(From, to):
             self._edges.append(Edge(self._map[From], self._map[to], label, dep_type,
-                                    renderType=EdgeRenderType.dependency, description=des))
+                                    renderType=EdgeRenderType.dependency, description=des, is_final=is_final))
 
     """
      * Adds the given collection of tokens to this instance.
@@ -323,9 +323,9 @@ class NLPInstance:
      * @param index the index of the token to add.
      * @return the token that was added.
     """
-    def addToken(self, index: int=None) -> Token:
+    def addToken(self, index: int=None, is_actual: bool=False) -> Token:
         if index is None:
-            vertex = Token(len(self._tokens))
+            vertex = Token(len(self._tokens), is_actual)
             self._tokens.append(vertex)
             self._map[vertex.index] = vertex
         else:

@@ -273,6 +273,7 @@ class TokenLayout:
      * @return the dimension of the drawn graph.
     """
     def layout(self, instance: NLPInstance, tokenWidths: dict, scene: Scene):
+        old_scene_color = scene.color
         tokens = instance.tokens
         if len(tokens) == 0:
             self._height = 1
@@ -305,6 +306,10 @@ class TokenLayout:
                     scene.color = (0, 0, 0)  # BLACK
                 else:
                     scene.color = (120, 120, 120)  # GREY
+                if token.is_actual:
+                    scene.color = (0, 102, 204)  # Blue
+                else:
+                    scene.color = (0, 0, 0)  # Black
                 scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, scene.color))
                 lasty += self._rowHeight
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
@@ -322,6 +327,7 @@ class TokenLayout:
                 self._height = lasty - self._rowHeight
 
         self._width = lastx - self._margin
+        scene.color = old_scene_color
         return self._width + scene.offsetx, self._height + 2 + scene.offsety
 
     """

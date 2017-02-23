@@ -16,6 +16,8 @@ This is an enhanced Version of Rick Muller's Code from
 """
 
 import os
+from xml.sax.saxutils import escape
+
 display_prog = "display"
 
 
@@ -53,12 +55,14 @@ class Scene:
         var = ["<?xml version=\"1.0\"?>\n",
                "<svg height=\"%d\" width=\"%d\" shape-rendering=\"%s\" text-rendering=\"%s\""
                " xmlns=\"http://www.w3.org/2000/svg\">\n" %
-               (self.height, self.width, rendering, rendering),
-               " <g style=\"fill-opacity:1.0; stroke:black;\n",
-               "  stroke-width:1;\">\n"]
+               (self.height, self.width, rendering, rendering)]
+        # " <g style=\"fill-opacity:1.0; stroke:black;\n",
+        # "  stroke-width:1;\">\n"
+
         for item in self.items:
             var += item.strarray()
-        var += [" </g>\n</svg>\n"]
+        var += [" </svg>\n"]
+        # var += [" </g>\n</svg>\n"]
         return var
 
     def write_svg(self, filename=None):
@@ -67,7 +71,6 @@ class Scene:
         else:
             self.svgname = self.name + ".svg"
         file = open(self.svgname, 'w')
-        print(self.svgname)
         file.writelines(self.strarray())
         file.close()
         return
@@ -196,7 +199,7 @@ class Polygon:
 
 
 class Rectangle:
-    def __init__(self, scene, origin, width, height, fill_color, line_color, line_width, rx=None, ry= None):
+    def __init__(self, scene, origin, width, height, fill_color, line_color, line_width, rx=None, ry=None):
         self.origin = origin
         self.height = height
         self.width = width
@@ -229,13 +232,14 @@ class Text:
 
     def strarray(self):
         return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-anchor=\"middle\" "
-                "alignment-baseline=\"central\" text-rendering=\"inherit\" style=\"font-family: Consolas\" >\n" %
-                (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
-                "   %s\n" % self.text,
+                "alignment-baseline=\"central\" text-rendering=\"inherit\""
+                " style=\"font-family: Courier New, Courier, monospace\" >\n"
+                % (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
+                "   %s\n" % escape(self.text),
                 "  </text>\n"]
 
     def getWidth(self):
-        return len(self.text) * 6
+        return len(self.text) * 7
 
 
 class TextToken:
@@ -250,9 +254,9 @@ class TextToken:
 
     def strarray(self):
         return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-rendering=\"inherit\""
-                " style=\"font-family: Consolas\">\n" %
+                " style=\"font-family: Courier New, Courier, monospace\">\n" %
                 (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
-                "   %s\n" % self.text,
+                "   %s\n" % escape(self.text),
                 "  </text>\n"]
 
     def getWidth(self):
@@ -266,10 +270,10 @@ def colorstr(rgb):
 def test():
     scene = Scene("test")
     scene.add(Rectangle(scene, (100, 100), 200, 200, (0, 255, 255), (0, 0, 0), 1))
-    scene.add(Line(scene, (200, 200), (200, 300), (0, 0, 0)))
-    scene.add(Line(scene, (200, 200), (300, 200), (0, 0, 0)))
-    scene.add(Line(scene, (200, 200), (100, 200), (0, 0, 0)))
-    scene.add(Line(scene, (200, 200), (200, 100), (0, 0, 0)))
+    scene.add(Line(scene, (200, 200), (200, 300), (0, 0, 0), 1))
+    scene.add(Line(scene, (200, 200), (300, 200), (0, 0, 0), 1))
+    scene.add(Line(scene, (200, 200), (100, 200), (0, 0, 0), 1))
+    scene.add(Line(scene, (200, 200), (200, 100), (0, 0, 0), 1))
     scene.add(Circle((200, 200), 30, (0, 0, 255), (0, 0, 0), 1))
     scene.add(Circle((200, 300), 30, (0, 255, 0), (0, 0, 0), 1))
     scene.add(Circle((300, 200), 30, (255, 0, 0), (0, 0, 0), 1))
