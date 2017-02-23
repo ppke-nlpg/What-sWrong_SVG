@@ -2,6 +2,7 @@
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 # Todo: Export to PDF, EPS, etc.
 
+import cairosvg
 from PyQt4 import QtGui, QtSvg
 from SVGWriter import Scene
 from SingleSentenceRenderer import SingleSentenceRenderer
@@ -226,7 +227,7 @@ class NLPCanvas:
         self._ui.graphicsView.show()
         self.fireChanged()
 
-    def exportNLPGraphics(self, filepath=None):
+    def exportNLPGraphics(self, filepath=None, output_type='SVG'):
         filtered = self.filterInstance()
         self._SVGScene = Scene()
 
@@ -237,6 +238,14 @@ class NLPCanvas:
         self._SVGScene = Scene(width=dim[0], height=dim[1])
 
         renderer.render(filtered, self._SVGScene)
+        if output_type == 'SVG':
+            self.writeSVG(filepath)
+        elif output_type == 'PS':
+            self.writePS(filepath)
+        else:
+            self.writePDF(filepath)
+
+    def writeSVG(self, filepath):
         if filepath is not None:
             self._SVGScene.write_svg(filepath)
         else:
@@ -257,4 +266,10 @@ class NLPCanvas:
      * @param file the eps file to export to.
      * @throws IOException if IO goes wrong.
     """
-    # XXX Will be implemented in the far future... PDF IS MORE IMPORTANT! Cairo? SVGlib?
+    def writePS(self, filepath):
+        svg_bytes = self._SVGScene.write_bytes()
+        cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
+
+    def writePDF(self, filepath):
+        svg_bytes = self._SVGScene.write_bytes()
+        cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
