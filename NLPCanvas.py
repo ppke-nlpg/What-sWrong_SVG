@@ -239,7 +239,9 @@ class NLPCanvas:
 
         renderer.render(filtered, self._SVGScene)
         if output_type == 'SVG':
-            self.writeSVG(filepath)
+            ret = self.writeSVG(filepath)
+            if ret is not None:
+                return ret
         elif output_type == 'PS':
             self.writePS(filepath)
         else:
