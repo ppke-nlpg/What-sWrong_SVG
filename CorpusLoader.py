@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8, vim: expandtab:ts=4 -*-
 
+# To be implemented
+
 
 """
  * A CorpusLoader is responsible for loading and managing corpora. A corpus is implemented as a list of NLPInstance
@@ -25,32 +27,32 @@ class CorpusLoader:
      * The current selected corpus.
     """
     @property
-    def selected(self):
+    def selected(self) -> tuple or None:  # List<NLPInstance>
         if self._selected is None:
             return None
         else:
             return tuple(self.selected)
 
     @selected.setter
-    def selected(self, value):
+    def selected(self, value: list):
         self._selected = value
 
     """
      * The set of all loaded corpora.
     """
     @property
-    def corpora(self):
+    def corpora(self) -> list:  # List<List<NLPInstance>>
         return self._corpora
 
     @corpora.setter
-    def corpora(self, value):
+    def corpora(self, value: list):
         self._corpora = value
 
     """
      * The file names the corpora came from, stored in a list model.
     """
     @property
-    def fileNames(self):
+    def fileNames(self):  # DefaultListModel
         return self._fileNames
 
     @fileNames.setter
@@ -61,11 +63,11 @@ class CorpusLoader:
      * A mapping from names to CorpusFormat objects that will load corpora when the user chooses the corresponding name.
     """
     @property
-    def formats(self):
+    def formats(self) -> dict:  # ArrayList<Listener>
         return self._formats
 
     @formats.setter
-    def formats(self, value):
+    def formats(self, value: dict):
         self._formats = value
 
     """
@@ -82,13 +84,13 @@ class CorpusLoader:
     """
      * The button that removes the selected corpus.
     """
-    # XXX private JButton remove;
+    # private JButton remove;
 
     """
      * The file chooser dialog.
     """
     @property
-    def fileChooser(self):
+    def fileChooser(self):  # JFileChooser
         return self._fileChooser
 
     @fileChooser.setter
@@ -99,18 +101,18 @@ class CorpusLoader:
      * The id of this loader (used when loading properties from the user configuration file).
     """
     @property
-    def id(self):
+    def id(self) -> str:
         return self._id
 
     @id.setter
-    def id(self, value):
+    def id(self, value: str):
         self._id = value
 
     """
      * The file dialog accessory to define the range of instances.
     """
     @property
-    def accessory(self):
+    def accessory(self):  # LoadAccessory
         return self._accessory
 
     @accessory.setter
@@ -161,7 +163,7 @@ class CorpusLoader:
      *
      * @param corpus the added corpus.
     """
-    def fireAdded(self, corpus):
+    def fireAdded(self, corpus: list):  # List<NLPInstance>
         for listener in self._changeListeners:
             listener.corpusAdded(corpus, self)
 
@@ -170,7 +172,7 @@ class CorpusLoader:
      *
      * @param corpus the removed corpus.
     """
-    def fireRemoved(self, corpus):
+    def fireRemoved(self, corpus):  # List<NLPInstance>
         for listener in self._changeListeners:
             listener.corpusRemoved(corpus, self)
 
@@ -179,7 +181,7 @@ class CorpusLoader:
      *
      * @param corpus the selected corpus.
     """
-    def fireSelected(self, corpus):
+    def fireSelected(self, corpus):  # List<NLPInstance>
         for listener in self._changeListeners:
             listener.corpusSelected(corpus, self)
 
@@ -199,7 +201,7 @@ class CorpusLoader:
          * The combo box to pick the format from.
         """
         @property
-        def filetypeComboBox(self):
+        def filetypeComboBox(self):  # JComboBox
             return self._filetypeComboBox
 
         @filetypeComboBox.setter
@@ -210,7 +212,7 @@ class CorpusLoader:
          * The spinner to pick the first instance.
         """
         @property
-        def start(self):
+        def start(self):  # JSpinner
             return self._start
 
         @start.setter
@@ -221,7 +223,7 @@ class CorpusLoader:
          * The spinner to pick the last instance.
         """
         @property
-        def end(self):
+        def end(self):  # JSpinner
             return self._end
 
         @end.setter
@@ -232,7 +234,7 @@ class CorpusLoader:
          * The accessories of each format are stored in a card layout of this panel.
         """
         @property
-        def accessoryCards(self):
+        def accessoryCards(self):  # JPanel
             return self._accessoryCards
 
         @accessoryCards.setter
@@ -248,40 +250,71 @@ class CorpusLoader:
             self._end = None
             self._accessoryCards = None
             # TODO: QtDesigner
-            pass
+
+            """ GUI STUFF
+            setLayout(new GridBagLayout());
+            setBorder(new TitledBorder(new EtchedBorder(), "Parameters"));
+            int y = 0;
+            add(new JLabel("Format:"), new SimpleGridBagConstraints(y, true));
+
+            filetypeComboBox = new JComboBox(new Vector<Object>(formats.values()));
+            filetypeComboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    ((CardLayout) accessoryCards.getLayout()).show(accessoryCards,
+                        filetypeComboBox.getSelectedItem().toString());
+                }
+            });
+            start = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+            start.setPreferredSize(new Dimension(100, (int) start.getPreferredSize().getHeight()));
+            end = new JSpinner(new SpinnerNumberModel(200, 0, Integer.MAX_VALUE, 1));
+            end.setPreferredSize(new Dimension(100, (int) start.getPreferredSize().getHeight()));
+
+            accessoryCards = new JPanel(new CardLayout());
+            for (CorpusFormat f : formats.values())
+                accessoryCards.add(f.getAccessory(), f.toString());
+            ((CardLayout) accessoryCards.getLayout()).show(accessoryCards,
+             filetypeComboBox.getSelectedItem().toString());
+
+            add(filetypeComboBox, new SimpleGridBagConstraints(y++, false));
+            add(new JSeparator(), new SimpleGridBagConstraints(0, y++, 2, 1));
+            add(accessoryCards, new SimpleGridBagConstraints(0, y++, 2, 1));
+            add(new JSeparator(), new SimpleGridBagConstraints(0, y++, 2, 1));
+            add(new JLabel("From:"), new SimpleGridBagConstraints(y, true));
+            add(start, new SimpleGridBagConstraints(y++, false));
+            add(new JLabel("To:"), new SimpleGridBagConstraints(y, true));
+            add(end, new SimpleGridBagConstraints(y, false));
+            """
 
         """
          * Gets the currently chosen format.
          *
          * @return the currently chosen CorpusFormat.
         """
-        def getFormat(self):
-            pass
-            # self._filetypeCombobox.getSelectedItem()
+        def getFormat(self):  # Returns CorpusFormat
+            pass  # return CorpusFormat(self._filetypeCombobox.getSelectedItem())  # XXX
 
         """
          * Gets the index of the first instance.
          *
          * @return the index of the first instance.
         """
-        # def getStart(self):
-        #     return self._start.getModel().getValue()
+        def getStart(self) -> int:
+            return int(self._start.getModel().getValue())  # XXX
 
         """
          * Gets the index of the last instance.
          *
          * @return the index of the last instance.
         """
-        def getEnd(self):
-            pass
-            # return self._end.getModel().getValue();
+        def getEnd(self) -> int:
+            return int(self._end.getModel().getValue())  # XXX
 
     """
      * Adds a CorpusFormat.
      *
      * @param format the format to add.
     """
-    def addFormat(self, corpus_format):
+    def addFormat(self, corpus_format):  # CorpusFormat
         self._formats[corpus_format.getName()] = corpus_format
 
     """
@@ -289,23 +322,23 @@ class CorpusLoader:
      *
      * @param dir the directory of the file dialog.
     """
-    def setDirectory(self, dir):
-        pass
+    def setDirectory(self, directory: str):  # XXX
+        pass  # fileChooser.setCurrentDirectory(new File(dir))
 
     """
      * gets the directory to use in the file dialog.
      *
      * @return the directory of the file dialog.
     """
-    def getDirectory(self):
-        pass
+    def getDirectory(self):  # XXX
+        pass  # fileChooser.getCurrentDirectory().getPath()
 
     """
      * Loads the properties of this loader from the properties object.
      *
      * @param properties the properties to load this loader's properties from.
     """
-    def loadProperties(self, properties):
+    def loadProperties(self, properties):  # Properties XXX TODO
         self.setDirectory(properties.getProperty(self.property("dir"), ""))
         # formatString = properties.getProperty(self.property("format"), "TAB-separated")
         # if formatString == "CoNLL":
@@ -320,7 +353,7 @@ class CorpusLoader:
      * @param name the name to qualify.
      * @return a name qualified using the id of this loader.
     """
-    def property(self, name):
+    def property(self, name: str):
         return self._id + "." + name
 
     """
@@ -328,9 +361,9 @@ class CorpusLoader:
      *
      * @param properties the Properties object to store this loader's properties to.
     """
-    def saveProperties(self, properties):
+    def saveProperties(self, properties):  # Properties
         properties.setProperty(self.property("dir"), self.getDirectory())
-        # properties.setProperty(self.property("format"), accessory.filetypeCombobox,getSelectedItem().toString())
+        properties.setProperty(self.property("format"), self.accessory.filetypeComboBox.getSelectedItem().toString())
         for corpus_format in self.formats.values():
             corpus_format.saveProperties(properties, self.id)
 
@@ -339,30 +372,147 @@ class CorpusLoader:
      *
      * @param title the title of this CorpusLoader.
     """
-    def __init__(self, title):
+    def __init__(self, title: str):
         self._selected = []
         self._corpora = []
         self._fileNames = []
         self._formats = {}
         self._changeListeners = []
         self._fileChooser = None
-        self._id = ""
         self._accessory = None
 
-        self.id = title.replaceAll(" ", "_").toLowerCase()
-        # self.setLayout(GridLayout)
-        # self.setBorder()
+        self.id = title.replace(" ", "_").lower()
+        # self.setLayout(GridLayout())
+        # self.setBorder(EmptyBorder(5, 5, 5, 5))
         # //setBorder(new TitledBorder(new EtchedBorder(), title));
         #        GridBagConstraints c = new GridBagConstraints();
         #        setUpFormats();
 
         self._corpora = []  # ArrayList<List<NLPInstance>>()
-        c = {}  # GridBagConstraints()
-        c.gridx = 0
-        c.gridy = 0
-        c.gridwidth = 2
-        # self.add
+        c = {"gridx": 0, "gridy": 0, "gridwidth": 2}  # GridBagConstraints()
+        # self.add  # add(new JLabel(title), c);
         # XXX CORPUS LOADER NOT IMPLEMENTED!
+        """
+        # file list
+        c.gridy = 1;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        fileNames = new DefaultListModel();
+        final JList files = new JList(fileNames);
+        files.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (files.getSelectedIndex() == -1) {
+                    selected = null;
+                    remove.setEnabled(false);
+                    fireSelected(null);
+
+                } else {
+                    selected = corpora.get(files.getSelectedIndex());
+                    remove.setEnabled(true);
+                    fireSelected(selected);
+                }
+            }
+        });
+        files.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane pane = new JScrollPane(files);
+        pane.setPreferredSize(new Dimension(150, 100));
+        //pane.setMinimumSize(new Dimension(150, 50));
+        add(pane, c);
+
+        //add files
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setDialogTitle("Load Corpus");
+        accessory = new LoadAccessory();
+        fileChooser.setAccessory(accessory);
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 2;
+        c.fill = GridBagConstraints.NONE;
+        c.weighty = 0;
+        JButton add = new JButton("Add");
+        add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int returnVal = fileChooser.showOpenDialog(CorpusLoader.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    final ProgressMonitor monitor = new ProgressMonitor(CorpusLoader.this,
+                        "Loading data", null, 0, accessory.getEnd() - 1);
+                    new Thread(new Runnable() {
+                        public void run() {
+                            CorpusFormat format = new TheBeastFormat();
+                            try {
+                                monitor.setProgress(0);
+                                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                                format = accessory.getFormat();
+                                format.setMonitor(new CorpusFormat.Monitor() {
+                                    public void progressed(int index) {
+                                        monitor.setProgress(index);
+                                    }
+                                });
+                                List<NLPInstance> corpus = format.load(fileChooser.getSelectedFile(),
+                                    accessory.getStart(), accessory.getEnd());
+                                if (corpus.size() == 0)
+                                    throw new RuntimeException("No instances in corpus.");
+                                monitor.close();
+                                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                                corpora.add(corpus);
+                                fileNames.addElement(fileChooser.getSelectedFile().getName());
+                                files.setSelectedIndex(fileNames.size() - 1);
+                                fireAdded(corpus);
+                            } catch (FileNotFoundException e1) {
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                JOptionPane.showMessageDialog(CorpusLoader.this,
+                                    "<html>Data could not be loaded with the <br><b>" +
+                                        format.getLongName() +
+                                        "</b> format.\nThis means that either you chose the wrong " +
+                                        "format, \nthe format of file you selected is broken, \nor we " +
+                                        "made a terrible mistake.", "Corpus format problem",
+                                    JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }).start();
+                }
+            }
+        });
+        add(add, c);
+        c.gridx = 1;
+        remove = new JButton("Remove");
+        remove.setEnabled(false);
+        remove.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = files.getSelectedIndex();
+                if (index != -1) {
+                    fileNames.remove(index);
+                    List<NLPInstance> corpus = corpora.remove(index);
+                    fireRemoved(corpus);
+                    //repaint();
+                }
+            }
+        });
+        add(remove, c);
+
+        //setSize(new Dimension(50, 200));
+        //setMinimumSize(new Dimension(150, 10));
+    }
+
+    private void setUpFormats() {
+        TabFormat tabFormat = new TabFormat();
+        TheBeastFormat theBeastFormat = new TheBeastFormat();
+        addFormat(tabFormat);
+        addFormat(theBeastFormat);
+        addFormat(new LispSExprFormat());
+        addFormat(new GaleAlignmentFormat());
+        addFormat(new BioNLP2009SharedTaskFormat());
+        addFormat(new BioNLP2009SharedTaskFormat());
+        addFormat(new GizaAlignmentFormat());
+    }
+
+    """
 
     def __len__(self):
         return len(self._corpora)

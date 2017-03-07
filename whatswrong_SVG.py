@@ -19,6 +19,7 @@ from NLPInstance import RenderType
 from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
 from TokenFilterPanel import TokenFilterPanel
+# from CorpusLoader import CorpusLoader
 
 
 class MyWindow(QtGui.QMainWindow):
@@ -106,9 +107,9 @@ class MyForm(QtGui.QMainWindow):
         directory = QtGui.QFileDialog.getOpenFileName(QtGui.QFileDialog())  # todo ok like this?
         corpus = []
         if corp_type == "gold":
-            self.goldMap[basename(directory)] = corpus
+            self.goldMap[basename(directory)] = corpus  # CorpusLoader(directory)
         if corp_type == "guess":
-            self.guessMap[basename(directory)] = corpus
+            self.guessMap[basename(directory)] = corpus  # CorpusLoader(directory)
 
         f = open(directory)
         l = list(f.readlines())
