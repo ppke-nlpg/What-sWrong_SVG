@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8; vim: expandtab:ts=4 -*-
 # HIÁNYOS!
 
 from NLPCanvas import NLPCanvas
@@ -262,11 +262,12 @@ class CorpusNavigator:
      * @see com.googlecode.whatswrong.NLPDiff
     """
     def getDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]) -> [NLPInstance]:  # XXX
-        diffCorpus = self._diffCorpora.get((gold, guess))
+        # diffCorpus = self._diffCorpora.get((gold, guess))
+        diffCorpus = None
         if diffCorpus is None:
             diffCorpus = []  # ArrayList<NLPInstance>(Math.min(gold.size(), guess.size()))
-            self._diffCorpora[(gold, guess)] = diffCorpus
-        for i in range(0, min(len(gold)), len(guess)):
+            # self._diffCorpora[(gold, guess)] = diffCorpus
+        for i in range(0, min(len(gold), len(guess))):
             diffCorpus.append(self._diff.diff(gold[i], guess[i]))
         # indices.put(diffCorpus, createIndex(diffCorpus))
         return diffCorpus
@@ -682,7 +683,7 @@ class CorpusNavigator:
                 if index in self._indices:
                     self._instance = self._indices[index]
                 else:
-                    self._instance = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
+                    self._instance = self.getDiffCorpus(self._gold, self._guess)[index]
                     self._indices[index] = self._instance
                 self._canvas.renderer.setEdgeTypeColor("FN", (000, 000, 255))  # Blue
                 self._canvas.renderer.setEdgeTypeColor("FP", (255, 000, 000))  # Red
