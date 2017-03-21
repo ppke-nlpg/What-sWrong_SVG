@@ -1,295 +1,133 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from enum import Enum
 
-"""
- * An Edge is a labelled and typed pair of tokens. It can represent dependencies edges as well as spans. Along with a
- * start and end (to and from) token an edge has the following three attributes: <ol> <li>Type: The type of a edge
- * denotes the type of information the edge represents. For example, the type could be "dep" for edges that represent
- * syntactic dependencies, or "role" for edges that represent semantic roles (a la CoNLL 2008).</li> <li>Render Type:
- * The render type of an edge controls how the edge will be rendered. For example, both "dep" and "role" edges could
- * have the render type {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}</li>. Then they are both drawn
- * as directed edges in a dependency style graph. <li>Label: This attribute classifies edges within a certain type. For
- * example, in the case of "dep" edges we could use the label "SUBJ" to denote subject dependencies. </li> </ol>
- *
- * @author Sebastian Riedel
-"""
-
-"""
- * The EdgeRenderType enum can be used to specify how the edge should be rendered.
-"""
-
 
 class EdgeRenderType(Enum):
-    """
-     * Draw edge as a span.
+    """An enum to specify how an edge should be rendered.
+
+    An edge can be rendered as a dependency or as a span.
     """
     span = "span",
-    """
-     * Draw edge as a dependency
-    """
-    dependency = "dependency"
+    dependency = "dependency" 
 
 
 class Edge:
+    """An Edge is a labelled and typed pair of tokens.
+
+    It can represent dependency edges as well as spans.
+
+    Attributes:
+        From: The start token.
+        To: The end token.
+        label (str): The label of the edge.
+        description (str): A description of the edge to be printed when edge
+            is clicked on. This attribute classifies edges within a certain type.
+            For example, in the case of "dep" edges we could use the label "SUBJ"
+            to denote subject dependencies.
+        note (str): A note that is added to the label but which does not have an 
+            effect on the identity of the edge when compared with another edge in the
+            NLPDiff#diff(NLPInstance, NLPInstance) method.
+        Type (str): The type of the edge. The type of a edge denotes the type of 
+            information the edge represents.  For example, the type could be "dep" for
+            edges that represent syntactic dependencies, or "role" for edges that
+            represent semantic roles (a la CoNLL 2008).
+        renderType (EdgeRenderType): How to render the edge. The render type of an edge
+            controls how the edge will be rendered.  For example, both "dep" and "role"
+            edges could have the render type EdgeRenderType#dependency. Then they
+            are both drawn as directed edges in a dependency style graph.
+        is_final (bool): Is the edge final? Can be used for visualising analysis steps
+            in which some edges are not yet final (can be removed later).
     """
-     * The start token.
-    """
-    @property
-    def From(self):
-        return self._From
 
-    @From.setter
-    def From(self, value):
-        self._From = value
-
-    """
-     * The end token.
-    """
-    @property
-    def To(self):
-        return self._To
-
-    @To.setter
-    def To(self, value):
-        self._To = value
-
-    """
-     * The label of the edge.
-    """
-    @property
-    def label(self) -> str:
-        return self._label
-
-    @label.setter
-    def label(self, value: str):
-        self._label = value
-
-    """
-     * A description of the edge to be printed when edge is clicked on
-    """
-    @property
-    def description(self) -> str:
-        return self._description
-
-    @description.setter
-    def description(self, value: str):
-        self._description = value
-
-    """
-     * A note that is added to the label but which does not have an effect on the identity of the edge when compared
-     * with another edge in the {@link com.googlecode.whatswrong.NLPDiff#diff(NLPInstance, NLPInstance)} method.
-    """
-    @property
-    def note(self) -> str:
-        return self._note
-
-    @note.setter
-    def note(self, value: str):
-        self._note = value
-
-    """
-     * The type of the edge.
-    """
-    @property
-    def type(self) -> str:
-        return self._type
-
-    @type.setter
-    def type(self, value: str):
-        self._type = value
-
-    """
-     * How to render the edge
-    """
-    @property
-    def renderType(self) -> EdgeRenderType:
-        return self._renderType
-
-    @renderType.setter
-    def renderType(self, value: EdgeRenderType):
-        self._renderType = value
-
-    """
-     * Create new edge.
-     *
-     * @param from       from token.
-     * @param to         to token
-     * @param label      the label of the edge
-     * @param type       the type of the edge (say, 'semantic role').
-     * @param renderType the render type.
-     * @param is_final a Boolean indicating whether the edge is final
-     
-     OR
-     
-     * Create new edge.
-     *
-     * @param from       from token.
-     * @param to         to token
-     * @param label      the label of the edge
-     * @param note       the note to add to the edge
-     * @param type       the type of the edge (say, 'semantic role').
-     * @param renderType the render type.
-     * @param is_final a Boolean indicating whether the edge is final
-
-     OR
-     
-     * Create new edge.
-     *
-     * @param from        from token.
-     * @param to          to token
-     * @param label       the label of the edge
-     * @param note        the note to add to the edge
-     * @param type        the type of the edge (say, 'semantic role').
-     * @param renderType  the render type.
-     * @param description a description of the edge.
-     * @param is_final a Boolean indicating whether the edge is final
-
-     OR
-     
-     * Creates a new edge with default render type (dependency).
-     *
-     * @param from  from token.
-     * @param to    to token.
-     * @param label the label of the edge.
-     * @param type  the type of the edge.
-     * @param is_final a Boolean indicating whether the edge is final
-
-    """
-    def __init__(self, From, To, label: str, Type, note: str=None, renderType: EdgeRenderType=EdgeRenderType.dependency,
+    def __init__(self, From, To, label: str, Type, note: str=None,
+                 renderType: EdgeRenderType=EdgeRenderType.dependency,
                  description: str=None, is_final: bool=True):
+        """Initialize an Edge instance. 
+        
+        Args:
+            From: The start token.
+            To: The end token.
+            label (str): The label of the edge.
+            note (str): A note that is added to the label.
+            Type (str): The type of the edge.
+            renderType (EdgeRenderType): How to render the edge.
+            is_final (bool): Is the edge final? 
+        """
         if description is None:
             description = "No Description"
-        self._From = From
-        self._To = To
-        self._label = label
-        self._note = note
-        self._type = Type
-        self._renderType = renderType
-        self._description = description
+        self.From = From
+        self.To = To
+        self.label = label
+        self.note = note
+        self.type = Type
+        self.renderType = renderType
+        self.description = description
         self.is_final = is_final
 
-    """
-     * If the type of label is qualified with a "qualifier:" prefix this method returns "qualifier". Else it returns the
-     * complete type string.
-     *
-     * @return the prefix until ":" of the type string, or the complete type string if no ":" is contained in the
-     *         string.
-    """
+        
     def getTypePrefix(self) -> str:
-        index = self._type.find(':')
-        if index == -1:
-            return self._type
-        else:
-            return self._type[0:index]
+        """Return the type prefix of the edge.
 
-    """
-     * If the type of label is "prefix:postfix"  this method returns "postfix". Else it returns the empty string.
-     *
-     * @return postfix after ":" or empty string if no ":" is contained in the type string.
-    """
+        If the type of label is qualified with a <qualifier>: prefix this method
+        returns <qualifier>.  Else it returns the complete type string. 
+
+        Returns:
+            str: The prefix until ":" of the type string, or the complete type
+            string if no ":" is contained in the string.
+        """
+        index = self.type.find(':')
+        if index == -1:
+            return self.type
+        else:
+            return self.type[0:index]
+
+        
     def getTypePostfix(self) -> str:
-        index = self._type.find(':')
+        """Return the type postfix of the edge.
+
+        Returns:
+            str: If the type of label is "<prefix>:<postfix>" this method returns
+            <postfix>. Else it returns the empty string.
+        """
+        index = self.type.find(':')
         if index == -1:
             return ""
         else:
-                return self._type[index+1:]
+            return self.type[index+1:]
 
-    """
-     * A description of the edge
-     *
-     * @return edge description
-    """
-    # See the getter above...
 
-    """
-     * Returns the mimimal index of both tokens in this edge.
-     *
-     * @return the mimimal index of both tokens in this edge.
-    """
     def getMinIndex(self) -> int:
-        return min(self._From.index, self._To.index)
+        """Return the mimimal index of the tokens in this edge.
 
-    """
-     * Returns the maximal index of both tokens in this edge.
-     *
-     * @return the maximal index of both tokens in this edge.
-    """
+        Returns:
+            int: The mimimal index of the tokens in this edge.
+        """
+        return min(self.From.index, self.To.index)
+
+    
     def getMaxIndex(self) -> int:
-        return max(self._From.index, self._To.index)
+        """Return the maximal index of both tokens in this edge.
 
-    """
-     * Returns the render type of this edge. For example, if this edge should be drawn as span it would return {@link
-     * com.googlecode.whatswrong.Edge.EdgeRenderType#span}.
-     *
-     * @return the render type of this edge.
-    """
-    # See the getter above...
+        Returns:
+            int: the maximal index of both tokens in this edge.
+        """
+        return max(self.From.index, self.To.index)
 
-    """
-     * Sets the render type of this edge. For example, if this edge should be drawn as span it should be {@link
-     * com.googlecode.whatswrong.Edge.EdgeRenderType#span}.
-     *
-     * @param renderType the render type of this edge.
-    """
-    # See the setter above...
-
-    """
-     * Returns the start token of the edge.
-     *
-     * @return the start token of the edge.
-    """
-    # See the getter above...
-
-    """
-     * Sets the description of this edge
-     *
-     * @param description a text describing this edge.
-    """
-    # See the setter above...
-
-    """
-     * Returns the end token of the edge.
-     *
-     * @return the end token of the edge.
-    """
-    # See the getter above...
-
-    """
-     * Returns the label of the edge. For example, for a dependency edge this could be "SUBJ".
-     *
-     * @return the label of the edge.
-    """
-    # See the getter above...
-
-    """
-     * Returns the note that is appended to the label.
-     *
-     * @return note to be appended to the label.
-    """
-    # See the getter above...
-
-    """
-     * Returns the label with an additional note if available.
-     *
-     * @return label with note in parentheses.
-    """
+        
     def getLabelWithNote(self) -> str:
+        """Return the label with an additional note if available.
+
+        Returns:
+            str: label with note in parentheses.
+        """
         note = ""
-        if self._note is not None:
-            note = "(" + self._note + ")"
-        return self._label + note
+        if self.note is not None:
+            note = "(" + self.note + ")"
+        return self.label + note
 
-    """
-     * Returns the type of the edge. This differs from the render type. For example, we can represent semantic and
-     * syntactic dependencies both using the dependency render type. However, the first one could have the edge type
-     * "semantic" and the second one "syntactic".
-     *
-     * @return the type of the edge.
-    """
-    # See the getter above...
-
+    
     """
      * Compares the type and label of this edge and the passed edge.
      *
@@ -297,17 +135,17 @@ class Edge:
      * @return an integer indicating the lexicographic order of this edge and the given edge.
     """
     def lexicographicOrder(self, edge):
-        if self._type < edge.type:
+        if self.type < edge.type:
             result = -1
-        elif self._type > edge.type:
+        elif self.type > edge.type:
             result = 1
-        elif self._label < edge.label:
+        elif self.label < edge.label:
             result = 1   # Minus compare!
-        elif self._label > edge.label:
+        elif self.label > edge.label:
             result = -1  # Minus compare!
-        elif self._note is not None and self._note < edge.note:
+        elif self.note is not None and self.note < edge.note:
             result = 1   # Minus compare!
-        elif self._note is not None and self._note > edge.note:
+        elif self.note is not None and self.note > edge.note:
             result = -1  # Minus compare!
         else:
             result = 0
@@ -320,7 +158,7 @@ class Edge:
      * @return true iff both tokens of this edge are to the left of the given token.
     """
     def leftOf(self, token) -> bool:
-        return self._From.index <= token.index and self._To.index <= token.index
+        return self.From.index <= token.index and self.To.index <= token.index
 
     """
      * Checks whether the edge is to the right of the given token.
@@ -329,7 +167,7 @@ class Edge:
      * @return true iff both tokens of this edge are to the right of the given token.
     """
     def rightOf(self, token) -> bool:
-        return self._From.index >= token.index and self._To.index >= token.index
+        return self.From.index >= token.index and self.To.index >= token.index
 
     """
      * Returns the distance between the from and to token.
@@ -337,7 +175,7 @@ class Edge:
      * @return the distance between the from and to token.
     """
     def getLength(self) -> bool:
-        return abs(self._From.index - self._To.index)
+        return abs(self.From.index - self.To.index)
 
     """
      * Check whether this edge completely covers the specified edge.
