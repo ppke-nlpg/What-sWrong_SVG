@@ -38,25 +38,24 @@ class Edge:
             are both drawn as directed edges in a dependency style graph.
         is_final (bool): Is the edge final? Can be used for visualising analysis steps
             in which some edges are not yet final (can be removed later).
-
     """
 
     def __init__(self, From, To, label: str, Type, note: str=None,
                  renderType: EdgeRenderType=EdgeRenderType.dependency,
-                 description: str=None, is_final: bool=True):
+                 description: str="No Description", is_final: bool=True):
         """Initialize an Edge instance. 
         
         Args:
             From (Token): The start token.
             To (Token): The end token.
             label (str): The label of the edge.
-            note (str): A note that is added to the label.
             Type (str): The type of the edge.
-            renderType (EdgeRenderType): How to render the edge.
-            is_final (bool): Is the edge final? 
+            note (str, optional): A note that is added to the label. Defaults
+                to None.
+            renderType (EdgeRenderType, optional): How to render the edge.
+                Defaults to EdgeRenderType.dependency.
+            is_final (bool): Is the edge final? Defaults to True.
         """
-        if description is None:
-            description = "No Description"
         self.From = From
         self.To = To
         self.label = label
@@ -198,6 +197,7 @@ class Edge:
            bool: True iff the given edge is completely covered by this edge. 
         """
         return self.getMinIndex() < edge.getMinIndex() <= edge.getMaxIndex() < self.getMaxIndex()
+
     
     def coversExactly(self, edge) -> bool:
         """Check whether this edge spans the same sequence of tokens as the given edge.
@@ -210,6 +210,7 @@ class Edge:
         """
         return edge.getMinIndex() == self.getMinIndex() <= self.getMaxIndex() == edge.getMaxIndex()
 
+    
     def coversSemi(self, edge) -> bool:
         """Checks whether this edge covers the given edge and is aligned with it on one side.
         
@@ -287,8 +288,8 @@ class Edge:
             str: A string representation of this edge that shows label, type and the
             indices of the start and end tokens.
         """
-        return "{0}-{1}->{2}({3})".format(self.From.index,
-                                          self.label, self.To.index, self.type)
+        return "{0}-{1}->{2}({3})".format(self.From.index, self.label, self.To.index,
+                                          self.type)
 
 
     def __hash__(self):
