@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from NLPInstance import NLPInstance
 
@@ -84,4 +84,4 @@ class EdgeLabelFilter:
     """
     def filter(self, original: NLPInstance):
         return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
-                           renderType=original.renderType, splitPoints=original.splitPoints)
+                           render_type=original.render_type, splitPoints=original.splitPoints)

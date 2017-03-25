@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 # todo: further redesign when all part is implemented eg: merge addDependency and addSpan
 
 from enum import Enum
@@ -33,12 +33,12 @@ class NLPInstance:
      * How to render this instance.
     """
     @property
-    def renderType(self) -> RenderType:
-        return self._renderType
+    def render_type(self) -> RenderType:
+        return self._render_type
 
-    @renderType.setter
-    def renderType(self, value: RenderType):
-        self._renderType = value
+    @render_type.setter
+    def render_type(self, value: RenderType):
+        self._render_type = value
 
     """
      * Contains the edges of this instance.
@@ -90,11 +90,11 @@ class NLPInstance:
      *
      * @param tokens      the tokens of the sentence.
      * @param edges       the edges of the sentence.
-     * @param renderType  the render type for the instance.
+     * @param render_type  the render type for the instance.
      * @param splitPoints the points at which the instance can be split.
 
     """
-    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None, renderType: RenderType=None,
+    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None, render_type: RenderType=None,
                  splitPoints: tuple or list=None):
         self._tokens = []  # ArrayList<Token>()
         self._map = {}  # HashMap<Integer, Token>()
@@ -105,10 +105,10 @@ class NLPInstance:
         self._edges = []  # ArrayList<Edge>()
         if edges is not None:
             self._edges.extend(edges)
-        if renderType is not None:
-            self._renderType = renderType
+        if render_type is not None:
+            self._render_type = render_type
         else:
-            self._renderType = None
+            self._render_type = None
         self._splitPoints = []  # ArrayList<Integer>()
         if splitPoints is not None:
             self._splitPoints.extend(splitPoints)
@@ -123,7 +123,7 @@ class NLPInstance:
     """
      * Sets the render type for this instance.
      *
-     * @param renderType the render type for this instance.
+     * @param render_type the render type for this instance.
     """
     # See the setter above...
 
@@ -149,7 +149,7 @@ class NLPInstance:
      *                   sentence.
      * @param label      the label of the edge.
      * @param type       the type of edge.
-     * @param renderType the render type of the edge.
+     * @param render_type the render type of the edge.
      * @see com.googlecode.whatswrong.Edge
 
      OR
@@ -184,14 +184,14 @@ class NLPInstance:
      *                   the provided token -- they just have to have the same index.
      * @param label      the label of the edge.
      * @param type       the type of edge.
-     * @param renderType the render type of the edge.
+     * @param render_type the render type of the edge.
      * @see com.googlecode.whatswrong.Edge
     """
     def addEdge(self, From: int=None, to: int=None, label: str=None, edge_type: str=None,
-                renderType: EdgeRenderType=None, desc=None, note: str=None):
+                render_type: EdgeRenderType=None, desc=None, note: str=None):
         if self.isValidEdge(From, to):
-            self._edges.append(Edge(From=self._map[From], To=self._map[to], label=label, Type=edge_type,
-                                    renderType=renderType, description=desc, note=note))
+            self._edges.append(Edge(From=self._map[From], To=self._map[to], label=label, edge_type=edge_type,
+                                    render_type=render_type, description=desc, note=note))
 
     def isValidEdge(self, From, to):
         if From not in self._map:
@@ -232,7 +232,7 @@ class NLPInstance:
     """
     def addSpan(self, From: int, to: int, label: str, span_type: str, desc: str=None):
         if self.isValidEdge(From, to):
-            self._edges.append(Edge(self._map[From], self._map[to], label, span_type, renderType=EdgeRenderType.span,
+            self._edges.append(Edge(self._map[From], self._map[to], label, span_type, render_type=EdgeRenderType.span,
                                     description=desc))
 
     """
@@ -262,7 +262,7 @@ class NLPInstance:
     def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
         if self.isValidEdge(From, to):
             self._edges.append(Edge(self._map[From], self._map[to], label, dep_type,
-                                    renderType=EdgeRenderType.dependency, description=des, is_final=is_final))
+                                    render_type=EdgeRenderType.dependency, description=des, is_final=is_final))
 
     """
      * Adds the given collection of tokens to this instance.
@@ -294,8 +294,8 @@ class NLPInstance:
         for i in range(0, min(len(self._tokens), len(nlp.tokens))):
             self._tokens[i].merge(nlp.tokens(i))
         for edge in nlp.edges():
-            self.addEdge(From=edge.From.index, to=edge.to.index, label=edge.label, edge_type=edge.type,
-                         renderType=edge.renderType, note=edge.note)
+            self.addEdge(From=edge.From.index, to=edge.to.index, label=edge.label, edge_type=edge.edge_type,
+                         render_type=edge.render_type, note=edge.note)
 
     """
      * Adds token that has the provided properties with default property names.
@@ -305,7 +305,7 @@ class NLPInstance:
     def addTokenWithProperties(self, *properties):
         token = Token(len(self._tokens))
         for prop in properties:
-            token.addProperty(prop)
+            token.add_property(prop)
         self._tokens.append(token)
         self._map[token.index] = token
 
@@ -369,11 +369,11 @@ class NLPInstance:
 
      * Returns all edges of this instance with the given render type.
      *
-     * @param renderType the render type of the edges to return.
+     * @param render_type the render type of the edges to return.
      * @return all edges of this instance with the given render type. This list can be altered if needed.
     """
-    def getEdges(self, renderType: RenderType=None) -> frozenset:  # ArrayList<Edge>(edges.size())
-        return frozenset({e for e in self._edges if e.renderType == renderType or renderType is None})
+    def getEdges(self, render_type: RenderType=None) -> frozenset:  # ArrayList<Edge>(edges.size())
+        return frozenset({e for e in self._edges if e.render_type == render_type or render_type is None})
 
     """
      * Returns the token at the given index.

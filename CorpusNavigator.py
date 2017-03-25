@@ -551,7 +551,7 @@ class CorpusNavigator:
             instance = self._indices[index]
             sentence = ""
             for token in instance.tokens:
-                word = token.getProperty(TokenProperty("Word"))
+                word = token.get_property(TokenProperty("Word"))
                 if sentence == "":
                     sentence += " " + word
                 else:
@@ -701,12 +701,12 @@ class CorpusNavigator:
             """
 
             example = NLPInstance()
-            example.addToken().addProperty("Word", "[root]").addProperty("Index", "0")
-            example.addToken().addProperty("Word", "Add").addProperty("Index", "1")
-            example.addToken().addProperty("Word", "a").addProperty("Index", "2")
-            example.addToken().addProperty("Word", "gold").addProperty("Index", "3")
-            example.addToken().addProperty("Word", "corpus").addProperty("Index", "4")
-            example.addToken().addProperty("Word", "!").addProperty("Index", "5")
+            example.addToken().add_named_prop("Word", "[root]").add_named_prop("Index", "0")
+            example.addToken().add_named_prop("Word", "Add").add_named_prop("Index", "1")
+            example.addToken().add_named_prop("Word", "a").add_named_prop("Index", "2")
+            example.addToken().add_named_prop("Word", "gold").add_named_prop("Index", "3")
+            example.addToken().add_named_prop("Word", "corpus").add_named_prop("Index", "4")
+            example.addToken().add_named_prop("Word", "!").add_named_prop("Index", "5")
             example.addDependency(0, 1, "ROOT", "dep")
             example.addDependency(0, 5, "PUNC", "dep")
             example.addDependency(1, 4, "OBJ", "dep")

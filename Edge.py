@@ -32,7 +32,7 @@ class Edge:
             information the edge represents.  For example, the type could be "dep" for
             edges that represent syntactic dependencies, or "role" for edges that
             represent semantic roles (a la CoNLL 2008).
-        renderType (EdgeRenderType): How to render the edge. The render type of an edge
+        render_type (EdgeRenderType): How to render the edge. The render type of an edge
             controls how the edge will be rendered.  For example, both "dep" and "role"
             edges could have the render type EdgeRenderType#dependency. Then they
             are both drawn as directed edges in a dependency style graph.
@@ -40,8 +40,8 @@ class Edge:
             in which some edges are not yet final (can be removed later).
     """
 
-    def __init__(self, From, To, label: str, Type, note: str=None,
-                 renderType: EdgeRenderType=EdgeRenderType.dependency,
+    def __init__(self, From, To, label: str, edge_type, note: str=None,
+                 render_type: EdgeRenderType=EdgeRenderType.dependency,
                  description: str="No Description", is_final: bool=True):
         """Initialize an Edge instance. 
         
@@ -49,19 +49,19 @@ class Edge:
             From (Token): The start token.
             To (Token): The end token.
             label (str): The label of the edge.
-            Type (str): The type of the edge.
+            edge_type (str): The type of the edge.
             note (str, optional): A note that is added to the label. Defaults
                 to None.
-            renderType (EdgeRenderType, optional): How to render the edge.
+            render_type (EdgeRenderType, optional): How to render the edge.
                 Defaults to EdgeRenderType.dependency.
-            is_final (bool): Is the edge final? Defaults to True.
+            is_final (bool, optional): Is the edge final? Defaults to True.
         """
         self.From = From
         self.To = To
         self.label = label
         self.note = note
-        self.type = Type
-        self.renderType = renderType
+        self.edge_type = edge_type
+        self.render_type = render_type
         self.description = description
         self.is_final = is_final
 
@@ -76,11 +76,11 @@ class Edge:
             str: The prefix until ":" of the type string, or the complete type
             string if no ":" is contained in the string.
         """
-        index = self.type.find(':')
+        index = self.edge_type.find(':')
         if index == -1:
-            return self.type
+            return self.edge_type
         else:
-            return self.type[0:index]
+            return self.edge_type[0:index]
 
         
     def getTypePostfix(self) -> str:
@@ -90,11 +90,11 @@ class Edge:
             str: If the type of label is "<prefix>:<postfix>" this method returns
             <postfix>. Else it returns the empty string.
         """
-        index = self.type.find(':')
+        index = self.edge_type.find(':')
         if index == -1:
             return ""
         else:
-            return self.type[index+1:]
+            return self.edge_type[index+1:]
 
 
     def getMinIndex(self) -> int:
@@ -137,9 +137,9 @@ class Edge:
             int: An integer indicating the lexicographic order of this edge and the given
             edge.
         """
-        if self.type < edge.type:
+        if self.edge_type < edge.edge_type:
             result = -1
-        elif self.type > edge.type:
+        elif self.edge_type > edge.edge_type:
             result = 1
         elif self.label < edge.label:
             result = 1   # Minus compare!
@@ -278,7 +278,7 @@ class Edge:
         """
         return (isinstance(other, self.__class__) and  self.From == other.From and
                 self.To == other.To and self.label == other.label and
-                self.type == other.type and self.note == other.note)
+                self.edge_type == other.edge_type and self.note == other.note)
     
     
     def __str__(self):
@@ -289,7 +289,7 @@ class Edge:
             indices of the start and end tokens.
         """
         return "{0}-{1}->{2}({3})".format(self.From.index, self.label, self.To.index,
-                                          self.type)
+                                          self.edge_type)
 
 
     def __hash__(self):
@@ -308,8 +308,8 @@ class Edge:
         if self.label is not None:
             result += hash(self.label)
         result *= 31
-        if self.type is not None:
-            result += hash(self.type)
+        if self.edge_type is not None:
+            result += hash(self.edge_type)
         result *= 31
         if self.note is not None:
             result += hash(self.note)

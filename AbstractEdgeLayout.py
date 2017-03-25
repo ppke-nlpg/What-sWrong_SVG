@@ -204,7 +204,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
     """
     def getStroke(self, edge=None, stroke_type=None):
         if edge is not None:
-            stroke = self.getStroke(edge.type)
+            stroke = self.getStroke(edge.edge_type)
             if edge in self._selected:
                 # TODO:
                 # return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin()

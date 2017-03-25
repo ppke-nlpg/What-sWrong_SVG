@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from NLPInstance import NLPInstance
 from Token import Token
@@ -108,9 +108,9 @@ class TokenFilter:
         result = []  # ArrayList<Token>(original.size())
         for vertex in original:
             copy = Token(vertex.index)
-            for curr_property in vertex.getPropertyTypes():
+            for curr_property in vertex.get_property_types():
                 if curr_property not in self._forbiddenProperties:
-                    copy.addProperty(token_property=curr_property, value=vertex.getProperty(curr_property))
+                    copy.add_property(token_property=curr_property, value=vertex.get_property(curr_property))
             result.append(copy)
         return result
 
@@ -129,7 +129,7 @@ class TokenFilter:
             new2old = {}  # HashMap<Token, Token>()
             tokens = []  # ArrayList<Token>()
             for t in original.tokens:  # Linear search: For every property x For every allowed 'string'
-                for prop, prop_name, allowed in ((t.getProperty(p), p.name, allowed) for p in t.getPropertyTypes()
+                for prop, prop_name, allowed in ((t.get_property(p), p.name, allowed) for p in t.get_property_types()
                                                  for allowed in self._allowedStrings):
                     # Index poperty is in range or full or partial stringmatch
                     if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
@@ -147,8 +147,8 @@ class TokenFilter:
                 if e.From in old2new and e.To in old2new:
                     newFrom = old2new[e.From]
                     newTo = old2new[e.To]
-                    edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, Type=e.type,
-                                       renderType=e.renderType, description=e.description)))
+                    edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, edge_type=e.edge_type,
+                                       render_type=e.render_type, description=e.description)))
             # find new split points (have to be changed becouse instance has new token sequence)
             splitPoints = []
             newTokenIndex = 0
@@ -159,8 +159,8 @@ class TokenFilter:
                     newTokenIndex += 1
                     newToken = tokens[newTokenIndex]
                     oldToken = new2old[newToken]
-            return NLPInstance(tokens=self.filterTokens(tokens), edges=edges, renderType=original.renderType,
+            return NLPInstance(tokens=self.filterTokens(tokens), edges=edges, render_type=original.render_type,
                                splitPoints=splitPoints)
         else:
             filteredTokens = self.filterTokens(original.tokens)
-            return NLPInstance(tokens=filteredTokens, edges=original.getEdges(), renderType=original.renderType)
+            return NLPInstance(tokens=filteredTokens, edges=original.getEdges(), render_type=original.render_type)

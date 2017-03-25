@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from collections import defaultdict
 from operator import attrgetter
@@ -220,16 +220,16 @@ class EdgeTokenFilter:
         if self._usePath:
             paths = self.calculatePaths(original)
             for From in paths.keys():
-                if From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                if From.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     for to in paths[From].keys():
-                        if to.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                        if to.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                             for path in paths[From][to]:
                                 result.update(path)
         else:
 
             for edge in original:
-                if edge.From.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
-                        edge.To.propertiesContain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                if edge.From.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
+                        edge.To.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     result.add(edge)
         return frozenset(result)
 
@@ -252,15 +252,15 @@ class EdgeTokenFilter:
     def filter(self, original: NLPInstance) -> NLPInstance:
         edges = self.filterEdges(original.getEdges())
         if not self._collaps:
-            return NLPInstance(tokens=original.tokens, edges=edges, renderType=original.renderType,
+            return NLPInstance(tokens=original.tokens, edges=edges, render_type=original.render_type,
                                splitPoints=original.splitPoints)
         else:
             tokens = set()  # HashSet<Token>()
             for e in edges:
-                if e.renderType == EdgeRenderType.dependency:
+                if e.render_type == EdgeRenderType.dependency:
                     tokens.add(e.From)
                     tokens.add(e.To)
-                elif e.renderType == EdgeRenderType.span:
+                elif e.render_type == EdgeRenderType.span:
                         for i in range(e.From.index, e.To.index + 1):
                             tokens.add(original.getToken(index=i))
 
@@ -279,7 +279,7 @@ class EdgeTokenFilter:
             updatedEdges = set()  # HashSet<Edge>()
             for e in edges:
                 updatedEdges.add(Edge(From=old2new[e.From], To=old2new[e.To], label=e.label, note=e.note,
-                                      Type=e.type, renderType=e.renderType, description=e.description))
+                                      edge_type=e.edge_type, render_type=e.render_type, description=e.description))
             # find new split points
             splitPoints = []  # ArrayList<Integer>()
             newTokenIndex = 0
@@ -292,5 +292,5 @@ class EdgeTokenFilter:
                     oldToken = new2old[newToken]
                 splitPoints.append(newTokenIndex)
 
-            return NLPInstance(tokens=updatedTokens, edges=updatedEdges, renderType=original.renderType,
+            return NLPInstance(tokens=updatedTokens, edges=updatedEdges, render_type=original.render_type,
                                splitPoints=splitPoints)

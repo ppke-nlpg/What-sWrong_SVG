@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from SVGWriter import Rectangle, Scene, Text, TextToken
 from Bounds1D import Bounds1D
@@ -243,7 +243,7 @@ class TokenLayout:
             maxX = 0
             lasty = self._baseLine + self._rowHeight
             for p in token.getSortedProperties():
-                curr_property = token.getProperty(p)
+                curr_property = token.get_property(p)
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 lasty += self._rowHeight
                 if labelwidth > maxX:
@@ -301,7 +301,7 @@ class TokenLayout:
             lasty = self._baseLine + self._rowHeight
             maxX = 0
             for p in token.getSortedProperties():
-                curr_property = token.getProperty(p)
+                curr_property = token.get_property(p)
                 if index == 0:
                     scene.color = (0, 0, 0)  # BLACK
                 else:

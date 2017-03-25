@@ -1,227 +1,180 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from TokenProperty import TokenProperty
-import re
+#import re # This is only needed for the commented out part in properties_contain
 from operator import attrgetter
 
-
-"""
- * A Token represents a word in an utterance. It consists of an index and a set of properties with name and value.
- *
- * @author Sebastian Riedel
-"""
-
-
 class Token:
-    """
-     * The index of the token.
-    """
-    @property
-    def index(self) -> int:
-        return self._index
+    """A Token represents a word in an utterance.
 
-    @index.setter
-    def index(self, value: int):
-        self._index = value
+    It consists of an index and a set of properties with their value.
 
+    Attributes:
+        index (int): The index of the token.
+        token_properties (Dict[TokenProperty, Object]): A mapping from properties
+            to values.
+        is_actual (bool): Whether the token is actually part of the analysis or
+            only provides context (e.g. in the case of a partial analysis visualisation).
+            Defaults to False.
     """
-     * A mapping from properties to values.
-    """
-    @property
-    def tokenProperties(self):
-        return self._tokenProperties
 
-    @tokenProperties.setter
-    def tokenProperties(self, value):
-        self._tokenProperties = value
-
-    """
-     * Creates a new token with the given index.
-     *
-     * @param index the index of the token.
-    """
+    
     def __init__(self, index: int, is_actual: bool=False):
-        self._index = index
-        self._tokenProperties = {}  # HashMap<TokenProperty, String>()
+        """Creates a new token with the given index and actuality value.
+        
+        Args:
+            index (int): The index of the token.
+            is_actual (bool, optional): Whether the token is actual. Defaults
+                to False.
+        """
+        self.index = index
+        self.token_properties = {}  
         self.is_actual = is_actual
 
-    """
-     * Returns the index of the token.
-     *
-     * @return the index of the token.
-    """
-    # See the getter above...
-    """
-     * Return all token properties (the property names). To get the value of a property use {@link
-     * Token#getProperty(TokenProperty)}.
-     *
-     * @return a collection with token properties.
-    """
-    def getPropertyTypes(self):
-        return tuple(self._tokenProperties.keys())
 
-    """
-     * Get the value of the given property.
-     *
-     * @param property the property to get the value for.
-     * @return the value of the given property.
-    """
-    def getProperty(self, token_property) -> str:
-        return self._tokenProperties[token_property]
+    def get_property(self, token_property) -> str:
+        """Get the value of the given property.
 
-    """
-     * Remove the property value with given index.
-     *
-     * @param index the index of the property to remove.
+        Args:
+            token_property (TokenProperty): The property to get the value for.
 
-    OR
+        Returns:
+            The value of the given property.
+        """
+        return self.token_properties[token_property]
 
-     * Remove the property value with the given name.
-     *
-     * @param name the name of the property to remove.
-    """
-    def removeProperty(self, name: str=None, index: int=None):
-        if index is not None:
-            del self._tokenProperties[TokenProperty(name=name)]
-        if name is not None:
-            del self._tokenProperties[TokenProperty(level=index)]
+    
+    def remove_property(self, name):
+        """Remove the property value with the given name.
 
-    """
-     * Add a property with the given name and value.
-     *
-     * @param name  the name of the property.
-     * @param value the value of the property.
-     * @return a pointer to this token.
-
-    OR
-
-     * Add the property with name "Property [index]" and the given value.
-     *
-     * @param index    the index of the property
-     * @param property the value of the property.
-
-    OR
-
-     * Add a property with given value.
-     *
-     * @param property the property to add
-     * @param value    the value of the property
-     * @return this token.
-     * Adds a property with the given value. The property name will be "Property i" where i this the current number of
-     * properties.
-     *
-     * @param value the value of the property.
-     """
-    def addProperty(self, value: str=None, name: str=None, index: int=None, token_property: TokenProperty=None):
-        if name is not None and value is not None:
-            self._tokenProperties[TokenProperty(name=name, level=len(self._tokenProperties))] = value
-            # return self  # No need for this...
-        elif index is not None and token_property is not None:
-            self._tokenProperties[TokenProperty(level=self._tokenProperties[index])] = token_property
-            # return None  # !! No need for this...
-        elif token_property is not None and value is not None:
-            self._tokenProperties[token_property] = value
-            # return self  # No need for this...
-        elif value is not None:
-            self._tokenProperties[TokenProperty(level=self._tokenProperties[len(self._tokenProperties)])] = value
-            # return None  # !! No need for this...
-        else:
-            raise Exception("addPropertyException")
+        Args:
+            name (str): The name of the property to remove.
+        """
+        del self.token_properties[TokenProperty(name=name)]
         return self
 
-    """
-     * Sorts the properties by property level and name.
-     *
-     * @return a list of sorted token properties.
-    """
+
+    def add_property(self, token_property: TokenProperty, value: str):
+        """Add a property with the given value.
+
+        Args:
+            token_property (TokenProperty): The property to be added.
+            value (str): The value of the property to be added.
+
+        Returns:
+            Token: The token itself.
+        """
+        self.token_properties[token_property] = value
+        return self
+
+    
+    def add_named_prop(self, name: str, value: str, level=None):
+        """Add a property with the given name and value.
+
+        Args:
+            name (str): The name of the property to be added.
+            value (str): The value of the property to be added.
+            level (int, optional): The level of the property to be added.
+                If not given it will be set to the number of the token's properties
+                (prior to the ongoing addition).
+        
+        Returns:
+            Token: The token itself.
+        """
+        level = level if level is not None else len(self.token_properties)
+        self.token_properties[TokenProperty(name, level)] = value
+        return self
+
+    
     def getSortedProperties(self) -> list:
-        sorted_properties = list(sorted(self._tokenProperties.keys(), key=attrgetter('level', 'name')))
+        """Return a list of sorted token properties.
+
+        Returns:
+            list: The list of sorted token properties.
+        """
+        sorted_properties = list(sorted(self.token_properties.keys(),
+                                        key=attrgetter('level', 'name')))
         return sorted_properties
 
-    """
-     * Returns a collection of all property values.
-     *
-     * @return a collection of all property values.
-    """
-    # See the getter above...
 
-    """
-     * Check whether any of the property values contains the given string.
-     *
-     * @param substring the string to check whether it is contained in any property value of this token.
-     * @return true iff there exists on property of this token for which <code>substring</code> is a substring of the
-     *         corresponding property value.
+    def get_property_types(self):
+        """Return all token properties.
 
-    OR
+        Note:
+            To get the value of a property use Token#get_property(TokenProperty).
+        
+        Returns:
+            tuple: A tuple containing the token's properties.
+        """
+        return tuple(self.token_properties.keys())
 
-     * Check whether any of the property values of this token contains any of the strings in the given set of strings.
-     *
-     * @param substrings set of strings to check
-     * @param wholeWord  should we check for complete words of is it enough for the given strings to be substrings of
-     *                   the token value.
-     * @return true iff a) if there is a property value equal to one of the strings in <code>substrings</code>
-     *         (wholeword=true) or b) if there is a property value that contains one of the strings in
-     *         <code>substrings</code> (wholeword=false).
-    """
-    def propertiesContain(self, substring: str=None, substrings: set=None, wholeWord: bool=None) -> bool:
-        if substring is not None:
-            for curr_property in self._tokenProperties.values():
-                if substring in curr_property:
+    
+    def properties_contain(self, substrings: set, wholeWord: bool=False) -> bool:
+        """Check whether any of the property values contains the given strings.
+        
+        Args:
+            substrings (set): Set of strings to check.
+            wholeWord (bool, optional): Should we check for complete words or is it enough
+                for the given strings to be substrings of the token value. Defaults to False.
+
+        Returns:
+            bool: True iff there is a property value that is equal to/contains one of the
+            strings in :substrings:.
+        """
+        for curr_property in self.token_properties.values():
+            for substr in substrings:
+                # if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
+                #     From, To = substr.split("-")
+                #     if int(From) <= int(curr_property) <= int(To):
+                #         return True
+                if curr_property == substr or (not wholeWord and  substr in curr_property):
                     return True
-            return False
-        else:
-            if substrings is not None and wholeWord is not None:
-                for curr_property in self._tokenProperties.values():
-                    for substr in substrings:
-                        if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
-                            From, To = substr.split("-")
-                            if int(From) <= curr_property <= int(To):
-                                return True
-                        elif (wholeWord and curr_property == substr) or substr in curr_property:
-                            return True
-            return False
+        return False
 
-    """
-     * Checks whether the two tokens have the same index. (Hence equality is only defined through the position of the
-     * token in the sentence.
-     *
-     * @param o the other token.
-     * @return <code>index==((Token)o).index</code>
-    """
+    
+    def merge(self, token):
+        """Inserts all properties and values of the other token into this token.
+
+        In case of clashes the value of the other token is taken.
+
+        Args:
+            token (Token): The token to merge with.
+        """
+        self.token_properties.update(token.token_properties)
+
+        
     def __eq__(self, other):
-        return other is not None and isinstance(other, self.__class__) and self._index == other.index
+        """Checks whether the two tokens have the same index.
 
-    """
-     * Returns the index of the token.
-     *
-     * @return the index of the token.
-    """
+        Note:
+            Hence equality is only defined through the position of the token in the sentence. 
+
+        Args:
+            other (Token): The other token.
+        
+        Returns:
+            bool: True iff the two tokens have the same index.
+        """
+        return (other is not None and isinstance(other, self.__class__) and
+                self.index == other.index)
+
+        
     def __hash__(self):
+        """Returns the index of the token as its hashcode.
+
+        Returns:
+            int: The index of the token.
+        """
         return self.index
 
-    """
-     * Inserts all properties and values of the other token into this token. In case of clashes the value of the other
-     * token is taken.
-     *
-     * @param token the token to merge with.
-    """
-    def merge(self, token):
-        self._tokenProperties.update(token.tokenProperties)
-
-    """
-     * Compares the indices of both tokens.
-     *
-     * @param o the other token.
-     * @return <code>index - o.getIndex()</code>
-    """
-    def compareTo(self, other):
-        return self._index - other.index
-
-    """
-     * Returns a string representation of this token containing token index and properties.
-     *
-     * @return a string representation of this token.
-    """
+        
     def __str__(self):
-        return "{0}:{1}".format(self._index, ", ".join(str(prop) for prop in self._tokenProperties))
+        """Return a string representation of this token containing token index and properties.
+
+        Returns:
+            str: A string representation of this token.
+        """
+        return "{0}:{1}".format(self.index, ", ".join(str(prop)
+                                                      for prop in self.token_properties))
+    

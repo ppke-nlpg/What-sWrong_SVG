@@ -188,7 +188,7 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             # set Color and remember old color
             old = scene.color
-            scene.color = self.getColor(edge.type)
+            scene.color = self.getColor(edge.edge_type)
 
             # prepare label (will be needed for spacing)
             labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # layout, Original fontsize = 8

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 import sys
 from os.path import basename
@@ -125,7 +125,7 @@ class MyForm(QtGui.QMainWindow):
             if line == "":
                 instanceNr += 1
                 instance = factory.create(rows)
-                instance.renderType = RenderType.single
+                instance.render_type = RenderType.single
                 corpus.append(instance)
                 del rows[:]
             else:
@@ -133,7 +133,7 @@ class MyForm(QtGui.QMainWindow):
         if len(rows) > 0:
             instanceNr += 1
             instance = factory.create(rows)
-            instance.renderType = RenderType.single
+            instance.render_type = RenderType.single
             corpus.append(instance)
 
         if corp_type == "gold":

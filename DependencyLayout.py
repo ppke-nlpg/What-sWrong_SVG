@@ -168,7 +168,7 @@ class DependencyLayout(AbstractEdgeLayout):
         for edge in edges_:
             # set Color and remember old color
             old = scene.color
-            scene.color = self.getColor(edge.type)
+            scene.color = self.getColor(edge.edge_type)
             # FIXME: do that more properly!
             if not edge.is_final:
                 scene.color = (255, 0, 0)  # Red

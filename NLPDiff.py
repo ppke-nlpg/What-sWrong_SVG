@@ -30,7 +30,7 @@ class NLPDiff:
     @staticmethod
     def diff(goldInstance: NLPInstance, guessInstance: NLPInstance) -> NLPInstance:
         diff = NLPInstance()
-        diff.renderType = goldInstance.renderType
+        diff.render_type = goldInstance.render_type
         for splitPoint in goldInstance.splitPoints:
             diff.addSplitPoint(splitPoint)
         diff.addTokens(goldInstance.tokens)
@@ -40,18 +40,18 @@ class NLPDiff:
         fp = guessIdentities - goldIdentities
         matches = goldIdentities & guessIdentities
         for edge in fn:
-            Type = edge.type + ":FN"
+            Type = edge.edge_type + ":FN"
             diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
-                         renderType=edge.renderType, desc=edge.description)
+                         render_type=edge.render_type, desc=edge.description)
         for edge in fp:
-            Type = edge.type + ":FP"
+            Type = edge.edge_type + ":FP"
             diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
-                         renderType=edge.renderType, desc=edge.description)
+                         render_type=edge.render_type, desc=edge.description)
 
         for edge in matches:
-            Type = edge.type + ":Match"
+            Type = edge.edge_type + ":Match"
             diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
-                         renderType=edge.renderType, desc=edge.description)
+                         render_type=edge.render_type, desc=edge.description)
         return diff
 
     """

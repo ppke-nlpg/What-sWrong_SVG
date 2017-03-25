@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 # Todo: Export to PDF, EPS, etc.
 
 import cairosvg
@@ -167,9 +167,9 @@ class NLPCanvas:
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
         self._dependencies = self._nlpInstance.getEdges()
-        self._usedTypes = {edge.type for edge in self._dependencies}  # Union
+        self._usedTypes = {edge.edge_type for edge in self._dependencies}  # Union
         self._tokens = self._nlpInstance.tokens
-        self._usedProperties = {prop for token in self._tokens for prop in token.getPropertyTypes()}  # UnionAll
+        self._usedProperties = {prop for token in self._tokens for prop in token.get_property_types()}  # UnionAll
         self.fireInstanceChanged()
 
     """
@@ -207,7 +207,7 @@ class NLPCanvas:
     """
     def filterInstance(self):
 
-        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, renderType=self._nlpInstance.renderType,
+        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, render_type=self._nlpInstance.render_type,
                                splitPoints=self._nlpInstance.splitPoints)
         for curr_filter in self._filters:
             instance = curr_filter.filter(instance)
@@ -231,7 +231,7 @@ class NLPCanvas:
         filtered = self.filterInstance()
         self._SVGScene = Scene()
 
-        renderer = self._renderers[filtered.renderType]
+        renderer = self._renderers[filtered.render_type]
 
         dim = renderer.render(filtered, self._SVGScene)
 
