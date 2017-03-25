@@ -28,7 +28,7 @@ class Edge:
         note (str): A note that is added to the label but which does not have an 
             effect on the identity of the edge when compared with another edge in the
             NLPDiff#diff(NLPInstance, NLPInstance) method.
-        Type (str): The type of the edge. The type of a edge denotes the type of 
+        edge_type (str): The type of the edge. The type of a edge denotes the type of 
             information the edge represents.  For example, the type could be "dep" for
             edges that represent syntactic dependencies, or "role" for edges that
             represent semantic roles (a la CoNLL 2008).
