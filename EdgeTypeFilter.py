@@ -131,8 +131,8 @@ class EdgeTypeFilter:
     """
     def filterEdges(self, original: frozenset) -> list:
         return [edge for edge in original if
-                (edge.getTypePrefix() == "" or edge.getTypePrefix() in self._allowedPrefixTypes) and  # Allowed prefixes
-                (edge.getTypePostfix() == "" or edge.getTypePostfix() in self._allowedPostfixTypes)]  # and postfixes
+                (edge.get_type_prefix() == "" or edge.get_type_prefix() in self._allowedPrefixTypes) and  # Allowed prefixes
+                (edge.get_type_postfix() == "" or edge.get_type_postfix() in self._allowedPostfixTypes)]  # and postfixes
 
     """
      * Does the filter allow the given prefix.

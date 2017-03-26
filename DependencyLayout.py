@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 import functools
 import itertools
@@ -75,8 +75,8 @@ class DependencyLayout(AbstractEdgeLayout):
 
         for over in edges_:
             for under in edges_:
-                if over != under and (over.covers(under) or over.coversSemi(under) or
-                                      over.coversExactly(under) and over.lexicographicOrder(under) > 0):
+                if over != under and (over.covers(under) or over.covers_semi(under) or
+                                      over.covers_exactly(under) and over.lexicographic_order(under) > 0):
                     dominates[over].append(under)
 
         for edge in edges_:
@@ -124,22 +124,22 @@ class DependencyLayout(AbstractEdgeLayout):
             """
             def compare(edge1, edge2):
                 # if they point in different directions order is defined by left to right
-                if edge1.leftOf(token) and edge2.rightOf(token):
+                if edge1.left_of(token) and edge2.right_of(token):
                     return -1
-                if edge2.leftOf(token) and edge1.rightOf(token):
+                if edge2.left_of(token) and edge1.right_of(token):
                     return 1
                 # otherwise we order by length
-                diff = edge2.getLength() - edge1.getLength()
-                if edge1.leftOf(token) and edge2.leftOf(token):
+                diff = len(edge2) - len(edge1)
+                if edge1.left_of(token) and edge2.left_of(token):
                     if diff != 0:
                         return -diff
                     else:
-                        return edge1.lexicographicOrder(edge2)
+                        return edge1.lexicographic_order(edge2)
                 else:
                     if diff != 0:
                         return diff
                     else:
-                        return edge2.lexicographicOrder(edge1)
+                        return edge2.lexicographic_order(edge1)
             connections = sorted(connections, key=functools.cmp_to_key(compare))
             # now put points along the token vertex wrt to ordering
             loopsOnVertex = loops[token]
@@ -199,12 +199,12 @@ class DependencyLayout(AbstractEdgeLayout):
             # write label in the middle under
 
             # XXX Original fontsize is 8
-            Text(scene, (0, 0), edge.getLabelWithNote(), 12, scene.color)
+            Text(scene, (0, 0), edge.get_label_with_note(), 12, scene.color)
             labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2  # - labelwith // 2
             # labely = height + 1
             labely = height + 10 + 1  # XXX layout.getAscent()
             # XXX Original fontsize is 8
-            scene.add(Text(scene, (labelx, labely), edge.getLabelWithNote(), 12, scene.color))
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), 12, scene.color))
 
             scene.color = old
             self._shapes[shape] = edge

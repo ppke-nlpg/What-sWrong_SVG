@@ -167,8 +167,8 @@ class EdgeTokenFilter:
                         for path1 in previous[From][over]:
                             for path2 in first[over][to]:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
-                                if not path2.issubset(path1) and next(iter(path1)).getTypePrefix() == \
-                                        next(iter(path2)).getTypePrefix():
+                                if not path2.issubset(path1) and next(iter(path1)).get_type_prefix() == \
+                                        next(iter(path2)).get_type_prefix():
                                     path = set()  # HashSet<Edge>
                                     path.update(path1)
                                     path.update(path2)

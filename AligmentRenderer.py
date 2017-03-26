@@ -83,9 +83,9 @@ class AligmentRenderer:
             width = dim[0]
 
         for edge in instance.getEdges(Edge.RenderType.dependency):
-            if edge.getTypePostfix() == "FP":
+            if edge.get_type_postfix() == "FP":
                 scene.color = (255, 0, 0)  # Color.RED
-            elif edge.getTypePostfix() == "FN":
+            elif edge.get_type_postfix() == "FN":
                 scene.color = (0, 0, 255)  # Color.BLUE
             else:
                 scene.color = (0, 0, 0)    # Color.BLACK

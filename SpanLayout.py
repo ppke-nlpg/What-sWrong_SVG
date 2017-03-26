@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from collections import Counter, defaultdict
 
@@ -146,16 +146,16 @@ class SpanLayout(AbstractEdgeLayout):
 
         for over in edges:
             for under in edges:
-                orderOver = self.getOrder(over.getTypePrefix())
-                orderUnder = self.getOrder(under.getTypePrefix())
+                orderOver = self.getOrder(over.get_type_prefix())
+                orderUnder = self.getOrder(under.get_type_prefix())
                 if not (orderOver is None and orderUnder is not None) or \
                        (orderOver is not None and orderUnder is None) or \
                        (orderOver != orderUnder and orderOver > orderUnder) or \
                        (orderOver == orderUnder and (  # Also when both are None...
-                        over.covers(under) or over.coversSemi(under) or
-                        over.coversExactly(under) and
-                        over.lexicographicOrder(under) > 0 or
-                        over.overlaps(under) and over.getMinIndex() < under.getMinIndex())):
+                        over.covers(under) or over.covers_semi(under) or
+                        over.covers_exactly(under) and
+                        over.lexicographic_order(under) > 0 or
+                        over.overlaps(under) and over.get_min_index() < under.get_min_index())):
                     dominates[over].append(under)
 
         for edge in edges:
@@ -228,7 +228,7 @@ class SpanLayout(AbstractEdgeLayout):
             labelx = minX + (maxX - minX) // 2 - labelwidth // 2
             labely = height + self._heightPerLevel // 2
 
-            scene.add(Text(scene, (labelx, labely), edge.getLabelWithNote(), 12, scene.color))  # Original fontsize = 8
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), 12, scene.color))  # Original fontsize = 8
             scene.color = old
             self._shapes[(minX, height-buffer, maxX-minX, self._heightPerLevel - 2 * buffer)] = edge
 
@@ -240,10 +240,10 @@ class SpanLayout(AbstractEdgeLayout):
             minDepths = {}  # HashMap<String, Integer>()
             for edge in edges:
                 edgeDepth = depth[edge]
-                typeDepth = minDepths.get(edge.getTypePrefix())
+                typeDepth = minDepths.get(edge.get_type_prefix())
                 if typeDepth is None or typeDepth > edgeDepth:
                     typeDepth = edgeDepth
-                    minDepths[edge.getTypePrefix()] = typeDepth
+                    minDepths[edge.get_type_prefix()] = typeDepth
 
             scene.color = (211, 211, 211)  # Color.LIGHT_GRAY
             for d in minDepths.values():
