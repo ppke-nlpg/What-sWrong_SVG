@@ -157,4 +157,4 @@ class EdgeTypeFilter:
     """
     def filter(self, original: NLPInstance):
         return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
-                           render_type=original.render_type, splitPoints=original.splitPoints)
+                           render_type=original.render_type, split_points=original.split_points)

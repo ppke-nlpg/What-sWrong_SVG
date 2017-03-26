@@ -208,7 +208,7 @@ class NLPCanvas:
     def filterInstance(self):
 
         instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, render_type=self._nlpInstance.render_type,
-                               splitPoints=self._nlpInstance.splitPoints)
+                               split_points=self._nlpInstance.split_points)
         for curr_filter in self._filters:
             instance = curr_filter.filter(instance)
         return instance

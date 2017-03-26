@@ -31,7 +31,7 @@ class NLPDiff:
     def diff(goldInstance: NLPInstance, guessInstance: NLPInstance) -> NLPInstance:
         diff = NLPInstance()
         diff.render_type = goldInstance.render_type
-        for splitPoint in goldInstance.splitPoints:
+        for splitPoint in goldInstance.split_points:
             diff.addSplitPoint(splitPoint)
         diff.addTokens(goldInstance.tokens)
         goldIdentities = goldInstance.getEdges()

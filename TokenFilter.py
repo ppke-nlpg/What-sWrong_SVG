@@ -150,9 +150,9 @@ class TokenFilter:
                     edges.append((Edge(start=newFrom, end=newTo, label=e.label, note=e.note, edge_type=e.edge_type,
                                        render_type=e.render_type, description=e.description)))
             # find new split points (have to be changed becouse instance has new token sequence)
-            splitPoints = []
+            split_points = []
             newTokenIndex = 0
-            for oldSplitPoint in original.splitPoints:
+            for oldSplitPoint in original.split_points:
                 newToken = tokens[newTokenIndex]
                 oldToken = new2old[newToken]
                 while newTokenIndex + 1 < len(tokens) and oldToken.index < oldSplitPoint:
@@ -160,7 +160,7 @@ class TokenFilter:
                     newToken = tokens[newTokenIndex]
                     oldToken = new2old[newToken]
             return NLPInstance(tokens=self.filterTokens(tokens), edges=edges, render_type=original.render_type,
-                               splitPoints=splitPoints)
+                               split_points=split_points)
         else:
             filteredTokens = self.filterTokens(original.tokens)
             return NLPInstance(tokens=filteredTokens, edges=original.getEdges(), render_type=original.render_type)

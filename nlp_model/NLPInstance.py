@@ -7,125 +7,63 @@ from enum import Enum
 from .token import Token
 from .edge import EdgeRenderType, Edge
 
-"""
- * An NLPInstance represents a sentence or any other kind of utterance and some of its (NLP) properties. Properties of
- * sentence are its tokens, that have their own properties, and edges between tokens. Such edges can represent syntactic
- * or semantic dependencies, such as SRL predicate-argument relations, as well as annotated spans (such as NP chunks or
- * NER entities).
- *
- * @author Sebastian Riedel
-"""
-
 
 class RenderType(Enum):
-    """
-     * Show as single sentence with dependencies and spans
+    """An enum to specify how an instance should be rendered.
+
+    Either a single sentence is shown or two aligned sentences,
+    on top of each other.
     """
     single = 'single',
-    """
-     * Show two aligned sentences, on top of each other
-    """
     alignment = 'alignment'
 
 
 class NLPInstance:
-    """
-     * How to render this instance.
-    """
-    @property
-    def render_type(self) -> RenderType:
-        return self._render_type
+    """An NLPInstance represents a sentence or utterance and some of its (NLP) properties.
 
-    @render_type.setter
-    def render_type(self, value: RenderType):
-        self._render_type = value
-
+    Properties of sentence are its tokens, that have their own properties, and
+    edges between tokens. Such edges can represent syntactic or semantic
+    dependencies, such as SRL predicate-argument relations, as well as annotated
+    spans (such as NP chunks or NER entities).
+    
+    Attributes:
+        tokens (list): The tokens of this instance.
+        edges (list): The edges of this instance.
+        render_type (RenderType): How to render this instance.
+        token_map (dict[int, Token]): A mapping from sentence indices to tokens.
+        split_points (list): A list of token indices at which the NLP instance is to
+            be split. These indices can refer to sentence boundaries in a
+            document, but they can also indicate that what follows after a split
+            point is an utterance in a different language (for alignment).
     """
-     * Contains the edges of this instance.
-    """
-    # See the getter below...
 
-    """
-     * Contains the tokens of this instance.
-    """
-    @property
-    def tokens(self) -> tuple:
-        return tuple(self._tokens)
-
-    @tokens.setter
-    def tokens(self, value: list):
-        self._tokens = value
-
-    """
-     * Contains a mapping from sentence indices to tokens.
-    """
-    @property
-    def map(self) -> dict:
-        return self._map
-
-    @map.setter
-    def map(self, value: dict):
-        self._map = value
-
-    """
-     * A list of token indices at which the NLP instance is to be split. These indices can refer to sentence boundaries
-     * in a document, but they can also indicate that what follows after a split point is an utterance in a different
-     * language (for alignment).
-    """
-    @property
-    def splitPoints(self) -> tuple:
-        return tuple(self._splitPoints)
-
-    @splitPoints.setter
-    def splitPoints(self, value: list):
-        self._splitPoints = value
-
-    """
-     * Creates an empty NLPInstance without edges or tokens.
-
-    OR
-
-     * Creates a new NLPInstance with the given tokens and edges. The passed collections will be copied and not
-     * changed.
-     *
-     * @param tokens      the tokens of the sentence.
-     * @param edges       the edges of the sentence.
-     * @param render_type  the render type for the instance.
-     * @param splitPoints the points at which the instance can be split.
-
-    """
-    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None, render_type: RenderType=None,
-                 splitPoints: tuple or list=None):
-        self._tokens = []  # ArrayList<Token>()
-        self._map = {}  # HashMap<Integer, Token>()
+    
+    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None,
+                 render_type: RenderType=RenderType.single, split_points: tuple or list=None):
+        """Create an NLPInstance with the given tokens and edges.
+        
+        The passed collections will be copied and not changed.
+        
+        Args:
+            tokens (tuple or list): 
+            edges (set or frozenset):
+            render_type (RenderType):
+            split_points (tuple or list): 
+        """
+        self.tokens = [] 
+        self.token_map = {}
+        self.edges = [] 
+        self.render_type = render_type
+        self.split_points = []
         if tokens is not None:
-            self._tokens.extend(tokens)
+            self.tokens.extend(tokens)
             for t in tokens:
-                self._map[t.index] = t
-        self._edges = []  # ArrayList<Edge>()
+                self.token_map[t.index] = t
         if edges is not None:
-            self._edges.extend(edges)
-        if render_type is not None:
-            self._render_type = render_type
-        else:
-            self._render_type = None
-        self._splitPoints = []  # ArrayList<Integer>()
-        if splitPoints is not None:
-            self._splitPoints.extend(splitPoints)
+            self.edges.extend(edges)
+        if split_points is not None:
+            self.split_points.extend(split_points)
 
-    """
-     * Returns the render type that controls which renderer to use.
-     *
-     * @return the render type for this instance.
-    """
-    # See the getter above...
-
-    """
-     * Sets the render type for this instance.
-     *
-     * @param render_type the render type for this instance.
-    """
-    # See the setter above...
 
     """
      * Creates and adds an edge from the token at the given 'from' index to the token at the given 'to' index with the
@@ -190,17 +128,17 @@ class NLPInstance:
     def addEdge(self, start: int=None, to: int=None, label: str=None, edge_type: str=None,
                 render_type: EdgeRenderType=None, desc=None, note: str=None):
         if self.isValidEdge(start, to):
-            self._edges.append(Edge(start=self._map[start], end=self._map[to], label=label, edge_type=edge_type,
+            self.edges.append(Edge(start=self.token_map[start], end=self.token_map[to], label=label, edge_type=edge_type,
                                     render_type=render_type, description=desc, note=note))
 
     def isValidEdge(self, start, to):
-        if start not in self._map:
-            print('There is no token at index: {0} for tokens {1}'.format(start, self._map))
+        if start not in self.token_map:
+            print('There is no token at index: {0} for tokens {1}'.format(start, self.token_map))
             fromToken = False
         else:
             fromToken = True
-        if to not in self._map:
-            print('There is no token at index: {0} for tokens {1}'.format(to, self._map))
+        if to not in self.token_map:
+            print('There is no token at index: {0} for tokens {1}'.format(to, self.token_map))
             toToken = False
         else:
             toToken = True
@@ -232,7 +170,7 @@ class NLPInstance:
     """
     def addSpan(self, start: int, to: int, label: str, span_type: str, desc: str=None):
         if self.isValidEdge(start, to):
-            self._edges.append(Edge(self._map[start], self._map[to], label, span_type, render_type=EdgeRenderType.span,
+            self.edges.append(Edge(self.token_map[start], self.token_map[to], label, span_type, render_type=EdgeRenderType.span,
                                     description=desc))
 
     """
@@ -261,7 +199,7 @@ class NLPInstance:
     """
     def addDependency(self, start: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
         if self.isValidEdge(start, to):
-            self._edges.append(Edge(self._map[start], self._map[to], label, dep_type,
+            self.edges.append(Edge(self.token_map[start], self.token_map[to], label, dep_type,
                                     render_type=EdgeRenderType.dependency, description=des, is_final=is_final))
 
     """
@@ -270,9 +208,9 @@ class NLPInstance:
      * @param tokens the tokens to add.
     """
     def addTokens(self, tokens: tuple):
-        self._tokens.extend(tokens)
+        self.tokens.extend(tokens)
         for t in tokens:
-            self._map[t.index] = t
+            self.token_map[t.index] = t
 
     """
      * Adds the given edges to this instance.
@@ -280,7 +218,7 @@ class NLPInstance:
      * @param edges the edges to add.
     """
     def addEdges(self, edges: list):
-        self._edges.extend(edges)
+        self.edges.extend(edges)
 
     """
      * Merges the given instance with this instance. A merge will add for every token i all properties of the token i of
@@ -291,8 +229,8 @@ class NLPInstance:
      * @param nlp the instance to merge into this instance.
     """
     def merge(self, nlp):
-        for i in range(0, min(len(self._tokens), len(nlp.tokens))):
-            self._tokens[i].merge(nlp.tokens(i))
+        for i in range(0, min(len(self.tokens), len(nlp.tokens))):
+            self.tokens[i].merge(nlp.tokens(i))
         for edge in nlp.edges():
             self.addEdge(start=edge.start.index, to=edge.to.index, label=edge.label, edge_type=edge.edge_type,
                          render_type=edge.render_type, note=edge.note)
@@ -303,11 +241,11 @@ class NLPInstance:
      * @param properties an vararray of strings.
     """
     def addTokenWithProperties(self, *properties):
-        token = Token(len(self._tokens))
+        token = Token(len(self.tokens))
         for prop in properties:
             token.add_property(prop)
-        self._tokens.append(token)
-        self._map[token.index] = token
+        self.tokens.append(token)
+        self.token_map[token.index] = token
 
     """
      * Adds a new token and returns it.
@@ -325,14 +263,14 @@ class NLPInstance:
     """
     def addToken(self, index: int=None, is_actual: bool=False) -> Token:
         if index is None:
-            vertex = Token(len(self._tokens), is_actual)
-            self._tokens.append(vertex)
-            self._map[vertex.index] = vertex
+            vertex = Token(len(self.tokens), is_actual)
+            self.tokens.append(vertex)
+            self.token_map[vertex.index] = vertex
         else:
-            vertex = self._map[index]
+            vertex = self.token_map[index]
             if vertex is None:
                 vertex = Token(index)
-                self._map[vertex.index] = vertex
+                self.token_map[vertex.index] = vertex
 
         return vertex
 
@@ -341,8 +279,8 @@ class NLPInstance:
      * all internal representations of the token sequence are consistent.
     """
     def consistify(self):
-        self._tokens.extend(self._map.values())
-        self._tokens.sort()
+        self.tokens.extend(self.token_map.values())
+        self.tokens.sort()
 
     """
      * Add a split point token index.
@@ -350,15 +288,7 @@ class NLPInstance:
      * @param tokenIndex a token index at which the instance should be split.
     """
     def addSplitPoint(self, tokenIndex: int):
-        self._splitPoints.append(tokenIndex)
-
-    """
-     * Returns the list of split points for this instance. A split point is a point at which renderers can split the
-     * token list.
-     *
-     * @return the list of split points.
-    """
-    # See the getter above...
+        self.split_points.append(tokenIndex)
 
     """
      * Returns all edges of this instance.
@@ -373,7 +303,7 @@ class NLPInstance:
      * @return all edges of this instance with the given render type. This list can be altered if needed.
     """
     def getEdges(self, render_type: RenderType=None) -> frozenset:  # ArrayList<Edge>(edges.size())
-        return frozenset({e for e in self._edges if e.render_type == render_type or render_type is None})
+        return frozenset({e for e in self.edges if e.render_type == render_type or render_type is None})
 
     """
      * Returns the token at the given index.
@@ -382,14 +312,8 @@ class NLPInstance:
      * @return the token at the given index.
     """
     def getToken(self, index: int) -> Token:
-        return self._map[index]
+        return self.token_map[index]
 
-    """
-     * Returns a list of all tokens in this instance.
-     *
-     * @return an unmodifiable list of all tokens of this sentence, in the right order.
-     """
-    # See the getter above...
 
     """
      * Returns a string representation of this instance. Mostly for debugging purposes.
@@ -397,6 +321,6 @@ class NLPInstance:
      * @return a string representation of this instance.
     """
     def __str__(self):
-        return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self._tokens),
-                                      ", ".join(str(v) for v in self._map.values()),
-                                      ", ".join(str(e) for e in self._edges))
+        return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
+                                      ", ".join(str(v) for v in self.token_map.values()),
+                                      ", ".join(str(e) for e in self.edges))

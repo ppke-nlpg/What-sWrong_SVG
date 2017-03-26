@@ -253,7 +253,7 @@ class EdgeTokenFilter:
         edges = self.filterEdges(original.getEdges())
         if not self._collaps:
             return NLPInstance(tokens=original.tokens, edges=edges, render_type=original.render_type,
-                               splitPoints=original.splitPoints)
+                               split_points=original.split_points)
         else:
             tokens = set()  # HashSet<Token>()
             for e in edges:
@@ -281,16 +281,16 @@ class EdgeTokenFilter:
                 updatedEdges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description))
             # find new split points
-            splitPoints = []  # ArrayList<Integer>()
+            split_points = []  # ArrayList<Integer>()
             newTokenIndex = 0
-            for oldSplitPoint in original.splitPoints:
+            for oldSplitPoint in original.split_points:
                 newToken = updatedTokens[newTokenIndex]
                 oldToken = new2old[newToken]
                 while newTokenIndex + 1 < len(tokens) and oldToken.index < oldSplitPoint:
                     newTokenIndex += 1
                     newToken = updatedTokens[newTokenIndex]
                     oldToken = new2old[newToken]
-                splitPoints.append(newTokenIndex)
+                split_points.append(newTokenIndex)
 
             return NLPInstance(tokens=updatedTokens, edges=updatedEdges, render_type=original.render_type,
-                               splitPoints=splitPoints)
+                               split_points=split_points)

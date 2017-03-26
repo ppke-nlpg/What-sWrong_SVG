@@ -232,11 +232,11 @@ class TokenLayout:
         if self._fromSplitPoint == -1:
             fromToken = 0
         else:
-            fromToken = instance.splitPoints[self._fromSplitPoint]
+            fromToken = instance.split_points[self._fromSplitPoint]
         if self._toSplitPoint == -1:
             toToken = len(tokens)
         else:
-            toToken = instance.splitPoints[self._toSplitPoint]
+            toToken = instance.split_points[self._toSplitPoint]
 
         for tokenIndex in range(fromToken, toToken):
             token = tokens[tokenIndex]
@@ -288,12 +288,12 @@ class TokenLayout:
         if self._fromSplitPoint == -1:
             fromToken = 0
         else:
-            fromToken = instance.splitPoints[self._fromSplitPoint]
+            fromToken = instance.split_points[self._fromSplitPoint]
 
         if self._toSplitPoint == -1:
             toToken = len(tokens)
         else:
-            toToken = instance.splitPoints[self._toSplitPoint]
+            toToken = instance.split_points[self._toSplitPoint]
 
         for tokenIndex in range(fromToken, toToken):
             token = tokens[tokenIndex]
