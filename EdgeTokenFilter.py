@@ -4,9 +4,9 @@
 from collections import defaultdict
 from operator import attrgetter
 
-from Edge import EdgeRenderType, Edge
-from NLPInstance import NLPInstance
-from Token import Token
+from nlp_model.edge import EdgeRenderType, Edge
+from nlp_model.NLPInstance import NLPInstance
+from nlp_model.token import Token
 
 """
  * An EdgeTokenFilter filters out edges based on the properties of their tokens. For example, we can filter out all

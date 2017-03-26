@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from NLPInstance import NLPInstance
-from Token import Token
-from TokenProperty import TokenProperty
-from Edge import Edge
+from nlp_model.NLPInstance import NLPInstance
+from nlp_model.token import Token
+from nlp_model.token_property import TokenProperty
+from nlp_model.edge import Edge
 
 """
  * A Tokenfilter removes certain properties from each token and removes tokens that do not contain certain property

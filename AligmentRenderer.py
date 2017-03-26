@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from TokenLayout import TokenLayout
-from Edge import Edge
+from nlp_model.edge import Edge
 from SVGWriter import Line, Scene, QuadraticBezierCurve
 
 """

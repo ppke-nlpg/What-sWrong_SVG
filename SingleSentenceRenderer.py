@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore
 
-from Edge import EdgeRenderType
+from nlp_model.edge import EdgeRenderType
 from SpanLayout import SpanLayout
 from DependencyLayout import DependencyLayout
 from TokenLayout import TokenLayout

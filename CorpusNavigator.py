@@ -3,10 +3,10 @@
 # HIÁNYOS!
 
 from NLPCanvas import NLPCanvas
-from NLPDiff import NLPDiff
+from nlp_model.NLPDiff import NLPDiff
 from CorpusLoader import CorpusLoader
-from NLPInstance import NLPInstance
-from TokenProperty import TokenProperty
+from nlp_model.NLPInstance import NLPInstance
+from nlp_model.token_property import TokenProperty
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
