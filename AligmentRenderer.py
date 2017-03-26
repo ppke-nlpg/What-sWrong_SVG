@@ -89,8 +89,8 @@ class AligmentRenderer:
                 scene.color = (0, 0, 255)  # Color.BLUE
             else:
                 scene.color = (0, 0, 0)    # Color.BLACK
-            bound1 = tokenXBounds1[edge.From]
-            bound2 = tokenXBounds2[edge.To]
+            bound1 = tokenXBounds1[edge.start]
+            bound2 = tokenXBounds2[edge.end]
             if self._isCurved:
                 start = (bound1.getMiddle(), height)
                 x1 = (bound1.getMiddle(), height + self._heightFactor // 2)  # INTEGER DIVISION!!!

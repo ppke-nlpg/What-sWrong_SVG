@@ -153,18 +153,18 @@ class EdgeTokenFilter:
         for edge in edges:
             path = set()  # HashSet<Edge>
             path.add(edge)
-            paths[edge.From][edge.To].add(frozenset(path))
-            paths[edge.To][edge.From].add(frozenset(path))
+            paths[edge.start][edge.end].add(frozenset(path))
+            paths[edge.end][edge.start].add(frozenset(path))
         pathsPerLength.append(paths)
         previous = paths
         first = paths
         while True:
             paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
             # go over each paths of the previous length and increase their size by one
-            for From in previous.keys():
-                for over in previous[From].keys():
+            for start in previous.keys():
+                for over in previous[start].keys():
                     for to in first[over].keys():
-                        for path1 in previous[From][over]:
+                        for path1 in previous[start][over]:
                             for path2 in first[over][to]:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
                                 if not path2.issubset(path1) and next(iter(path1)).get_type_prefix() == \
@@ -172,8 +172,8 @@ class EdgeTokenFilter:
                                     path = set()  # HashSet<Edge>
                                     path.update(path1)
                                     path.update(path2)
-                                    paths[From][to].add(frozenset(path))
-                                    paths[to][From].add(frozenset(path))
+                                    paths[start][to].add(frozenset(path))
+                                    paths[to][start].add(frozenset(path))
             if len(paths) == 0:
                 pathsPerLength.append(paths)
             previous = paths
@@ -181,10 +181,10 @@ class EdgeTokenFilter:
                 break
         result = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         for p in pathsPerLength:
-            for From in p.keys():
-                for to in p[From].keys():
-                    for path in p[From][to]:
-                        result[From][to].add(path)
+            for start in p.keys():
+                for to in p[start].keys():
+                    for path in p[start][to]:
+                        result[start][to].add(path)
         return result
     """
      * If true at least one edge tokens must contain at least one property value that matches one of the allowed
@@ -219,17 +219,17 @@ class EdgeTokenFilter:
         result = set()  # ArrayList<Edge>()
         if self._usePath:
             paths = self.calculatePaths(original)
-            for From in paths.keys():
-                if From.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
-                    for to in paths[From].keys():
+            for start in paths.keys():
+                if start.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                    for to in paths[start].keys():
                         if to.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
-                            for path in paths[From][to]:
+                            for path in paths[start][to]:
                                 result.update(path)
         else:
 
             for edge in original:
-                if edge.From.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
-                        edge.To.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                if edge.start.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
+                        edge.end.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
                     result.add(edge)
         return frozenset(result)
 
@@ -258,10 +258,10 @@ class EdgeTokenFilter:
             tokens = set()  # HashSet<Token>()
             for e in edges:
                 if e.render_type == EdgeRenderType.dependency:
-                    tokens.add(e.From)
-                    tokens.add(e.To)
+                    tokens.add(e.start)
+                    tokens.add(e.end)
                 elif e.render_type == EdgeRenderType.span:
-                        for i in range(e.From.index, e.To.index + 1):
+                        for i in range(e.start.index, e.end.index + 1):
                             tokens.add(original.getToken(index=i))
 
             _sorted = sorted(tokens, key=attrgetter("index"))
@@ -278,7 +278,7 @@ class EdgeTokenFilter:
 
             updatedEdges = set()  # HashSet<Edge>()
             for e in edges:
-                updatedEdges.add(Edge(From=old2new[e.From], To=old2new[e.To], label=e.label, note=e.note,
+                updatedEdges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description))
             # find new split points
             splitPoints = []  # ArrayList<Integer>()

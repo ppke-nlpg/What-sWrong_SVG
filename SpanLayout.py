@@ -118,10 +118,10 @@ class SpanLayout(AbstractEdgeLayout):
     def estimateRequiredTokenWidths(self, edges, scene):
         result = {}  # HashMap<Token, Integer>()
         for edge in edges:
-            if edge.From == edge.To:
+            if edge.start == edge.end:
                 labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).getWidth()  # Original fontsize = 8
-                width = max(labelwidth, result.get(edge.From, labelwidth))  # oldWith is result[...]
-                result[edge.From] = width + self._totalTextMargin
+                width = max(labelwidth, result.get(edge.start, labelwidth))  # oldWith is result[...]
+                result[edge.start] = width + self._totalTextMargin
         return result
 
     """
@@ -178,8 +178,8 @@ class SpanLayout(AbstractEdgeLayout):
         # build map from vertex to incoming/outgoing edges
         vertex2edges = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges:
-            vertex2edges[edge.From].append(edge)
-            vertex2edges[edge.To].append(edge)
+            vertex2edges[edge.start].append(edge)
+            vertex2edges[edge.end].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
 
         maxWidth = 0
@@ -202,10 +202,10 @@ class SpanLayout(AbstractEdgeLayout):
 
             buffer = 2
 
-            fromBounds = bounds[edge.From]
-            toBounds = bounds[edge.To]
-            minX = min(fromBounds.From, toBounds.From)
-            maxX = max(fromBounds.To, toBounds.To)
+            fromBounds = bounds[edge.start]
+            toBounds = bounds[edge.end]
+            minX = min(fromBounds.start, toBounds.start)
+            maxX = max(fromBounds.end, toBounds.end)
 
             if maxX > maxWidth:
                 maxWidth = maxX + 1
@@ -233,7 +233,7 @@ class SpanLayout(AbstractEdgeLayout):
             self._shapes[(minX, height-buffer, maxX-minX, self._heightPerLevel - 2 * buffer)] = edge
 
         # int maxWidth = 0;
-        maxWidth = max((bound.To for bound in bounds.values()), default=0)
+        maxWidth = max((bound.end for bound in bounds.values()), default=0)
 
         if self._separationLines:
             # find largest depth for each prefix type

@@ -125,8 +125,8 @@ class Token:
         for curr_property in self.token_properties.values():
             for substr in substrings:
                 # if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
-                #     From, To = substr.split("-")
-                #     if int(From) <= int(curr_property) <= int(To):
+                #     start, end = substr.split("-")
+                #     if int(start) <= int(curr_property) <= int(end):
                 #         return True
                 if curr_property == substr or (not wholeWord and  substr in curr_property):
                     return True

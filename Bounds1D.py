@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 
 """
  * This class represents one dimensional bounds.
@@ -13,23 +13,23 @@ class Bounds1D:
      * Where do the bounds start
     """
     @property
-    def From(self):
-        return self._From
+    def start(self):
+        return self._start
 
-    @From.setter
-    def From(self, value):
-        self._From = value
+    @start.setter
+    def start(self, value):
+        self._start = value
 
     """
      * Where do the bounds end.
     """
     @property
-    def To(self):
-        return self._To
+    def end(self):
+        return self._end
 
-    @To.setter
-    def To(self, value):
-        self._To = value
+    @end.setter
+    def end(self, value):
+        self._end = value
 
     """
      * Create a new Bounds1D object for the given bounds.
@@ -37,9 +37,9 @@ class Bounds1D:
      * @param from where do the bounds start.
      * @param to   where do the bounds end.
     """
-    def __init__(self, From, To):
-        self._From = From
-        self._To = To
+    def __init__(self, start, end):
+        self._start = start
+        self._end = end
 
     """
      * Return the total width of the bounds
@@ -47,7 +47,7 @@ class Bounds1D:
      * @return width of bounds.
     """
     def getWidth(self):
-        return self._To - self._From
+        return self._end - self._start
 
     """
      * Get middle of the bounds.
@@ -55,7 +55,7 @@ class Bounds1D:
      * @return the middle of the bounds.
     """
     def getMiddle(self):
-        return self._From + self.getWidth() // 2  # Integer division!
+        return self._start + self.getWidth() // 2  # Integer division!
 
     def __hash__(self):
-        return hash(str(self._From)) + 31 * hash(str(self._To))
+        return hash(str(self._start)) + 31 * hash(str(self._end))

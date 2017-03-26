@@ -18,8 +18,8 @@ class Edge:
     It can represent dependency edges as well as spans.
 
     Attributes:
-        From (Token): The start token.
-        To (Token): The end token.
+        start (Token): The start token.
+        end (Token): The end token.
         label (str): The label of the edge.
         description (str): A description of the edge to be printed when edge
             is clicked on. This attribute classifies edges within a certain type.
@@ -40,14 +40,14 @@ class Edge:
             in which some edges are not yet final (can be removed later).
     """
 
-    def __init__(self, From, To, label: str, edge_type, note: str=None,
+    def __init__(self, start, end, label: str, edge_type, note: str=None,
                  render_type: EdgeRenderType=EdgeRenderType.dependency,
                  description: str="No Description", is_final: bool=True):
         """Initialize an Edge instance. 
         
         Args:
-            From (Token): The start token.
-            To (Token): The end token.
+            start (Token): The start token.
+            end (Token): The end token.
             label (str): The label of the edge.
             edge_type (str): The type of the edge.
             note (str, optional): A note that is added to the label. Defaults
@@ -56,8 +56,8 @@ class Edge:
                 Defaults to EdgeRenderType.dependency.
             is_final (bool, optional): Is the edge final? Defaults to True.
         """
-        self.From = From
-        self.To = To
+        self.start = start
+        self.end = end
         self.label = label
         self.note = note
         self.edge_type = edge_type
@@ -103,7 +103,7 @@ class Edge:
         Returns:
             int: The mimimal index of the tokens in this edge.
         """
-        return min(self.From.index, self.To.index)
+        return min(self.start.index, self.end.index)
 
     
     def get_max_index(self) -> int:
@@ -112,7 +112,7 @@ class Edge:
         Returns:
             int: the maximal index of both tokens in this edge.
         """
-        return max(self.From.index, self.To.index)
+        return max(self.start.index, self.end.index)
 
         
     def get_label_with_note(self) -> str:
@@ -163,7 +163,7 @@ class Edge:
         Returns:
             bool: True iff both tokens of this edge are to the left of the given token.
         """
-        return self.From.index <= token.index and self.To.index <= token.index
+        return self.start.index <= token.index and self.end.index <= token.index
 
     
     def right_of(self, token) -> bool:
@@ -175,7 +175,7 @@ class Edge:
         Returns:
             bool: True iff both tokens of this edge are to the right of the given token.
         """
-        return self.From.index >= token.index and self.To.index >= token.index
+        return self.start.index >= token.index and self.end.index >= token.index
 
 
     
@@ -264,7 +264,7 @@ class Edge:
         Returns:
             int: the distance between the from and to token.
         """
-        return abs(self.From.index - self.To.index)
+        return abs(self.start.index - self.end.index)
 
     
     
@@ -278,8 +278,8 @@ class Edge:
             bool: True if both edges have the same type, label, note and the same
             from and to tokens.
         """
-        return (isinstance(other, self.__class__) and  self.From == other.From and
-                self.To == other.To and self.label == other.label and
+        return (isinstance(other, self.__class__) and  self.start == other.start and
+                self.end == other.end and self.label == other.label and
                 self.edge_type == other.edge_type and self.note == other.note)
     
     
@@ -290,7 +290,7 @@ class Edge:
             str: A string representation of this edge that shows label, type and the
             indices of the start and end tokens.
         """
-        return "{0}-{1}->{2}({3})".format(self.From.index, self.label, self.To.index,
+        return "{0}-{1}->{2}({3})".format(self.start.index, self.label, self.end.index,
                                           self.edge_type)
 
 
@@ -301,11 +301,11 @@ class Edge:
             int: A hashcode based on type, label, note, from and to token.
         """
         result = 0
-        if self.From is not None:
-            result = hash(self.From)
+        if self.start is not None:
+            result = hash(self.start)
         result *= 31
-        if self.To is not None:
-            result += hash(self.To)
+        if self.end is not None:
+            result += hash(self.end)
         result *= 31
         if self.label is not None:
             result += hash(self.label)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+# -*- coding: utf-8 -*-
 # Lehet, hogy megszüntethető?
 
 from abc import ABCMeta
@@ -96,23 +96,23 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * A mapping from edges to their start points in the layout.
     """
     @property
-    def From(self):
-        return self._From
+    def start(self):
+        return self._start
 
-    @From.setter
-    def From(self, value):
-        self._From = value
+    @start.setter
+    def start(self, value):
+        self._start = value
 
     """
      * A mapping from edges to their end points in the layout.
     """
     @property
-    def To(self):
-        return self._To
+    def end(self):
+        return self._end
 
-    @To.setter
-    def To(self, value):
-        self._To = value
+    @end.setter
+    def end(self, value):
+        self._end = value
 
     """
      * A mapping from edge shapes to the corresponding edge objects.
@@ -337,7 +337,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @return the start point of the given edge.
     """
     def getFrom(self, edge):
-        return self._From[edge]
+        return self._start[edge]
 
     """
      * Return the point at the end of the given edge.
@@ -346,7 +346,7 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
      * @return the end point of the given edge.
     """
     def getTo(self, edge):
-        return self._To[edge]
+        return self._end[edge]
 
     """
      * Return the height of the graph layout.
@@ -432,8 +432,8 @@ class AbstractEdgeLayout(metaclass=ABCMeta):
         self._colors = {}  # HashMap<String, Color>()
         self._strokes = {}  # new HashMap<String, BasicStroke>()
         self._defaultStroke = None  # BasicStroke()
-        self._From = {}  # HashMap<Edge, Point>
-        self._To = {}  # HashMap<Edge, Point> to
+        self._start = {}  # HashMap<Edge, Point>
+        self._end = {}  # HashMap<Edge, Point> to
         self._shapes = {}  # HashMap<Shape, Edge>()
         self._selected = set()  # HashSet<Edge>()
         self._visible = set()   # HashSet<Edge>()

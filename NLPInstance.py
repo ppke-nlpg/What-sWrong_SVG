@@ -187,15 +187,15 @@ class NLPInstance:
      * @param render_type the render type of the edge.
      * @see com.googlecode.whatswrong.Edge
     """
-    def addEdge(self, From: int=None, to: int=None, label: str=None, edge_type: str=None,
+    def addEdge(self, start: int=None, to: int=None, label: str=None, edge_type: str=None,
                 render_type: EdgeRenderType=None, desc=None, note: str=None):
-        if self.isValidEdge(From, to):
-            self._edges.append(Edge(From=self._map[From], To=self._map[to], label=label, edge_type=edge_type,
+        if self.isValidEdge(start, to):
+            self._edges.append(Edge(start=self._map[start], end=self._map[to], label=label, edge_type=edge_type,
                                     render_type=render_type, description=desc, note=note))
 
-    def isValidEdge(self, From, to):
-        if From not in self._map:
-            print('There is no token at index: {0} for tokens {1}'.format(From, self._map))
+    def isValidEdge(self, start, to):
+        if start not in self._map:
+            print('There is no token at index: {0} for tokens {1}'.format(start, self._map))
             fromToken = False
         else:
             fromToken = True
@@ -230,9 +230,9 @@ class NLPInstance:
      * @param description the description of the span.
      * @see com.googlecode.whatswrong.Edge
     """
-    def addSpan(self, From: int, to: int, label: str, span_type: str, desc: str=None):
-        if self.isValidEdge(From, to):
-            self._edges.append(Edge(self._map[From], self._map[to], label, span_type, render_type=EdgeRenderType.span,
+    def addSpan(self, start: int, to: int, label: str, span_type: str, desc: str=None):
+        if self.isValidEdge(start, to):
+            self._edges.append(Edge(self._map[start], self._map[to], label, span_type, render_type=EdgeRenderType.span,
                                     description=desc))
 
     """
@@ -259,9 +259,9 @@ class NLPInstance:
      * @param description description of the edge
      * @see com.googlecode.whatswrong.Edge
     """
-    def addDependency(self, From: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
-        if self.isValidEdge(From, to):
-            self._edges.append(Edge(self._map[From], self._map[to], label, dep_type,
+    def addDependency(self, start: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
+        if self.isValidEdge(start, to):
+            self._edges.append(Edge(self._map[start], self._map[to], label, dep_type,
                                     render_type=EdgeRenderType.dependency, description=des, is_final=is_final))
 
     """
@@ -294,7 +294,7 @@ class NLPInstance:
         for i in range(0, min(len(self._tokens), len(nlp.tokens))):
             self._tokens[i].merge(nlp.tokens(i))
         for edge in nlp.edges():
-            self.addEdge(From=edge.From.index, to=edge.to.index, label=edge.label, edge_type=edge.edge_type,
+            self.addEdge(start=edge.start.index, to=edge.to.index, label=edge.label, edge_type=edge.edge_type,
                          render_type=edge.render_type, note=edge.note)
 
     """

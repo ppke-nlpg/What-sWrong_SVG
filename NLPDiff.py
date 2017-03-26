@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8, vim: expandtab:ts=4 -*-
+#/bin/env python3
+# -*- coding: utf-8 -*-
 
 from NLPInstance import NLPInstance
 
@@ -41,16 +41,16 @@ class NLPDiff:
         matches = goldIdentities & guessIdentities
         for edge in fn:
             Type = edge.edge_type + ":FN"
-            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+            diff.addEdge(start=edge.start.index, to=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
                          render_type=edge.render_type, desc=edge.description)
         for edge in fp:
             Type = edge.edge_type + ":FP"
-            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+            diff.addEdge(start=edge.start.index, to=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
                          render_type=edge.render_type, desc=edge.description)
 
         for edge in matches:
             Type = edge.edge_type + ":Match"
-            diff.addEdge(From=edge.From.index, to=edge.To.index, label=edge.label, note=edge.note, edge_type=Type,
+            diff.addEdge(start=edge.start.index, to=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
                          render_type=edge.render_type, desc=edge.description)
         return diff
 

@@ -144,10 +144,10 @@ class TokenFilter:
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
             for e in original.getEdges():
-                if e.From in old2new and e.To in old2new:
-                    newFrom = old2new[e.From]
-                    newTo = old2new[e.To]
-                    edges.append((Edge(From=newFrom, To=newTo, label=e.label, note=e.note, edge_type=e.edge_type,
+                if e.start in old2new and e.end in old2new:
+                    newFrom = old2new[e.start]
+                    newTo = old2new[e.end]
+                    edges.append((Edge(start=newFrom, end=newTo, label=e.label, note=e.note, edge_type=e.edge_type,
                                        render_type=e.render_type, description=e.description)))
             # find new split points (have to be changed becouse instance has new token sequence)
             splitPoints = []

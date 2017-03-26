@@ -100,7 +100,7 @@ class CorpusFormat(metaclass=ABCMeta):
      * @throws IOException if I/O goes wrong.
     """
     @abstractmethod
-    def load(self, file, From, to):
+    def load(self, file, start, to):
         pass
 
     """

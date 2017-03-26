@@ -61,10 +61,10 @@ class DependencyLayout(AbstractEdgeLayout):
         allLoops = set()  # HashSet<Edge>()
         tokens = set()  # HashSet<Token>()
         for edge in edges_:
-            tokens.add(edge.From)
-            tokens.add(edge.To)
-            if edge.From == edge.To:
-                loops[edge.From].append(edge)
+            tokens.add(edge.start)
+            tokens.add(edge.end)
+            if edge.start == edge.end:
+                loops[edge.start].append(edge)
                 allLoops.add(edge)
 
         edges_ -= allLoops
@@ -107,11 +107,11 @@ class DependencyLayout(AbstractEdgeLayout):
         # build map from vertex to incoming/outgoing edges
         vertex2edges = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
         for edge in edges_:
-            vertex2edges[edge.From].append(edge)
-            vertex2edges[edge.To].append(edge)
+            vertex2edges[edge.start].append(edge)
+            vertex2edges[edge.end].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
-        From = {}  # HashMap<Edge, Point>()
-        To = {}    # HashMap<Edge, Point>()
+        start = {}  # HashMap<Edge, Point>()
+        end = {}    # HashMap<Edge, Point>()
         for token in tokens:
             connections = vertex2edges[token]
 
@@ -145,22 +145,22 @@ class DependencyLayout(AbstractEdgeLayout):
             loopsOnVertex = loops[token]
             width = (bounds[token].getWidth() + self._vertexExtraSpace) //\
                     (len(connections) + 1 + len(loopsOnVertex) * 2)
-            x = (bounds[token].From - (self._vertexExtraSpace // 2)) + width
+            x = (bounds[token].start - (self._vertexExtraSpace // 2)) + width
             for loop in loopsOnVertex:
                 point = (x, self._baseline + maxHeight)
-                From[loop] = point
+                start[loop] = point
                 x += width
             for edge in connections:
                 point = (x, self._baseline + maxHeight)
-                if edge.From == token:
-                    From[edge] = point
+                if edge.start == token:
+                    start[edge] = point
                 else:
-                    To[edge] = point
+                    end[edge] = point
                 x += width
 
             for loop in loopsOnVertex:
                 point = (x, self._baseline + maxHeight)
-                To[loop] = point
+                end[loop] = point
                 x += width
 
         # draw each edge
@@ -174,13 +174,13 @@ class DependencyLayout(AbstractEdgeLayout):
                 scene.color = (255, 0, 0)  # Red
             # draw lines
             height = self._baseline + maxHeight - (depth[edge] + 1) * self._heightPerLevel + offset[edge]
-            if edge.From == edge.To:
+            if edge.start == edge.end:
                 height -= self._heightPerLevel // 2
-            p1 = From[edge]
+            p1 = start[edge]
             if p1 is None:
                 print(edge)
             p2 = (p1[0], height)
-            p4 = To[edge]
+            p4 = end[edge]
             if p4 is None:
                 print(edges)
             p3 = (p4[0], height)
@@ -209,7 +209,7 @@ class DependencyLayout(AbstractEdgeLayout):
             scene.color = old
             self._shapes[shape] = edge
 
-        maxWidth = max(itertools.chain(From.values(), To.values()), key=operator.itemgetter(0), default=(0,))[0]
+        maxWidth = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return maxWidth + self._arrowsize + 2, maxHeight
 
     """

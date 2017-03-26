@@ -112,18 +112,18 @@ class TabFormat(CorpusFormat):
     def saveProperties(self, properties, prefix: str):
         properties.setProperty(prefix + ".tab.type", str(self._type.getSelectedItem()))
 
-    def load(self, file, From: int, to: int):
+    def load(self, file, start: int, to: int):
         processor = self._type.getSelectedItem()  # TODO grafika
-        result = self.loadTabs(file, From, to, processor, False)
+        result = self.loadTabs(file, start, to, processor, False)
         if self._open.isSelected():
             filename = file.name[0:file.name.rfind('.')] + ".open"
             openFile = open(filename)
-            openCorpus = self.loadTabs(openFile, From, to, processor, True)
+            openCorpus = self.loadTabs(openFile, start, to, processor, True)
             for i in range(0, len(openCorpus)):
                 result[i].merge(openCorpus[i])
         return result
 
-    def loadTabs(self, file, From: int, to: int, processor, can_open: bool):
+    def loadTabs(self, file, start: int, to: int, processor, can_open: bool):
         corpus = []  # ArrayList<NLPInstance>()
         rows = []  # ArrayList<List<String>>()
         instnceNr = 0
@@ -134,7 +134,7 @@ class TabFormat(CorpusFormat):
             if line == "" or re.match("<\\s>$", line.split()[0]):
                 self._monitor.progressed(instnceNr)
                 instnceNr += 1
-                if instnceNr <= From:  # Equals because ++instnceNr expression
+                if instnceNr <= start:  # Equals because ++instnceNr expression
                     continue
                 if can_open:
                     instance = processor.createOpen(rows)
@@ -143,7 +143,7 @@ class TabFormat(CorpusFormat):
                 corpus.append(instance)
                 rows.clear()
             else:
-                if instnceNr < From:
+                if instnceNr < start:
                     continue
                 rows.append(re.split("\\s+", line))  # rows.add(Arrays.asList(line.split("\\s+")));
         if len(rows) > 0:
@@ -647,7 +647,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.addDependency(From=int(row[6]), to=mod, label=row[7], dep_type="dep")
+                instance.addDependency(start=int(row[6]), to=mod, label=row[7], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_named_prop("DepMissing", "missing")
@@ -750,7 +750,7 @@ class CoNLL2008:
                     pred = predicates[col-11]
                     arg = int(row[0])
                     # if arg != pred
-                    instance.addEdge(From=pred, to=arg, label=label, edge_type="role")
+                    instance.addEdge(start=pred, to=arg, label=label, edge_type="role")
         return instance
 
     """
@@ -774,7 +774,7 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             # dependency
-            instance.addEdge(From=int(row[3]), to=index, label=row[4], edge_type="malt")
+            instance.addEdge(start=int(row[3]), to=index, label=row[4], edge_type="malt")
             index += 1
         return index
 
@@ -855,9 +855,9 @@ class CoNLL2009:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(From=int(row[8]), to=int(row[0]), label=row[10], dep_type="dep")
+                instance.addDependency(start=int(row[8]), to=int(row[0]), label=row[10], dep_type="dep")
             if row[9] != "_":
-                instance.addDependency(From=int(row[9]), to=int(row[0]), label=row[11], dep_type="pdep")
+                instance.addDependency(start=int(row[9]), to=int(row[0]), label=row[11], dep_type="pdep")
             # role
             for col in range(14, len(row)):
                 label = row[col]
@@ -865,7 +865,7 @@ class CoNLL2009:
                     pred = predicates[col-14]
                     arg = int(row[0])
                     # if arg != pred:
-                    instance.addDependency(From=pred, to=arg, label=label, dep_type="role")
+                    instance.addDependency(start=pred, to=arg, label=label, dep_type="role")
         return instance
 
     """
@@ -939,7 +939,7 @@ class MaltTab:
             row = row.strip().split()
             # dependency
             try:
-                instance.addDependency(From=int(row[2]), to=mod, label=row[3], dep_type="dep")
+                instance.addDependency(start=int(row[2]), to=mod, label=row[3], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_named_prop("DepMissing", "missing")
@@ -1021,7 +1021,7 @@ class CCG:
             if row[0] != "<s>" and not re.match("<\\s>$", row[0]):
                 # dependency
                 try:
-                    instance.addEdge(From=int(row[1]), to=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
+                    instance.addEdge(start=int(row[1]), to=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
                 except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                     print("Can't parse dependency", file=sys.stderr)
                     instance.tokens[mod].add_named_prop("DepMissing", "missing")
