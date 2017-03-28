@@ -34,8 +34,8 @@ class NLPDiff:
         for split_point in goldInstance.split_points:
             diff.add_split_point(split_point)
         diff.add_tokens(goldInstance.tokens)
-        goldIdentities = goldInstance.getEdges()
-        guessIdentities = guessInstance.getEdges()
+        goldIdentities = goldInstance.get_edges()
+        guessIdentities = guessInstance.get_edges()
         fn = goldIdentities - guessIdentities
         fp = guessIdentities - goldIdentities
         matches = goldIdentities & guessIdentities

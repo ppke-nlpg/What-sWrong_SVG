@@ -250,7 +250,7 @@ class EdgeTokenFilter:
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
     def filter(self, original: NLPInstance) -> NLPInstance:
-        edges = self.filterEdges(original.getEdges())
+        edges = self.filterEdges(original.get_edges())
         if not self._collaps:
             return NLPInstance(tokens=original.tokens, edges=edges, render_type=original.render_type,
                                split_points=original.split_points)
@@ -262,7 +262,7 @@ class EdgeTokenFilter:
                     tokens.add(e.end)
                 elif e.render_type == EdgeRenderType.span:
                         for i in range(e.start.index, e.end.index + 1):
-                            tokens.add(original.getToken(index=i))
+                            tokens.add(original.get_token(index=i))
 
             _sorted = sorted(tokens, key=attrgetter("index"))
 

@@ -83,5 +83,5 @@ class EdgeLabelFilter:
      * @see NLPInstanceFilter#filter(NLPInstance)
     """
     def filter(self, original: NLPInstance):
-        return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.getEdges()),
+        return NLPInstance(tokens=original.tokens, edges=self.filterEdges(original.get_edges()),
                            render_type=original.render_type, split_points=original.split_points)

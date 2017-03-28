@@ -260,34 +260,38 @@ class NLPInstance:
         self.split_points.append(token_index)
 
         
-    def getEdges(self, render_type: RenderType=None) -> frozenset:
-        """Returns all edges of this instance with a given render_type.
+    def get_edges(self, render_type: RenderType=None) -> frozenset:
+        """Return all edges of this instance with a given render_type.
         
         Args:
             render_type (RenderType, optional): The render type of the edges to return.
         
         Returns:
-            frozenset: All edges of this instance with the given render type.
+            frozenset: All edges of this instance with the given render type. If no
+            render type is specified then the set of all edges is returned.
         """
         return frozenset({e for e in self.edges if
                           e.render_type == render_type or render_type is None})
 
-    """
-     * Returns the token at the given index.
-     *
-     * @param index the index of the token to return
-     * @return the token at the given index.
-    """
-    def getToken(self, index: int) -> Token:
+    
+    def get_token(self, index: int) -> Token:
+        """Return the token at the given index.
+
+        Args:
+            index (int): The index of the token to return.
+
+        Returns:
+            Token: The token at the given index.
+        """
         return self.token_map[index]
 
 
-    """
-     * Returns a string representation of this instance. Mostly for debugging purposes.
-     *
-     * @return a string representation of this instance.
-    """
     def __str__(self):
+        """Return a string representation of this instance. Mostly for debugging purposes.
+
+        Returns: A string representation of this instance.
+        """
         return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
                                       ", ".join(str(v) for v in self.token_map.values()),
                                       ", ".join(str(e) for e in self.edges))
+

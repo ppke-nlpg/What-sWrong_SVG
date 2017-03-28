@@ -166,7 +166,7 @@ class NLPCanvas:
     """
     def setNLPInstance(self, nlpIntance):
         self._nlpInstance = nlpIntance
-        self._dependencies = self._nlpInstance.getEdges()
+        self._dependencies = self._nlpInstance.get_edges()
         self._usedTypes = {edge.edge_type for edge in self._dependencies}  # Union
         self._tokens = self._nlpInstance.tokens
         self._usedProperties = {prop for token in self._tokens for prop in token.get_property_types()}  # UnionAll

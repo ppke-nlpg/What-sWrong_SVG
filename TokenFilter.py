@@ -143,7 +143,7 @@ class TokenFilter:
                         break
             # update edges and remove those that have vertices not in the new vertex set
             edges = []  # ArrayList<Edge>()
-            for e in original.getEdges():
+            for e in original.get_edges():
                 if e.start in old2new and e.end in old2new:
                     newFrom = old2new[e.start]
                     newTo = old2new[e.end]
@@ -163,4 +163,4 @@ class TokenFilter:
                                split_points=split_points)
         else:
             filteredTokens = self.filterTokens(original.tokens)
-            return NLPInstance(tokens=filteredTokens, edges=original.getEdges(), render_type=original.render_type)
+            return NLPInstance(tokens=filteredTokens, edges=original.get_edges(), render_type=original.render_type)

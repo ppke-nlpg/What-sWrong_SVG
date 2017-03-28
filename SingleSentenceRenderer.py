@@ -101,8 +101,8 @@ class SingleSentenceRenderer:
      * @see NLPCanvasRenderer#render(NLPInstance, Graphics2D)
     """
     def render(self, instance, scene, render_spans=True):
-        dependencies = instance.getEdges(EdgeRenderType.dependency)
-        spans = instance.getEdges(EdgeRenderType.span)
+        dependencies = instance.get_edges(EdgeRenderType.dependency)
+        spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
         widths = self._spanLayout.estimateRequiredTokenWidths(spans, scene)
