@@ -299,3 +299,39 @@ class NLPInstance:
                                       ", ".join(str(v) for v in self.token_map.values()),
                                       ", ".join(str(e) for e in self.edges))
 
+
+def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance) -> NLPInstance:
+    """Calculate the difference between two NLP instances in terms of their edges.
+    
+    Args:
+        gold_instance (NLPInstance): The gold instance.
+        guess_instance the (NLPInstance): The guess instance.
+
+    Returns:
+        NLPInstance: An NLPInstance with Matches, False Negatives and False Positives
+        of the difference.
+    """
+    diff = NLPInstance()
+    diff.render_type = gold_instance.render_type
+    for split_point in gold_instance.split_points:
+        diff.add_split_point(split_point)
+    diff.add_tokens(gold_instance.tokens)
+    goldIdentities = gold_instance.get_edges()
+    guessIdentities = guess_instance.get_edges()
+    fn = goldIdentities - guessIdentities
+    fp = guessIdentities - goldIdentities
+    matches = goldIdentities & guessIdentities
+    for edge in fn:
+        Type = edge.edge_type + ":FN"
+        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+                     render_type=edge.render_type, desc=edge.description)
+    for edge in fp:
+        Type = edge.edge_type + ":FP"
+        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+                     render_type=edge.render_type, desc=edge.description)
+
+    for edge in matches:
+        Type = edge.edge_type + ":Match"
+        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+                     render_type=edge.render_type, desc=edge.description)
+    return diff

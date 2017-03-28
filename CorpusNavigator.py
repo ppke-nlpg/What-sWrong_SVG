@@ -3,9 +3,8 @@
 # HIÁNYOS!
 
 from NLPCanvas import NLPCanvas
-from nlp_model.NLPDiff import NLPDiff
 from CorpusLoader import CorpusLoader
-from nlp_model.nlp_instance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance, nlp_diff
 from nlp_model.token_property import TokenProperty
 
 """
@@ -214,16 +213,6 @@ class CorpusNavigator:
     """
     # private JTextField search;
     """
-     * The NLPDiff object that compares pairs of instances.
-    """
-    @property
-    def diff(self) -> NLPDiff:
-        return self._diff
-
-    @diff.setter
-    def diff(self, value: NLPDiff):
-        self._diff = value
-    """
      * The panel that controls the instance index spinner.
     """
     # private JPanel spinnerPanel;
@@ -259,7 +248,6 @@ class CorpusNavigator:
      * @param gold  the gold corpus.
      * @param guess the guess corpus.
      * @return the difference corpus.
-     * @see com.googlecode.whatswrong.NLPDiff
     """
     def getDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]) -> [NLPInstance]:  # XXX
         # diffCorpus = self._diffCorpora.get((gold, guess))
@@ -268,10 +256,10 @@ class CorpusNavigator:
             diffCorpus = []  # ArrayList<NLPInstance>(Math.min(gold.size(), guess.size()))
             # self._diffCorpora[(gold, guess)] = diffCorpus
         for i in range(0, min(len(gold), len(guess))):
-            diffCorpus.append(self._diff.diff(gold[i], guess[i]))
+            diffCorpus.append(nlp_diff(gold[i], guess[i]))
         # indices.put(diffCorpus, createIndex(diffCorpus))
         return diffCorpus
-        # return self._diff.diff(gold, guess)  # XX Current Working
+        # return nlp_diff(gold, guess)  # XX Current Working
 
     """
      * Removes the difference corpus for the given corpus pair.
@@ -426,7 +414,6 @@ class CorpusNavigator:
         self._goldCorpora = goldLoader  # XXX Should be set
         self._guessCorpora = guessLoader  # XXX Should be set
         self._indexSearcher = None
-        self._diff = NLPDiff()
 
         self._guess = guessLoader
         self._gold = goldLoader
