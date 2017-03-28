@@ -287,9 +287,13 @@ class NLPInstance:
 
 
     def __str__(self):
-        """Return a string representation of this instance. Mostly for debugging purposes.
+        """Return a string representation of this instance.
 
-        Returns: A string representation of this instance.
+        Note: 
+            Mostly for debugging purposes.
+
+        Returns:
+            str: A string representation of this instance.
         """
         return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
                                       ", ".join(str(v) for v in self.token_map.values()),
