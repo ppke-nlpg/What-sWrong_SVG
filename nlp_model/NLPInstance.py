@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# todo: further redesign when all part is implemented eg: merge addDependency and addSpan
+# todo: further redesign when all part is implemented eg: merge add_dependency and add_span
 
 from enum import Enum
 
@@ -65,203 +65,169 @@ class NLPInstance:
             self.split_points.extend(split_points)
 
 
-    """
-     * Creates and adds an edge from the token at the given 'from' index to the token at the given 'to' index with the
-     * given label and type. The edge will have the default render type.
-     *
-     * @param from  index of the token the edge should start at. The token at the given index must already exist in the
-     *              sentence.
-     * @param to    index of the token edge should end at. The token at the given index must already exist in the
-     *              sentence.
-     * @param label the label of the edge.
-     * @param type  the type of edge.
-     * @see com.googlecode.whatswrong.Edge
 
-     OR
+    def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None,
+                 render_type: EdgeRenderType=None, desc=None, note: str=None,
+                 is_final: bool=True):
+        """Creates and adds an edge with the given properties.
+        
+        Args:
+            start (int): The index of the start token.
+            end (int): The index of the end token.
+            label (str, optional): The label of the edge. Defaults to None.
+            edge_type (str, optional): The type of the edge.  Defaults to None.
+            render_type (EdgeRenderType, optional): The render type of the edge.
+                Defaults to None.
+            desc (str, optional): The description of the edge. Defaults to None.
+            note (str, optional): The note associated with the edge. Defaults to None.
+            is_final (bool, optional): Is the edge final? Defaults to False.
 
-     * Creates and adds a new edge with the given properties.
-     *
-     * @param from       index of the token the edge should start at. The token at the given index must already exist in
-     *                   the sentence.
-     * @param to         index of the token edge should end at. The token at the given index must already exist in the
-     *                   sentence.
-     * @param label      the label of the edge.
-     * @param type       the type of edge.
-     * @param render_type the render type of the edge.
-     * @see com.googlecode.whatswrong.Edge
-
-     OR
-
-     * Adds an edge.
-     *
-     * @param edge the edge to add.
-
-     OR
-
-     * Creates and adds an edge with the given properties. It will have the default render type.
-     *
-     * @param from  The start token. The created edge will start at the token of this sentence with the same index as
-     *              the provided token. This means the start token of created edge does not need to be equal to the
-     *              provided token -- they just have to have the same index.
-     * @param to    the end token. The created edge will end at the token of this sentence with the same index as the
-     *              provided token. This means that the end token of created edge does not need to be equal to the
-     *              provided token -- they just have to have the same index.
-     * @param label the label of the edge.
-     * @param type  the type of edge.
-     * @see com.googlecode.whatswrong.Edge
-
-     OR
-
-     * Creates and adds an edge with the given properties. It will have the default render type.
-     *
-     * @param from       The start token. The created edge will start at the token of this sentence with the same index
-     *                   as the provided token. This means the start token of created edge does not need to be equal to
-     *                   the provided token -- they just have to have the same index.
-     * @param to         the end token. The created edge will end at the token of this sentence with the same index as
-     *                   the provided token. This means that the end token of created edge does not need to be equal to
-     *                   the provided token -- they just have to have the same index.
-     * @param label      the label of the edge.
-     * @param type       the type of edge.
-     * @param render_type the render type of the edge.
-     * @see com.googlecode.whatswrong.Edge
-    """
-    def addEdge(self, start: int=None, to: int=None, label: str=None, edge_type: str=None,
-                render_type: EdgeRenderType=None, desc=None, note: str=None):
-        if self.isValidEdge(start, to):
-            self.edges.append(Edge(start=self.token_map[start], end=self.token_map[to], label=label, edge_type=edge_type,
-                                    render_type=render_type, description=desc, note=note))
-
-    def isValidEdge(self, start, to):
-        if start not in self.token_map:
-            print('There is no token at index: {0} for tokens {1}'.format(start, self.token_map))
-            fromToken = False
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label,
+                                   edge_type, note, render_type, desc, is_final))
         else:
-            fromToken = True
-        if to not in self.token_map:
-            print('There is no token at index: {0} for tokens {1}'.format(to, self.token_map))
-            toToken = False
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
+                           format(start, end))
+
+            
+    def is_valid_edge(self, start, end):
+        """Returns whether a valid edge can be drawn between two positions.
+
+        Args:
+            start (int): The start index of the edge.
+            end (int): The end index of the edge.
+
+        Returns:
+            bool: True iff there are tokens at the two given positions.
+        """
+        return (start in self.token_map and end in self.token_map)
+
+    
+    def add_span(self, start: int, end: int, label: str, span_type: str, desc: str=None):
+        """Creates and adds an edge with rendertype RenderType#span.
+        
+        Args:      
+            start (int): Index of the token the edge should start at. The token at the
+                given index must already exist in the sentence.
+            end (int): Index of the token the edge should end at. The token at the
+                given index must already exist in the sentence.
+            label (str): The label of the edge.
+            span_type (str): The type of edge.
+            desc (str, optional): The description of the span.
+
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label,
+                                   span_type, render_type=EdgeRenderType.span,
+                                   description=desc))
         else:
-            toToken = True
-        return toToken and fromToken
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
+                           format(start, end))
 
-    """
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#span}
-     *
-     * @param from  index of the token the edge should start at. The token at the given index must already exist in the
-     *              sentence.
-     * @param to    index of the token edge should end at. The token at the given index must already exist in the
-     *              sentence.
-     * @param label the label of the edge.
-     * @param type  the type of edge.
-     * @see com.googlecode.whatswrong.Edge
+        
+    def add_dependency(self, start: int, end: int, label, dep_type: str, desc: str=None,
+                      is_final: bool=True):
+        """Creates and adds an edge with render type RenderType#dependency.
 
-     OR
+        Args:      
+            start (int): Index of the token the edge should start at. The token at the
+                given index must already exist in the sentence.
+            end (int): Index of the token the edge should end at. The token at the
+                given index must already exist in the sentence.
+            label (str): The label of the edge.
+            dep_type (str): The type of edge.
+            desc (str, optional): The description of the span.
+            is_final (bool, optional): Whether the dependency is final. Defaults to true.
 
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#span}
-     *
-     * @param from        index of the token the edge should start at. The token at the given index must already exist
-     *                    in the sentence.
-     * @param to          index of the token edge should end at. The token at the given index must already exist in the
-     *                    sentence.
-     * @param label       the label of the edge.
-     * @param type        the type of edge.
-     * @param description the description of the span.
-     * @see com.googlecode.whatswrong.Edge
-    """
-    def addSpan(self, start: int, to: int, label: str, span_type: str, desc: str=None):
-        if self.isValidEdge(start, to):
-            self.edges.append(Edge(self.token_map[start], self.token_map[to], label, span_type, render_type=EdgeRenderType.span,
-                                    description=desc))
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, dep_type,
+                                   render_type=EdgeRenderType.dependency, description=desc,
+                                   is_final=is_final))
+        else:
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
+                           format(start, end))
 
-    """
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}
-     *
-     * @param from  index of the token the edge should start at. The token at the given index must already exist in the
-     *              sentence.
-     * @param to    index of the token edge should end at. The token at the given index must already exist in the
-     *              sentence.
-     * @param label the label of the edge.
-     * @param type  the type of edge.
-     * @see com.googlecode.whatswrong.Edge
-
-     OR
-
-     * Creates and adds an edge with rendertype {@link com.googlecode.whatswrong.Edge.EdgeRenderType#dependency}
-     *
-     * @param from        index of the token the edge should start at. The token at the given index must already exist
-     *                    in the sentence.
-     * @param to          index of the token edge should end at. The token at the given index must already exist in the
-     *                    sentence.
-     * @param label       the label of the edge.
-     * @param type        the type of edge.
-     * @param description description of the edge
-     * @see com.googlecode.whatswrong.Edge
-    """
-    def addDependency(self, start: int, to: int, label, dep_type: str, des: str=None, is_final: bool=True):
-        if self.isValidEdge(start, to):
-            self.edges.append(Edge(self.token_map[start], self.token_map[to], label, dep_type,
-                                    render_type=EdgeRenderType.dependency, description=des, is_final=is_final))
-
-    """
-     * Adds the given collection of tokens to this instance.
-     *
-     * @param tokens the tokens to add.
-    """
-    def addTokens(self, tokens: tuple):
+        
+    def add_tokens(self, tokens: tuple):
+        """Adds the given collection of tokens to this instance.
+        
+        Args:
+            tokens (tuple): The tokens to add.
+        """
         self.tokens.extend(tokens)
         for t in tokens:
             self.token_map[t.index] = t
 
-    """
-     * Adds the given edges to this instance.
-     *
-     * @param edges the edges to add.
-    """
-    def addEdges(self, edges: list):
+            
+    def add_edges(self, edges: list):
+        """Adds the given collection of edges to this instance.
+        
+        Args:
+            edges (tuple): The edges to add.
+        """
         self.edges.extend(edges)
+        
 
-    """
-     * Merges the given instance with this instance. A merge will add for every token i all properties of the token i of
-     * the passed instance <code>nlp</code>. It will also add every edge between i and i in the given instance
-     * <code>nlp</code> as an edge between the tokens i and j of this instance, using the same type, label and
-     * rendertype as the original edge.
-     *
-     * @param nlp the instance to merge into this instance.
-    """
     def merge(self, nlp):
+        """Merges the given instance with this instance.
+        
+        A merge will add for every token i all properties of the token i of the
+        passed instance ``nlp``. It will also add every edge between i and i in the
+        given instance ``nlp`` as an edge between the tokens i and j of this
+        instance, using the same type, label and rendertype as the original
+        edge.
+        
+        Args:
+            nlp (NLPInstance): The instance to merge into this instance.
+        """
         for i in range(0, min(len(self.tokens), len(nlp.tokens))):
             self.tokens[i].merge(nlp.tokens(i))
         for edge in nlp.edges():
-            self.addEdge(start=edge.start.index, to=edge.to.index, label=edge.label, edge_type=edge.edge_type,
-                         render_type=edge.render_type, note=edge.note)
+            self.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label,
+                          edge_type=edge.edge_type, render_type=edge.render_type,
+                          note=edge.note)
 
-    """
-     * Adds token that has the provided properties with default property names.
-     *
-     * @param properties an vararray of strings.
-    """
-    def addTokenWithProperties(self, *properties):
+            
+    def add_token_with_properties(self, *properties):
+        """Add a token to this NLPInstance that has the provided properties.
+
+        Args:
+            *properties: TokenProperty instances.
+        """
         token = Token(len(self.tokens))
         for prop in properties:
             token.add_property(prop)
         self.tokens.append(token)
         self.token_map[token.index] = token
 
-    """
-     * Adds a new token and returns it.
-     *
-     * @return the token that was added.
+        
+    def add_token(self, index: int=None, is_actual: bool=False) -> Token:
+        """Add a token at the given index.
 
-    OR
+        This method can be used when we don't want to build the sentence in
+        order.
 
-     * Adds a token at a certain index. This method can be used when we don't want to build the sentence in order. Note
-     * that if you build the instance using this method you have to call {@link NLPInstance#consistify()} when you are
-     * done.
-     *
-     * @param index the index of the token to add.
-     * @return the token that was added.
-    """
-    def addToken(self, index: int=None, is_actual: bool=False) -> Token:
+        Note: 
+            If you build the instance using this method you have to call
+            NLPInstance#consistify() when you are done.
+        
+        Args:
+            index (int, optional): The position where the token should be added.
+                If not given then the position will be set to the number of already
+                present tokens.
+            is_actual (bool, optional): Is the token actual? Defaults to False.
+
+        Returns:
+            Token: The token that was added.
+        """
         if index is None:
             vertex = Token(len(self.tokens), is_actual)
             self.tokens.append(vertex)
@@ -274,36 +240,37 @@ class NLPInstance:
 
         return vertex
 
-    """
-     * If tokens were added with {@link com.googlecode.whatswrong.NLPInstance#addToken(int)} this method ensures that
-     * all internal representations of the token sequence are consistent.
-    """
+    
     def consistify(self):
+        """Ensure that the all internal representations of the token sequence are consistent.
+        
+        If tokens were added with NLPInstance#add_token() this method ensures
+        that all internal representations of the token sequence are consistent.
+        """
         self.tokens.extend(self.token_map.values())
         self.tokens.sort()
 
-    """
-     * Add a split point token index.
-     *
-     * @param tokenIndex a token index at which the instance should be split.
-    """
-    def addSplitPoint(self, tokenIndex: int):
-        self.split_points.append(tokenIndex)
+        
+    def add_split_point(self, token_index: int):
+        """Add a split point token index.
 
-    """
-     * Returns all edges of this instance.
-     *
-     * @return all edges of this instance as unmodifiable list.
+        Args:
+            token_index: A token index at which the instance should be split.
+        """
+        self.split_points.append(token_index)
 
-     OR
-
-     * Returns all edges of this instance with the given render type.
-     *
-     * @param render_type the render type of the edges to return.
-     * @return all edges of this instance with the given render type. This list can be altered if needed.
-    """
-    def getEdges(self, render_type: RenderType=None) -> frozenset:  # ArrayList<Edge>(edges.size())
-        return frozenset({e for e in self.edges if e.render_type == render_type or render_type is None})
+        
+    def getEdges(self, render_type: RenderType=None) -> frozenset:
+        """Returns all edges of this instance with a given render_type.
+        
+        Args:
+            render_type (RenderType, optional): The render type of the edges to return.
+        
+        Returns:
+            frozenset: All edges of this instance with the given render type.
+        """
+        return frozenset({e for e in self.edges if
+                          e.render_type == render_type or render_type is None})
 
     """
      * Returns the token at the given index.

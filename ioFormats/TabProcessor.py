@@ -168,7 +168,7 @@ class TabFormat(CorpusFormat):
                 if inChunk:
                     # start a new chunk and finish old one
                     if "B" == bio or "I" == bio and label != currentChunk:
-                        instance.addSpan(begin, index - 1, currentChunk, field_type)
+                        instance.add_span(begin, index - 1, currentChunk, field_type)
                         begin = index
                         currentChunk = label
                 else:
@@ -176,11 +176,11 @@ class TabFormat(CorpusFormat):
                     begin = index
                     currentChunk = label
             elif inChunk:
-                    instance.addSpan(begin, index - 1, currentChunk, field_type)
+                    instance.add_span(begin, index - 1, currentChunk, field_type)
                     inChunk = False
             index += 1
         if inChunk:
-            instance.addSpan(begin, index - 1, currentChunk, field_type)
+            instance.add_span(begin, index - 1, currentChunk, field_type)
 
     @staticmethod
     def extractSpan00(rows: list, column: int, field_type: str, instance: NLPInstance):
@@ -197,12 +197,12 @@ class TabFormat(CorpusFormat):
                 label = chunk[minus+1:]
                 if "B" == bio:
                     if inChunk:
-                        instance.addSpan(begin, index - 1, currentChunk, field_type)
+                        instance.add_span(begin, index - 1, currentChunk, field_type)
                     begin = index
                     currentChunk = label
                     inChunk = True
             elif inChunk:
-                    instance.addSpan(begin, index - 1, currentChunk, field_type)
+                    instance.add_span(begin, index - 1, currentChunk, field_type)
                     inChunk = False
             index += 1
 
@@ -220,7 +220,7 @@ class TabFormat(CorpusFormat):
                 currentChunk = chunk[1:end]
                 begin = index
             if chunk.endswith(")"):
-                instance.addSpan(begin, index, prefix + currentChunk, field_type)
+                instance.add_span(begin, index, prefix + currentChunk, field_type)
             index += 1
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -262,11 +262,11 @@ class CoNLL2000:
         for row in rows:
             row = row.strip().split(' ')
             chunk = row[2]
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index))
-            instance.addSpan(index, index, row[1], "pos")
-            instance.addSpan(index, index, chunk, "chunk (BIO)")
+            instance.add_span(index, index, row[1], "pos")
+            instance.add_span(index, index, chunk, "chunk (BIO)")
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
@@ -334,10 +334,10 @@ class CoNLL2002:
         index = 0
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index))
-            instance.addSpan(index, index, row[1], "ner (BIO)")
+            instance.add_span(index, index, row[1], "ner (BIO)")
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
@@ -404,13 +404,13 @@ class CoNLL2003:
         index = 0
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index))
 
-            instance.addSpan(index, index, row[1], "pos")
-            instance.addSpan(index, index, row[2], "chunk (BIO")
-            instance.addSpan(index, index, row[3], "ner (BIO)")
+            instance.add_span(index, index, row[1], "pos")
+            instance.add_span(index, index, row[2], "chunk (BIO")
+            instance.add_span(index, index, row[3], "ner (BIO)")
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
@@ -478,7 +478,7 @@ class CoNLL2004:
         index = 0
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index))
             index += 1
@@ -488,7 +488,7 @@ class CoNLL2004:
             row = row.strip().split()
             if row[1] != "-":
                 sense = row[1]
-                instance.addSpan(index, index, sense, "sense")
+                instance.add_span(index, index, sense, "sense")
 
                 tabformat = TabFormat(object)  # TODO: object = MainWindow?
                 tabformat.extractSpan05(rows, 2+predicateCount, "role", sense+":", instance)
@@ -556,7 +556,7 @@ class CoNLL2005:
         index = 0
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index))
             index += 1
@@ -566,7 +566,7 @@ class CoNLL2005:
             row = row.strip().split()
             if row[9] != "-":  # TODO: nincs 9 szó ebben?
                 sense = row[10] + "." + row[9]
-                instance.addSpan(index, index, sense, "sense")
+                instance.add_span(index, index, sense, "sense")
 
                 tabformat = TabFormat(object)  # TODO: object = MainWindow?
                 tabformat.extractSpan05(rows, 11+predicateCount, "role", sense+":", instance)
@@ -632,10 +632,10 @@ class CoNLL2006:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().add_named_prop("Word", "-Root-")
+        instance.add_token().add_named_prop("Word", "-Root-")
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[1]).\
                 add_named_prop(name="Index", value=row[0]).\
                 add_named_prop(name="Lemma", value=row[2]).\
@@ -647,7 +647,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.addDependency(start=int(row[6]), to=mod, label=row[7], dep_type="dep")
+                instance.add_dependency(start=int(row[6]), end=mod, label=row[7], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_named_prop("DepMissing", "missing")
@@ -722,11 +722,11 @@ class CoNLL2008:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().add_named_prop("Word", "-Root-")
+        instance.add_token().add_named_prop("Word", "-Root-")
         predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[1]).\
                 add_named_prop(name="Index", value=row[0]).\
                 add_named_prop(name="Lemma", value=row[2]).\
@@ -737,12 +737,12 @@ class CoNLL2008:
             if row[10] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(index, index, row[10], "sense")
+                instance.add_span(index, index, row[10], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(int(row[8]), int(row[0]), row[9], "dep")
+                instance.add_dependency(int(row[8]), int(row[0]), row[9], "dep")
             # role
             for col in range(11, len(row)):
                 label = row[col]
@@ -750,7 +750,7 @@ class CoNLL2008:
                     pred = predicates[col-11]
                     arg = int(row[0])
                     # if arg != pred
-                    instance.addEdge(start=pred, to=arg, label=label, edge_type="role")
+                    instance.add_edge(start=pred, end=arg, label=label, edge_type="role")
         return instance
 
     """
@@ -763,10 +763,10 @@ class CoNLL2008:
     """
     def createOpen(self, rows):
         instance = NLPInstance()
-        instance.addToken()
+        instance.add_token()
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(token_property=self.ne, value=row[0]).\
                 add_named_prop(token_property=self.bbn, value=row[1]).\
                 add_named_prop(token_property=self.wn, value=row[2])
@@ -774,7 +774,7 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             # dependency
-            instance.addEdge(start=int(row[3]), to=index, label=row[4], edge_type="malt")
+            instance.add_edge(start=int(row[3]), end=index, label=row[4], edge_type="malt")
             index += 1
         return index
 
@@ -834,11 +834,11 @@ class CoNLL2009:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().add_named_prop(name="Word", value="-Root-")
+        instance.add_token().add_named_prop(name="Word", value="-Root-")
         predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[1]).\
                 add_named_prop(name="Index", value=row[0]).\
                 add_named_prop(name="Lemma", value=row[2]).\
@@ -850,14 +850,14 @@ class CoNLL2009:
             if row[13] != "_":
                 index = int(row[0])
                 predicates.append(index)
-                instance.addSpan(index, index, row[13], "sense")
+                instance.add_span(index, index, row[13], "sense")
         for row in rows:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.addDependency(start=int(row[8]), to=int(row[0]), label=row[10], dep_type="dep")
+                instance.add_dependency(start=int(row[8]), end=int(row[0]), label=row[10], dep_type="dep")
             if row[9] != "_":
-                instance.addDependency(start=int(row[9]), to=int(row[0]), label=row[11], dep_type="pdep")
+                instance.add_dependency(start=int(row[9]), end=int(row[0]), label=row[11], dep_type="pdep")
             # role
             for col in range(14, len(row)):
                 label = row[col]
@@ -865,7 +865,7 @@ class CoNLL2009:
                     pred = predicates[col-14]
                     arg = int(row[0])
                     # if arg != pred:
-                    instance.addDependency(start=pred, to=arg, label=label, dep_type="role")
+                    instance.add_dependency(start=pred, end=arg, label=label, dep_type="role")
         return instance
 
     """
@@ -925,11 +925,11 @@ class MaltTab:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.addToken().add_named_prop(name="Word", value="-Root-")
+        instance.add_token().add_named_prop(name="Word", value="-Root-")
         index = 1
         for row in rows:
             row = row.strip().split()
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
                 add_named_prop(name="Index", value=str(index)).\
                 add_named_prop(name="Pos", value=row[1])
@@ -939,7 +939,7 @@ class MaltTab:
             row = row.strip().split()
             # dependency
             try:
-                instance.addDependency(start=int(row[2]), to=mod, label=row[3], dep_type="dep")
+                instance.add_dependency(start=int(row[2]), end=mod, label=row[3], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_named_prop("DepMissing", "missing")
@@ -1008,12 +1008,12 @@ class CCG:
         # Skip <s> and dep count
         for i in range(2, len(sentence)):
             w_t_c = sentence[i].split("|")  # In Python this is not regex
-            instance.addToken().\
+            instance.add_token().\
                 add_named_prop(name="Word", value=w_t_c[0]).\
                 add_named_prop(name="Tag", value=w_t_c[1]).\
                 add_named_prop(name="Category", value=w_t_c[2]).\
                 add_named_prop(name="Index", value=str(i-1))
-        # instance.addToken().add_named_prop("Word", "-Root-")
+        # instance.add_token().add_named_prop("Word", "-Root-")
 
         mod = 1
         for row in rows:
@@ -1021,7 +1021,7 @@ class CCG:
             if row[0] != "<s>" and not re.match("<\\s>$", row[0]):
                 # dependency
                 try:
-                    instance.addEdge(start=int(row[1]), to=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
+                    instance.add_edge(start=int(row[1]), end=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
                 except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                     print("Can't parse dependency", file=sys.stderr)
                     instance.tokens[mod].add_named_prop("DepMissing", "missing")
