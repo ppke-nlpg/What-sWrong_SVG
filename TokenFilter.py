@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from nlp_model.NLPInstance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance
 from nlp_model.token import Token
 from nlp_model.token_property import TokenProperty
 from nlp_model.edge import Edge

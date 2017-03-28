@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from nlp_model.NLPInstance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance
 
 """
  * An EdgeLabelFilter filters out edges with a label that contains one of a set of allowed label substrings.

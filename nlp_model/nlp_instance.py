@@ -255,7 +255,7 @@ class NLPInstance:
         """Add a split point token index.
 
         Args:
-            token_index: A token index at which the instance should be split.
+            token_index (int): A token index at which the instance should be split.
         """
         self.split_points.append(token_index)
 

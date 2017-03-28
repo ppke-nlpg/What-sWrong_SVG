@@ -3,7 +3,7 @@
 
 from SVGWriter import Rectangle, Scene, Text, TextToken
 from Bounds1D import Bounds1D
-from nlp_model.NLPInstance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance
 
 """
  * A TokenLayout object lays out a collection of tokens in sequence by placing a stack of property values of each token

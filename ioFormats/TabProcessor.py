@@ -8,7 +8,7 @@
 import sys
 import re
 
-from nlp_model.NLPInstance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance
 from nlp_model.token_property import TokenProperty
 from ioFormats.CorpusFormat import CorpusFormat
 

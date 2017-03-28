@@ -1,7 +1,7 @@
 #/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .NLPInstance import NLPInstance
+from .nlp_instance import NLPInstance
 
 """
  * An NLPDiff object takes two NLPInstances, a gold and a guess instance, and compares the set of edges that both

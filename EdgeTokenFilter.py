@@ -5,7 +5,7 @@ from collections import defaultdict
 from operator import attrgetter
 
 from nlp_model.edge import EdgeRenderType, Edge
-from nlp_model.NLPInstance import NLPInstance
+from nlp_model.nlp_instance import NLPInstance
 from nlp_model.token import Token
 
 """
