@@ -108,7 +108,7 @@ class SingleSentenceRenderer:
         widths = self._spanLayout.estimateRequiredTokenWidths(spans, scene)
 
         # find token bounds
-        tokenXBounds = self._tokenLayout.estimateTokenBounds(instance, widths, scene)
+        tokenXBounds = self._tokenLayout.estimate_token_bounds(instance, widths, scene)
 
         scene.antialiasing = self._antiAliasing
 

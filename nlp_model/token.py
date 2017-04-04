@@ -87,7 +87,7 @@ class Token:
         return self
 
     
-    def getSortedProperties(self) -> list:
+    def get_sorted_properties(self) -> list:
         """Return a list of sorted token properties.
 
         Returns:

@@ -55,8 +55,8 @@ class AligmentRenderer:
         self._isCurved = True
 
         self._antiAliasing = True
-        self._tokenLayout2.toSplitPoint = 0
-        self._tokenLayout2.fromSplitPoint = 0
+        self._tokenLayout2.to_split_point = 0
+        self._tokenLayout2.from_split_point = 0
 
     """
      * Renders the given instance as a single sentence with spans drawn below tokens, and dependencies above tokens.
@@ -68,8 +68,8 @@ class AligmentRenderer:
      *      java.awt.Graphics2D)
     """
     def render(self,  instance, scene: Scene):
-        tokenXBounds1 = self._tokenLayout1.estimateTokenBounds(instance, {}, scene)
-        tokenXBounds2 = self._tokenLayout2.estimateTokenBounds(instance, {}, scene)
+        tokenXBounds1 = self._tokenLayout1.estimate_token_bounds(instance, {}, scene)
+        tokenXBounds2 = self._tokenLayout2.estimate_token_bounds(instance, {}, scene)
 
         scene.antialiasing = self._antiAliasing
 
