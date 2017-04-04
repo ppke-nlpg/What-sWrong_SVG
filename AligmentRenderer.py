@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from TokenLayout import TokenLayout
-from nlp_model.edge import Edge
+from nlp_model.edge import EdgeRenderType
 from SVGWriter import Line, Scene, QuadraticBezierCurve
 
 """
@@ -82,7 +82,7 @@ class AligmentRenderer:
         if dim[0] > width:
             width = dim[0]
 
-        for edge in instance.get_edges(Edge.RenderType.dependency):
+        for edge in instance.get_edges(EdgeRenderType.dependency):
             if edge.get_type_postfix() == "FP":
                 scene.color = (255, 0, 0)  # Color.RED
             elif edge.get_type_postfix() == "FN":

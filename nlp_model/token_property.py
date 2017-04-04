@@ -54,7 +54,7 @@ class TokenProperty:
         Returns:
             bool: True iff the property names are not equal.
         """
-        return self.name !=  other.name
+        return self.name != other.name
 
     
     def __lt__(self, other):

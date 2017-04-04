@@ -38,7 +38,7 @@ class TabFormat(CorpusFormat):
         self.addProcessor(name="CoNLL 2009", processor=CoNLL2009())
         self.addProcessor(name="CoNLL 2008", processor=CoNLL2008())
         self.addProcessor(name="CoNLL 2006", processor=CoNLL2006())
-        # self.addProcessor(name="CoNLL 2005", processor=CoNLL2005())
+        self.addProcessor(name="CoNLL 2005", processor=CoNLL2005())
         self.addProcessor(name="CoNLL 2004", processor=CoNLL2004())
         self.addProcessor(name="CoNLL 2002", processor=CoNLL2002())
         self.addProcessor(name="CoNLL 2003", processor=CoNLL2003())
@@ -164,7 +164,7 @@ class TabFormat(CorpusFormat):
             minus = chunk.find('-')
             if minus != -1:
                 bio = chunk[0:minus]
-                label = chunk[minus + 1:]
+                label = chunk[minus+1:]
                 if inChunk:
                     # start a new chunk and finish old one
                     if "B" == bio or "I" == bio and label != currentChunk:
@@ -189,7 +189,6 @@ class TabFormat(CorpusFormat):
         begin = 0
         currentChunk = ""
         for row in rows:
-            row = row.split(' ')
             chunk = row[column]
             minus = chunk.find('-')
             if minus != -1:
@@ -209,6 +208,7 @@ class TabFormat(CorpusFormat):
     @staticmethod
     def extractSpan05(rows: list, column: int, field_type: str, prefix: str, instance: NLPInstance):
         index = 0
+        inChunk = False
         begin = 0
         currentChunk = ""
         for row in rows:
@@ -256,11 +256,10 @@ class CoNLL2000:
     """
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
-
+        rows = [row.strip().split(' ') for row in rows]
         instance = NLPInstance()
         index = 0
         for row in rows:
-            row = row.strip().split(' ')
             chunk = row[2]
             instance.add_token().\
                 add_named_prop(name="Word", value=row[0]).\
@@ -341,6 +340,7 @@ class CoNLL2002:
             index += 1
 
         tabformat = TabFormat(object)  # TODO: object = MainWindow?
+        rows = [row.strip().split(' ') for row in rows]
         tabformat.extractSpan00(rows=rows, column=1, field_type="ner", instance=instance)
 
         return instance
@@ -766,10 +766,10 @@ class CoNLL2008:
         instance.add_token()
         for row in rows:
             row = row.strip().split()
-            instance.add_token().\
-                add_named_prop(token_property=self.ne, value=row[0]).\
-                add_named_prop(token_property=self.bbn, value=row[1]).\
-                add_named_prop(token_property=self.wn, value=row[2])
+            instance.add_token(). \
+                add_property(token_property=self.ne, value=row[0]). \
+                add_property(token_property=self.bbn, value=row[1]). \
+                add_property(token_property=self.wn, value=row[2])
         index = 1
         for row in rows:
             row = row.strip().split()

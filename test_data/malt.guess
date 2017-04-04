@@ -6,7 +6,7 @@ arbetsinkomster	nn.utr.plu.ind.nom	3	PR
 Genom	pp	3	ADV
 skattereformen	nn.utr.sin.def.nom	1	PR
 införs	vb.prs.sfo	0	ROOT
-individuell	jj.pos.utr.sin.ind.nom	5	ATT
+individuell	jj.pos.utr.sin.ind.nom	6	ATT
 beskattning	nn.utr.sin.ind.nom	3	SUB
 (	pad	5	IP
 särbeskattning	nn.utr.sin.ind.nom	5	APP

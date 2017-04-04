@@ -103,7 +103,7 @@ class NLPInstance:
         Returns:
             bool: True iff there are tokens at the two given positions.
         """
-        return (start in self.token_map and end in self.token_map)
+        return start in self.token_map and end in self.token_map
 
     
     def add_span(self, start: int, end: int, label: str, span_type: str, desc: str=None):
@@ -305,7 +305,7 @@ def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance) -> NLPInst
     
     Args:
         gold_instance (NLPInstance): The gold instance.
-        guess_instance the (NLPInstance): The guess instance.
+        guess_instance (NLPInstance): The guess instance.
 
     Returns:
         NLPInstance: An NLPInstance with Matches, False Negatives and False Positives

@@ -128,7 +128,7 @@ class Token:
                 #     start, end = substr.split("-")
                 #     if int(start) <= int(curr_property) <= int(end):
                 #         return True
-                if curr_property == substr or (not wholeWord and  substr in curr_property):
+                if curr_property == substr or (not wholeWord and substr in curr_property):
                     return True
         return False
 
@@ -177,4 +177,3 @@ class Token:
         """
         return "{0}:{1}".format(self.index, ", ".join(str(prop)
                                                       for prop in self.token_properties))
-    
