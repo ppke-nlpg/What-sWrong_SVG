@@ -26,8 +26,8 @@ class TokenLayout:
 
     Attributes:
         text_layouts (dict): 
-        bounds (dict): A dict specifying the horizontal bounds as a (<start>, <end>)
-            pair for each token.
+        bounds (dict): A dict specifying the horizontal bounds as a Bounds1D
+            tuple.
         row_height (int): The height of each property value row in the stack.
         base_line (int): Where should we start to draw the stacks.
         margin (int): The margin between tokens (i.e., their stacks).
