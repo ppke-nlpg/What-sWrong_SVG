@@ -16,9 +16,9 @@ class TokenLayout:
     values are rendered in gray.
 
     Note:
-        Note that the TokenLayout remembers the bounds of each token property stack
-        and the text layout of each property value.  This can be handy when other
-        layouts (e.g. DependencyLayout) want to connect the tokens.
+        The TokenLayout remembers the bounds of each token property stack and the
+        text layout of each property value.  This can be handy when other layouts
+        (e.g. DependencyLayout) want to connect the tokens.
 
     Attributes:
         text_layouts (dict): 
@@ -75,29 +75,29 @@ class TokenLayout:
         lastx = 0
 
         if self.from_split_point == -1:
-            fromToken = 0
+            from_token = 0
         else:
-            fromToken = instance.split_points[self.from_split_point]
+            from_token = instance.split_points[self.from_split_point]
         if self.to_split_point == -1:
-            toToken = len(tokens)
+            to_token = len(tokens)
         else:
-            toToken = instance.split_points[self.to_split_point]
+            to_token = instance.split_points[self.to_split_point]
 
-        for tokenIndex in range(fromToken, toToken):
+        for tokenIndex in range(from_token, to_token):
             token = tokens[tokenIndex]
-            maxX = 0
+            maxx = 0
             lasty = self.base_line + self.row_height
             for p in token.get_sorted_properties():
                 curr_property = token.get_property(p)
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
                 lasty += self.row_height
-                if labelwidth > maxX:
-                    maxX = labelwidth
-            requiredWidth = token_widths.get(token)
-            if requiredWidth is not None and maxX < requiredWidth:
-                maxX = requiredWidth
-            result[token] = Bounds1D(lastx, lastx+maxX)
-            lastx += maxX + self.margin
+                if labelwidth > maxx:
+                    maxx = labelwidth
+            required_width = token_widths.get(token)
+            if required_width is not None and maxx < required_width:
+                maxx = required_width
+            result[token] = Bounds1D(lastx, lastx+maxx)
+            lastx += maxx + self.margin
             if lasty - self.row_height > self.height:
                 self.height = lasty - self.row_height
 
@@ -166,11 +166,12 @@ class TokenLayout:
                     maxx = labelwidth
                 self.text_layouts[(token, index+1)] = curr_property  # curr_property -> layout (Not used...)
                 index += 1
-            requiredWidth = token_widths.get(token)
-            if requiredWidth is not None and maxx < requiredWidth:
-                maxx = requiredWidth
-            self.bounds[token] = Rectangle(scene, (lastx, self.base_line), maxx, lasty-self.base_line,
-                                            (255, 255, 255), (0, 0, 0), 1)
+            required_width = token_widths.get(token)
+            if required_width is not None and maxx < required_width:
+                maxx = required_width
+            self.bounds[token] = Rectangle(scene, (lastx, self.base_line),
+                                           maxx, lasty-self.base_line,
+                                           (255, 255, 255), (0, 0, 0), 1)
             lastx += maxx + self.margin
             if lasty - self.row_height > self.height:
                 self.height = lasty - self.row_height
