@@ -143,7 +143,8 @@ class DependencyLayout(AbstractEdgeLayout):
             connections = sorted(connections, key=functools.cmp_to_key(compare))
             # now put points along the token vertex wrt to ordering
             loopsOnVertex = loops[token]
-            width = (bounds[token].getWidth() + self._vertexExtraSpace) //\
+            bounds_width = bounds[token].end - bounds[token].start
+            width = (bounds_width + self._vertexExtraSpace) //\
                     (len(connections) + 1 + len(loopsOnVertex) * 2)
             x = (bounds[token].start - (self._vertexExtraSpace // 2)) + width
             for loop in loopsOnVertex:

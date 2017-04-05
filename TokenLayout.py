@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from SVGWriter import Rectangle, Scene, Text, TextToken
-from Bounds1D import Bounds1D
+from collections import namedtuple
 from nlp_model.nlp_instance import NLPInstance
+
+Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
+"""This named tuple represents one dimensional bounds.
+"""
 
 class TokenLayout:
     """Layout for a sequentially ordered collection of objects.
@@ -22,7 +26,8 @@ class TokenLayout:
 
     Attributes:
         text_layouts (dict): 
-        bounds (dict): ??
+        bounds (dict): A dict specifying the horizontal bounds as a (<start>, <end>)
+            pair for each token.
         row_height (int): The height of each property value row in the stack.
         base_line (int): Where should we start to draw the stacks.
         margin (int): The margin between tokens (i.e., their stacks).
