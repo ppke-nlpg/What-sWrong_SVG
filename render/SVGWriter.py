@@ -119,7 +119,7 @@ class QuadraticBezierCurve:
 
     def strarray(self):
         return ["  <path d=\"M {0:d} {1:d} C {2:d} {3:d} {4:d} {5:d} {6:d} {7:d}\" shape-rendering=\"inherit\""
-                " style=\"stroke:{};stroke-width:{:d}\" fill=\"none\" />\n"
+                " style=\"stroke:{8};stroke-width:{9:d}\" fill=\"none\" />\n"
                 .format(self.start[0] + self.offsetx, self.start[1] + self.offsety, self.control1[0] + self.offsetx,
                         self.control1[1] + self.offsety, self.control2[0] + self.offsetx,
                         self.control2[1] + self.offsety, self.end[0] + self.offsetx, self.end[1] + self.offsety,
