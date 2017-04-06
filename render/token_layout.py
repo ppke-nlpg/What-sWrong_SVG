@@ -62,7 +62,6 @@ class TokenLayout:
 
         Args:
             instance (NLPInstance): The NLPInstance to layout.
-
             token_widths (dict): A map that defines some minomal widths for
                 each token. The estimated bounds will fulfill the width
                 requirements specified by this map. If a token has no required
