@@ -6,8 +6,8 @@ import itertools
 import operator
 from collections import Counter, defaultdict
 
-from AbstractEdgeLayout import AbstractEdgeLayout
-from SVGWriter import Line, Scene, Text, QuadraticBezierCurve
+from .abstract_edge_layout import AbstractEdgeLayout
+from .SVGWriter import Line, Scene, Text, QuadraticBezierCurve
 
 class DependencyLayout(AbstractEdgeLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Untested
 
-from NLPCanvas import NLPCanvas
+from render.NLPCanvas import NLPCanvas
 from EdgeLabelFilter import EdgeLabelFilter
 from EdgeTokenFilter import EdgeTokenFilter
 

@@ -4,10 +4,10 @@
 
 import cairosvg
 from PyQt4 import QtGui, QtSvg
-from SVGWriter import Scene
-from SingleSentenceRenderer import SingleSentenceRenderer
+from .SVGWriter import Scene
+from .SingleSentenceRenderer import SingleSentenceRenderer
 from nlp_model.nlp_instance import NLPInstance, RenderType
-from AligmentRenderer import AligmentRenderer
+from .AligmentRenderer import AligmentRenderer
 
 """
  * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token

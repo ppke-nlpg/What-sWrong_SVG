@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from TokenLayout import TokenLayout
+from .token_layout import TokenLayout
 from nlp_model.edge import EdgeRenderType
-from SVGWriter import Line, Scene, QuadraticBezierCurve
+from .SVGWriter import Line, Scene, QuadraticBezierCurve
 
 """
  * A SingleSentenceRenderer renders an NLPInstance as a single sentence with spans drawn below the tokens, and

@@ -4,9 +4,9 @@
 from PyQt4 import QtCore
 
 from nlp_model.edge import EdgeRenderType
-from SpanLayout import SpanLayout
-from DependencyLayout import DependencyLayout
-from TokenLayout import TokenLayout
+from .span_layout import SpanLayout
+from .dependency_layout import DependencyLayout
+from .token_layout import TokenLayout
 
 """
  * A SingleSentenceRenderer renders an NLPInstance as a single sentence with spans drawn below the tokens, and

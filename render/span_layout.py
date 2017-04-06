@@ -3,8 +3,8 @@
 
 from collections import Counter, defaultdict
 
-from AbstractEdgeLayout import AbstractEdgeLayout
-from SVGWriter import Line, Rectangle, Scene, Text
+from .abstract_edge_layout import AbstractEdgeLayout
+from .SVGWriter import Line, Rectangle, Scene, Text
 
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.

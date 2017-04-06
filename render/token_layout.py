@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from SVGWriter import Rectangle, Scene, Text, TextToken
+from .SVGWriter import Rectangle, Scene, Text, TextToken
 from collections import namedtuple
 from nlp_model.nlp_instance import NLPInstance
 
