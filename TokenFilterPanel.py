@@ -6,7 +6,7 @@ from PyQt4 import QtGui
 import re
 from operator import attrgetter
 
-from render.NLPCanvas import NLPCanvas
+from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
 
 """

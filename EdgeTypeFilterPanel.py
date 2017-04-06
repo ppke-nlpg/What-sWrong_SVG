@@ -4,7 +4,7 @@
 
 from PyQt4 import QtGui
 
-from render.NLPCanvas import NLPCanvas
+from NLPCanvas import NLPCanvas
 from EdgeTypeFilter import EdgeTypeFilter
 
 """

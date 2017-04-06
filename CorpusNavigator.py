@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # HIÁNYOS!
 
-from render.NLPCanvas import NLPCanvas
+from NLPCanvas import NLPCanvas
 from CorpusLoader import CorpusLoader
 from nlp_model.nlp_instance import NLPInstance, nlp_diff
 from nlp_model.token_property import TokenProperty
