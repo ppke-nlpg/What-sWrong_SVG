@@ -105,7 +105,7 @@ class SingleSentenceRenderer:
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
-        widths = self._spanLayout.estimateRequiredTokenWidths(spans, scene)
+        widths = self._spanLayout.estimate_required_token_widths(spans, scene)
 
         # find token bounds
         tokenXBounds = self._tokenLayout.estimate_token_bounds(instance, widths, scene)
@@ -117,7 +117,7 @@ class SingleSentenceRenderer:
 
         # place dependencies on top
 
-        dim = self._dependencyLayout.layoutEdges(dependencies, tokenXBounds, scene)
+        dim = self._dependencyLayout.layout_edges(dependencies, tokenXBounds, scene)
         height += dim[1]
         self._startOfTokens = height
         if dim[0] > width:
@@ -135,7 +135,7 @@ class SingleSentenceRenderer:
         # add spans
         if render_spans:
             scene.translate(0, dim[1])
-            dim = self._spanLayout.layoutEdges(spans, tokenXBounds, scene)
+            dim = self._spanLayout.layout_edges(spans, tokenXBounds, scene)
             height += dim[1]
             if dim[0] > width:
                 width = dim[0]
@@ -167,7 +167,7 @@ class SingleSentenceRenderer:
      * @inheritDoc
     """
     def getEdgeAt(self, p, radius):
-        print("dependencyLayout height = " + self._dependencyLayout.getHeight())
+        print("dependencyLayout height = " + self._dependencyLayout.max_height)
         if p.y < self._startOfTokens:
             return self._dependencyLayout.getEdgeAt(p, radius)
         else:
@@ -180,8 +180,8 @@ class SingleSentenceRenderer:
      * @param heightFactor an integer that indicates how high the graph should be.
     """
     def setHightFactor(self, heightFactor):
-        self._dependencyLayout.heightPerLevel = heightFactor
-        self._spanLayout.heightPerLevel = heightFactor
+        self._dependencyLayout.height_per_level = heightFactor
+        self._spanLayout.height_per_level = heightFactor
 
     """
      * Returns an integer that reflects the height of the graph.
@@ -189,7 +189,7 @@ class SingleSentenceRenderer:
      * @return an integer that reflects the height of the graph. The higher this value, the higher the graph.
     """
     def getHeightFactor(self):
-        return self._dependencyLayout.heightPerLevel
+        return self._dependencyLayout.height_per_level
 
     """
      * Controls whether the graph should be curved or rectangular. If curved the dependencies are drawn as curves
@@ -208,7 +208,7 @@ class SingleSentenceRenderer:
      * @return true iff the renderer draws a more curved graph.
     """
     def isCurved(self):
-        return self._dependencyLayout.isCurve()
+        return self._dependencyLayout.curve
 
     """
      * Set the color for edges of a certain type.
@@ -217,8 +217,8 @@ class SingleSentenceRenderer:
      * @param color    the color of the edges of the given type.
     """
     def setEdgeTypeColor(self, edgeType, color):
-        self._dependencyLayout.setColor(edgeType, color)
-        self._spanLayout.setColor(edgeType, color)
+        self._dependencyLayout.set_color(edgeType, color)
+        self._spanLayout.set_color(edgeType, color)
 
     """
      * Sets the order/vertical layer in which the area of a certain type should be drawn.
@@ -227,7 +227,7 @@ class SingleSentenceRenderer:
      * @param order    the order/vertical layer in which the area of the given type should be drawn.
     """
     def setEdgeTypeOrder(self, edgeType, order):
-        self._spanLayout.setTypeOrder(edgeType, order)
+        self._spanLayout.set_type_order(edgeType, order)
     
     """
      * Should anti-aliasing be used when drawing the graph.
