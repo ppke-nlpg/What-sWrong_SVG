@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Lehet, hogy megszüntethető?
 
-class AbstractEdgeLayout():
+
+class AbstractEdgeLayout:
     """An AbstractEdgeLayout serves as a base class for edge layout classes.
 
     It mostly stores properties associated with drawing edge layouts, such as
@@ -51,7 +51,6 @@ class AbstractEdgeLayout():
         self.max_width = 0
         self.max_height = 0
 
-        
     def set_color(self, edge_type, color):
         """Set the color for edges of a certain type.
         
@@ -61,7 +60,6 @@ class AbstractEdgeLayout():
         """
         self.colors[edge_type] = color
 
-        
     def set_stroke(self, edge_type, stroke):
         """Set the stroke for edges of a certain type.
         
@@ -71,7 +69,6 @@ class AbstractEdgeLayout():
         """
         self.strokes[edge_type] = stroke
 
-        
     def get_stroke_for_edge(self, edge):
         """Return the stroke for a given edge.
 
@@ -88,7 +85,6 @@ class AbstractEdgeLayout():
             pass
         return self.strokes[edge.edge_type]
 
-
     def get_stroke_for_edgetype(self, edge_type):
         """Return the stroke for a given edge.
 
@@ -103,7 +99,6 @@ class AbstractEdgeLayout():
                 return self.strokes[substring]
         return self.default_stroke
 
-    
     def get_color(self, edge_type):
         """Return the color for edges of the given type.
 
@@ -118,7 +113,6 @@ class AbstractEdgeLayout():
                 return self.colors[substring]
         return 0, 0, 0  # Color.BLACK
 
-    
     def add_to_selection(self, edge):
         """Add an edge to the selection.
         
@@ -127,7 +121,6 @@ class AbstractEdgeLayout():
         """
         self.selected.add(edge)
 
-        
     def remove_from_selected(self, edge):
         """Remove an edge from the selection.
 
@@ -136,19 +129,16 @@ class AbstractEdgeLayout():
         """
         self.selected.remove(edge)
 
-        
     def clear_selection(self):
         """Remove all edges from the selection.
         """
         self.selected.clear()
 
-        
     def show_all(self):
         """Show all edges.
         """
         self.visible.clear()
 
-        
     def toggle_selection(self, edge):
         """Change whether the given edge is selected or not.
 
@@ -160,7 +150,6 @@ class AbstractEdgeLayout():
         else:
             self.selected.add(edge)
 
-
     def select(self, edge):
         """Select only one edge.
 
@@ -169,7 +158,6 @@ class AbstractEdgeLayout():
         """
         self.selected = set(edge)
 
-        
     def get_edge_at(self, point, radius):
         """Get the Edge at a given location.
 
@@ -193,7 +181,6 @@ class AbstractEdgeLayout():
             return result
         """
 
-
     def calculate_depth(self, dominates, depth, root):
         """Count the number of edges under each edge and return the maximum.
         
@@ -213,7 +200,6 @@ class AbstractEdgeLayout():
         depth[root] = maximum + 1
         return maximum + 1
 
-
     def get_start(self, edge):
         """Return the point at the start of the given edge.
 
@@ -225,7 +211,6 @@ class AbstractEdgeLayout():
         """
         return self.start[edge]
 
-    
     def get_end(self, edge):
         """Return the point at the end of the given edge.
 
@@ -236,7 +221,3 @@ class AbstractEdgeLayout():
             The edge to get the ending point for.
         """
         return self.end[edge]
-
-
-
-

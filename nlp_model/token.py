@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from .token_property import TokenProperty
-#import re # This is only needed for the commented out part in properties_contain
+# import re # This is only needed for the commented out part in properties_contain
 from operator import attrgetter
+
 
 class Token:
     """A Token represents a word in an utterance.
@@ -19,7 +20,6 @@ class Token:
             Defaults to False.
     """
 
-    
     def __init__(self, index: int, is_actual: bool=False):
         """Creates a new token with the given index and actuality value.
         
@@ -32,7 +32,6 @@ class Token:
         self.token_properties = {}  
         self.is_actual = is_actual
 
-
     def get_property(self, token_property) -> str:
         """Get the value of the given property.
 
@@ -44,7 +43,6 @@ class Token:
         """
         return self.token_properties[token_property]
 
-    
     def remove_property(self, name):
         """Remove the property value with the given name.
 
@@ -53,7 +51,6 @@ class Token:
         """
         del self.token_properties[TokenProperty(name=name)]
         return self
-
 
     def add_property(self, token_property: TokenProperty, value: str):
         """Add a property with the given value.
@@ -68,7 +65,6 @@ class Token:
         self.token_properties[token_property] = value
         return self
 
-    
     def add_named_prop(self, name: str, value: str, level=None):
         """Add a property with the given name and value.
 
@@ -86,7 +82,6 @@ class Token:
         self.token_properties[TokenProperty(name, level)] = value
         return self
 
-    
     def get_sorted_properties(self) -> list:
         """Return a list of sorted token properties.
 
@@ -96,7 +91,6 @@ class Token:
         sorted_properties = list(sorted(self.token_properties.keys(),
                                         key=attrgetter('level', 'name')))
         return sorted_properties
-
 
     def get_property_types(self):
         """Return all token properties.
@@ -109,7 +103,6 @@ class Token:
         """
         return tuple(self.token_properties.keys())
 
-    
     def properties_contain(self, substrings: set, wholeWord: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
         
@@ -132,7 +125,6 @@ class Token:
                     return True
         return False
 
-    
     def merge(self, token):
         """Inserts all properties and values of the other token into this token.
 
@@ -143,7 +135,6 @@ class Token:
         """
         self.token_properties.update(token.token_properties)
 
-        
     def __eq__(self, other):
         """Checks whether the two tokens have the same index.
 
@@ -159,7 +150,6 @@ class Token:
         return (other is not None and isinstance(other, self.__class__) and
                 self.index == other.index)
 
-        
     def __hash__(self):
         """Returns the index of the token as its hashcode.
 
@@ -168,7 +158,6 @@ class Token:
         """
         return self.index
 
-        
     def __str__(self):
         """Return a string representation of this token containing token index and properties.
 

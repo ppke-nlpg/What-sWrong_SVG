@@ -53,9 +53,9 @@ class Scene:
         if self.antialiasing:
             rendering = "geometricPrecision"
         var = ["<?xml version=\"1.0\"?>\n",
-               "<svg height=\"%d\" width=\"%d\" shape-rendering=\"%s\" text-rendering=\"%s\""
-               " xmlns=\"http://www.w3.org/2000/svg\">\n" %
-               (self.height, self.width, rendering, rendering)]
+               "<svg height=\"{0:d}\" width=\"{1:d}\" shape-rendering=\"{2}\" text-rendering=\"{2}\""
+               " xmlns=\"http://www.w3.org/2000/svg\">\n"
+               .format(self.height, self.width, rendering)]
         # " <g style=\"fill-opacity:1.0; stroke:black;\n",
         # "  stroke-width:1;\">\n"
 
@@ -79,7 +79,7 @@ class Scene:
         return '\n'.join(self.strarray()).encode('UTF-8')
 
     def display(self, prog=display_prog):
-        os.system("%s %s" % (prog, self.svgname))
+        os.system("{0} {1}".format(prog, self.svgname))
         return
 
 
@@ -94,10 +94,10 @@ class Line:
         return
 
     def strarray(self):
-        return ["  <line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" shape-rendering=\"inherit\""
-                " style=\"stroke:%s;stroke-width:%d\"/>\n" %
-                (self.start[0]+self.offsetx, self.start[1]+self.offsety, self.end[0]+self.offsetx,
-                 self.end[1]+self.offsety, colorstr(self.color), self.width)]
+        return ["  <line x1=\"{0:d}\" y1=\"{1:d}\" x2=\"{2:d}\" y2=\"{3:d}\" shape-rendering=\"inherit\""
+                " style=\"stroke:{4};stroke-width:{5:d}\"/>\n"
+                .format(self.start[0] + self.offsetx, self.start[1] + self.offsety, self.end[0] + self.offsetx,
+                        self.end[1] + self.offsety, colorstr(self.color), self.width)]
 
 
 class QuadraticBezierCurve:
@@ -118,11 +118,12 @@ class QuadraticBezierCurve:
         return
 
     def strarray(self):
-        return ["  <path d=\"M %d %d C %d %d %d %d %d %d\" shape-rendering=\"inherit\""
-                " style=\"stroke:%s;stroke-width:%d\" fill=\"none\" />\n" %
-                (self.start[0]+self.offsetx, self.start[1]+self.offsety, self.control1[0]+self.offsetx,
-                 self.control1[1]+self.offsety, self.control2[0]+self.offsetx, self.control2[1]+self.offsety,
-                 self.end[0]+self.offsetx, self.end[1]+self.offsety, colorstr(self.color), self.width)]
+        return ["  <path d=\"M {0:d} {1:d} C {2:d} {3:d} {4:d} {5:d} {6:d} {7:d}\" shape-rendering=\"inherit\""
+                " style=\"stroke:{};stroke-width:{:d}\" fill=\"none\" />\n"
+                .format(self.start[0] + self.offsetx, self.start[1] + self.offsety, self.control1[0] + self.offsetx,
+                        self.control1[1] + self.offsety, self.control2[0] + self.offsetx,
+                        self.control2[1] + self.offsety, self.end[0] + self.offsetx, self.end[1] + self.offsety,
+                        colorstr(self.color), self.width)]
 
 # TODO <path d="M 100 350 q 150 -300 300 0" stroke="blue" stroke-width="5" fill="none" />
 
@@ -137,10 +138,10 @@ class Circle:
         return
 
     def strarray(self):
-        return ["  <circle cx=\"%d\" cy=\"%d\" r=\"%d\" shape-rendering=\"inherit\"\n" %
-                (self.center[0], self.center[1], self.radius),
-                "    style=\"fill:%s;stroke:%s;stroke-width:%d\"  />\n" %
-                (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
+        return ["  <circle cx=\"{0:d}\" cy=\"{1:d}\" r=\"{2:d}\" shape-rendering=\"inherit\"\n"
+                .format(self.center[0], self.center[1], self.radius),
+                "    style=\"fill:{0};stroke:{1};stroke-width:{2:d}\"  />\n"
+                .format(colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
 class HalfCircle:
@@ -156,13 +157,12 @@ class HalfCircle:
         return
 
     def strarray(self):
-        clip = "<clipPath id=\"cut-off-bottom%d\"> \n <rect x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\"" \
-               " shape-rendering=\"inherit\" /> \n" \
-               " </clipPath>" % (self.id, self.center[0]-self.radius, self.center[1], self.radius*2,
-                                 self.radius)
-        circle = "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" shape-rendering=\"inherit\"" \
-                 " clip-path=\"url(#cut-off-bottom%d)\" style=\"stroke:%s;stroke-width:%dfill-opacity: 1\"/>" %\
-                 (self.center[0], self.center[1], self.radius, self.id, colorstr(self.line_color), self.line_width)
+        clip = "<clipPath id=\"cut-off-bottom{0:d}\"> \n <rect x=\"{1:d}\" y=\"{2:d}\" width=\"{3:d}\"" \
+               " height=\"{4:d}\" shape-rendering=\"inherit\" /> \n </clipPath>" \
+               .format(self.id, self.center[0] - self.radius, self.center[1], self.radius * 2, self.radius)
+        circle = "<circle cx=\"{0:d}\" cy=\"{1:d}\" r=\"{2:d}\" shape-rendering=\"inherit\"" \
+                 " clip-path=\"url(#cut-off-bottom{:d})\" style=\"stroke:{};stroke-width:{:d}fill-opacity: 1\"/>" \
+            .format(self.center[0], self.center[1], self.radius, self.id, colorstr(self.line_color), self.line_width)
         return [clip + "\n" + circle]
 
 
@@ -176,10 +176,10 @@ class Ellipse:
         self.line_width = line_width
 
     def strarray(self):
-        return ["  <ellipse cx=\"%d\" cy=\"%d\" rx=\"%d\" ry=\"%d\" shape-rendering=\"inherit\"\n" %
-                (self.center[0], self.center[1], self.radiusx, self.radiusy),
-                "    style=\"fill:%s;stroke:%s;stroke-width:%d\"/>\n" %
-                (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
+        return ["  <ellipse cx=\"{0:d}\" cy=\"{1:d}\" rx=\"{2:d}\" ry=\"{3:d}\" shape-rendering=\"inherit\"\n"
+                .format(self.center[0], self.center[1], self.radiusx, self.radiusy),
+                "    style=\"fill:{0};stroke:{1};stroke-width:{2:d}\"/>\n"
+                .format(colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
 class Polygon:
@@ -192,10 +192,10 @@ class Polygon:
     def strarray(self):
         polygon = "<polygon points=\""
         for point in self.points:
-            polygon += " %d,%d" % (point[0], point[1])
+            polygon += " {0:d},{1:d}".format(point[0], point[1])
         return [polygon,
-                "\" \nshape-rendering=\"inherit\" style=\"fill:%s;stroke:%s;stroke-width:%d\"/>\n" %
-                (colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
+                "\" \nshape-rendering=\"inherit\" style=\"fill:{0};stroke:{1};stroke-width:{2:d}\"/>\n"
+                .format(colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
 
 
 class Rectangle:
@@ -210,14 +210,15 @@ class Rectangle:
         self.offsety = scene.offsety
         self.rounded = ""
         if rx is not None and ry is not None:
-            self.rounded = " rx=\"%d\" ry=\"%d\"" % (rx, ry)
+            self.rounded = " rx=\"{0:d}\" ry=\"{1:d}\"".format(rx, ry)
         return
 
     def strarray(self):
-        return ["  <rect x=\"%d\" y=\"%d\" height=\"%d\"\n" %
-                (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.height),
-                "    width=\"%d\"%s shape-rendering=\"inherit\" style=\"fill:%s;stroke:%s;stroke-width:%d\" />\n" %
-                (self.width, self.rounded, colorstr(self.fill_color), colorstr(self.line_color), self.line_width)]
+        return ["  <rect x=\"{0:d}\" y=\"{1:d}\" height=\"{2:d}\"\n"
+                .format(self.origin[0] + self.offsetx, self.origin[1] + self.offsety, self.height),
+                "    width=\"{0:d}\"{1} shape-rendering=\"inherit\" style=\"fill:{2};stroke:{3};stroke-width:{4:d}\""
+                " />\n".format(self.width, self.rounded, colorstr(self.fill_color), colorstr(self.line_color),
+                               self.line_width)]
 
 
 class Text:
@@ -231,14 +232,14 @@ class Text:
         return
 
     def strarray(self):
-        return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-anchor=\"middle\" "
+        return ["  <text x=\"{0:d}\" y=\"{1:d}\" font-size=\"{2:d}\" fill=\"{3}\" text-anchor=\"middle\" "
                 "alignment-baseline=\"central\" text-rendering=\"inherit\""
                 " style=\"font-family: Courier New, Courier, monospace\" >\n"
-                % (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
-                "   %s\n" % escape(self.text),
+                .format(self.origin[0] + self.offsetx, self.origin[1] + self.offsety, self.size, colorstr(self.color)),
+                "   {0}\n".format(escape(self.text)),
                 "  </text>\n"]
 
-    def getWidth(self):
+    def get_width(self):
         return len(self.text) * 7
 
 
@@ -253,27 +254,27 @@ class TextToken:
         return
 
     def strarray(self):
-        return ["  <text x=\"%d\" y=\"%d\" font-size=\"%d\" fill=\"%s\" text-rendering=\"inherit\""
-                " style=\"font-family: Courier New, Courier, monospace\">\n" %
-                (self.origin[0]+self.offsetx, self.origin[1]+self.offsety, self.size, colorstr(self.color)),
-                "   %s\n" % escape(self.text),
+        return ["  <text x=\"{0:d}\" y=\"{1:d}\" font-size=\"{2:d}\" fill=\"{3}\" text-rendering=\"inherit\""
+                " style=\"font-family: Courier New, Courier, monospace\">\n"
+                .format(self.origin[0] + self.offsetx, self.origin[1] + self.offsety, self.size, colorstr(self.color)),
+                "   {0}\n".format(escape(self.text)),
                 "  </text>\n"]
 
-    def getWidth(self):
+    def get_width(self):
         return len(self.text) * 6
 
 
 def colorstr(rgb):
-    return "rgb(%d,%d,%d)" % (rgb[0], rgb[1], rgb[2])
+    return "rgb({0:d},{1:d},{2:d})".format(rgb[0], rgb[1], rgb[2])
 
 
 def test():
     scene = Scene("test")
     scene.add(Rectangle(scene, (100, 100), 200, 200, (0, 255, 255), (0, 0, 0), 1))
-    scene.add(Line(scene, (200, 200), (200, 300), (0, 0, 0), 1))
-    scene.add(Line(scene, (200, 200), (300, 200), (0, 0, 0), 1))
-    scene.add(Line(scene, (200, 200), (100, 200), (0, 0, 0), 1))
-    scene.add(Line(scene, (200, 200), (200, 100), (0, 0, 0), 1))
+    scene.add(Line(scene, (200, 200), (200, 300), (0, 0, 0)))
+    scene.add(Line(scene, (200, 200), (300, 200), (0, 0, 0)))
+    scene.add(Line(scene, (200, 200), (100, 200), (0, 0, 0)))
+    scene.add(Line(scene, (200, 200), (200, 100), (0, 0, 0)))
     scene.add(Circle((200, 200), 30, (0, 0, 255), (0, 0, 0), 1))
     scene.add(Circle((200, 300), 30, (0, 255, 0), (0, 0, 0), 1))
     scene.add(Circle((300, 200), 30, (255, 0, 0), (0, 0, 0), 1))

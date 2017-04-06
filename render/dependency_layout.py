@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from .abstract_edge_layout import AbstractEdgeLayout
 from .SVGWriter import Line, Scene, Text, QuadraticBezierCurve
 
+
 class DependencyLayout(AbstractEdgeLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.
 
@@ -32,7 +33,6 @@ class DependencyLayout(AbstractEdgeLayout):
         super().__init__()
         self.arrowsize = 2
 
-        
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
         
@@ -186,7 +186,7 @@ class DependencyLayout(AbstractEdgeLayout):
             if self.curve:
                 shape = self.create_curve_arrow(scene, p1, p2, p3, p4)
             else:
-                shape = self.createRectArrow(scene, p1, p2, p3, p4)
+                shape = self.create_rect_arrow(scene, p1, p2, p3, p4)
 
             x = (p4[0] - self.arrowsize, p4[1] - self.arrowsize)
             z = (p4[0] + self.arrowsize, p4[1] - self.arrowsize)
@@ -231,7 +231,6 @@ class DependencyLayout(AbstractEdgeLayout):
         scene.add(Line(scene, p3, p4, scene.color))
         return p1, p2, p3, p4
 
-    
     @staticmethod
     def create_curve_arrow(scene: Scene, start, c1, c2, end):
         """Create an curved path around the given points in a scene.
@@ -259,4 +258,3 @@ class DependencyLayout(AbstractEdgeLayout):
         scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, scene.color))
         scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, scene.color))
         return start, c1, c2, end
-

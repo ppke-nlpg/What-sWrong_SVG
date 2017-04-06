@@ -19,7 +19,6 @@ class TokenProperty:
         level (int): The level of the property.
     """
 
-    
     def __init__(self, name: str=None, level: int=0):
         """Create a new property.
 
@@ -32,7 +31,6 @@ class TokenProperty:
         self.name = name
         self.level = level
 
-
     def __eq__(self, other):
         """Two TokenProperty objects are equal iff their names match.
 
@@ -43,7 +41,6 @@ class TokenProperty:
             bool: True iff the property names are equal.
         """
         return self.name == other.name
-
 
     def __ne__(self, other):
         """Two TokenProperty objects are not equal iff their names are different.
@@ -56,7 +53,6 @@ class TokenProperty:
         """
         return self.name != other.name
 
-    
     def __lt__(self, other):
         """First compares the level of the two properties and if these are equal the
         property names are compared.
@@ -72,7 +68,6 @@ class TokenProperty:
         return self.level < other.level or (self.level == other.level and
                                             self.name < other.name)
 
-
     def __hash__(self):
         """Calculates a hashcode based on the property name.
 
@@ -80,4 +75,3 @@ class TokenProperty:
             int: A hashcode based on the property name. 
         """
         return hash(self.name) if self.name is not None else 0
-

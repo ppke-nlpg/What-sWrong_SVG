@@ -9,6 +9,7 @@ Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
 """
 
+
 class TokenLayout:
     """Layout for a sequentially ordered collection of objects.
 
@@ -94,7 +95,7 @@ class TokenLayout:
             lasty = self.base_line + self.row_height
             for p in token.get_sorted_properties():
                 curr_property = token.get_property(p)
-                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
+                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
                 lasty += self.row_height
                 if labelwidth > maxx:
                     maxx = labelwidth
@@ -108,8 +109,7 @@ class TokenLayout:
 
         return result
 
-    
-    def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene):
+    def layout(self, instance: NLPInstance, token_widths: dict, g2d: Scene):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property values
@@ -127,7 +127,7 @@ class TokenLayout:
             The dimension of the drawn graph.
         """
         
-        old_scene_color = scene.color
+        old_scene_color = g2d.color
         tokens = instance.tokens
         if len(tokens) == 0:
             self.height = 1
@@ -137,7 +137,7 @@ class TokenLayout:
         lastx = 0
         self.height = 0
 
-        scene.color = (0, 0, 0)  # BLACK
+        g2d.color = (0, 0, 0)  # BLACK
 
         if self.from_split_point == -1:
             from_token = 0
@@ -157,16 +157,16 @@ class TokenLayout:
             for p in token.get_sorted_properties():
                 curr_property = token.get_property(p)
                 if index == 0:
-                    scene.color = (0, 0, 0)  # BLACK
+                    g2d.color = (0, 0, 0)  # BLACK
                 else:
-                    scene.color = (120, 120, 120)  # GREY
+                    g2d.color = (120, 120, 120)  # GREY
                 if token.is_actual:
-                    scene.color = (0, 102, 204)  # Blue
+                    g2d.color = (0, 102, 204)  # Blue
                 else:
-                    scene.color = (0, 0, 0)  # Black
-                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, scene.color))
+                    g2d.color = (0, 0, 0)  # Black
+                g2d.add(TextToken(g2d, (lastx, lasty), curr_property, 12, g2d.color))
                 lasty += self.row_height
-                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).getWidth()
+                labelwidth = Text(g2d, (0, 0), curr_property, 12, g2d.color).get_width()
                 if labelwidth > maxx:
                     maxx = labelwidth
                 self.text_layouts[(token, index+1)] = curr_property  # curr_property -> layout (Not used...)
@@ -174,18 +174,17 @@ class TokenLayout:
             required_width = token_widths.get(token)
             if required_width is not None and maxx < required_width:
                 maxx = required_width
-            self.bounds[token] = Rectangle(scene, (lastx, self.base_line),
-                                           maxx, lasty-self.base_line,
+            self.bounds[token] = Rectangle(g2d, (lastx, self.base_line),
+                                           maxx, lasty - self.base_line,
                                            (255, 255, 255), (0, 0, 0), 1)
             lastx += maxx + self.margin
             if lasty - self.row_height > self.height:
                 self.height = lasty - self.row_height
 
         self.width = lastx - self.margin
-        scene.color = old_scene_color
-        return self.width + scene.offsetx, self.height + 2 + scene.offsety
+        g2d.color = old_scene_color
+        return self.width + g2d.offsetx, self.height + 2 + g2d.offsety
 
-    
     def get_property_text_layout(self, vertex, index):
         """Returns the text layout for a given property and property index.
 
@@ -199,7 +198,6 @@ class TokenLayout:
         """
         return self.text_layouts[(vertex, index)]
 
-    
     def get_bounds(self, vertex):
         """Gets the bounds of the property value stack of the given token.
 
@@ -210,5 +208,3 @@ class TokenLayout:
             A bounding box around the stack of property values for the given token.
         """
         return self.bounds[vertex]
-
-    

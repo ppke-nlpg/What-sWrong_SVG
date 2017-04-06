@@ -169,10 +169,10 @@ class SingleSentenceRenderer:
     def getEdgeAt(self, p, radius):
         print("dependencyLayout height = " + self._dependencyLayout.max_height)
         if p.y < self._startOfTokens:
-            return self._dependencyLayout.getEdgeAt(p, radius)
+            return self._dependencyLayout.get_edge_at(p, radius)
         else:
             shifted = QtCore.QPoint(p.x, p.y - self._startOfSpans)
-            return self._spanLayout.getEdgeAt(shifted, radius)
+            return self._spanLayout.get_edge_at(shifted, radius)
 
     """
      * Controls the height of the graph.
