@@ -21,22 +21,23 @@ class TokenLayout:
     values are rendered in gray.
 
     Note:
-        The TokenLayout remembers the bounds of each token property stack and the
-        text layout of each property value.  This can be handy when other layouts
-        (e.g. DependencyLayout) want to connect the tokens.
+        The TokenLayout remembers the bounds of each token property stack and
+        the text layout of each property value. This can be handy when other
+        layouts (e.g. DependencyLayout) want to connect the tokens.
 
     Attributes:
-        text_layouts (dict): 
+        text_layouts (dict):
         bounds (dict): A dict specifying the horizontal bounds as a Bounds1D
             tuple.
         row_height (int): The height of each property value row in the stack.
         base_line (int): Where should we start to draw the stacks.
         margin (int): The margin between tokens (i.e., their stacks).
         from_split_point (int): The index of the the split point at which the
-            renderer starts to draw the token sequence or -1 if it should start.
+            renderer starts to draw the token sequence or -1 if it should
+            start.
         to_split_point (int): The index of the the split point at which the
-            renderer stops to draw the token sequence or -1 if it should stop at
-            the end.
+            renderer stops to draw the token sequence or -1 if it should stop
+            at the end.
         width (int): The total width of the graph that consists of all token
             stacks next to each other.
         height (int): The total height of the graph that consists of all token
@@ -56,19 +57,22 @@ class TokenLayout:
         self.width = 0
         self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, scene):
+    def estimate_token_bounds(self, instance: NLPInstance,token_widths: dict, scene):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
-        
+
         Args:
             instance (NLPInstance): The NLPInstance to layout.
-            token_widths (dict): A map that defines some minomal widths for each token.
-                The estimated bounds will fulfill the width requirements specified by
-                this map. If a token has no required width its estimated width will be
-                based on the length of its textual properties.
+
+            token_widths (dict): A map that defines some minomal widths for
+                each token. The estimated bounds will fulfill the width
+                requirements specified by this map. If a token has no required
+                width its estimated width will be based on the length of its
+                textual properties.
             scene (): The scene object to render to.
-        
+
         Returns:
-            dict: A mapping from tokens to estimated horizontal bounds in the layout.
+            dict: A mapping from tokens to estimated horizontal bounds in the
+            layout.
         """
         result = {}
         self.height = 0
@@ -112,21 +116,21 @@ class TokenLayout:
     def layout(self, instance: NLPInstance, token_widths: dict, g2d: Scene):
         """Lay out all tokens in the given collection.
 
-        Lays out all tokens in the given collection as stacks of property values
-        that are placed next to each other according the order of the tokens (as
-        indicated by their indices).
+        Lays out all tokens in the given collection as stacks of property
+        values that are placed next to each other according the order of the
+        tokens (as indicated by their indices).
 
         Args:
             instance (NLPInstance): The NLPInstance to layout.
-            token_widths (dict): if some tokens need extra space (for example because they
-                have self loops in a DependencyLayout the space they need can be
-                provided through this map.
+            token_widths (dict): if some tokens need extra space (for example
+                because they have self loops in a DependencyLayout the space
+                they need can be provided through this map.
             g2d: The graphics object to draw to.
-           
+
         Returns:
             The dimension of the drawn graph.
         """
-        
+
         old_scene_color = g2d.color
         tokens = instance.tokens
         if len(tokens) == 0:
@@ -189,12 +193,13 @@ class TokenLayout:
         """Returns the text layout for a given property and property index.
 
         Args:
-            vertex: The token for which we want the text layout of a propery of it.
+            vertex: The token for which we want the text layout of a propery
+                of it.
             index: The index of the property in the stack.
-        
+
         Returns:
-            The text layout of the property value at index `index` of the stack for
-            the token
+            The text layout of the property value at index `index` of the stack
+            for the token.
         """
         return self.text_layouts[(vertex, index)]
 
@@ -203,8 +208,9 @@ class TokenLayout:
 
         Args:
             vertex (Token): The token for which to get the bounds for.
-        
+
         Returns:
-            A bounding box around the stack of property values for the given token.
+            A bounding box around the stack of property values for the given
+            token.
         """
         return self.bounds[vertex]
