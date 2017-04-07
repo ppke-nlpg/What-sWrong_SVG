@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from .token_property import TokenProperty
-# import re # This is only needed for the commented out part in properties_contain
+# import re # This was only needed for the commented out part in
+# the properties_contain method
 from operator import attrgetter
 
 
@@ -13,23 +14,23 @@ class Token:
 
     Attributes:
         index (int): The index of the token.
-        token_properties (Dict[TokenProperty, Object]): A mapping from properties
-            to values.
+        token_properties (Dict[TokenProperty, Object]): A mapping from
+            properties to values.
         is_actual (bool): Whether the token is actually part of the analysis or
-            only provides context (e.g. in the case of a partial analysis visualisation).
-            Defaults to False.
+            only provides context (e.g. in the case of a partial analysis
+            visualisation). Defaults to False.
     """
 
     def __init__(self, index: int, is_actual: bool=False):
         """Creates a new token with the given index and actuality value.
-        
+
         Args:
             index (int): The index of the token.
             is_actual (bool, optional): Whether the token is actual. Defaults
                 to False.
         """
         self.index = index
-        self.token_properties = {}  
+        self.token_properties = {}
         self.is_actual = is_actual
 
     def get_property(self, token_property) -> str:
@@ -71,10 +72,10 @@ class Token:
         Args:
             name (str): The name of the property to be added.
             value (str): The value of the property to be added.
-            level (int, optional): The level of the property to be added.
-                If not given it will be set to the number of the token's properties
-                (prior to the ongoing addition).
-        
+            level (int, optional): The level of the property to be added. If
+                not given it will be set to the number of the token's
+                properties (prior to the ongoing addition).
+
         Returns:
             Token: The token itself.
         """
@@ -96,8 +97,8 @@ class Token:
         """Return all token properties.
 
         Note:
-            To get the value of a property use Token#get_property(TokenProperty).
-        
+            To get the value of a property use Token#get_property.
+
         Returns:
             tuple: A tuple containing the token's properties.
         """
@@ -105,15 +106,16 @@ class Token:
 
     def properties_contain(self, substrings: set, wholeWord: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
-        
+
         Args:
             substrings (set): Set of strings to check.
-            wholeWord (bool, optional): Should we check for complete words or is it enough
-                for the given strings to be substrings of the token value. Defaults to False.
+            wholeWord (bool, optional): Should we check for complete words or
+                is it enough for the given strings to be substrings of the
+                token value. Defaults to False.
 
         Returns:
-            bool: True iff there is a property value that is equal to/contains one of the
-            strings in :substrings:.
+            bool: True iff there is a property value that is equal to/contains
+            one of the strings in :substrings:.
         """
         for curr_property in self.token_properties.values():
             for substr in substrings:
@@ -121,7 +123,8 @@ class Token:
                 #     start, end = substr.split("-")
                 #     if int(start) <= int(curr_property) <= int(end):
                 #         return True
-                if curr_property == substr or (not wholeWord and substr in curr_property):
+                if curr_property == substr or (not wholeWord and substr in
+                                               curr_property):
                     return True
         return False
 
@@ -139,11 +142,12 @@ class Token:
         """Checks whether the two tokens have the same index.
 
         Note:
-            Hence equality is only defined through the position of the token in the sentence. 
+            Hence equality is only defined through the position of the token in
+            the sentence.
 
         Args:
             other (Token): The other token.
-        
+
         Returns:
             bool: True iff the two tokens have the same index.
         """
@@ -159,10 +163,10 @@ class Token:
         return self.index
 
     def __str__(self):
-        """Return a string representation of this token containing token index and properties.
+        """Return a string representation of this token.
 
         Returns:
             str: A string representation of this token.
         """
-        return "{0}:{1}".format(self.index, ", ".join(str(prop)
-                                                      for prop in self.token_properties))
+        props = ", ".join(str(prop) for prop in self.token_properties)
+        return "{0}:{1}".format(self.index, props)

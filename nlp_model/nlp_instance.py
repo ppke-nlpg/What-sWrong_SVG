@@ -41,7 +41,8 @@ class NLPInstance:
             alignment).
     """
 
-    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None,
+    def __init__(self, tokens: tuple or list=None,
+                 edges: set or frozenset=None,
                  render_type: RenderType=RenderType.single,
                  split_points: tuple or list=None):
         """Create an NLPInstance with the given tokens and edges.
@@ -68,9 +69,9 @@ class NLPInstance:
         if split_points is not None:
             self.split_points.extend(split_points)
 
-    def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None,
-                 render_type: EdgeRenderType=None, desc=None, note: str=None,
-                 is_final: bool=True):
+    def add_edge(self, start: int, end: int, label: str=None,
+                 edge_type: str=None, render_type: EdgeRenderType=None,
+                 desc=None, note: str=None, is_final: bool=True):
         """Creates and adds an edge with the given properties.
 
         Args:
@@ -91,8 +92,9 @@ class NLPInstance:
 
         """
         if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end], label,
-                                   edge_type, note, render_type, desc, is_final))
+            self.edges.append(Edge(self.token_map[start], self.token_map[end],
+                                   label, edge_type, note, render_type,
+                                   desc, is_final))
         else:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
@@ -134,33 +136,36 @@ class NLPInstance:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
 
-    def add_dependency(self, start: int, end: int, label, dep_type: str, desc: str=None,
-                       is_final: bool=True):
+    def add_dependency(self, start: int, end: int, label, dep_type: str,
+                       desc: str=None, is_final: bool=True):
         """Creates and adds an edge with render type RenderType#dependency.
 
-        Args:      
-            start (int): Index of the token the edge should start at. The token at the
-                given index must already exist in the sentence.
-            end (int): Index of the token the edge should end at. The token at the
-                given index must already exist in the sentence.
+        Args:
+            start (int): Index of the token the edge should start at. The token
+                at the given index must already exist in the sentence.
+            end (int): Index of the token the edge should end at. The token at
+                the given index must already exist in the sentence.
             label (str): The label of the edge.
             dep_type (str): The type of edge.
             desc (str, optional): The description of the span.
-            is_final (bool, optional): Whether the dependency is final. Defaults to true.
+            is_final (bool, optional): Whether the dependency is final.
+                Defaults to true.
 
         Raises:
             KeyError: If there was no token at one of the given positions.
+
         """
         if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, dep_type,
-                                   description=desc, is_final=is_final))
+            self.edges.append(Edge(self.token_map[start], self.token_map[end],
+                                   label, dep_type, description=desc,
+                                   is_final=is_final))
         else:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
 
     def add_tokens(self, tokens: tuple):
         """Adds the given collection of tokens to this instance.
-        
+
         Args:
             tokens (tuple): The tokens to add.
         """
@@ -170,7 +175,7 @@ class NLPInstance:
 
     def add_edges(self, edges: list):
         """Adds the given collection of edges to this instance.
-        
+
         Args:
             edges (tuple): The edges to add.
         """
@@ -178,15 +183,16 @@ class NLPInstance:
 
     def merge(self, nlp):
         """Merges the given instance with this instance.
-        
+
         A merge will add for every token i all properties of the token i of the
-        passed instance ``nlp``. It will also add every edge between i and i in the
-        given instance ``nlp`` as an edge between the tokens i and j of this
-        instance, using the same type, label and rendertype as the original
-        edge.
-        
+        passed instance ``nlp``. It will also add every edge between i and i in
+        the given instance ``nlp`` as an edge between the tokens i and j of
+        this instance, using the same type, label and rendertype as the
+        original edge.
+
         Args:
             nlp (NLPInstance): The instance to merge into this instance.
+
         """
         for i in range(0, min(len(self.tokens), len(nlp.tokens))):
             self.tokens[i].merge(nlp.tokens[i])
@@ -199,7 +205,7 @@ class NLPInstance:
         """Add a token that has the provided properties and values.
 
         Args:
-            *props_and_vals: (<token_property>, <value>) pairs.
+            props_and_vals: (<token_property>, <value>) pairs.
         """
         token = Token(len(self.tokens))
         for prop, val in props_and_vals:
@@ -218,13 +224,14 @@ class NLPInstance:
             NLPInstance#consistify() when you are done.
 
         Args:
-            index (int, optional): The position where the token should be added.
-                If not given then the position will be set to the number of already
-                present tokens.
+            index (int, optional): The position where the token should be
+                added. If not given then the position will be set to the number
+                of already present tokens.
             is_actual (bool, optional): Is the token actual? Defaults to False.
 
         Returns:
             Token: The token that was added.
+
         """
         if index is None:
             vertex = Token(len(self.tokens), is_actual)
@@ -291,9 +298,10 @@ class NLPInstance:
         Returns:
             str: A string representation of this instance.
         """
-        return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
-                                      ", ".join(str(v) for v in self.token_map.values()),
-                                      ", ".join(str(e) for e in self.edges))
+        tokens = ", ".join(str(token) for token in self.tokens)
+        values = ", ".join(str(v) for v in self.token_map.values())
+        edges = ", ".join(str(e) for e in self.edges)
+        return "{0}\n{1}\n{2}".format(tokens, values, edges)
 
 
 def nlp_diff(gold_instance: NLPInstance,
@@ -320,15 +328,18 @@ def nlp_diff(gold_instance: NLPInstance,
     matches = goldIdentities & guessIdentities
     for edge in fn:
         Type = edge.edge_type + ":FN"
-        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+        diff.add_edge(start=edge.start.index, end=edge.end.index,
+                      label=edge.label, note=edge.note, edge_type=Type,
                       render_type=edge.render_type, desc=edge.description)
     for edge in fp:
         Type = edge.edge_type + ":FP"
-        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+        diff.add_edge(start=edge.start.index, end=edge.end.index,
+                      label=edge.label, note=edge.note, edge_type=Type,
                       render_type=edge.render_type, desc=edge.description)
 
     for edge in matches:
         Type = edge.edge_type + ":Match"
-        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note, edge_type=Type,
+        diff.add_edge(start=edge.start.index, end=edge.end.index,
+                      label=edge.label, note=edge.note, edge_type=Type,
                       render_type=edge.render_type, desc=edge.description)
     return diff

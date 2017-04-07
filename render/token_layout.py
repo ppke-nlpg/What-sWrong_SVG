@@ -57,7 +57,8 @@ class TokenLayout:
         self.width = 0
         self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance,token_widths: dict, scene):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict,
+                              scene):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -167,12 +168,13 @@ class TokenLayout:
                     g2d.color = (0, 102, 204)  # Blue
                 else:
                     g2d.color = (0, 0, 0)  # Black
-                g2d.add(TextToken(g2d, (lastx, lasty), curr_property, 12, g2d.color))
+                g2d.add(TextToken(g2d, (lastx, lasty), curr_property, 12,
+                                  g2d.color))
                 lasty += self.row_height
                 labelwidth = Text(g2d, (0, 0), curr_property, 12, g2d.color).get_width()
                 if labelwidth > maxx:
                     maxx = labelwidth
-                self.text_layouts[(token, index+1)] = curr_property  # curr_property -> layout (Not used...)
+                self.text_layouts[(token, index+1)] = curr_property
                 index += 1
             required_width = token_widths.get(token)
             if required_width is not None and maxx < required_width:
