@@ -89,7 +89,6 @@ class NLPInstance:
 
         Raises:
             KeyError: If there was no token at one of the given positions.
-
         """
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end],
@@ -192,7 +191,6 @@ class NLPInstance:
 
         Args:
             nlp (NLPInstance): The instance to merge into this instance.
-
         """
         for i in range(0, min(len(self.tokens), len(nlp.tokens))):
             self.tokens[i].merge(nlp.tokens[i])
