@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from .SVGWriter import Line, Scene, Text, QuadraticBezierCurve
+from .svg_writer import Line, Scene, Text, QuadraticBezierCurve
 
 
 class DependencyLayout(AbstractEdgeLayout):

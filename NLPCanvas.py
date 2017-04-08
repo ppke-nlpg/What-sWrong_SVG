@@ -4,7 +4,7 @@
 
 import cairosvg
 from PyQt4 import QtGui, QtSvg
-from render.SVGWriter import Scene
+from render.svg_writer import Scene
 from render.SingleSentenceRenderer import SingleSentenceRenderer
 from nlp_model.nlp_instance import NLPInstance, RenderType
 from render.AligmentRenderer import AligmentRenderer
