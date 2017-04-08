@@ -38,6 +38,7 @@ To install the program install all the depencies separately clone the repository
 
    - Python 3 (the higher version is the better, the program is only tested with the lastest LTS version of Ubuntu)
    - PyQt4 (for GUI)
+   - [svgwrite](https://pypi.python.org/pypi/svgwrite/)
    - [cairosvg](http://cairosvg.org/) (for (E)PS and PDF export)
  
 # Development and contributing
