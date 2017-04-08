@@ -246,11 +246,12 @@ class NLPCanvas:
         else:
             self.writePDF(filepath)
 
+
     def writeSVG(self, filepath):
         if filepath is not None:
-            self._SVGScene.write_svg(filepath)
+            self._SVGScene.save(filepath)
         else:
-            return self._SVGScene.write_bytes()
+            return self._SVGScene.tostring().encode('UTF-8')
 
     """
      * Clears the current instance.
@@ -268,9 +269,9 @@ class NLPCanvas:
      * @throws IOException if IO goes wrong.
     """
     def writePS(self, filepath):
-        svg_bytes = self._SVGScene.write_bytes()
+        svg_bytes = self._SVGScene.tostring().encode('UTF-8')
         cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
 
     def writePDF(self, filepath):
-        svg_bytes = self._SVGScene.write_bytes()
+        svg_bytes = self._SVGScene.tostring().encode('UTF-8')
         cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
