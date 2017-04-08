@@ -64,6 +64,13 @@ Please consult [the general rules of contributing](https://github.com/ppke-nlpg/
 4. Modify the pull request as asked to be accepted!
 5. Profit! :)
 
+## Style guide
+
+__Note: We are currently transforming the code (and the docstrings) from the JAVA like easy-to-diff(TM) format to a Pythonic format. There are JAVA code excerpts in some source files and some JAVA files that means TODOs. These will be eliminated when they are implemented.__
+
+1. We prefer the [Google Style docstring format](http://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
+2. Concerning the code style: what is good for PyCharm or similar linter by default (i.e. no warnings), it's good for us. (It is more relaxed, than the Google Style guide.)    
+
 ### We happily accept contributions on the following topics:
 
 - Add test data (we need the format, not the proprietary data) to the following implemened formats (as some of the datasets are not online by now.) 
