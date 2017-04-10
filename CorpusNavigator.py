@@ -674,8 +674,8 @@ class CorpusNavigator:
                     self._indices[index] = self._instance
                 self._canvas.renderer.setEdgeTypeColor("FN", (000, 000, 255))  # Blue
                 self._canvas.renderer.setEdgeTypeColor("FP", (255, 000, 000))  # Red
-                self._canvas.setNLPInstance(self._instance)
-                self._canvas.updateNLPGraphics()
+                self._canvas.set_nlp_instance(self._instance)
+                self._canvas.update_nlp_graphics()
         else:
             """
             searchButton.setEnabled(false);
@@ -701,7 +701,7 @@ class CorpusNavigator:
             example.add_dependency(4, 3, "MOD", "dep")
             example.add_dependency(1, 4, "A1", "role")
             example.add_span(1, 1, "add.1", "sense")
-            self._canvas.setNLPInstance(example)
+            self._canvas.set_nlp_instance(example)
             self._edgeTypeFilter.addAllowedPrefixType("dep")
             self._edgeTypeFilter.addAllowedPrefixType("role")
             self._edgeTypeFilter.addAllowedPrefixType("sense")
@@ -721,4 +721,4 @@ class CorpusNavigator:
             self._canvas.renderer.setEdgeTypeOrder("sense", 4)
             self._canvas.renderer.setEdgeTypeOrder("role", 5)
             self._canvas.renderer.setEdgeTypeOrder("phrase", 5)
-            self._canvas.updateNLPGraphics()
+            self._canvas.update_nlp_graphics()

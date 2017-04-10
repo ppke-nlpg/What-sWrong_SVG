@@ -125,7 +125,7 @@ class NLPCanvas:
         self._ui = ui
         self._scene = QtGui.QGraphicsScene()
         self._SVGScene = None
-        self._nlpInstance = None
+        self._nlp_instance = None
         self._listeners = []
         self._changeListeners = []
 
@@ -164,11 +164,11 @@ class NLPCanvas:
      *
      * @param nlpInstance the new NLP instance.
     """
-    def setNLPInstance(self, nlpIntance):
-        self._nlpInstance = nlpIntance
-        self._dependencies = self._nlpInstance.get_edges()
+    def set_nlp_instance(self, nlp_instance):
+        self._nlp_instance = nlp_instance
+        self._dependencies = self._nlp_instance.get_edges()
         self._usedTypes = {edge.edge_type for edge in self._dependencies}  # Union
-        self._tokens = self._nlpInstance.tokens
+        self._tokens = self._nlp_instance.tokens
         self._usedProperties = {prop for token in self._tokens for prop in token.get_property_types()}  # UnionAll
         self.fireInstanceChanged()
 
@@ -205,9 +205,9 @@ class NLPCanvas:
      *
      * @return the filtered instance.
     """
-    def filterInstance(self):
-        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, render_type=self._nlpInstance.render_type,
-                               split_points=self._nlpInstance.split_points)
+    def filter_instance(self):
+        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, render_type=self._nlp_instance.render_type,
+                               split_points=self._nlp_instance.split_points)
         for curr_filter in self._filters:
             instance = curr_filter.filter(instance)
         return instance
@@ -216,18 +216,27 @@ class NLPCanvas:
      * Updates the current graph. This takes into account all changes to the filter,
       NLP instance and drawing parameters.
     """
-    def updateNLPGraphics(self):
+    def update_nlp_graphics(self):
         scene = QtGui.QGraphicsScene()
         self._ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(self.exportNLPGraphics())
+        rr = QtSvg.QSvgRenderer(self.export_nlp_graphics())
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self._ui.graphicsView.show()
         self.fireChanged()
 
-    def exportNLPGraphics(self, filepath=None, output_type='SVG'):
-        filtered = self.filterInstance()
+    def clear(self):
+        """
+         * Clears the current instance.
+        """
+        self._tokens.clear()
+        self._dependencies.clear()
+        self._usedTypes.clear()
+        self._usedProperties.clear()
+
+    def export_nlp_graphics(self, filepath=None, output_type='SVG'):
+        filtered = self.filter_instance()
         self._SVGScene = Scene()
 
         renderer = self._renderers[filtered.render_type]
@@ -238,40 +247,30 @@ class NLPCanvas:
 
         renderer.render(filtered, self._SVGScene)
         if output_type == 'SVG':
-            ret = self.writeSVG(filepath)
+            ret = self.write_svg(filepath)
             if ret is not None:
                 return ret
         elif output_type == 'PS':
-            self.writePS(filepath)
+            self.write_ps(filepath)
         else:
-            self.writePDF(filepath)
+            self.write_pdf(filepath)
 
-
-    def writeSVG(self, filepath):
+    def write_svg(self, filepath):
         if filepath is not None:
             self._SVGScene.save(filepath)
         else:
             return self._SVGScene.tostring().encode('UTF-8')
 
-    """
-     * Clears the current instance.
-    """
-    def clear(self):
-        self._tokens.clear()
-        self._dependencies.clear()
-        self._usedTypes.clear()
-        self._usedProperties.clear()
-
-    """
-     * Exports the current graph to EPS.
-     *
-     * @param file the eps file to export to.
-     * @throws IOException if IO goes wrong.
-    """
-    def writePS(self, filepath):
+    def write_ps(self, filepath):
+        """
+         * Exports the current graph to EPS.
+         *
+         * @param file the eps file to export to.
+         * @throws IOException if IO goes wrong.
+        """
         svg_bytes = self._SVGScene.tostring().encode('UTF-8')
         cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
 
-    def writePDF(self, filepath):
+    def write_pdf(self, filepath):
         svg_bytes = self._SVGScene.tostring().encode('UTF-8')
         cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)

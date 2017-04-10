@@ -49,7 +49,7 @@ class TokenFilterPanel:
             else:
                 self._tokenFilter.addForbiddenProperty(name=t)
         if not self._updating:
-            self._canvas.updateNLPGraphics()
+            self._canvas.update_nlp_graphics()
 
     def allowedChanged(self, text):  # keyReleased
         self._tokenFilter.clearAllowedStrings()
@@ -59,11 +59,11 @@ class TokenFilterPanel:
                 if m:
                     curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
                 self._tokenFilter.addAllowedString(curr_property)
-        self._canvas.updateNLPGraphics()
+        self._canvas.update_nlp_graphics()
 
     def wholeWordActionPerformed(self, value):
         self._tokenFilter.wholeWord = value == 2  # Checked == True
-        self._canvas.updateNLPGraphics()
+        self._canvas.update_nlp_graphics()
 
     """
      * Updates the list of available token properties.

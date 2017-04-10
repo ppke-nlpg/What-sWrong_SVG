@@ -30,7 +30,7 @@ class DependencyFilterPanel:
             split = text.split(",")
             for label in split:
                 edgeLabelFilter.addAllowedLabel(label)
-            nlpCanvas.updateNLPGraphics()
+            nlpCanvas.update_nlp_graphics()
         labelField.textEdited.connect(labelFieldChanged)
 
         tokenTextField = gui.edgeFilterTokenLineEdit
@@ -41,26 +41,26 @@ class DependencyFilterPanel:
             split = text.split(",")
             for token_property in split:
                 edgeTokenFilter.addAllowedProperty(token_property)
-            nlpCanvas.updateNLPGraphics()
+            nlpCanvas.update_nlp_graphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 
         usePath = gui.onlyPathCheckBox
 
         def usePathAction(value):
             edgeTokenFilter.usePath = value == 2  # checked
-            nlpCanvas.updateNLPGraphics()
+            nlpCanvas.update_nlp_graphics()
         usePath.stateChanged.connect(usePathAction)
 
         collapse = gui.collapsCheckBox
 
         def collapseAction(value):
             edgeTokenFilter.collaps = value == 2  # checked
-            nlpCanvas.updateNLPGraphics()
+            nlpCanvas.update_nlp_graphics()
         collapse.stateChanged.connect(collapseAction)
 
         wholeWords = gui.edgeFilterWholeWordsCheckBox
 
         def wholeWordsAction(value):
             edgeTokenFilter.wholeWords = value == 2  # checked
-            nlpCanvas.updateNLPGraphics()
+            nlpCanvas.update_nlp_graphics()
         wholeWords.stateChanged.connect(wholeWordsAction)

@@ -85,7 +85,7 @@ class EdgeTypeFilterPanel:
                 else:
                     self._edgeTypeFilter.removeAllowedPrefixType(t)
             self._justChanged.clear()
-            self._nlpCanvas.updateNLPGraphics()
+            self._nlpCanvas.update_nlp_graphics()
         self._types.itemSelectionChanged.connect(valueChanged)
 
         # add false positive/negative and match check buttons
@@ -95,7 +95,7 @@ class EdgeTypeFilterPanel:
             else:
                 self._edgeTypeFilter.removeAllowedPostfixType("Match")
             self._justChanged.clear()
-            self._nlpCanvas.updateNLPGraphics()
+            self._nlpCanvas.update_nlp_graphics()
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
@@ -104,7 +104,7 @@ class EdgeTypeFilterPanel:
             else:
                 self._edgeTypeFilter.removeAllowedPostfixType("FN")
 
-            self._nlpCanvas.updateNLPGraphics()
+            self._nlpCanvas.update_nlp_graphics()
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
@@ -113,7 +113,7 @@ class EdgeTypeFilterPanel:
             else:
                 self._edgeTypeFilter.removeAllowedPostfixType("FP")
 
-            self._nlpCanvas.updateNLPGraphics()
+            self._nlpCanvas.update_nlp_graphics()
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
 
     """
