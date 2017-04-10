@@ -83,18 +83,6 @@ class EdgeTypeFilter:
         self.allowed_postfix_types.remove(t)
         self.fire_changed(t)
 
-    def filter_edges(self, original: frozenset) -> frozenset:
-        """
-         * Filters out all edges that don't have an allowed prefix and postfix type.
-         *
-         * @param original the original set of edges.
-         * @return the filtered set of edges.
-         * @see EdgeFilter#filterEdges(Collection<Edge>)
-        """
-        return frozenset(edge for edge in original if  # Allowed prefixes and postfixes
-                         (edge.get_type_prefix() == "" or edge.get_type_prefix() in self.allowed_prefix_types) and
-                         (edge.get_type_postfix() == "" or edge.get_type_postfix() in self.allowed_postfix_types))
-
     def allows_prefix(self, t: str):
         """
          * Does the filter allow the given prefix.
@@ -112,6 +100,18 @@ class EdgeTypeFilter:
          * @return true iff the given type is allowed as postfix.
         """
         return t in self.allowed_postfix_types
+
+    def filter_edges(self, original: frozenset) -> frozenset:
+        """
+         * Filters out all edges that don't have an allowed prefix and postfix type.
+         *
+         * @param original the original set of edges.
+         * @return the filtered set of edges.
+         * @see EdgeFilter#filterEdges(Collection<Edge>)
+        """
+        return frozenset(edge for edge in original if  # Allowed prefixes and postfixes
+                         (edge.get_type_prefix() == "" or edge.get_type_prefix() in self.allowed_prefix_types) and
+                         (edge.get_type_postfix() == "" or edge.get_type_postfix() in self.allowed_postfix_types))
 
     def filter(self, original: NLPInstance):
         """
