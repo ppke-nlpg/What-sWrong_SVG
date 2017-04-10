@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # Todo: Export to PDF, EPS, etc.
 
-import cairosvg
 from PyQt4 import QtGui, QtSvg
-from render.svg_writer import Scene
-from render.SingleSentenceRenderer import SingleSentenceRenderer
+
 from nlp_model.nlp_instance import NLPInstance, RenderType
 from render.AligmentRenderer import AligmentRenderer
+from render.SingleSentenceRenderer import SingleSentenceRenderer
+from render.svg_writer import Scene
 
 """
  * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token
@@ -124,7 +124,6 @@ class NLPCanvas:
         self._filters = None
         self._ui = ui
         self._scene = QtGui.QGraphicsScene()
-        self._SVGScene = None
         self._nlp_instance = None
         self._listeners = []
         self._changeListeners = []
@@ -206,7 +205,8 @@ class NLPCanvas:
      * @return the filtered instance.
     """
     def filter_instance(self):
-        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies, render_type=self._nlp_instance.render_type,
+        instance = NLPInstance(tokens=self._tokens, edges=self._dependencies,
+                               render_type=self._nlp_instance.render_type,
                                split_points=self._nlp_instance.split_points)
         for curr_filter in self._filters:
             instance = curr_filter.filter(instance)
@@ -220,7 +220,7 @@ class NLPCanvas:
         scene = QtGui.QGraphicsScene()
         self._ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(self.export_nlp_graphics())
+        rr = QtSvg.QSvgRenderer(Scene.export_nlp_graphics(self._renderers, self.filter_instance()))
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self._ui.graphicsView.show()
@@ -234,43 +234,3 @@ class NLPCanvas:
         self._dependencies.clear()
         self._usedTypes.clear()
         self._usedProperties.clear()
-
-    def export_nlp_graphics(self, filepath=None, output_type='SVG'):
-        filtered = self.filter_instance()
-        self._SVGScene = Scene()
-
-        renderer = self._renderers[filtered.render_type]
-
-        dim = renderer.render(filtered, self._SVGScene)
-
-        self._SVGScene = Scene(width=dim[0], height=dim[1])
-
-        renderer.render(filtered, self._SVGScene)
-        if output_type == 'SVG':
-            ret = self.write_svg(filepath)
-            if ret is not None:
-                return ret
-        elif output_type == 'PS':
-            self.write_ps(filepath)
-        else:
-            self.write_pdf(filepath)
-
-    def write_svg(self, filepath):
-        if filepath is not None:
-            self._SVGScene.save(filepath)
-        else:
-            return self._SVGScene.tostring().encode('UTF-8')
-
-    def write_ps(self, filepath):
-        """
-         * Exports the current graph to EPS.
-         *
-         * @param file the eps file to export to.
-         * @throws IOException if IO goes wrong.
-        """
-        svg_bytes = self._SVGScene.tostring().encode('UTF-8')
-        cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
-
-    def write_pdf(self, filepath):
-        svg_bytes = self._SVGScene.tostring().encode('UTF-8')
-        cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)

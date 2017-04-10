@@ -19,6 +19,7 @@ from nlp_model.nlp_instance import RenderType
 from NLPCanvas import NLPCanvas
 from TokenFilter import TokenFilter
 from TokenFilterPanel import TokenFilterPanel
+from render.svg_writer import Scene
 # from CorpusLoader import CorpusLoader
 
 
@@ -186,7 +187,7 @@ class MyForm(QtGui.QMainWindow):
 
     def file_save(self):
         name = QtGui.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')  # todo ok like this?
-        self.canvas.export_nlp_graphics(name)
+        Scene.export_nlp_graphics(self.canvas._renderers, self.canvas.filter_instance(), name)
 
 
 def test(f):

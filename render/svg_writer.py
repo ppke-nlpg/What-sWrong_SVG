@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import cairosvg
 import svgwrite as sw
 
 """
@@ -34,6 +34,31 @@ class Scene(sw.drawing.Drawing):
 
     def translate_to(self, vect):
         return vect[0] + self.offsetx, vect[1] + self.offsety
+
+    @staticmethod
+    def export_nlp_graphics(renderers, filtered, filepath=None, output_type='SVG'):
+        svg_scene = Scene()  # TODO: Do this in a more clever way...
+
+        renderer = renderers[filtered.render_type]
+
+        dim = renderer.render(filtered, svg_scene)
+
+        svg_scene = Scene(width=dim[0], height=dim[1])
+
+        renderer.render(filtered, svg_scene)
+
+        svg_bytes = svg_scene.tostring().encode('UTF-8')
+
+        if filepath is not None and output_type == 'SVG':
+            svg_scene.save(filepath)
+        elif filepath is None and output_type == 'SVG':
+            return svg_bytes
+        elif output_type == 'PS':
+            cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
+        elif output_type == 'PDF':
+            cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
+        else:
+            raise ValueError('{0} not a supported filetype!'.format(output_type))
 
 
 class Line(sw.shapes.Line):
