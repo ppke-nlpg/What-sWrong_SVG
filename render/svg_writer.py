@@ -16,7 +16,7 @@ class Scene(sw.drawing.Drawing):
         offsety (int): Vertical offset.
         color (tuple): Scene color.
     """
-    def __init__(self, width=400, height=400):
+    def __init__(self, width: int=400, height: int=400):
         """Initialize a Scene instance.
 
         Args:
@@ -28,15 +28,26 @@ class Scene(sw.drawing.Drawing):
         self.offsety = 0
         self.color = (0, 0, 0)
 
-    def translate(self, offx, offy):
+    def translate(self, offx: int, offy: int):
         self.offsetx += offx
         self.offsety += offy
 
-    def translate_to(self, vect):
+    def translate_to(self, vect: tuple):
         return vect[0] + self.offsetx, vect[1] + self.offsety
 
     @staticmethod
-    def export_nlp_graphics(renderer, filtered, filepath=None, output_type='SVG'):
+    def export_nlp_graphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
+        """Export a Scene instance into the supported formats.
+
+        Args:
+            renderer (SingleSentenceRenderer or AlignmentRenderer): The renderer object.
+            filtered (NLPInstance): The filtered NLPInstane to be rendered.
+            filepath (str): The path of the outputfile.
+            output_type (str): The type of the output format.
+        
+        Returns: The bytesting of the rendered object if needed. 
+            
+        """
         svg_scene = Scene()  # TODO: Do this in a more clever way...
 
         dim = renderer.render(filtered, svg_scene)
@@ -60,7 +71,7 @@ class Scene(sw.drawing.Drawing):
 
 
 class Line(sw.shapes.Line):
-    def __init__(self, scene, start, end, color, width=1):
+    def __init__(self, scene: Scene, start: tuple, end: tuple, color: tuple, width: int=1):
         super().__init__(scene.translate_to(start),
                          scene.translate_to(end),
                          shape_rendering='inherit',
@@ -69,7 +80,7 @@ class Line(sw.shapes.Line):
 
 
 class QuadraticBezierCurve(sw.path.Path):
-    def __init__(self, scene, start, control1, control2, end, color, width=1):
+    def __init__(self, scene, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
         super().__init__(d=['M', scene.translate_to(start),
                             'C', scene.translate_to(control1),
                             scene.translate_to(control2),
@@ -80,8 +91,8 @@ class QuadraticBezierCurve(sw.path.Path):
 
 
 class Rectangle(sw.shapes.Rect):
-    def __init__(self, scene, origin, width, height, fill_color, line_color,
-                 line_width, rx=0, ry=0):
+    def __init__(self, scene: Scene, origin: tuple, width: tuple, height: tuple, fill_color: tuple, line_color: tuple,
+                 line_width: int, rx: int=0, ry: int=0):
         super().__init__(insert=scene.translate_to(origin),
                          height=height,
                          width=width,
@@ -93,7 +104,7 @@ class Rectangle(sw.shapes.Rect):
 
 
 class Text(sw.text.Text):
-    def __init__(self, scene, origin, text, size, color):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple):
         origin = scene.translate_to(origin)
         super().__init__(text,
                          x=[origin[0]],
@@ -105,12 +116,12 @@ class Text(sw.text.Text):
                          alignment_baseline='central',
                          text_anchor='middle')
 
-    def get_width(self):
+    def get_width(self) -> int:
         return len(self.text) * 7
 
 
 class TextToken(sw.text.Text):
-    def __init__(self, scene, origin, text, size, color):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple):
         origin = scene.translate_to(origin)
         super().__init__(text,
                          x=[origin[0]],
@@ -120,9 +131,9 @@ class TextToken(sw.text.Text):
                          font_size=size,
                          text_rendering='inherit')
 
-    def get_width(self):
+    def get_width(self) -> int:
         return len(self.text) * 6
 
 
-def colorstr(rgb):
+def colorstr(rgb: tuple) -> str:
     return "rgb({0:d},{1:d},{2:d})".format(rgb[0], rgb[1], rgb[2])
