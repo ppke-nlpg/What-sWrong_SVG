@@ -28,7 +28,7 @@ class NLPCanvas:
              * Creates a new canvas with default size.
         """
         self.renderer = SingleSentenceRenderer()
-        self.renderers = {RenderType.single: self.renderer,
+        self.renderers = {RenderType.single: SingleSentenceRenderer(),
                           RenderType.alignment: AligmentRenderer()}
         self.tokens = []
         self.dependencies = set()
@@ -105,7 +105,7 @@ class NLPCanvas:
         scene = QtGui.QGraphicsScene()
         self._ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(Scene.export_nlp_graphics(self.renderers, self.filter_instance()))
+        rr = QtSvg.QSvgRenderer(Scene.export_nlp_graphics(self.renderer, self.filter_instance()))
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self._ui.graphicsView.show()

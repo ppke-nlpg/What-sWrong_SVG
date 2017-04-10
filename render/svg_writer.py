@@ -36,10 +36,8 @@ class Scene(sw.drawing.Drawing):
         return vect[0] + self.offsetx, vect[1] + self.offsety
 
     @staticmethod
-    def export_nlp_graphics(renderers, filtered, filepath=None, output_type='SVG'):
+    def export_nlp_graphics(renderer, filtered, filepath=None, output_type='SVG'):
         svg_scene = Scene()  # TODO: Do this in a more clever way...
-
-        renderer = renderers[filtered.render_type]
 
         dim = renderer.render(filtered, svg_scene)
 

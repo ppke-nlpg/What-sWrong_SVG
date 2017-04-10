@@ -187,7 +187,7 @@ class MyForm(QtGui.QMainWindow):
 
     def file_save(self):
         name = QtGui.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')  # todo ok like this?
-        Scene.export_nlp_graphics(self.canvas._renderers, self.canvas.filter_instance(), name)
+        Scene.export_nlp_graphics(self.canvas.renderer, self.canvas.filter_instance(), name)
 
 
 def test(f):
