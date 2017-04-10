@@ -23,7 +23,7 @@ class TokenFilterPanel:
         self._tokenFilter = tokenFilter
 
         self._canvas = canvas
-        self._canvas.addChangeListener(changeListener=self)
+        self._canvas.addChangeListener(self)
 
         self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
