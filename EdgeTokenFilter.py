@@ -220,16 +220,16 @@ class EdgeTokenFilter:
         if self._usePath:
             paths = self.calculatePaths(original)
             for start in paths.keys():
-                if start.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                if start.properties_contain(substrings=self._allowedProperties, whole_word=self._wholeWords):
                     for to in paths[start].keys():
-                        if to.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                        if to.properties_contain(substrings=self._allowedProperties, whole_word=self._wholeWords):
                             for path in paths[start][to]:
                                 result.update(path)
         else:
 
             for edge in original:
-                if edge.start.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords) or \
-                        edge.end.properties_contain(substrings=self._allowedProperties, wholeWord=self._wholeWords):
+                if edge.start.properties_contain(substrings=self._allowedProperties, whole_word=self._wholeWords) or \
+                        edge.end.properties_contain(substrings=self._allowedProperties, whole_word=self._wholeWords):
                     result.add(edge)
         return frozenset(result)
 

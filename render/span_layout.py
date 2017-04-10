@@ -101,12 +101,12 @@ class SpanLayout(AbstractEdgeLayout):
 
         for over in edges:
             for under in edges:
-                orderOver = self.get_order(over.get_type_prefix())
-                orderUnder = self.get_order(under.get_type_prefix())
-                if not (orderOver is None and orderUnder is not None) or \
-                       (orderOver is not None and orderUnder is None) or \
-                       (orderOver != orderUnder and orderOver > orderUnder) or \
-                       (orderOver == orderUnder and (  # Also when both are None...
+                order_over = self.get_order(over.get_type_prefix())
+                order_under = self.get_order(under.get_type_prefix())
+                if not (order_over is None and order_under is not None) or \
+                       (order_over is not None and order_under is None) or \
+                       (order_over != order_under and order_over > order_under) or \
+                       (order_over == order_under and (  # Also when both are None...
                         over.covers(under) or over.covers_semi(under) or
                         over.covers_exactly(under) and
                         over.lexicographic_order(under) > 0 or
@@ -149,11 +149,11 @@ class SpanLayout(AbstractEdgeLayout):
             labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).get_width()  # layout, Original fontsize = 8
             # draw lines
             if self.revert:
-                spanLevel = max_depth - depth[edge]
+                span_level = max_depth - depth[edge]
             else:
-                spanLevel = depth[edge]
+                span_level = depth[edge]
 
-            height = self.baseline + max_height - (spanLevel + 1) * self.height_per_level + offset[edge]
+            height = self.baseline + max_height - (span_level + 1) * self.height_per_level + offset[edge]
 
             buffer = 2
 

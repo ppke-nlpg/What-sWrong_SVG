@@ -162,11 +162,11 @@ class NLPInstance:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
 
-    def add_tokens(self, tokens: tuple):
+    def add_tokens(self, tokens: list):
         """Adds the given collection of tokens to this instance.
 
         Args:
-            tokens (tuple): The tokens to add.
+            tokens (list): The tokens to add.
         """
         self.tokens.extend(tokens)
         for t in tokens:
@@ -319,25 +319,25 @@ def nlp_diff(gold_instance: NLPInstance,
     for split_point in gold_instance.split_points:
         diff.add_split_point(split_point)
     diff.add_tokens(gold_instance.tokens)
-    goldIdentities = gold_instance.get_edges()
-    guessIdentities = guess_instance.get_edges()
-    fn = goldIdentities - guessIdentities
-    fp = guessIdentities - goldIdentities
-    matches = goldIdentities & guessIdentities
+    gold_identities = gold_instance.get_edges()
+    guess_identities = guess_instance.get_edges()
+    fn = gold_identities - guess_identities
+    fp = guess_identities - gold_identities
+    matches = gold_identities & guess_identities
     for edge in fn:
-        Type = edge.edge_type + ":FN"
+        edge_type = edge.edge_type + ":FN"
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=Type,
+                      label=edge.label, note=edge.note, edge_type=edge_type,
                       render_type=edge.render_type, desc=edge.description)
     for edge in fp:
-        Type = edge.edge_type + ":FP"
+        edge_type = edge.edge_type + ":FP"
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=Type,
+                      label=edge.label, note=edge.note, edge_type=edge_type,
                       render_type=edge.render_type, desc=edge.description)
 
     for edge in matches:
-        Type = edge.edge_type + ":Match"
+        edge_type = edge.edge_type + ":Match"
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=Type,
+                      label=edge.label, note=edge.note, edge_type=edge_type,
                       render_type=edge.render_type, desc=edge.description)
     return diff

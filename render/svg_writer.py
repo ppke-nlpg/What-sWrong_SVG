@@ -91,7 +91,7 @@ class QuadraticBezierCurve(sw.path.Path):
 
 
 class Rectangle(sw.shapes.Rect):
-    def __init__(self, scene: Scene, origin: tuple, width: tuple, height: tuple, fill_color: tuple, line_color: tuple,
+    def __init__(self, scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple, line_color: tuple,
                  line_width: int, rx: int=0, ry: int=0):
         super().__init__(insert=scene.translate_to(origin),
                          height=height,

@@ -52,16 +52,16 @@ class DependencyLayout(AbstractEdgeLayout):
         self.shapes.clear()
 
         loops = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
-        allLoops = set()  # HashSet<Edge>()
+        all_loops = set()  # HashSet<Edge>()
         tokens = set()  # HashSet<Token>()
         for edge in edges_:
             tokens.add(edge.start)
             tokens.add(edge.end)
             if edge.start == edge.end:
                 loops[edge.start].append(edge)
-                allLoops.add(edge)
+                all_loops.add(edge)
 
-        edges_ -= allLoops
+        edges_ -= all_loops
 
         depth = Counter()   # Counter<Edge>()
         offset = Counter()  # Counter<Edge>()
@@ -95,7 +95,7 @@ class DependencyLayout(AbstractEdgeLayout):
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
-        if max_depth == 0 and len(allLoops) > 0:
+        if max_depth == 0 and len(all_loops) > 0:
             max_height += self.height_per_level // 2
 
         # build map from vertex to incoming/outgoing edges
@@ -139,12 +139,12 @@ class DependencyLayout(AbstractEdgeLayout):
             connections = vertex2edges[token]
             connections = sorted(connections, key=functools.cmp_to_key(compare_edges))
             # now put points along the token vertex wrt to ordering
-            loopsOnVertex = loops[token]
+            loops_on_vertex = loops[token]
             bounds_width = bounds[token].end - bounds[token].start
             width = (bounds_width + self.vertex_extra_space) //\
-                    (len(connections) + 1 + len(loopsOnVertex) * 2)
+                    (len(connections) + 1 + len(loops_on_vertex) * 2)
             x = (bounds[token].start - (self.vertex_extra_space // 2)) + width
-            for loop in loopsOnVertex:
+            for loop in loops_on_vertex:
                 point = (x, self.baseline + max_height)
                 start[loop] = point
                 x += width
@@ -156,13 +156,13 @@ class DependencyLayout(AbstractEdgeLayout):
                     end[edge] = point
                 x += width
 
-            for loop in loopsOnVertex:
+            for loop in loops_on_vertex:
                 point = (x, self.baseline + max_height)
                 end[loop] = point
                 x += width
 
         # draw each edge
-        edges_ |= allLoops
+        edges_ |= all_loops
         for edge in edges_:
             # set Color and remember old color
             old = scene.color
@@ -232,7 +232,7 @@ class DependencyLayout(AbstractEdgeLayout):
         return p1, p2, p3, p4
 
     @staticmethod
-    def create_curve_arrow(scene: Scene, start, c1, c2, end):
+    def create_curve_arrow(scene: Scene, start: tuple, c1: tuple, c2: tuple, end: tuple):
         """Create an curved path around the given points in a scene.
 
         The path starts at `start` and ends at `end`. Points c1 and c2 are used as
@@ -248,12 +248,6 @@ class DependencyLayout(AbstractEdgeLayout):
         Return:
             The given points as a tuple.
         """
-        start = (start[0], start[1])
-        # y = (c1[0] - start.x(), c1[1]-start.y())
-        # z = (c1[0]+(c2[0]-c1[0]) / 2 -start.x(), c1[1]-start.y())
-        c1 = (c1[0], c1[1])
-        c2 = (c2[0], c2[1])
-        end = (end[0], end[1])
         middle = (c1[0] + (c2[0]-c1[0]) // 2, c1[1])
         scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, scene.color))
         scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, scene.color))

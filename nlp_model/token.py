@@ -104,12 +104,12 @@ class Token:
         """
         return tuple(self.token_properties.keys())
 
-    def properties_contain(self, substrings: set, wholeWord: bool=False) -> bool:
+    def properties_contain(self, substrings: set, whole_word: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
 
         Args:
             substrings (set): Set of strings to check.
-            wholeWord (bool, optional): Should we check for complete words or
+            whole_word (bool, optional): Should we check for complete words or
                 is it enough for the given strings to be substrings of the
                 token value. Defaults to False.
 
@@ -123,7 +123,7 @@ class Token:
                 #     start, end = substr.split("-")
                 #     if int(start) <= int(curr_property) <= int(end):
                 #         return True
-                if curr_property == substr or (not wholeWord and substr in
+                if curr_property == substr or (not whole_word and substr in
                                                curr_property):
                     return True
         return False
