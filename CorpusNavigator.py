@@ -428,14 +428,14 @@ class CorpusNavigator:
         # guessLoader.addChangeListener(this);
         # goldLoader.addChangeListener(this);
 
-        self.canvas.renderer.setEdgeTypeOrder("pos", 0)
-        self.canvas.renderer.setEdgeTypeOrder("chunk (BIO)", 1)
-        self.canvas.renderer.setEdgeTypeOrder("chunk", 2)
-        self.canvas.renderer.setEdgeTypeOrder("ner (BIO)", 2)
-        self.canvas.renderer.setEdgeTypeOrder("ner", 3)
-        self.canvas.renderer.setEdgeTypeOrder("sense", 4)
-        self.canvas.renderer.setEdgeTypeOrder("role", 5)
-        self.canvas.renderer.setEdgeTypeOrder("phase", 5)
+        self.canvas.renderer.set_edge_type_order("pos", 0)
+        self.canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
+        self.canvas.renderer.set_edge_type_order("chunk", 2)
+        self.canvas.renderer.set_edge_type_order("ner (BIO)", 2)
+        self.canvas.renderer.set_edge_type_order("ner", 3)
+        self.canvas.renderer.set_edge_type_order("sense", 4)
+        self.canvas.renderer.set_edge_type_order("role", 5)
+        self.canvas.renderer.set_edge_type_order("phase", 5)
 
         # results = []
         self._spinner = ui.spinBox
@@ -672,8 +672,8 @@ class CorpusNavigator:
                 else:
                     self._instance = self.getDiffCorpus(self._gold, self._guess)[index]
                     self._indices[index] = self._instance
-                self._canvas.renderer.setEdgeTypeColor("FN", (000, 000, 255))  # Blue
-                self._canvas.renderer.setEdgeTypeColor("FP", (255, 000, 000))  # Red
+                self._canvas.renderer.set_edge_type_color("FN", (000, 000, 255))  # Blue
+                self._canvas.renderer.set_edge_type_color("FP", (255, 000, 000))  # Red
                 self._canvas.set_nlp_instance(self._instance)
                 self._canvas.update_nlp_graphics()
         else:
@@ -713,12 +713,12 @@ class CorpusNavigator:
             self._edgeTypeFilter.add_allowed_postfix_type("FN")
             self._edgeTypeFilter.add_allowed_postfix_type("Match")
 
-            self._canvas.renderer.setEdgeTypeOrder("pos", 0)
-            self._canvas.renderer.setEdgeTypeOrder("chunk (BIO)", 1)
-            self._canvas.renderer.setEdgeTypeOrder("chunk", 2)
-            self._canvas.renderer.setEdgeTypeOrder("ner (BIO)", 2)
-            self._canvas.renderer.setEdgeTypeOrder("ner", 3)
-            self._canvas.renderer.setEdgeTypeOrder("sense", 4)
-            self._canvas.renderer.setEdgeTypeOrder("role", 5)
-            self._canvas.renderer.setEdgeTypeOrder("phrase", 5)
+            self._canvas.renderer.set_edge_type_order("pos", 0)
+            self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
+            self._canvas.renderer.set_edge_type_order("chunk", 2)
+            self._canvas.renderer.set_edge_type_order("ner (BIO)", 2)
+            self._canvas.renderer.set_edge_type_order("ner", 3)
+            self._canvas.renderer.set_edge_type_order("sense", 4)
+            self._canvas.renderer.set_edge_type_order("role", 5)
+            self._canvas.renderer.set_edge_type_order("phrase", 5)
             self._canvas.update_nlp_graphics()

@@ -114,7 +114,7 @@ class AligmentRenderer:
     """
      * Should anti-aliasing be used when drawing the graph.
      *
-     * @param antiAliasing rue iff anti-aliasing should be used when drawing the graph.
+     * @param anti_aliasing rue iff anti-aliasing should be used when drawing the graph.
     """
     # See the setter above...
 
