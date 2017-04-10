@@ -29,7 +29,7 @@ class DependencyFilterPanel:
             edgeLabelFilter.clear()
             split = text.split(",")
             for label in split:
-                edgeLabelFilter.addAllowedLabel(label)
+                edgeLabelFilter.add_allowed_label(label)
             nlpCanvas.update_nlp_graphics()
         labelField.textEdited.connect(labelFieldChanged)
 
@@ -40,7 +40,7 @@ class DependencyFilterPanel:
             edgeTokenFilter.clear()
             split = text.split(",")
             for token_property in split:
-                edgeTokenFilter.addAllowedProperty(token_property)
+                edgeTokenFilter.add_allowed_property(token_property)
             nlpCanvas.update_nlp_graphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 
@@ -61,6 +61,6 @@ class DependencyFilterPanel:
         wholeWords = gui.edgeFilterWholeWordsCheckBox
 
         def wholeWordsAction(value):
-            edgeTokenFilter.wholeWords = value == 2  # checked
+            edgeTokenFilter.whole_words = value == 2  # checked
             nlpCanvas.update_nlp_graphics()
         wholeWords.stateChanged.connect(wholeWordsAction)

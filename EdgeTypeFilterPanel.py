@@ -67,7 +67,7 @@ class EdgeTypeFilterPanel:
         """
         self._edgeTypeFilter = edgeTypeFilter
         self._nlpCanvas.addListener(listener=self)
-        edgeTypeFilter.addListener(listener=self)
+        edgeTypeFilter.add_listener(listener=self)
 
         self.updateTypesList()
         self.updateSelection()
@@ -81,9 +81,9 @@ class EdgeTypeFilterPanel:
                 t = str(self._listModel[index])
                 self._justChanged.add(t)
                 if self._types.isItemSelected(self._types.item(index)):
-                    self._edgeTypeFilter.addAllowedPrefixType(t)
+                    self._edgeTypeFilter.add_allowed_prefix_type(t)
                 else:
-                    self._edgeTypeFilter.removeAllowedPrefixType(t)
+                    self._edgeTypeFilter.remove_allowed_prefix_type(t)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._types.itemSelectionChanged.connect(valueChanged)
@@ -91,27 +91,27 @@ class EdgeTypeFilterPanel:
         # add false positive/negative and match check buttons
         def matchActionPerformed(value):
             if value == 2:  # Checked
-                self._edgeTypeFilter.addAllowedPostfixType("Match")
+                self._edgeTypeFilter.add_allowed_postfix_type("Match")
             else:
-                self._edgeTypeFilter.removeAllowedPostfixType("Match")
+                self._edgeTypeFilter.remove_allowed_postfix_type("Match")
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
             if value == 2:  # Checked
-                self._edgeTypeFilter.addAllowedPostfixType("FN")
+                self._edgeTypeFilter.add_allowed_postfix_type("FN")
             else:
-                self._edgeTypeFilter.removeAllowedPostfixType("FN")
+                self._edgeTypeFilter.remove_allowed_postfix_type("FN")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
             if value == 2:  # Checked
-                self._edgeTypeFilter.addAllowedPostfixType("FP")
+                self._edgeTypeFilter.add_allowed_postfix_type("FP")
             else:
-                self._edgeTypeFilter.removeAllowedPostfixType("FP")
+                self._edgeTypeFilter.remove_allowed_postfix_type("FP")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
@@ -132,7 +132,7 @@ class EdgeTypeFilterPanel:
         # TODO: deselecting items?
         for index in range(0, len(self._types)):
             t = str(self._types.item(index))
-            if self._edgeTypeFilter.allowsPrefix(t):
+            if self._edgeTypeFilter.allows_prefix(t):
                 self._types.setItemSelected(self._types.item(index), True)
 
     """
@@ -154,16 +154,16 @@ class EdgeTypeFilterPanel:
 
         # XXX Sholuld be enabled automatically
         self._falseNegatives.setEnabled("FP" in postfixTypes)
-        self._edgeTypeFilter.addAllowedPostfixType("FP")
-        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allowsPostfix("FP")])  # Checked(2), Not(0)
+        self._edgeTypeFilter.add_allowed_postfix_type("FP")
+        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FP")])  # Checked(2), Not(0)
 
         self._falsePositives.setEnabled("FN" in postfixTypes)
-        self._edgeTypeFilter.addAllowedPostfixType("FN")
-        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allowsPostfix("FN")])  # Checked(2), Not(0)
+        self._edgeTypeFilter.add_allowed_postfix_type("FN")
+        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FN")])  # Checked(2), Not(0)
 
         self._matches.setEnabled("Match" in postfixTypes)
-        self._edgeTypeFilter.addAllowedPostfixType("Match")
-        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allowsPostfix("Match")])  # Checked(2), Not(0)
+        self._edgeTypeFilter.add_allowed_postfix_type("Match")
+        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("Match")])  # Checked(2), Not(0)
 
         self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
 
