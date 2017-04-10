@@ -5,11 +5,11 @@
 from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
-from EdgeTypeFilter import EdgeTypeFilter
+from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
 
 """
- * An EdgeTypeFilterPanel controls an EdgeTypeFilter and requests an update for an NLPCanvas whenever the filter is
- * changed.
+ * An EdgeTypeFilterPanel controls an EdgeTypeAndLabelFilter and requests an update for an NLPCanvas whenever
+  the filter is changed.
  """
 
 # QtCheckbox helper...
@@ -23,7 +23,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: EdgeTypeFilter):
+    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: EdgeTypeAndLabelFilter):
         """
          * The canvas to request the update after the filter has been changed.
         """
@@ -155,11 +155,11 @@ class EdgeTypeFilterPanel:
         # XXX Sholuld be enabled automatically
         self._falseNegatives.setEnabled("FP" in postfixTypes)
         self._edgeTypeFilter.add_allowed_postfix_type("FP")
-        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FP")])  # Checked(2), Not(0)
+        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FP")])  # Checked(2) Not(0)
 
         self._falsePositives.setEnabled("FN" in postfixTypes)
         self._edgeTypeFilter.add_allowed_postfix_type("FN")
-        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FN")])  # Checked(2), Not(0)
+        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FN")])  # Checked(2) Not(0)
 
         self._matches.setEnabled("Match" in postfixTypes)
         self._edgeTypeFilter.add_allowed_postfix_type("Match")
@@ -186,7 +186,7 @@ class EdgeTypeFilterPanel:
      * Updates the selection.
      *
      * @param type type string that was allowed or disallowed.
-     * @see com.googlecode.whatswrong.EdgeTypeFilter.Listener#changed(String)
+     * @see com.googlecode.whatswrong.EdgeTypeAndLabelFilter.Listener#changed(String)
     """
     def changed(self, edge_type):
         if edge_type not in self._justChanged:

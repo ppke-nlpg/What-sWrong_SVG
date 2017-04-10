@@ -3,12 +3,12 @@
 # Untested
 
 from NLPCanvas import NLPCanvas
-from EdgeLabelFilter import EdgeLabelFilter
+from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
 from EdgeTokenFilter import EdgeTokenFilter
 
 """
- * A DependencyFilterPanel controls a EdgeLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after changes to
- * the filters.
+ * A DependencyFilterPanel controls a EdgeTypeAndLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after
+  changes to the filters.
  *
  * @author Sebastian Riedel
 """
@@ -19,10 +19,11 @@ class DependencyFilterPanel:
          * Creates a new DependencyFilterPanel.
          *
          * @param nlpCanvas       the NLPCanvas to update when the filters are changed through this panel.
-         * @param edgeLabelFilter The EdgeLabelFilter to control through this panel.
+         * @param edgeLabelFilter The EdgeTypeAndLabelFilter to control through this panel.
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
-    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: EdgeLabelFilter, edgeTokenFilter: EdgeTokenFilter):
+    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: EdgeTypeAndLabelFilter,
+                 edgeTokenFilter: EdgeTokenFilter):
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):
