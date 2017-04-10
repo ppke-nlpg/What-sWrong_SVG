@@ -32,11 +32,14 @@ class Scene(sw.drawing.Drawing):
         self.offsetx += offx
         self.offsety += offy
 
+    def translate_to(self, vect):
+        return vect[0] + self.offsetx, vect[1] + self.offsety
+
 
 class Line(sw.shapes.Line):
     def __init__(self, scene, start, end, color, width=1):
-        super().__init__((start[0] + scene.offsetx, start[1] + scene.offsety),
-                         (end[0] + scene.offsetx, end[1] + scene.offsety),
+        super().__init__(scene.translate_to(start),
+                         scene.translate_to(end),
                          shape_rendering='inherit',
                          stroke=colorstr(color),
                          stroke_width=width)
@@ -44,25 +47,19 @@ class Line(sw.shapes.Line):
 
 class QuadraticBezierCurve(sw.path.Path):
     def __init__(self, scene, start, control1, control2, end, color, width=1):
-        super().__init__(d=['M',
-                            (start[0] + scene.offsetx,
-                             start[1] + scene.offsety),
-                            'C',
-                            (control1[0] + scene.offsetx,
-                             control1[1] + scene.offsety),
-                            (control2[0] + scene.offsetx,
-                             control2[1] + scene.offsety),
-                            (end[0] + scene.offsetx,
-                             end[1] + scene.offsety)],
+        super().__init__(d=['M', scene.translate_to(start),
+                            'C', scene.translate_to(control1),
+                            scene.translate_to(control2),
+                            scene.translate_to(end)],
                          stroke=colorstr(color),
+                         stroke_width=width,
                          fill='none')
 
 
 class Rectangle(sw.shapes.Rect):
     def __init__(self, scene, origin, width, height, fill_color, line_color,
                  line_width, rx=0, ry=0):
-        super().__init__(insert=(origin[0] + scene.offsetx,
-                                 origin[1] + scene.offsety),
+        super().__init__(insert=scene.translate_to(origin),
                          height=height,
                          width=width,
                          shape_rendering='inherit',
@@ -74,9 +71,10 @@ class Rectangle(sw.shapes.Rect):
 
 class Text(sw.text.Text):
     def __init__(self, scene, origin, text, size, color):
+        origin = scene.translate_to(origin)
         super().__init__(text,
-                         x=[origin[0] + scene.offsetx],
-                         y=[origin[1] + scene.offsety],
+                         x=[origin[0]],
+                         y=[origin[1]],
                          fill=colorstr(color),
                          font_family='Courier New, Courier, monospace',
                          font_size=size,
@@ -90,9 +88,10 @@ class Text(sw.text.Text):
 
 class TextToken(sw.text.Text):
     def __init__(self, scene, origin, text, size, color):
+        origin = scene.translate_to(origin)
         super().__init__(text,
-                         x=[origin[0] + scene.offsetx],
-                         y=[origin[1] + scene.offsety],
+                         x=[origin[0]],
+                         y=[origin[1]],
                          fill=colorstr(color),
                          font_family='Courier New, Courier, monospace',
                          font_size=size,
