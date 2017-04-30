@@ -107,37 +107,10 @@ class DependencyLayout(AbstractEdgeLayout):
         start = {}  # HashMap<Edge, Point>()
         end = {}    # HashMap<Edge, Point>()
         for token in tokens:
-
-            def compare_edges(edge1, edge2):
-                """Compare to edges to see which one should be drawn higher.
-
-                Args:
-                    edge1 (Edge): The first edge to compare.
-                    edge2 (Edge): The second edge to compare.
-
-                Returns:
-                    int: < 0 if edge1 < edge2 else >0.
-                """
-                # if they point in different directions order is defined by left to right
-                if edge1.left_of(token) and edge2.right_of(token):
-                    return -1
-                if edge2.left_of(token) and edge1.right_of(token):
-                    return 1
-                # otherwise we order by length
-                diff = len(edge2) - len(edge1)
-                if edge1.left_of(token) and edge2.left_of(token):
-                    if diff != 0:
-                        return -diff
-                    else:
-                        return edge1.lexicographic_order(edge2)
-                else:
-                    if diff != 0:
-                        return diff
-                    else:
-                        return edge2.lexicographic_order(edge1)
-
             connections = vertex2edges[token]
-            connections = sorted(connections, key=functools.cmp_to_key(compare_edges))
+            connections = sorted(connections,
+                                 key=functools.cmp_to_key(lambda e1, e2:
+                                                          self.compare_edges(e1, e2, token)))
             # now put points along the token vertex wrt to ordering
             loops_on_vertex = loops[token]
             bounds_width = bounds[token].end - bounds[token].start
@@ -252,3 +225,37 @@ class DependencyLayout(AbstractEdgeLayout):
         scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, scene.color))
         scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, scene.color))
         return start, c1, c2, end
+
+    @staticmethod
+    def compare_edges(edge1, edge2, token):
+        """Compare to edges to see which one should be drawn higher.
+
+        Args:
+            edge1 (Edge): The first edge to compare.
+            edge2 (Edge): The second edge to compare.
+            token (Token): A token to use as a reference point for the
+                comparison.
+        Returns:
+            int: < 0 if edge1 < edge2 else >0.
+        """
+        # if they point in different directions order is defined by left to right
+        if edge1.left_of(token) and edge2.right_of(token):
+            return -1
+        if edge2.left_of(token) and edge1.right_of(token):
+            return 1
+        # otherwise we order by length
+        diff = len(edge2) - len(edge1)
+        if edge1.left_of(token) and edge2.left_of(token):
+            if diff != 0:
+                return -diff
+            else:
+                return edge1.lexicographic_order(edge2)
+        else:
+            if diff != 0:
+                return diff
+            else:
+                return edge2.lexicographic_order(edge1)
+
+            
+
+                
