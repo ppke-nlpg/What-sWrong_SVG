@@ -14,7 +14,7 @@ class AbstractEdgeLayout:
         vertex_extra_space (int): How many extra pixels to start and end arrows
             from.
         curve (bool): Should the edges be curved.
-        colors (dict): A mapping from string to colors. If an edge has a type
+        colors (dict[str, color]): A mapping from string to colors. If an edge has a type
             that matches one of the key strings it will get the corresponding
             color.
         strokes (dict): A mapping from string to strokes. If an edge has a type
@@ -40,7 +40,7 @@ class AbstractEdgeLayout:
         self.height_per_level = 15
         self.vertex_extra_space = 12
         self.curve = True
-        self.colors = {}  # HashMap<String, Color>()
+        self.colors = {} 
         self.strokes = {}  # new HashMap<String, BasicStroke>()
         self.default_stroke = None  # BasicStroke()
         self.start = {}  # HashMap<Edge, Point>
