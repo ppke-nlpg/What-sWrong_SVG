@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from collections import namedtuple
+
+
+Point = namedtuple('Point', ['x', 'y'])
+"""This named tuple represents a point on a plane.
+"""
+
 
 class AbstractEdgeLayout:
     """An AbstractEdgeLayout serves as a base class for edge layout classes.
@@ -162,7 +169,7 @@ class AbstractEdgeLayout:
         """Get the Edge at a given location.
 
         Args:
-            point: The location of the edge.
+            point (Point): The location of the edge.
             radius (int): The radius around the point which the edge should cross.
             
         Returns: The edge that crosses circle around the given point with the given
