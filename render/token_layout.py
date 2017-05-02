@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .svg_writer import Rectangle, Scene, Text, TextToken
 from collections import namedtuple
 from nlp_model.nlp_instance import NLPInstance
+from .svg_writer import Rectangle, Scene, Text, TextToken
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
 """
+
+def middle(bounds):
+    """Return the middle of a Bounds1D instance.
+
+    Args:
+        bounds (Bounds1D): The bounds object whose middle is to be calculated.
+
+    Returns:
+        float: The mean of the elements in `values`.
+    """
+    return (bounds.start + bounds.end)/2
 
 
 class TokenLayout:
@@ -93,12 +104,12 @@ class TokenLayout:
         else:
             to_token = instance.split_points[self.to_split_point]
 
-        for tokenIndex in range(from_token, to_token):
-            token = tokens[tokenIndex]
+        for token_index in range(from_token, to_token):
+            token = tokens[token_index]
             maxx = 0
             lasty = self.base_line + self.row_height
-            for p in token.get_sorted_properties():
-                curr_property = token.get_property(p)
+            for prop in token.get_sorted_properties():
+                curr_property = token.get_property(prop)
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
                 lasty += self.row_height
                 if labelwidth > maxx:
@@ -158,8 +169,8 @@ class TokenLayout:
             index = 0
             lasty = self.base_line + self.row_height
             maxx = 0
-            for p in token.get_sorted_properties():
-                curr_property = token.get_property(p)
+            for prop in token.get_sorted_properties():
+                curr_property = token.get_property(prop)
                 if index == 0:
                     g2d.color = (0, 0, 0)  # BLACK
                 else:

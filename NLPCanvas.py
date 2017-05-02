@@ -5,7 +5,7 @@
 from PyQt4 import QtGui, QtSvg
 
 from nlp_model.nlp_instance import NLPInstance, RenderType
-from render.AligmentRenderer import AligmentRenderer
+from render.aligment_renderer import AligmentRenderer
 from render.single_sentence_renderer import SingleSentenceRenderer
 from render.svg_writer import Scene
 

@@ -46,7 +46,6 @@ class Scene(sw.drawing.Drawing):
             output_type (str): The type of the output format.
         
         Returns: The bytesting of the rendered object if needed. 
-            
         """
         svg_scene = Scene()  # TODO: Do this in a more clever way...
 
