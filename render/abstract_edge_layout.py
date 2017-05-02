@@ -3,7 +3,8 @@
 
 from collections import namedtuple
 
-
+# Historical note: The following named tuple was introduced to eliminate the
+# use of QPoint which introduced an unnecessary dependency on QT.
 Point = namedtuple('Point', ['x', 'y'])
 """This named tuple represents a point on a plane.
 """
@@ -24,22 +25,23 @@ class AbstractEdgeLayout:
         colors (dict[str, color]): A mapping from string to colors. If an edge has a type
             that matches one of the key strings it will get the corresponding
             color.
-        strokes (dict): A mapping from string to strokes. If an edge has a type
-            that matches one of the key strings it will get the corresponding
-            stroke.
-        default_stroke: The stroke to use as default.
-        start (dict): A mapping from edges to their start points in the layout.
-        end (dict): A mapping from edges to their end points in the layout.
-        shapes (dict): A mapping from edge shapes to the corresponding edge
-            objects.
-        selected (set): The set of selected edges.
-        visible (set): The set of visisible edges.
+        strokes (Dict[str, BasicStroke]): A mapping from string to strokes. If
+            an edge has a type that matches one of the key strings it will get
+            the corresponding stroke.
+        default_stroke (BasicStroke): The stroke to use as default.
+        start (Dict[Edge, Point]): A mapping from edges to their start points
+            in the layout.
+        end (Dict[Edge, Point]): A mapping from edges to their end points in
+            the layout.
+        shapes (Dict[Shape, Edge]): A mapping from edge shapes to the
+            corresponding edge objects.
+        selected (Set[Edge]): The set of selected edges.
+        visible (Set[Edge]): The set of visisible edges.
         max_height (int): The height of the layout. This property is to be set
             by the #layout method after the layout process.
         max_width (int): The width of the layout. This property is to be set by
             the #layout method after the layout process.
     """
-
     def __init__(self):
         """Initialize an AbstractEdgeLayout instance.
         """
@@ -47,20 +49,20 @@ class AbstractEdgeLayout:
         self.height_per_level = 15
         self.vertex_extra_space = 12
         self.curve = True
-        self.colors = {} 
-        self.strokes = {}  # new HashMap<String, BasicStroke>()
-        self.default_stroke = None  # BasicStroke()
-        self.start = {}  # HashMap<Edge, Point>
-        self.end = {}  # HashMap<Edge, Point> to
-        self.shapes = {}  # HashMap<Shape, Edge>()
-        self.selected = set()  # HashSet<Edge>()
-        self.visible = set()   # HashSet<Edge>()
+        self.colors = {}
+        self.strokes = {}
+        self.default_stroke = None
+        self.start = {}
+        self.end = {}
+        self.shapes = {} 
+        self.selected = set()
+        self.visible = set()
         self.max_width = 0
         self.max_height = 0
 
     def set_color(self, edge_type, color):
         """Set the color for edges of a certain type.
-        
+
         Args:
             edge_type: The type of the edges we want to change the color for.
             color: The color of the edges of the given type.
@@ -69,7 +71,7 @@ class AbstractEdgeLayout:
 
     def set_stroke(self, edge_type, stroke):
         """Set the stroke for edges of a certain type.
-        
+
         Args:
             edge_type: The type of the edges we want to change the stroke for.
             stroke: The stroke of the edges of the given type.
@@ -81,9 +83,9 @@ class AbstractEdgeLayout:
 
         Args:
             edge (Edge): The edge we need the stroke for.
-        
+
         Returns:
-            The stroke for the given type. 
+            The stroke for the given type.
         """
         if edge in self.selected:
             # TODO:
@@ -97,9 +99,9 @@ class AbstractEdgeLayout:
 
         Args:
             edge_type (str): The edge type we need the stroke for.
-        
+
         Returns:
-            The stroke for the given edge type. 
+            The stroke for the given edge type.
         """
         for substring in self.strokes.keys():
             if substring in edge_type:
@@ -111,18 +113,18 @@ class AbstractEdgeLayout:
 
         Args:
             edge_type (str): The edge type we need the color for.
-        
+
         Returns:
-            The color for the given edge type. 
+            The color for the given edge type.
         """
         for substring in self.colors.keys():
             if substring in edge_type:
                 return self.colors[substring]
-        return 0, 0, 0  # Color.BLACK
+        return 0, 0, 0  # Black
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.
-        
+
         Args:
             edge (Edge): The edge to add to the selection.
         """
@@ -171,7 +173,7 @@ class AbstractEdgeLayout:
         Args:
             point (Point): The location of the edge.
             radius (int): The radius around the point which the edge should cross.
-            
+
         Returns: The edge that crosses circle around the given point with the given
         radius.
         """
@@ -190,7 +192,7 @@ class AbstractEdgeLayout:
 
     def calculate_depth(self, dominates, depth, root):
         """Count the number of edges under each edge and return the maximum.
-        
+
         Args:
             dominates (dict): A map from edges to the edges it dominates.
             depth (dict): The resulting depths of each edge.
@@ -203,7 +205,8 @@ class AbstractEdgeLayout:
             return depth[root]
         if len(dominates[root]) == 0:
             return 0
-        maximum = max(self.calculate_depth(dominates, depth, children) for children in dominates[root])
+        maximum = max((self.calculate_depth(dominates, depth, children) for
+                       children in dominates[root]), default=0)
         depth[root] = maximum + 1
         return maximum + 1
 
@@ -211,8 +214,8 @@ class AbstractEdgeLayout:
         """Return the point at the start of the given edge.
 
         Args:
-            edge (Edge): The edge whose start is to be returned. 
-        
+            edge (Edge): The edge whose start is to be returned.
+
         Returns:
             The edge to get the starting point for.
         """
@@ -222,8 +225,8 @@ class AbstractEdgeLayout:
         """Return the point at the end of the given edge.
 
         Args:
-            edge (Edge): The edge whose end is to be returned. 
-        
+            edge (Edge): The edge whose end is to be returned.
+
         Returns:
             The edge to get the ending point for.
         """

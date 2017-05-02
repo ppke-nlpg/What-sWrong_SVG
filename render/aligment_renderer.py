@@ -52,11 +52,11 @@ class AligmentRenderer:
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
             if edge.get_type_postfix() == "FP":
-                scene.color = (255, 0, 0)  # Color.RED
+                scene.color = (255, 0, 0)  # Red
             elif edge.get_type_postfix() == "FN":
-                scene.color = (0, 0, 255)  # Color.BLUE
+                scene.color = (0, 0, 255)  # Blue
             else:
-                scene.color = (0, 0, 0)    # Color.BLACK
+                scene.color = (0, 0, 0)    # Black
             bound1 = token_xbounds1[edge.start]
             bound2 = token_xbounds2[edge.end]
             if self._is_curved:

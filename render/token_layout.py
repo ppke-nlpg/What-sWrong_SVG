@@ -152,7 +152,7 @@ class TokenLayout:
         lastx = 0
         self.height = 0
 
-        g2d.color = (0, 0, 0)  # BLACK
+        g2d.color = (0, 0, 0)  # Black
 
         if self.from_split_point == -1:
             from_token = 0
@@ -172,9 +172,9 @@ class TokenLayout:
             for prop in token.get_sorted_properties():
                 curr_property = token.get_property(prop)
                 if index == 0:
-                    g2d.color = (0, 0, 0)  # BLACK
+                    g2d.color = (0, 0, 0)  # Black
                 else:
-                    g2d.color = (120, 120, 120)  # GREY
+                    g2d.color = (120, 120, 120)  # Grey
                 if token.is_actual:
                     g2d.color = (0, 102, 204)  # Blue
                 else:
