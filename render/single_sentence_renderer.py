@@ -99,7 +99,7 @@ class SingleSentenceRenderer:
             shifted = Point(point.x, point.y - self._start_of_spans)
             return self._span_layout.get_edge_at(shifted, radius)
 
-    def set_hight_factor(self, height_factor):
+    def set_height_factor(self, height_factor):
         """Controls the height of the graph.
 
         Args:
