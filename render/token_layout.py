@@ -18,7 +18,7 @@ def middle(bounds):
     Returns:
         float: The mean of the elements in `values`.
     """
-    return (bounds.start + bounds.end)/2
+    return (bounds.start + bounds.end) // 2
 
 
 class TokenLayout:
