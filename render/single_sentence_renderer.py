@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+This module defines a class which renders an NLPInstance model as single
+analysed sentence.
+"""
+
 from nlp_model.edge import EdgeRenderType
 from .span_layout import SpanLayout
 from .dependency_layout import DependencyLayout

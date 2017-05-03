@@ -61,17 +61,17 @@ class AligmentRenderer:
             bound2 = token_xbounds2[edge.end]
             if self._is_curved:
                 start = (middle(bound1), height)
-                x1 = (middle(bound1), height + self._height_factor // 2)  # INTEGER DIVISION!!!
-                x2 = (middle(bound2), height + self._height_factor // 2)  # INTEGER DIVISION!!!
+                ctrl1 = (middle(bound1), height + self._height_factor // 2)
+                ctrl2 = (middle(bound2), height + self._height_factor // 2)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(QuadraticBezierCurve(scene, start, x1, x2, end, scene.color))
+                scene.add(QuadraticBezierCurve(scene, start, ctrl1, ctrl2, end, scene.color))
             else:
-                x1 = (middle(bound1), height)
-                x2 = (middle(bound2), height + self._height_factor)
-                scene.add(Line(scene, x1, x2, scene.color))
+                start = (middle(bound1), height)
+                end = (middle(bound2), height + self._height_factor)
+                scene.add(Line(scene, start, end, scene.color))
 
         # add spans
-        scene.translate(0, dim.height + self._height_factor)
+        scene.translate(0, dim[1] + self._height_factor)
         dim = self._token_layout2.layout(instance, {}, scene)
         height += dim[0] + self._height_factor
         if dim[1] > width:
@@ -87,7 +87,7 @@ class AligmentRenderer:
             int: The margin between tokens.
         """
         return self._token_layout1.margin()
-    
+
     @margin.setter
     def margin(self, value):
         """Sets the margin between tokens.
@@ -97,4 +97,3 @@ class AligmentRenderer:
         """
         self._token_layout1.margin = value
         self._token_layout2.margin = value
-

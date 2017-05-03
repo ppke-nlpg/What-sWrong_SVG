@@ -62,8 +62,8 @@ class NLPInstance:
         self.split_points = []
         if tokens is not None:
             self.tokens.extend(tokens)
-            for t in tokens:
-                self.token_map[t.index] = t
+            for token in tokens:
+                self.token_map[token.index] = token
         if edges is not None:
             self.edges.extend(edges)
         if split_points is not None:
@@ -169,8 +169,8 @@ class NLPInstance:
             tokens (list): The tokens to add.
         """
         self.tokens.extend(tokens)
-        for t in tokens:
-            self.token_map[t.index] = t
+        for token in tokens:
+            self.token_map[token.index] = token
 
     def add_edges(self, edges: list):
         """Adds the given collection of edges to this instance.
@@ -321,15 +321,15 @@ def nlp_diff(gold_instance: NLPInstance,
     diff.add_tokens(gold_instance.tokens)
     gold_identities = gold_instance.get_edges()
     guess_identities = guess_instance.get_edges()
-    fn = gold_identities - guess_identities
-    fp = guess_identities - gold_identities
+    false_negatives = gold_identities - guess_identities
+    false_positives = guess_identities - gold_identities
     matches = gold_identities & guess_identities
-    for edge in fn:
+    for edge in false_negatives:
         edge_type = edge.edge_type + ":FN"
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge_type,
                       render_type=edge.render_type, desc=edge.description)
-    for edge in fp:
+    for edge in false_positives:
         edge_type = edge.edge_type + ":FP"
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge_type,
