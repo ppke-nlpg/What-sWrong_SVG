@@ -16,7 +16,7 @@ from EdgeTokenFilter import EdgeTokenFilter
 from DependencyFilterPanel import DependencyFilterPanel
 from nlp_model.nlp_instance import RenderType
 from NLPCanvas import NLPCanvas
-from TokenFilter import TokenFilter
+from filters.token_filter import TokenFilter
 from TokenFilterPanel import TokenFilterPanel
 from render.svg_writer import Scene
 # from CorpusLoader import CorpusLoader

@@ -7,7 +7,7 @@ import re
 from operator import attrgetter
 
 from NLPCanvas import NLPCanvas
-from TokenFilter import TokenFilter
+from filters.token_filter import TokenFilter
 
 """
  * A TokenFilterPanel controls a TokenFilter and updates a NLPCanvas whenever the filter has been changed.
