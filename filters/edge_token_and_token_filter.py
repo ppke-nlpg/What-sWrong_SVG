@@ -122,25 +122,6 @@ class EdgeTokenAndTokenFilter:
         if prop in self.forbidden_properties:
             self.forbidden_properties.remove(prop)
 
-    def filter_tokens_properties(self, original: list) -> list:
-        """Filter a set of tokens by removing property values and tokens.
-
-        Args:
-            original (set): The original set of tokens.
-
-        Returns:
-            set: The filtered set of tokens.
-        """
-        result = []  # ArrayList<Token>(original.size())
-        for vertex in original:
-            copy = Token(vertex.index)
-            for curr_property in vertex.get_property_types():
-                if curr_property not in self.forbidden_properties:
-                    copy.add_property(token_property=curr_property,
-                                      value=vertex.get_property(curr_property))
-            result.append(copy)
-        return result
-
     def select_token(self, token):
         """Linear search: For every property x For every allowed 'string'
            Index poperty is in range or full or partial stringmatch
@@ -297,14 +278,14 @@ class EdgeTokenAndTokenFilter:
                             for i in range(e.start.index, e.end.index + 1):
                                 tokens.add(original.get_token(index=i))
 
-            _sorted = self.filter_tokens_properties(sorted(tokens, key=attrgetter("Index")))
+            _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
 
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             updated_tokens = []  # ArrayList<Token>()
             for i, token in enumerate(_sorted):
                 new_token = Token(i)
-                new_token.merge(original.tokens[token.index])  # XXX Invent some filtered merge?
+                new_token.merge(original.tokens[token.index], forbidden_properties=self.forbidden_properties)
                 old2new[token] = new_token
                 new2old[new_token] = token
                 updated_tokens.append(new_token)
