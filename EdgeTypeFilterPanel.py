@@ -5,7 +5,7 @@
 from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
-from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
+from filters.EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
 
 """
  * An EdgeTypeFilterPanel controls an EdgeTypeAndLabelFilter and requests an update for an NLPCanvas whenever

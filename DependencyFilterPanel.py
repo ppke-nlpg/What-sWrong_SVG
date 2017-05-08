@@ -3,7 +3,7 @@
 # Untested
 
 from NLPCanvas import NLPCanvas
-from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
+from filters.EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
 from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 
 """

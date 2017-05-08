@@ -272,14 +272,6 @@ class EdgeTokenAndTokenFilter:
 
         First filters the tokens and then removes edges that have tokens which
         were filtered out.
-
-        Args:
-            original (NLPInstance): The original nlp instance.
-
-        Returns:
-            NLPInstance: The filtered nlp instance.
-
-
         First filters out edges and then filters out tokens without edges if isCollaps() is true.
 
         Args:
@@ -287,8 +279,6 @@ class EdgeTokenAndTokenFilter:
 
         Returns:
             NLPInstance: The filtered nlp instance.
-
-
         """
         edges = original.get_edges()
         if len(self._allowed_strings) == 0 and not self.collaps:

@@ -3,21 +3,24 @@
 
 import sys
 from os.path import basename
+
 from PyQt4 import QtGui
 
 from CorpusNavigator import CorpusNavigator
+from DependencyFilterPanel import DependencyFilterPanel
+from EdgeTypeFilterPanel import EdgeTypeFilterPanel
 from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
-from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008,\
-    CoNLL2009, MaltTab
-from EdgeTypeFilterPanel import EdgeTypeFilterPanel
-from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
-from DependencyFilterPanel import DependencyFilterPanel
-from nlp_model.nlp_instance import RenderType
 from NLPCanvas import NLPCanvas
-from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 from TokenFilterPanel import TokenFilterPanel
+from filters.EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
+from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
+from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
+    CoNLL2009, MaltTab
+from nlp_model.nlp_instance import RenderType
 from render.svg_writer import Scene
+
+
 # from CorpusLoader import CorpusLoader
 
 
