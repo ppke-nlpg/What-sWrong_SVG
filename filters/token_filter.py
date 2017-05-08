@@ -119,11 +119,11 @@ class TokenFilter:
                     if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
                             (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
                                                                  not self._whole_word and allowed in prop)):
-                        new_vertex = Token(len(updated_tokens))
-                        new_vertex.merge(token)
-                        updated_tokens.append(new_vertex)
-                        old2new[token] = new_vertex
-                        new2old[new_vertex] = token
+                        new_token = Token(len(updated_tokens))
+                        new_token.merge(original.tokens[token.index])
+                        old2new[token] = new_token
+                        new2old[new_token] = token
+                        updated_tokens.append(new_token)
                         break
             # update edges and remove those that have vertices not in the new vertex set
             updated_edges = set()  # ArrayList<Edge>()

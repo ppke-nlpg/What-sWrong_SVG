@@ -202,11 +202,11 @@ class EdgeTokenFilter:
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             updated_tokens = []  # ArrayList<Token>()
-            for t in _sorted:
+            for token in _sorted:
                 new_token = Token(len(updated_tokens))
-                new_token.merge(original.tokens[t.index])
-                old2new[t] = new_token
-                new2old[new_token] = t
+                new_token.merge(original.tokens[token.index])
+                old2new[token] = new_token
+                new2old[new_token] = token
                 updated_tokens.append(new_token)
 
             updated_edges = set()  # HashSet<Edge>()
