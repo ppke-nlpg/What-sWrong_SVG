@@ -11,12 +11,11 @@ from GUI.GUI import Ui_MainWindow
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008,\
     CoNLL2009, MaltTab
 from EdgeTypeFilterPanel import EdgeTypeFilterPanel
-from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter, EdgeTypeAndLabelFilter
-from EdgeTokenFilter import EdgeTokenFilter
+from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
 from DependencyFilterPanel import DependencyFilterPanel
 from nlp_model.nlp_instance import RenderType
 from NLPCanvas import NLPCanvas
-from filters.token_filter import TokenFilter
+from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 from TokenFilterPanel import TokenFilterPanel
 from render.svg_writer import Scene
 # from CorpusLoader import CorpusLoader
@@ -150,16 +149,15 @@ class MyForm(QtGui.QMainWindow):
         self.ui.actionExport.setEnabled(True)
 
         # create the filter pipeline
-        edgeTokenFilter = EdgeTokenFilter()
-        tokenFilter = TokenFilter()
+        edgeTokenAndtokenFilter = EdgeTokenAndTokenFilter()
         edgeTypeAndLabelFilter = EdgeTypeAndLabelFilter()
 
         # set filter of canvas to be the pipeline
-        self.canvas.filters = (tokenFilter, edgeTypeAndLabelFilter, edgeTokenFilter)
+        self.canvas.filters = (edgeTypeAndLabelFilter, edgeTokenAndtokenFilter)
 
         EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeAndLabelFilter)
-        DependencyFilterPanel(self.ui, self.canvas, edgeTypeAndLabelFilter, edgeTokenFilter)
-        TokenFilterPanel(self.ui, self.canvas, tokenFilter)
+        DependencyFilterPanel(self.ui, self.canvas, edgeTypeAndLabelFilter, edgeTokenAndtokenFilter)
+        TokenFilterPanel(self.ui, self.canvas, edgeTokenAndtokenFilter)
 
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None

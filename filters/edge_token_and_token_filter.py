@@ -4,13 +4,31 @@
 from collections import defaultdict
 from operator import attrgetter
 
-from nlp_model.edge import EdgeRenderType, Edge
 from nlp_model.nlp_instance import NLPInstance
 from nlp_model.token import Token
+from nlp_model.token_property import TokenProperty
+from nlp_model.edge import Edge, EdgeRenderType
 
 
-class EdgeTokenFilter:
-    """
+class EdgeTokenAndTokenFilter:
+    """A Tokenfilter filters an NLPInstance on the basis of token properties.
+
+    The filtered elements can be certain properties from each token or tokens
+    that do not contain certain property values. The filter also removes all
+    edges that were connecting one or more removed tokens.
+
+    Attributes:
+
+        forbidden_properties (Set[TokenProperty]): The set of properties we
+            should not see.
+        _allowed_strings (Set[TokenProperty]): A token needs to have at least
+            one property value contained in this set (if
+            EdgeTokenAndTokenFilter#whole_word} is true) or needs to have one value that
+            contains a string in this set (otherwise).
+        _whole_word (bool): Should tokens be allowed only if they have a
+            property value that equals one of the allowed strings or is it
+            sufficient if one value contains one of the allowed strings.
+
      * An EdgeTokenFilter filters out edges based on the properties of their tokens. For example, we can filter out all
      * edges that do not contain at least one token with the word "blah". The filter can also be configured
       to filter out all edges which are not on a path between tokens with certain properties. For example, we can filter
@@ -23,9 +41,6 @@ class EdgeTokenFilter:
      * then the filter does nothing and keeps all edges.
      *
      * @author Sebastian Riedel
-    """
-    def __init__(self, *allowed_properties):
-        """
          * Creates a new filter with the given allowed property values.
          *
          * @param allowed_properties A var array of allowed property values. An Edge will be filtered out if none of its
@@ -40,6 +55,13 @@ class EdgeTokenFilter:
          * an edge will only be allowed if it is on a path between two tokens with allowed properties.
          * This also means that if there is only one token with allowed properties all edges will be filtered out.
         """
+    def __init__(self, *allowed_properties):
+        """Initalize a new EdgeTokenAndTokenFilter.
+        """
+        self.forbidden_properties = set()
+        self._allowed_strings = set()
+        self._whole_word = False
+
         self._usePath = False
 
         """
@@ -59,6 +81,76 @@ class EdgeTokenFilter:
          * filtered out.
         """
         self._allowed_properties = set(allowed_properties)
+
+    def add_allowed_string(self, string: str):
+        """Add an allowed property value.
+
+        Args:
+            string (str): The allowed property value.
+        """
+        self._allowed_strings.add(string)
+
+    def clear_allowed_strings(self):
+        """Remove all allowed strings.
+
+        In this state the filter allows all tokens.
+        """
+        self._allowed_strings.clear()
+
+    def add_forbidden_property(self, name: str):
+        """Add a property that is forbidden.
+
+        The corresponding values are removed from each token.
+
+        Args:
+            name (str): The name of the property to forbid.
+        """
+        self.forbidden_properties.add(TokenProperty(name))
+
+    def remove_forbidden_property(self, name: str):
+        """Remove a property that is forbidden.
+
+        The corresponding values will be shown again.
+
+        Args:
+            name (str): The name of the property to show again.
+        """
+        prop = TokenProperty(name)
+        if prop in self.forbidden_properties:
+            self.forbidden_properties.remove(prop)
+
+    def filter_tokens(self, original: list) -> list:
+        """Filter a set of tokens by removing property values and tokens.
+
+        Args:
+            original (set): The original set of tokens.
+
+        Returns:
+            set: The filtered set of tokens.
+        """
+        result = []  # ArrayList<Token>(original.size())
+        for vertex in original:
+            copy = Token(vertex.index)
+            for curr_property in vertex.get_property_types():
+                if curr_property not in self.forbidden_properties:
+                    copy.add_property(token_property=curr_property,
+                                      value=vertex.get_property(curr_property))
+            result.append(copy)
+        return result
+
+    def select_token(self, token):
+        """Linear search: For every property x For every allowed 'string'
+           Index poperty is in range or full or partial stringmatch
+        """
+        for p in token.get_property_types():
+            prop_name = p.name
+            prop = token.get_property(p)
+            for allowed in self._allowed_strings:
+                if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
+                   (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
+                                                        not self._whole_word and allowed in prop)):
+                    return True
+        return False
 
     def allows(self, property_value: str) -> bool:
         """Returns whether the given value is an allowed property value.
@@ -178,6 +270,16 @@ class EdgeTokenFilter:
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
+        First filters the tokens and then removes edges that have tokens which
+        were filtered out.
+
+        Args:
+            original (NLPInstance): The original nlp instance.
+
+        Returns:
+            NLPInstance: The filtered nlp instance.
+
+
         First filters out edges and then filters out tokens without edges if isCollaps() is true.
 
         Args:
@@ -185,14 +287,21 @@ class EdgeTokenFilter:
 
         Returns:
             NLPInstance: The filtered nlp instance.
+
+
         """
-        edges = self.filter_edges(original.get_edges())
-        if not self.collaps:
+        edges = original.get_edges()
+        if len(self._allowed_strings) == 0 and not self.collaps:
             updated_tokens = original.tokens
             updated_edges = edges
             updated_split_points = original.split_points
         else:
             tokens = set()  # HashSet<Token>()
+            # first filter out tokens not containing allowed strings
+            for t in original.tokens:
+                if self.select_token(t):
+                    tokens.add(t)
+
             for e in edges:
                 if e.render_type == EdgeRenderType.dependency:
                     tokens.add(e.start)
@@ -231,5 +340,5 @@ class EdgeTokenFilter:
                     old_token = new2old[new_token]
                 updated_split_points.append(new_token_index)
 
-        return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
-                           split_points=updated_split_points)
+        return NLPInstance(tokens=self.filter_tokens(updated_tokens), edges=updated_edges,
+                           render_type=original.render_type, split_points=updated_split_points)

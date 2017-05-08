@@ -7,10 +7,10 @@ import re
 from operator import attrgetter
 
 from NLPCanvas import NLPCanvas
-from filters.token_filter import TokenFilter
+from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 
 """
- * A TokenFilterPanel controls a TokenFilter and updates a NLPCanvas whenever the filter has been changed.
+ * A TokenFilterPanel controls a EdgeTokenAndTokenFilter and updates a NLPCanvas whenever the filter has been changed.
  *
  * @author Sebastian Riedel
 """
@@ -19,7 +19,7 @@ interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class TokenFilterPanel:
-    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: TokenFilter):
+    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: EdgeTokenAndTokenFilter):
         self._tokenFilter = tokenFilter
 
         self._canvas = canvas

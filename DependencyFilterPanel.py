@@ -4,7 +4,7 @@
 
 from NLPCanvas import NLPCanvas
 from EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
-from EdgeTokenFilter import EdgeTokenFilter
+from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 
 """
  * A DependencyFilterPanel controls a EdgeTypeAndLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after
@@ -23,7 +23,7 @@ class DependencyFilterPanel:
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
     def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: EdgeTypeAndLabelFilter,
-                 edgeTokenFilter: EdgeTokenFilter):
+                 edgeTokenFilter: EdgeTokenAndTokenFilter):
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):
