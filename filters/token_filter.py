@@ -22,7 +22,7 @@ class TokenFilter:
             one property value contained in this set (if
             TokenFilter#whole_word} is true) or needs to have one value that
             contains a string in this set (otherwise).
-        whole_word (bool): Should tokens be allowed only if they have a
+        _whole_word (bool): Should tokens be allowed only if they have a
             property value that equals one of the allowed strings or is it
             sufficient if one value contains one of the allowed strings.
     """
@@ -102,7 +102,11 @@ class TokenFilter:
         Returns:
             NLPInstance: The filtered nlp instance.
         """
-        if len(self._allowed_strings) > 0:
+        if len(self._allowed_strings) == 0:
+            new_tokens = original.tokens
+            new_edges = original.get_edges()
+            new_split_points = None
+        else:
             # first filter out tokens not containing allowed strings
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
@@ -142,8 +146,9 @@ class TokenFilter:
                     new_token_index += 1
                     new_token = tokens[new_token_index]
                     old_token = new2old[new_token]
-            return NLPInstance(tokens=self.filter_tokens(tokens), edges=edges, render_type=original.render_type,
-                               split_points=split_points)
-        else:
-            filtered_tokens = self.filter_tokens(original.tokens)
-            return NLPInstance(tokens=filtered_tokens, edges=original.get_edges(), render_type=original.render_type)
+            new_tokens = tokens
+            new_edges = edges
+            new_split_points = split_points
+
+        return NLPInstance(tokens=self.filter_tokens(new_tokens), edges=new_edges, render_type=original.render_type,
+                           split_points=new_split_points)

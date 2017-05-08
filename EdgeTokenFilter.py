@@ -197,7 +197,7 @@ class EdgeTokenFilter:
                         for i in range(e.start.index, e.end.index + 1):
                             tokens.add(original.get_token(index=i))
 
-            _sorted = sorted(tokens, key=attrgetter("index"))
+            _sorted = sorted(tokens, key=attrgetter("Index"))
 
             updated_tokens = []  # ArrayList<Token>()
             old2new = {}  # HashMap<Token, Token>()
