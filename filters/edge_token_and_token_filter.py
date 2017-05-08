@@ -190,14 +190,14 @@ class EdgeTokenAndTokenFilter:
         self._allowed_properties.clear()
 
     @staticmethod
-    def calculate_paths(edges: frozenset) -> defaultdict:
+    def calculate_paths(edges: set) -> set:
         """Calculates all paths between all tokens of the provided edges.
 
         Args:
-            edges (frozenset): The edges (graph) to use for getting all paths.
+            edges (set): The edges (graph) to use for getting all paths.
 
         Returns:
-            defaultdict(set): All paths defined through the provided edges.
+            set: All paths defined through the provided edges.
         """
         paths_per_length = []  # ArrayList<Paths>()
 
@@ -227,12 +227,12 @@ class EdgeTokenAndTokenFilter:
                                     paths[start][to].add(frozenset(path))
                                     paths[to][start].add(frozenset(path))
 
-        result = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
+        result = set()  # ArrayList<Edge>()
         for p in paths_per_length:
             for start in p.keys():
                 for to in p[start].keys():
-                    for path in p[start][to]:
-                        result[start][to].add(path)
+                    result.update(p[start][to])  # Add all good paths...
+
         return result
 
     def filter_edges(self, original: frozenset) -> frozenset:
@@ -249,19 +249,13 @@ class EdgeTokenAndTokenFilter:
         if len(self._allowed_properties) == 0:
             return original
         result = set()  # ArrayList<Edge>()
-        if self._usePath:
-            # We only allow edges that are on the path of tokens that have the allowed properties.
-            paths = self.calculate_paths(original)  # XXX Why do not do this filtering in he calculate_paths function?
-            for start in paths.keys():
-                if start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                    for to in paths[start].keys():
-                        if to.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                            result.update(paths[start][to])  # Add all good paths...
-        else:
-            for edge in original:
-                if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
-                        edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                    result.add(edge)
+        # Filter good edges...
+        for edge in original:
+            if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
+                    edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
+                result.add(edge)
+        if self._usePath:  # We only allow edges that are on the path of tokens that have the allowed properties.
+            result = self.calculate_paths(result)
         return frozenset(result)
 
     def filter(self, original: NLPInstance) -> NLPInstance:
