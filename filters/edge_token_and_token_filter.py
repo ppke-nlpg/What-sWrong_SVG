@@ -62,6 +62,9 @@ class EdgeTokenAndTokenFilter:
         self._allowed_strings = set()
         self._whole_word = False
 
+        """
+         * Should we only allow edges that are on the path of tokens that have the allowed properties.
+        """
         self._usePath = False
 
         """
@@ -119,7 +122,7 @@ class EdgeTokenAndTokenFilter:
         if prop in self.forbidden_properties:
             self.forbidden_properties.remove(prop)
 
-    def filter_tokens(self, original: list) -> list:
+    def filter_tokens_properties(self, original: list) -> list:
         """Filter a set of tokens by removing property values and tokens.
 
         Args:
@@ -149,7 +152,7 @@ class EdgeTokenAndTokenFilter:
                 if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
                    (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
                                                         not self._whole_word and allowed in prop)):
-                    return True
+                    return True  # In Python you can't break out of multiple loops!
         return False
 
     def allows(self, property_value: str) -> bool:
@@ -201,19 +204,18 @@ class EdgeTokenAndTokenFilter:
         paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         # initialize
         for edge in edges:
-            path = set()  # HashSet<Edge>
-            path.add(edge)
-            paths[edge.start][edge.end].add(frozenset(path))
-            paths[edge.end][edge.start].add(frozenset(path))
-        paths_per_length.append(paths)
-        previous = paths
+            path = frozenset({edge})  # HashSet<Edge>
+            paths[edge.start][edge.end].add(path)
+            paths[edge.end][edge.start].add(path)
         first = paths
-        while True:
+        while len(paths) > 0:
+            paths_per_length.append(paths)
+            previous = paths
             paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
             # go over each paths of the previous length and increase their size by one
             for start in previous.keys():
                 for over in previous[start].keys():
-                    for to in first[over].keys():
+                    for to in first[over].keys():  # One long paths...
                         for path1 in previous[start][over]:
                             for path2 in first[over][to]:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
@@ -224,11 +226,7 @@ class EdgeTokenAndTokenFilter:
                                     path.update(path2)
                                     paths[start][to].add(frozenset(path))
                                     paths[to][start].add(frozenset(path))
-            if len(paths) == 0:
-                paths_per_length.append(paths)
-            previous = paths
-            if len(paths) == 0:
-                break
+
         result = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         for p in paths_per_length:
             for start in p.keys():
@@ -252,15 +250,14 @@ class EdgeTokenAndTokenFilter:
             return original
         result = set()  # ArrayList<Edge>()
         if self._usePath:
-            paths = self.calculate_paths(original)
+            # We only allow edges that are on the path of tokens that have the allowed properties.
+            paths = self.calculate_paths(original)  # XXX Why do not do this filtering in he calculate_paths function?
             for start in paths.keys():
                 if start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
                     for to in paths[start].keys():
                         if to.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                            for path in paths[start][to]:
-                                result.update(path)
+                            result.update(paths[start][to])  # Add all good paths...
         else:
-
             for edge in original:
                 if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
                         edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
@@ -280,34 +277,40 @@ class EdgeTokenAndTokenFilter:
         Returns:
             NLPInstance: The filtered nlp instance.
         """
+        # Filter edges
         edges = self.filter_edges(original.get_edges())
+
+        # Filter tokens
         if len(self._allowed_strings) == 0 and not self.collaps:
+            # Nothing to do...
             updated_tokens = original.tokens
             updated_edges = edges
             updated_split_points = original.split_points
         else:
             tokens = set()  # HashSet<Token>()
             # first filter out tokens not containing allowed strings
-            for t in original.tokens:
-                if self.select_token(t):
-                    tokens.add(t)
+            if len(self._allowed_strings) > 0:
+                for t in original.tokens:
+                    if self.select_token(t):
+                        tokens.add(t)
 
-            for e in edges:
-                if e.render_type == EdgeRenderType.dependency:
-                    tokens.add(e.start)
-                    tokens.add(e.end)
-                elif e.render_type == EdgeRenderType.span:
-                        for i in range(e.start.index, e.end.index + 1):
-                            tokens.add(original.get_token(index=i))
+            if self.collaps:
+                for e in edges:
+                    if e.render_type == EdgeRenderType.dependency:
+                        tokens.add(e.start)
+                        tokens.add(e.end)
+                    elif e.render_type == EdgeRenderType.span:
+                            for i in range(e.start.index, e.end.index + 1):
+                                tokens.add(original.get_token(index=i))
 
-            _sorted = sorted(tokens, key=attrgetter("Index"))
+            _sorted = self.filter_tokens_properties(sorted(tokens, key=attrgetter("Index")))
 
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             updated_tokens = []  # ArrayList<Token>()
-            for token in _sorted:
-                new_token = Token(len(updated_tokens))
-                new_token.merge(original.tokens[token.index])
+            for i, token in enumerate(_sorted):
+                new_token = Token(i)
+                new_token.merge(original.tokens[token.index])  # XXX Invent some filtered merge?
                 old2new[token] = new_token
                 new2old[new_token] = token
                 updated_tokens.append(new_token)
@@ -330,5 +333,5 @@ class EdgeTokenAndTokenFilter:
                     old_token = new2old[new_token]
                 updated_split_points.append(new_token_index)
 
-        return NLPInstance(tokens=self.filter_tokens(updated_tokens), edges=updated_edges,
-                           render_type=original.render_type, split_points=updated_split_points)
+        return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
+                           split_points=updated_split_points)
