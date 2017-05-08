@@ -103,9 +103,9 @@ class TokenFilter:
             NLPInstance: The filtered nlp instance.
         """
         if len(self._allowed_strings) == 0:
-            new_tokens = original.tokens
-            new_edges = original.get_edges()
-            new_split_points = None
+            updated_tokens = original.tokens
+            updated_edges = original.get_edges()
+            updated_split_points = None
         else:
             # first filter out tokens not containing allowed strings
             old2new = {}  # HashMap<Token, Token>()
@@ -126,15 +126,10 @@ class TokenFilter:
                         new2old[new_vertex] = token
                         break
             # update edges and remove those that have vertices not in the new vertex set
-            edges = set()  # ArrayList<Edge>()
-            for edge in original.get_edges():
-                if edge.start in old2new and edge.end in old2new:
-                    new_from = old2new[edge.start]
-                    new_to = old2new[edge.end]
-                    edges.add((Edge(start=new_from, end=new_to, label=edge.label,
-                                    note=edge.note, edge_type=edge.edge_type,
-                                    render_type=edge.render_type,
-                                    description=edge.description)))
+            updated_edges = set()  # ArrayList<Edge>()
+            for e in (e for e in original.get_edges() if e.start in old2new and e.end in old2new):
+                updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
+                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description))
             # find new split points (have to be changed because instance has
             # new token sequence)
             updated_split_points = []
@@ -148,9 +143,5 @@ class TokenFilter:
                     old_token = new2old[new_token]
                 updated_split_points.append(new_token_index)
 
-            new_tokens = updated_tokens
-            new_edges = edges
-            new_split_points = updated_split_points
-
-        return NLPInstance(tokens=self.filter_tokens(new_tokens), edges=new_edges, render_type=original.render_type,
-                           split_points=new_split_points)
+        return NLPInstance(tokens=self.filter_tokens(updated_tokens), edges=updated_edges,
+                           render_type=original.render_type, split_points=updated_split_points)
