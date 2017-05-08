@@ -110,7 +110,7 @@ class TokenFilter:
             # first filter out tokens not containing allowed strings
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
-            tokens = []  # ArrayList<Token>()
+            updated_tokens = []  # ArrayList<Token>()
             for token in original.tokens:  # Linear search: For every property x For every allowed 'string'
                 for prop, prop_name, allowed in \
                     ((token.get_property(p), p.name, allowed) for p in token.get_property_types()
@@ -119,9 +119,9 @@ class TokenFilter:
                     if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
                             (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
                                                                  not self._whole_word and allowed in prop)):
-                        new_vertex = Token(len(tokens))
+                        new_vertex = Token(len(updated_tokens))
                         new_vertex.merge(token)
-                        tokens.append(new_vertex)
+                        updated_tokens.append(new_vertex)
                         old2new[token] = new_vertex
                         new2old[new_vertex] = token
                         break
@@ -137,18 +137,20 @@ class TokenFilter:
                                     description=edge.description)))
             # find new split points (have to be changed because instance has
             # new token sequence)
-            split_points = []
+            updated_split_points = []
             new_token_index = 0
             for old_split_point in original.split_points:
-                new_token = tokens[new_token_index]
+                new_token = updated_tokens[new_token_index]
                 old_token = new2old[new_token]
-                while new_token_index + 1 < len(tokens) and old_token.index < old_split_point:
+                while new_token_index + 1 < len(updated_tokens) and old_token.index < old_split_point:
                     new_token_index += 1
-                    new_token = tokens[new_token_index]
+                    new_token = updated_tokens[new_token_index]
                     old_token = new2old[new_token]
-            new_tokens = tokens
+                updated_split_points.append(new_token_index)
+
+            new_tokens = updated_tokens
             new_edges = edges
-            new_split_points = split_points
+            new_split_points = updated_split_points
 
         return NLPInstance(tokens=self.filter_tokens(new_tokens), edges=new_edges, render_type=original.render_type,
                            split_points=new_split_points)

@@ -199,9 +199,9 @@ class EdgeTokenFilter:
 
             _sorted = sorted(tokens, key=attrgetter("Index"))
 
-            updated_tokens = []  # ArrayList<Token>()
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
+            updated_tokens = []  # ArrayList<Token>()
             for t in _sorted:
                 new_token = Token(len(updated_tokens))
                 new_token.merge(original.tokens[t.index])
@@ -216,10 +216,10 @@ class EdgeTokenFilter:
             # find new split points
             updated_split_points = []  # ArrayList<Integer>()
             new_token_index = 0
-            for oldSplitPoint in original.split_points:
+            for old_split_point in original.split_points:
                 new_token = updated_tokens[new_token_index]
                 old_token = new2old[new_token]
-                while new_token_index + 1 < len(tokens) and old_token.index < oldSplitPoint:
+                while new_token_index + 1 < len(updated_tokens) and old_token.index < old_split_point:
                     new_token_index += 1
                     new_token = updated_tokens[new_token_index]
                     old_token = new2old[new_token]
