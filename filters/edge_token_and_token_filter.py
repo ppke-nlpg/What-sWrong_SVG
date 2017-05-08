@@ -280,7 +280,7 @@ class EdgeTokenAndTokenFilter:
         Returns:
             NLPInstance: The filtered nlp instance.
         """
-        edges = original.get_edges()
+        edges = self.filter_edges(original.get_edges())
         if len(self._allowed_strings) == 0 and not self.collaps:
             updated_tokens = original.tokens
             updated_edges = edges
