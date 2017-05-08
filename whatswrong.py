@@ -13,11 +13,10 @@ from GUI.ChooseFormat import Ui_ChooseFormat
 from GUI.GUI import Ui_MainWindow
 from NLPCanvas import NLPCanvas
 from TokenFilterPanel import TokenFilterPanel
-from filters.EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
-from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
 from nlp_model.nlp_instance import RenderType
+from render.filter import Filter
 from render.svg_writer import Scene
 
 
@@ -151,16 +150,12 @@ class MyForm(QtGui.QMainWindow):
         self.canvas = NLPCanvas(self.ui)
         self.ui.actionExport.setEnabled(True)
 
-        # create the filter pipeline
-        edgeTokenAndtokenFilter = EdgeTokenAndTokenFilter()
-        edgeTypeAndLabelFilter = EdgeTypeAndLabelFilter()
+        # set filter of the canvas
+        self.canvas.filter = Filter()
 
-        # set filter of canvas to be the pipeline
-        self.canvas.filters = (edgeTypeAndLabelFilter, edgeTokenAndtokenFilter)
-
-        EdgeTypeFilterPanel(self.ui, self.canvas, edgeTypeAndLabelFilter)
-        DependencyFilterPanel(self.ui, self.canvas, edgeTypeAndLabelFilter, edgeTokenAndtokenFilter)
-        TokenFilterPanel(self.ui, self.canvas, edgeTokenAndtokenFilter)
+        EdgeTypeFilterPanel(self.ui, self.canvas, self.canvas.filter)
+        DependencyFilterPanel(self.ui, self.canvas, self.canvas.filter, self.canvas.filter)
+        TokenFilterPanel(self.ui, self.canvas, self.canvas.filter)
 
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
@@ -174,7 +169,7 @@ class MyForm(QtGui.QMainWindow):
 
         if gold:
             CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess,
-                            edgeTypeFilter=edgeTypeAndLabelFilter)
+                            edgeTypeFilter=self.canvas.filter)
 
     def onItemChanged(self):
         self.refresh()

@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 # Untangle GUI stuff...
 
-from PyQt4 import QtGui
 import re
 from operator import attrgetter
 
+from PyQt4 import QtGui
+
 from NLPCanvas import NLPCanvas
-from filters.edge_token_and_token_filter import EdgeTokenAndTokenFilter
+from render.filter import Filter
 
 """
  * A TokenFilterPanel controls a EdgeTokenAndTokenFilter and updates a NLPCanvas whenever the filter has been changed.
@@ -19,7 +20,7 @@ interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class TokenFilterPanel:
-    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: EdgeTokenAndTokenFilter):
+    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: Filter):
         self._tokenFilter = tokenFilter
 
         self._canvas = canvas

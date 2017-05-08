@@ -34,7 +34,7 @@ class NLPCanvas:
         self.dependencies = set()
         self.usedTypes = set()
         self.usedProperties = set()
-        self.filters = None
+        self.filter = None
         self._ui = ui
         self._nlp_instance = None
         self._listeners = []
@@ -93,9 +93,8 @@ class NLPCanvas:
         instance = NLPInstance(tokens=self.tokens, edges=self.dependencies,
                                render_type=self._nlp_instance.render_type,
                                split_points=self._nlp_instance.split_points)
-        for curr_filter in self.filters:
-            instance = curr_filter.filter(instance)
-        return instance
+
+        return self.filter.filter(instance)
 
     def update_nlp_graphics(self):
         """

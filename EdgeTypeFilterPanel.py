@@ -5,7 +5,7 @@
 from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
-from filters.EdgeTypeAndLabelFilter import EdgeTypeAndLabelFilter
+from render.filter import Filter
 
 """
  * An EdgeTypeFilterPanel controls an EdgeTypeAndLabelFilter and requests an update for an NLPCanvas whenever
@@ -23,7 +23,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: EdgeTypeAndLabelFilter):
+    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: Filter):
         """
          * The canvas to request the update after the filter has been changed.
         """
