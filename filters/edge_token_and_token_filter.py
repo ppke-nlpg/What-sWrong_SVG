@@ -122,20 +122,6 @@ class EdgeTokenAndTokenFilter:
         if prop in self.forbidden_properties:
             self.forbidden_properties.remove(prop)
 
-    def select_token(self, token):
-        """Linear search: For every property x For every allowed 'string'
-           Index poperty is in range or full or partial stringmatch
-        """
-        for p in token.get_property_types():
-            prop_name = p.name
-            prop = token.get_property(p)
-            for allowed in self._allowed_strings:
-                if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
-                   (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
-                                                        not self._whole_word and allowed in prop)):
-                    return True  # In Python you can't break out of multiple loops!
-        return False
-
     def allows(self, property_value: str) -> bool:
         """Returns whether the given value is an allowed property value.
 
@@ -164,7 +150,7 @@ class EdgeTokenAndTokenFilter:
         """
         self._allowed_properties.remove(property_value)
 
-    def clear(self):
+    def clear_allowed_property(self):
         """Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and
          allows all edges.
         """
@@ -216,28 +202,19 @@ class EdgeTokenAndTokenFilter:
 
         return result
 
-    def filter_edges(self, original: frozenset) -> frozenset:
-        """Filters out all edges that do not have at least one token with an allowed property value.
-
-          If the set of allowed property values is empty this method just returns the original set and does nothing.
-
-         Args:
-            original (frozenset): The input set of edges.
-
-        Returns:
-            frozenset: The filtered set of edges.
+    def select_token(self, token):
+        """Linear search: For every property x For every allowed 'string'
+           Index poperty is in range or full or partial stringmatch
         """
-        if len(self._allowed_properties) == 0:
-            return original
-        result = set()  # ArrayList<Edge>()
-        # Filter good edges...
-        for edge in original:
-            if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
-                    edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                result.add(edge)
-        if self._usePath:  # We only allow edges that are on the path of tokens that have the allowed properties.
-            result = self.calculate_paths(result)
-        return frozenset(result)
+        for p in token.get_property_types():
+            prop_name = p.name
+            prop = token.get_property(p)
+            for allowed in self._allowed_strings:
+                if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
+                   (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
+                                                        not self._whole_word and allowed in prop)):
+                    return True  # In Python you can't break out of multiple loops!
+        return False
 
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
@@ -252,8 +229,20 @@ class EdgeTokenAndTokenFilter:
         Returns:
             NLPInstance: The filtered nlp instance.
         """
-        # Filter edges
-        edges = self.filter_edges(original.get_edges())
+        # Filter edges:
+        # Filters out all edges that do not have at least one token with an allowed property value.
+        # If the set of allowed property values is empty this method just returns the original set and does nothing.
+        edges = original.get_edges()
+        if len(self._allowed_properties) > 0:
+            new_edges = set()  # ArrayList<Edge>()
+            # Filter good edges...
+            for edge in edges:
+                if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
+                        edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
+                    new_edges.add(edge)
+            edges = new_edges
+            if self._usePath:  # We only allow edges that are on the path of tokens that have the allowed properties.
+                edges = self.calculate_paths(edges)
 
         # Filter tokens
         if len(self._allowed_strings) == 0 and not self.collaps:
