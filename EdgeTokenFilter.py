@@ -19,8 +19,7 @@ class EdgeTokenFilter:
      * <p>This filter can also filter out the tokens for which all edges have been filtered out via the edge filtering
      * process. This mode is called "collapsing" because the graph is collapsed to contain only connected components.
      * <p/>
-     * <p>Note that if no allowed property values are defined ({@link com.googlecode.whatswrong.EdgeTokenFilter#
-     addAllowedProperty(String)})
+     * <p>Note that if no allowed property values are defined (EdgeTokenFilter.add_allowed_property(str))
      * then the filter does nothing and keeps all edges.
      *
      * @author Sebastian Riedel
@@ -31,13 +30,11 @@ class EdgeTokenFilter:
          *
          * @param allowed_properties A var array of allowed property values. An Edge will be filtered out if none of its
          *                          tokens has a property with an allowed property value (or a property value that
-         *                          contains an allowed value, 
-         *                          if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()} is false).
+         *                          contains an allowed value, if isWholeWords() is false).
          OR
          * @param allowedPropertyValues A set of allowed property values. An Edge will be filtered out if none of its
          *                               tokens has a property with an allowed property value (or a property value that
-         *                               contains an allowed value,
-         *                              if {@link com.googlecode.whatswrong.EdgeTokenFilter#isWholeWords()} is false).
+         *                               contains an allowed value, if isWholeWords() is false).
          * Should we only allow edges that are on the path of tokens that have the allowed properties.
          * Usually the filter allows all edges that have tokens with allowed properties. However, if it "uses paths"
          * an edge will only be allowed if it is on a path between two tokens with allowed properties.
@@ -64,46 +61,48 @@ class EdgeTokenFilter:
         self._allowed_properties = set(allowed_properties)
 
     def allows(self, property_value: str) -> bool:
-        """
-         * Returns whether the given value is an allowed property value.
-         *
-         * @param propertyValue the value to test.
-         * @return whether the given value is an allowed property value.
+        """Returns whether the given value is an allowed property value.
+
+        Args:
+            property_value (str): The value to test.
+
+        Returns:
+            bool: Whether the given value is an allowed property value.
         """
         return property_value in self._allowed_properties
 
     def add_allowed_property(self, property_value: str):
-        """
-         * Adds an allowed property value. An Edge must have a least one token with at least one property value that
-         *  either matches one of the allowed property values or contains one of them, depending on {@link
-         * EdgeTokenFilter#isWholeWords()}.
-         *
-         * @param property_value the property value to allow.
+        """ Adds an allowed property value. An Edge must have a least one token with at least one property value that
+         either matches one of the allowed property values or contains one of them, depending on isWholeWords().
+
+        Args:
+            property_value (str): The property value to allow.
         """
         self._allowed_properties.add(property_value)
 
     def remove_allowed_property(self, property_value: str):
-        """
-         * Remove an allowed property value.
-         *
-         * @param property_value the property value to remove from the set of allowed property values.
+        """Remove an allowed property value.
+
+        Args:
+            property_value (str): The property value to remove from the set of allowed property values.
         """
         self._allowed_properties.remove(property_value)
 
     def clear(self):
-        """
-         * Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and
-         * allows all edges.
+        """Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and
+         allows all edges.
         """
         self._allowed_properties.clear()
 
     @staticmethod
     def calculate_paths(edges: frozenset) -> defaultdict:
-        """
-         * Calculates all paths between all tokens of the provided edges.
-         *
-         * @param edges the edges (graph) to use for getting all paths.
-         * @return all paths defined through the provided edges.
+        """Calculates all paths between all tokens of the provided edges.
+
+        Args:
+            edges (frozenset): The edges (graph) to use for getting all paths.
+
+        Returns:
+            defaultdict(set): All paths defined through the provided edges.
         """
         paths_per_length = []  # ArrayList<Paths>()
 
@@ -147,12 +146,15 @@ class EdgeTokenFilter:
         return result
 
     def filter_edges(self, original: frozenset) -> frozenset:
-        """
-         * Filters out all edges that do not have at least one token with an allowed property value.
-         * If the set of allowed property values is empty this method just returns the original set and does nothing.
-         *
-         * @param original the input set of edges.
-         * @return the filtered out set of edges.
+        """Filters out all edges that do not have at least one token with an allowed property value.
+
+          If the set of allowed property values is empty this method just returns the original set and does nothing.
+
+         Args:
+            original (frozenset): The input set of edges.
+
+        Returns:
+            frozenset: The filtered set of edges.
         """
         if len(self._allowed_properties) == 0:
             return original
@@ -174,13 +176,15 @@ class EdgeTokenFilter:
         return frozenset(result)
 
     def filter(self, original: NLPInstance) -> NLPInstance:
-        """
-         * First filters out edges and then filters out tokens without edges if {@link EdgeTokenFilter#isCollaps()}
-         * is true.
-         *
-         * @param original the original nlp instance.
-         * @return the filtered instance.
-         * @see NLPInstanceFilter#filter(NLPInstance)
+        """Filter an NLP instance.
+
+        First filters out edges and then filters out tokens without edges if isCollaps() is true.
+
+        Args:
+            original (NLPInstance): The original nlp instance.
+
+        Returns:
+            NLPInstance: The filtered nlp instance.
         """
         edges = self.filter_edges(original.get_edges())
         if not self.collaps:
@@ -209,11 +213,13 @@ class EdgeTokenFilter:
                 new2old[new_token] = token
                 updated_tokens.append(new_token)
 
+            # update edges and remove those that have vertices not in the new vertex set
             updated_edges = set()  # HashSet<Edge>()
-            for e in edges:
+            for e in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
                                        edge_type=e.edge_type, render_type=e.render_type, description=e.description))
-            # find new split points
+            # find new split points (have to be changed because instance has
+            # new token sequence)
             updated_split_points = []  # ArrayList<Integer>()
             new_token_index = 0
             for old_split_point in original.split_points:

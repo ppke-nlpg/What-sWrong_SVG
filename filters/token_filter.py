@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from operator import attrgetter
+
 from nlp_model.nlp_instance import NLPInstance
 from nlp_model.token import Token
 from nlp_model.token_property import TokenProperty
@@ -71,7 +73,7 @@ class TokenFilter:
         if prop in self.forbidden_properties:
             self.forbidden_properties.remove(prop)
 
-    def filter_tokens(self, original):
+    def filter_tokens(self, original: list) -> list:
         """Filter a set of tokens by removing property values and tokens.
 
         Args:
@@ -91,8 +93,9 @@ class TokenFilter:
         return result
 
     def select_token(self, token):
-        # Linear search: For every property x For every allowed 'string'
-        # Index poperty is in range or full or partial stringmatch
+        """Linear search: For every property x For every allowed 'string'
+           Index poperty is in range or full or partial stringmatch
+        """
         for p in token.get_property_types():
             prop_name = p.name
             prop = token.get_property(p)
@@ -103,7 +106,7 @@ class TokenFilter:
                     return True
         return False
 
-    def filter(self, original: NLPInstance):
+    def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
         First filters the tokens and then removes edges that have tokens which
@@ -115,17 +118,23 @@ class TokenFilter:
         Returns:
             NLPInstance: The filtered nlp instance.
         """
+        edges = original.get_edges()
         if len(self._allowed_strings) == 0:
             updated_tokens = original.tokens
-            updated_edges = original.get_edges()
-            updated_split_points = None
+            updated_edges = edges
+            updated_split_points = original.split_points
         else:
             # first filter out tokens not containing allowed strings
+            tokens = set()  # HashSet<Token>()
+            for t in original.tokens:
+                if self.select_token(t):
+                    tokens.add(t)
+            _sorted = sorted(tokens, key=attrgetter("Index"))
 
             old2new = {}  # HashMap<Token, Token>()
             new2old = {}  # HashMap<Token, Token>()
             updated_tokens = []  # ArrayList<Token>()
-            for token in (t for t in original.tokens if self.select_token(t)):
+            for token in _sorted:
                 new_token = Token(len(updated_tokens))
                 new_token.merge(original.tokens[token.index])
                 old2new[token] = new_token
@@ -133,13 +142,13 @@ class TokenFilter:
                 updated_tokens.append(new_token)
 
             # update edges and remove those that have vertices not in the new vertex set
-            updated_edges = set()  # ArrayList<Edge>()
-            for e in (e for e in original.get_edges() if e.start in old2new and e.end in old2new):
+            updated_edges = set()  # HashSet<Edge>()
+            for e in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
                                        edge_type=e.edge_type, render_type=e.render_type, description=e.description))
             # find new split points (have to be changed because instance has
             # new token sequence)
-            updated_split_points = []
+            updated_split_points = []  # ArrayList<Integer>()
             new_token_index = 0
             for old_split_point in original.split_points:
                 new_token = updated_tokens[new_token_index]
