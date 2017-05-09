@@ -11,14 +11,26 @@ from nlp_model.edge import Edge, EdgeRenderType
 
 
 class Filter:
-    """A Tokenfilter filters an NLPInstance on the basis of token properties.
+    """A Filter filters out components of an NLPInstance.
 
     The filtered elements can be certain properties from each token or tokens
     that do not contain certain property values. The filter also removes all
     edges that were connecting one or more removed tokens.
 
-    Attributes:
+    Similarly, a filter can filter out edges based on the properties of their
+    tokens. For example, we can filter out all edges that do not contain at
+    least one token with the word "blah". The filter can also be configured to
+    filter out all edges which are not on a path between tokens with certain
+    properties. For example, we can filter out all edges that are not on the
+    paths between a token with word "blah" and a token with word "blub".
 
+    This filter can also filter out the tokens for which all edges have been
+    filtered out via the edge filtering process. This mode is called
+    "collapsing" because the graph is collapsed to contain only connected
+    components. Note that if no allowed property values are defined
+    (#add_allowed_property) then the filter does nothing and keeps all edges.
+
+    Attributes:
         forbidden_properties (Set[TokenProperty]): The set of properties we
             should not see.
         _allowed_strings (Set[TokenProperty]): A token needs to have at least
@@ -28,95 +40,45 @@ class Filter:
         _whole_word (bool): Should tokens be allowed only if they have a
             property value that equals one of the allowed strings or is it
             sufficient if one value contains one of the allowed strings.
-
-     * An EdgeTokenFilter filter out edges based on the properties of their tokens. For example, we can filter out all
-     * edges that do not contain at least one token with the word "blah". The filter can also be configured
-      to filter out all edges which are not on a path between tokens with certain properties. For example, we can filter
-       out all edges that are not on the paths between a token with word "blah" and a token with word "blub".
-     * <p/>
-     * <p>This filter can also filter out the tokens for which all edges have been filtered out via the edge filtering
-     * process. This mode is called "collapsing" because the graph is collapsed to contain only connected components.
-     * <p/>
-     * <p>Note that if no allowed property values are defined (EdgeTokenFilter.add_allowed_property(str))
-     * then the filter does nothing and keeps all edges.
-     *
-     * @author Sebastian Riedel
-         * Creates a new filter with the given allowed property values.
-         *
-         * @param allowed_properties A var array of allowed property values. An Edge will be filtered out if none of its
-         *                          tokens has a property with an allowed property value (or a property value that
-         *                          contains an allowed value, if isWholeWords() is false).
-         OR
-         * @param allowedPropertyValues A set of allowed property values. An Edge will be filtered out if none of its
-         *                               tokens has a property with an allowed property value (or a property value that
-         *                               contains an allowed value, if isWholeWords() is false).
-         * Should we only allow edges that are on the path of tokens that have the allowed properties.
-         * Usually the filter allows all edges that have tokens with allowed properties. However, if it "uses paths"
-         * an edge will only be allowed if it is on a path between two tokens with allowed properties.
-         * This also means that if there is only one token with allowed properties all edges will be filtered out.
-     * An EdgeTypeAndLabelFilter filter out edges that do not have certain (prefix or postfix) types.
-     * An EdgeTypeAndLabelFilter filter out edges with a label that contains one of a set of allowed label substrings.
-     * <p/>
-     * <p>Note that if the set of allowed label substrings is empty the filter allows all edges.
-     *
-     * @author Sebastian Riedel
-     * Creates a new EdgeTypeAndLabelFilter that allows the given label substrings.
-     *
-     * @param allowedLabels var array label substrings that are allowed.
-     OR
-     * @param allowedLabels a set of label substrings that are allowed.
+        _use_path (bool): Should we only allow edges that are on the path of
+            tokens that have the allowed properties.
+        collaps (bool): If active this property will cause the filter to filter
+            out all tokens for which all edges where filtered out in the edge
+            filtering step.
+        whole_words (bool): If true at least one edge tokens must contain at
+            least one property value that matches one of the allowed
+            properties. If false it sufficient for the property values to
+            contain an allowed property as substring.
+        allowed_properties (set): Set of property values that one of the tokens
+            of an edge has to have so that the edge is not going to be filtered
+            out.
+        allowed_prefix_types (Set[str]): The allowed prefix types. If an edge has a
+            prefix-type in this set it can pass.
+        allowed_postfix_types (Set[str]): The allowed postfix types. If an edge has a
+            postfix-type in this set it can pass.
+        _listeners: The list of listeners of this filter.
+        _allowed_labels: Allowed label substrings.
     """
+        
     def __init__(self, allowed_labels=set(), allowed_prefix_types=set(), *allowed_properties):
-        """Initalize a new Filter.
+        """Initalize a new Filter instance.
+        
+        Args:
+            allowed_labels (set): A set of label substrings that are allowed.
+            allowed_prefix_types (set): A set of prefixes that are allowed.
+            allowed_properties: Properties that are allowed.
         """
         self.forbidden_properties = set()
         self._allowed_strings = set()
         self._whole_word = False
-
-        """
-         * Should we only allow edges that are on the path of tokens that have the allowed properties.
-        """
-        self._usePath = False
-
-        """
-         * If active this property will cause the filter to filter out all tokens for which all edges where filtered out
-         * in  the edge filtering step.
-        """
+        self._use_path = False
         self.collaps = False
-
-        """
-         * If true at least one edge tokens must contain at least one property value that matches one of the allowed
-         * properties. If false it sufficient for the property values to contain an allowed property as substring.
-        """
         self.whole_words = False
-
-        """
-         * Set of property values that one of the tokens of an edge has to have so that the edge is not going to be
-         * filtered out.
-        """
-        self._allowed_properties = set(allowed_properties)
-
-        """
-         * Am EdgeTypeAndLabelFilter.Listener is notified of changes to the set of allowed edge type strings.
-         * Creates a new EdgeTypeAndLabelFilter with the given allowed edge prefix types.
-         *
-         * @param allowedPrefixTypes the allowed prefix types.
-         * If an edge has a prefix-type in this set it can pass.
-        """
-        self.allowed_prefix_types = allowed_prefix_types  # HashSet<String>()
-        """
-         * If an edge has a postfix-type in this set it can pass.
-        """
-        self.allowed_postfix_types = set()  # HashSet<String>()
-        """
-         * The list of listeners of this filter.
-        """
+        self.allowed_prefix_types = allowed_prefix_types
+        self.allowed_postfix_types = set()
         self._listeners = []  # ArrayList<Listener>()
-
-        """
-        * Set of allowed label substrings.
-        """
-        self._allowedLabels = allowed_labels
+        self._allowed_labels = allowed_labels
+        self._allowed_properties = allowed_properties
 
     def add_allowed_string(self, string: str):
         """Add an allowed property value.
@@ -167,11 +129,15 @@ class Filter:
         return property_value in self._allowed_properties
 
     def add_allowed_property(self, property_value: str):
-        """ Adds an allowed property value. An Edge must have a least one token with at least one property value that
-         either matches one of the allowed property values or contains one of them, depending on isWholeWords().
+        """Adds an allowed property value.
+
+        An Edge must have a least one token with at least one property value
+        that either matches one of the allowed property values or contains one
+        of them, depending on self.is_whole_words.
 
         Args:
             property_value (str): The property value to allow.
+
         """
         self._allowed_properties.add(property_value)
 
@@ -179,29 +145,32 @@ class Filter:
         """Remove an allowed property value.
 
         Args:
-            property_value (str): The property value to remove from the set of allowed property values.
+            property_value (str): The property value to remove from the set of
+            allowed property values.
         """
         self._allowed_properties.remove(property_value)
 
     def clear_allowed_property(self):
-        """Removes all allowed words. Note that if no allowed words are specified the filter changes it's behaviour and
-         allows all edges.
+        """Removes all allowed words.
+
+        Note that if no allowed words are specified the filter changes it's
+        behaviour and allows all edges.
         """
         self._allowed_properties.clear()
 
     def add_listener(self, listener):
-        """
-         * Adds a listener.
-         *
-         * @param listener the listener to add.
+        """Adds a listener.
+
+        Args:
+            listener: The listener to add.
         """
         self._listeners.append(listener)
 
     def fire_changed(self, t: str):
-        """
-         * Notifies every listener that the allow/disallow state of a type has changed.
-         *
-         * @param type the type which allow/disallow state has changed.
+        """Notifies every listener that the allow/disallow state of a type has changed.
+
+        Args:
+            type: The type which allow/disallow state has changed.
         """
         for l in self._listeners:
             l.changed(t)
@@ -213,7 +182,7 @@ class Filter:
          * @param label the label substring we want to check whether the filter allows it.
          * @return true iff the filter allows the given label substring.
         """
-        return label in self._allowedLabels
+        return label in self._allowed_labels
 
     def add_allowed_label(self, label: str):
         """
@@ -221,7 +190,7 @@ class Filter:
          *
          * @param label the label that should be allowed
         """
-        self._allowedLabels.add(label)
+        self._allowed_labels.add(label)
 
     def remove_allowed_label(self, label: str):
         """
@@ -229,13 +198,13 @@ class Filter:
          *
          * @param label the label substring to disallow.
         """
-        self._allowedLabels.remove(label)
+        self._allowed_labels.remove(label)
 
     def clear_allowed_label(self):
         """
          * Removes all allowed label substrings. In this state the filter allows all labels.
         """
-        self._allowedLabels.clear()
+        self._allowed_labels.clear()
 
     def add_allowed_prefix_type(self, t: str):
         """
@@ -355,27 +324,20 @@ class Filter:
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
-        First filter the tokens and then removes edges that have tokens which
-        were filtered out.
-        First filter out edges and then filter out tokens without edges if isCollaps() is true.
+        Filters the tokens and then removes edges that have tokens which were
+        filtered out. Also filters out edges and then filter out tokens without
+        edges if self.is_collaps is true.
+
+        Filters out all edges that don't have an allowed prefix and postfix
+        type. Filters out all edges that don't have a label that contains one
+        of the allowed label substrings. If the set of allowed substrings is
+        empty then the original set of edges is returned as is.
 
         Args:
             original (NLPInstance): The original nlp instance.
 
         Returns:
-            NLPInstance: The filtered nlp instance.
-
-         * Filters out all edges that don't have an allowed prefix and postfix type.
-         *
-         * @param original the original set of edges.
-         * @return the filtered set of edges.
-         * @see EdgeFilter#filterEdges(Collection<Edge>)
-         * Filters out all edges that don't have a label that contains one of the allowed label substrings.
-         * If the set of allowed substrings is empty then the original set of edges is returned as is.
-         *
-         * @param original the original set of edges.
-         * @return a filtered version of the original edge collection.
-         * @see EdgeFilter#filterEdges(Collection<Edge>)
+            NLPInstance: The filtered NLPInstance.
         """
         # Filter edges:
         # Filters out all edges that do not have at least one token with an allowed property value.
@@ -389,16 +351,16 @@ class Filter:
                         edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
                     new_edges.add(edge)
             edges = new_edges
-            if self._usePath:  # We only allow edges that are on the path of tokens that have the allowed properties.
+            if self._use_path:  # We only allow edges that are on the path of tokens that have the allowed properties.
                 edges = self.calculate_paths(edges)
 
-            if len(self._allowedLabels) > 0:
+            if len(self._allowed_labels) > 0:
                 result = set()  # ArrayList<Edge>(original.size())
                 for edge in edges:  # Allowed prefixes and postfixes
                     if (edge.get_type_prefix() == "" or edge.get_type_prefix() in self.allowed_prefix_types) and \
                             (edge.get_type_postfix() == "" or edge.get_type_postfix() in self.allowed_postfix_types):
 
-                        for allowed in self._allowedLabels:
+                        for allowed in self._allowed_labels:
                             if allowed in edge.label:
                                 result.add(edge)
                                 break
