@@ -3,7 +3,7 @@
 # Untested
 
 from NLPCanvas import NLPCanvas
-from render.filter import Filter
+from nlp_model.filter import Filter
 
 """
  * A DependencyFilterPanel controls a EdgeTypeAndLabelFilter and a EdgeTokenFilter and updates an NLPCanvas after
