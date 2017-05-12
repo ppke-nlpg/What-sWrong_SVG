@@ -170,94 +170,111 @@ class Filter:
         """Notifies every listener that the allow/disallow state of a type has changed.
 
         Args:
-            type: The type which allow/disallow state has changed.
+            t (str): The type whose allow/disallow state has changed.
         """
         for l in self._listeners:
             l.changed(t)
 
     def allows_label(self, label: str):
-        """
-         * Checks whether the filter allows the given label substring.
-         *
-         * @param label the label substring we want to check whether the filter allows it.
-         * @return true iff the filter allows the given label substring.
+        """Checks whether the filter allows the given label
+        
+        Args:
+            label: The label substring we want to check whether the filter allows it.
+        
+        Returns:
+            bool: True iff the filter allows the given label substring.
         """
         return label in self._allowed_labels
 
     def add_allowed_label(self, label: str):
-        """
-         * Adds an allowed label substring.
-         *
-         * @param label the label that should be allowed
+        """Adds an allowed label substring.
+
+        Args:
+            label (str): The label that should be allowed.
         """
         self._allowed_labels.add(label)
 
     def remove_allowed_label(self, label: str):
-        """
-        * Removes an allowed label substring.
-         *
-         * @param label the label substring to disallow.
+        """Removes an allowed label substring.
+
+        Args:
+            label (str): The label substring to disallow.
         """
         self._allowed_labels.remove(label)
 
     def clear_allowed_label(self):
-        """
-         * Removes all allowed label substrings. In this state the filter allows all labels.
+        """Removes all allowed label substrings.
+
+        In this state the filter allows all labels.
         """
         self._allowed_labels.clear()
 
     def add_allowed_prefix_type(self, t: str):
-        """
-         * Adds an allowed prefix type. This causes the filter to accept edges with the given prefix type.
-         *
-         * @param type the allowed prefix type.
+        """Adds an allowed prefix type.
+        
+        This causes the filter to accept edges with the given prefix type.
+
+        Args:
+            t (str): The allowed prefix type.
         """
         self.allowed_prefix_types.add(t)
         self.fire_changed(t)
 
     def add_allowed_postfix_type(self, t: str):
-        """
-         * Adds an allowed prefix type. This causes the filter to accept edges with the given postfix type.
-         *
-         * @param type the allowed postfix type.
+        """Adds an allowed postfix type.
+        
+        This causes the filter to accept edges with the given postfix type.
+
+        Args:
+            t (str): The allowed postfix type.
         """
         self.allowed_postfix_types.add(t)
         self.fire_changed(t)
 
     def remove_allowed_prefix_type(self, t: str):
-        """
-         * Disallows the given prefix type. This causes the filter to stop accepting edges with the given prefix type.
-         *
-         * @param type the prefix type to disallow.
+        """Disallows the given prefix type.
+
+        This causes the filter to stop accepting edges with the given prefix
+        type.
+
+        Args:
+            t (str): The prefix type to disallow.
         """
         if t in self.allowed_prefix_types:
             self.allowed_prefix_types.remove(t)
             self.fire_changed(t)
 
     def remove_allowed_postfix_type(self, t: str):
-        """
-         * Disallows the given postfix type. This causes the filter to stop accepting edges with the given postfix type.
-         *
-         * @param type the postfix type to disallow.
+        """Disallows the given postfix type.
+
+        This causes the filter to stop accepting edges with the given postfix
+        types.
+        
+        Args:
+            t (str): The postfix type to disallow.
         """
         self.allowed_postfix_types.remove(t)
         self.fire_changed(t)
 
     def allows_prefix(self, t: str):
-        """
-         * Does the filter allow the given prefix.
-         *
-         * @param type the type to check whether it is allowed as prefix.
-         * @return true iff the given type is allowed as prefix.
+        """Does the filter allow the given 
+        
+        Args:
+            t (str): The type to check whether it is allowed as prefix.
+
+        Returns:
+            bool: True iff the given type is allowed as prefix.
         """
         return t in self.allowed_prefix_types
 
     def allows_postfix(self, t: str):
-        """
-         * Does the filter allow the given postfix.
-         *
-         * @param type the type to check whether it is allowed as postfix.
-         * @return true iff the given type is allowed as postfix.
+        """Does the filter allow the given postfix.
+        
+        Args:
+            t (str): The type to check whether it is allowed as postfix.
+
+        Returns:
+            bool: True iff the given type is allowed as postfix.
         """
         return t in self.allowed_postfix_types
 
@@ -272,7 +289,6 @@ class Filter:
             set: All paths defined through the provided edges.
         """
         paths_per_length = []  # ArrayList<Paths>()
-
         paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
         # initialize
         for edge in edges:
