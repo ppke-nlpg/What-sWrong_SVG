@@ -44,7 +44,7 @@ class Filter:
             sufficient if one value contains one of the allowed strings.
         use_path (bool): Should we only allow edges that are on the path of
             tokens that have the allowed properties.
-        collaps (bool): If active this property will cause the filter to filter
+        collapse (bool): If active this property will cause the filter to filter
             out all tokens for which all edges where filtered out in the edge
             filtering step.
         allowed_prefix_types (Set[str]): The allowed prefix types. If an edge has a
@@ -67,7 +67,7 @@ class Filter:
         self.allowed_propvals = allowed_propvals or {''}
         self.propvals_whole_word = False
         self.use_path = False
-        self.collaps = False
+        self.collapse = False
         self.allowed_prefix_types = allowed_prefix_types
         self.allowed_postfix_types = allowed_postfix_types
         self.allowed_labels = allowed_labels
@@ -384,7 +384,7 @@ class Filter:
             edges = filter(self.edge_type_is_allowed, edges)
                 
         # Filter tokens
-        if len(self.allowed_propvals) == 0 and not self.collaps:
+        if len(self.allowed_propvals) == 0 and not self.collapse:
             # Nothing to do...
             updated_tokens = original.tokens
             updated_edges = edges
@@ -396,7 +396,7 @@ class Filter:
             if len(self.allowed_propvals) > 0:
                 tokens = set(filter(self.token_has_allowed_prop, original.tokens))
 
-            if self.collaps:
+            if self.collapse:
                 for e in edges:
                     if e.render_type == EdgeRenderType.dependency:
                         tokens.add(e.start)
