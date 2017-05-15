@@ -36,7 +36,9 @@ class Filter:
         allowed_propvals (set): A token needs to have at least one
             property value contained in this set (if 'propvals_whole_word' is
             true) or needs to have one value that contains a string in this set
-            (otherwise).
+            (otherwise). The set can also contain ranges, in that case a token
+            matches this value if it has an `Index` property with a numerical
+            value within the range. See also #token_has_allowed_prop.
         propvals_whole_word (bool): Should tokens be allowed only if they have a
             property value that equals one of the allowed strings or is it
             sufficient if one value contains one of the allowed strings.
@@ -49,9 +51,7 @@ class Filter:
             prefix-type in this set it can pass.
         allowed_postfix_types (Set[str]): The allowed postfix types. If an edge has a
             postfix-type in this set it can pass.
-        listeners: The list of listeners of this filter.
         allowed_labels: Allowed label substrings.
-
     """
         
     def __init__(self, allowed_labels=set(), allowed_prefix_types=set(),
@@ -70,7 +70,6 @@ class Filter:
         self.collaps = False
         self.allowed_prefix_types = allowed_prefix_types
         self.allowed_postfix_types = allowed_postfix_types
-        self.listeners = []  # ArrayList<Listener>()
         self.allowed_labels = allowed_labels
 
     def add_allowed_propval(self, string: str):
@@ -138,23 +137,6 @@ class Filter:
         """
         self.allowed_propvals.clear()
 
-    def add_listener(self, listener):
-        """Adds a listener.
-
-        Args:
-            listener: The listener to add.
-        """
-        self.listeners.append(listener)
-
-    def fire_changed(self, t: str):
-        """Notifies every listener that the allow/disallow state of a type has changed.
-
-        Args:
-            t (str): The type whose allow/disallow state has changed.
-        """
-        for l in self.listeners:
-            l.changed(t)
-
     def allows_label(self, label: str):
         """Checks whether the filter allows the given label
         
@@ -198,7 +180,6 @@ class Filter:
             t (str): The allowed prefix type.
         """
         self.allowed_prefix_types.add(t)
-        self.fire_changed(t)
 
     def add_allowed_postfix_type(self, t: str):
         """Adds an allowed postfix type.
@@ -209,7 +190,6 @@ class Filter:
             t (str): The allowed postfix type.
         """
         self.allowed_postfix_types.add(t)
-        self.fire_changed(t)
 
     def remove_allowed_prefix_type(self, t: str):
         """Disallows the given prefix type.
@@ -222,7 +202,6 @@ class Filter:
         """
         if t in self.allowed_prefix_types:
             self.allowed_prefix_types.remove(t)
-            self.fire_changed(t)
 
     def remove_allowed_postfix_type(self, t: str):
         """Disallows the given postfix type.
@@ -235,7 +214,6 @@ class Filter:
         """
         if t in self.allowed_postfix_types:
             self.allowed_postfix_types.remove(t)
-            self.fire_changed(t)
 
     def allows_prefix(self, t: str):
         """Does the filter allow the given 

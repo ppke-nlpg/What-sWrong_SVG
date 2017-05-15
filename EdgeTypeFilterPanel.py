@@ -67,7 +67,6 @@ class EdgeTypeFilterPanel:
         """
         self._edgeTypeFilter = edgeTypeFilter
         self._nlpCanvas.addListener(listener=self)
-        edgeTypeFilter.add_listener(listener=self)
 
         self.updateTypesList()
         self.updateSelection()
