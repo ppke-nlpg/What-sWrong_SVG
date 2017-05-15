@@ -77,7 +77,14 @@ class MyForm(QtGui.QMainWindow):
         self.ui.actionExport.setStatusTip('Export to SVG')
         self.ui.actionExport.triggered.connect(self.file_save)
         self.ui.actionExport.setEnabled(False)
-        self.canvas = None
+        self.canvas = NLPCanvas(self.ui)
+        self.canvas.filter = Filter()
+
+        EdgeTypeFilterPanel(self.ui, self.canvas, self.canvas.filter)
+        DependencyFilterPanel(self.ui, self.canvas, self.canvas.filter, self.canvas.filter)
+        TokenFilterPanel(self.ui, self.canvas, self.canvas.filter)
+
+        self.ui.actionExport.setEnabled(True)
 
     def browse_gold_folder(self):
         # app =
@@ -146,17 +153,6 @@ class MyForm(QtGui.QMainWindow):
             self.ui.selectGuessListWidget.setItemSelected(item, True)
 
     def refresh(self):
-
-        self.canvas = NLPCanvas(self.ui)
-        self.ui.actionExport.setEnabled(True)
-
-        # set filter of the canvas
-        self.canvas.filter = Filter()
-
-        EdgeTypeFilterPanel(self.ui, self.canvas, self.canvas.filter)
-        DependencyFilterPanel(self.ui, self.canvas, self.canvas.filter, self.canvas.filter)
-        TokenFilterPanel(self.ui, self.canvas, self.canvas.filter)
-
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
         guess = None

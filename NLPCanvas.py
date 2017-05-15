@@ -5,27 +5,24 @@
 from PyQt4 import QtGui, QtSvg
 
 from nlp_model.nlp_instance import NLPInstance, RenderType
+from nlp_model.filter import Filter
 from render.aligment_renderer import AligmentRenderer
 from render.single_sentence_renderer import SingleSentenceRenderer
 from render.svg_writer import Scene
 
-
 class NLPCanvas:
-    """
-     * An NLPCanvas is responsible for drawing the tokens and edges of an NLPInstance using different edge and token
-     * layouts. In order to draw an NLPInstance clients have to first set the instance to draw by calling {@link
-     * com.googlecode.whatswrong.NLPCanvas#setNLPInstance(NLPInstance)} and then update the graphical representation by
-     * calling {@link NLPCanvas#updateNLPGraphics()}. The latter method should also be called whenever changes are made
-     * to the layout configuration (curved edges vs straight edges, antialiasing etc.).
-     *
-     * @author Sebastian Riedel
-     * @see com.googlecode.whatswrong.EdgeLayout
-     * @see com.googlecode.whatswrong.TokenLayout
+    """An NLPCanvas draws the tokens and edges of an NLPInstance.
+
+    It uses different edge and token layouts. In order to draw an NLPInstance
+    clients have to first set the instance to draw by calling
+    NLPCanvas#setNLPInstance and then update the graphical representation by
+    calling NLPCanvas#updateNLPGraphics. The latter method should also be
+    called whenever changes are made to the layout configuration (curved edges
+    vs straight edges, antialiasing etc.).
     """
 
     def __init__(self, ui):
-        """
-             * Creates a new canvas with default size.
+        """Creates a new canvas with default size.
         """
         self.renderer = SingleSentenceRenderer()
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
@@ -81,15 +78,16 @@ class NLPCanvas:
         self.dependencies = self._nlp_instance.get_edges()
         self.usedTypes = {edge.edge_type for edge in self.dependencies}  # Union
         self.tokens = self._nlp_instance.tokens
-        self.usedProperties = {prop for token in self.tokens for prop in token.get_property_types()}  # UnionAll
+        self.usedProperties = {prop for token in self.tokens for prop in token.get_properties()}  # UnionAll
         self.fireInstanceChanged()
 
     def filter_instance(self):
+        """Just calls the filter on the current instance.
+
+        Returns:
+            NLPInstance: The filtered instance.
         """
-         * Just calls the filter on the current instance.
-         *
-         * @return the filtered instance.
-        """
+        # print('Call to filter_instance')
         instance = NLPInstance(tokens=self.tokens, edges=self.dependencies,
                                render_type=self._nlp_instance.render_type,
                                split_points=self._nlp_instance.split_points)
@@ -97,10 +95,12 @@ class NLPCanvas:
         return self.filter.filter(instance)
 
     def update_nlp_graphics(self):
+        """Updates the current graph.
+
+        This takes into account all changes to the filter, NLP instance and
+        drawing parameters.
         """
-         * Updates the current graph. This takes into account all changes to the filter,
-          NLP instance and drawing parameters.
-        """
+        print('NLPCanvas#updateNLPGraphics')
         scene = QtGui.QGraphicsScene()
         self._ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
@@ -111,8 +111,7 @@ class NLPCanvas:
         self.fireChanged()
 
     def clear(self):
-        """
-         * Clears the current instance.
+        """Clears the current instance.
         """
         self.tokens.clear()
         self.dependencies.clear()

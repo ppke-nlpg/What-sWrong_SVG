@@ -28,72 +28,74 @@ class Filter:
     filtered out via the edge filtering process. This mode is called
     "collapsing" because the graph is collapsed to contain only connected
     components. Note that if no allowed property values are defined
-    (#add_allowed_property) then the filter does nothing and keeps all edges.
+    (#add_allowed_propval) then the filter does nothing and keeps all edges.
 
     Attributes:
         forbidden_properties (Set[TokenProperty]): The set of properties we
             should not see.
-        _allowed_strings (Set[TokenProperty]): A token needs to have at least
-            one property value contained in this set (if
-            Filter#whole_word} is true) or needs to have one value that
-            contains a string in this set (otherwise).
-        _whole_word (bool): Should tokens be allowed only if they have a
+        allowed_propvals (set): A token needs to have at least one
+            property value contained in this set (if 'propvals_whole_word' is
+            true) or needs to have one value that contains a string in this set
+            (otherwise).
+        propvals_whole_word (bool): Should tokens be allowed only if they have a
             property value that equals one of the allowed strings or is it
             sufficient if one value contains one of the allowed strings.
-        _use_path (bool): Should we only allow edges that are on the path of
+        use_path (bool): Should we only allow edges that are on the path of
             tokens that have the allowed properties.
         collaps (bool): If active this property will cause the filter to filter
             out all tokens for which all edges where filtered out in the edge
             filtering step.
-        whole_words (bool): If true at least one edge tokens must contain at
-            least one property value that matches one of the allowed
-            properties. If false it sufficient for the property values to
-            contain an allowed property as substring.
-        allowed_properties (set): Set of property values that one of the tokens
-            of an edge has to have so that the edge is not going to be filtered
-            out.
         allowed_prefix_types (Set[str]): The allowed prefix types. If an edge has a
             prefix-type in this set it can pass.
         allowed_postfix_types (Set[str]): The allowed postfix types. If an edge has a
             postfix-type in this set it can pass.
-        _listeners: The list of listeners of this filter.
-        _allowed_labels: Allowed label substrings.
+        listeners: The list of listeners of this filter.
+        allowed_labels: Allowed label substrings.
+
     """
         
-    def __init__(self, allowed_labels=set(), allowed_prefix_types=set(), *allowed_properties):
+    def __init__(self, allowed_labels=set(), allowed_prefix_types=set(),
+                 allowed_postfix_types={'FN','FP','Match'}, *allowed_propvals):
         """Initalize a new Filter instance.
         
         Args:
             allowed_labels (set): A set of label substrings that are allowed.
             allowed_prefix_types (set): A set of prefixes that are allowed.
-            allowed_properties: Properties that are allowed.
+            allowed_propvals: Property values that are allowed.
         """
         self.forbidden_properties = set()
-        self._allowed_strings = set()
-        self._whole_word = False
-        self._use_path = False
+        self.allowed_propvals = allowed_propvals or {''}
+        self.propvals_whole_word = False
+        self.use_path = False
         self.collaps = False
-        self.whole_words = False
         self.allowed_prefix_types = allowed_prefix_types
-        self.allowed_postfix_types = set()
-        self._listeners = []  # ArrayList<Listener>()
-        self._allowed_labels = allowed_labels
-        self._allowed_properties = allowed_properties
+        self.allowed_postfix_types = allowed_postfix_types
+        self.listeners = []  # ArrayList<Listener>()
+        self.allowed_labels = allowed_labels
 
-    def add_allowed_string(self, string: str):
+    def add_allowed_propval(self, string: str):
         """Add an allowed property value.
 
         Args:
             string (str): The allowed property value.
         """
-        self._allowed_strings.add(string)
+        self.allowed_propvals.add(string)
+        
+    def remove_allowed_propval(self, property_value: str):
+        """Remove an allowed property value.
 
-    def clear_allowed_strings(self):
+        Args:
+            property_value (str): The property value to remove from the set of
+            allowed property values.
+        """
+        self.allowed_propvals.remove(property_value)
+
+    def clear_allowed_propvals(self):
         """Remove all allowed strings.
 
         In this state the filter allows all tokens.
         """
-        self._allowed_strings.clear()
+        self.allowed_propvals.clear()
 
     def add_forbidden_property(self, name: str):
         """Add a property that is forbidden.
@@ -126,29 +128,7 @@ class Filter:
         Returns:
             bool: Whether the given value is an allowed property value.
         """
-        return property_value in self._allowed_properties
-
-    def add_allowed_property(self, property_value: str):
-        """Adds an allowed property value.
-
-        An Edge must have a least one token with at least one property value
-        that either matches one of the allowed property values or contains one
-        of them, depending on self.is_whole_words.
-
-        Args:
-            property_value (str): The property value to allow.
-
-        """
-        self._allowed_properties.add(property_value)
-
-    def remove_allowed_property(self, property_value: str):
-        """Remove an allowed property value.
-
-        Args:
-            property_value (str): The property value to remove from the set of
-            allowed property values.
-        """
-        self._allowed_properties.remove(property_value)
+        return property_value in self.allowed_propvals
 
     def clear_allowed_property(self):
         """Removes all allowed words.
@@ -156,7 +136,7 @@ class Filter:
         Note that if no allowed words are specified the filter changes it's
         behaviour and allows all edges.
         """
-        self._allowed_properties.clear()
+        self.allowed_propvals.clear()
 
     def add_listener(self, listener):
         """Adds a listener.
@@ -164,7 +144,7 @@ class Filter:
         Args:
             listener: The listener to add.
         """
-        self._listeners.append(listener)
+        self.listeners.append(listener)
 
     def fire_changed(self, t: str):
         """Notifies every listener that the allow/disallow state of a type has changed.
@@ -172,7 +152,7 @@ class Filter:
         Args:
             t (str): The type whose allow/disallow state has changed.
         """
-        for l in self._listeners:
+        for l in self.listeners:
             l.changed(t)
 
     def allows_label(self, label: str):
@@ -184,7 +164,7 @@ class Filter:
         Returns:
             bool: True iff the filter allows the given label substring.
         """
-        return label in self._allowed_labels
+        return label in self.allowed_labels
 
     def add_allowed_label(self, label: str):
         """Adds an allowed label substring.
@@ -192,7 +172,7 @@ class Filter:
         Args:
             label (str): The label that should be allowed.
         """
-        self._allowed_labels.add(label)
+        self.allowed_labels.add(label)
 
     def remove_allowed_label(self, label: str):
         """Removes an allowed label substring.
@@ -200,14 +180,14 @@ class Filter:
         Args:
             label (str): The label substring to disallow.
         """
-        self._allowed_labels.remove(label)
+        self.allowed_labels.remove(label)
 
     def clear_allowed_label(self):
         """Removes all allowed label substrings.
 
         In this state the filter allows all labels.
         """
-        self._allowed_labels.clear()
+        self.allowed_labels.clear()
 
     def add_allowed_prefix_type(self, t: str):
         """Adds an allowed prefix type.
@@ -253,8 +233,9 @@ class Filter:
         Args:
             t (str): The postfix type to disallow.
         """
-        self.allowed_postfix_types.remove(t)
-        self.fire_changed(t)
+        if t in self.allowed_postfix_types:
+            self.allowed_postfix_types.remove(t)
+            self.fire_changed(t)
 
     def allows_prefix(self, t: str):
         """Does the filter allow the given 
@@ -323,20 +304,72 @@ class Filter:
 
         return result
 
-    def select_token(self, token):
-        """Linear search: For every property x For every allowed 'string'
-           Index poperty is in range or full or partial stringmatch
+    def token_has_allowed_prop(self, token):
+        """Whether this filter should keep a specific token based on its prop. vals.
+        
+        A token is to be kept if
+        - the allowed_propvals set contains a range and the value of the
+          token's `Index` property is within this range, or
+        - the allowed_propvals set contains a string which is a
+          substring/identical to one of the propvals of the token. Identity is
+          required when `propvals_whole_word` is True.
+
+        Args:
+            token (Token): A token.
+
+        Returns:
+            bool: True iff the token should be kept.
         """
-        for p in token.get_property_types():
+        for p in token.get_properties():
             prop_name = p.name
-            prop = token.get_property(p)
-            for allowed in self._allowed_strings:
-                if (prop_name == "Index" and isinstance(allowed, range) and int(prop) in allowed) or \
-                   (not isinstance(allowed, range) and (self._whole_word and prop == allowed or
-                                                        not self._whole_word and allowed in prop)):
+            prop_val = token.get_property(p)
+            for allowed in self.allowed_propvals:
+                if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
+                   (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
+                                                        not self.propvals_whole_word and allowed in prop_val)):
                     return True  # In Python you can't break out of multiple loops!
         return False
 
+    def edge_has_allowed_tokprop(self, edge):
+        """Is the edge allowed on the basis of its token properties.
+
+        Args:
+            edge (Edge): An edge.
+
+        Returns:
+            bool: True iff at least one of the edge's end tokens has an allowed
+            properties.
+        """
+        return self.token_has_allowed_prop(edge.start) or self.token_has_allowed_prop(edge.end)
+    
+    def edge_type_is_allowed(self, edge):
+        """Is the edge allowed on the basis of its type.
+
+        Args:
+            edge (Edge): An edge.
+
+        Returns:
+            bool: True iff the edge allowed on the basis of its label and type.
+        """
+        return ((edge.get_type_prefix() == "" or edge.get_type_prefix()
+                 in self.allowed_prefix_types) and 
+                (edge.get_type_postfix() == "" or edge.get_type_postfix()
+                 in self.allowed_postfix_types))
+
+    def edge_label_is_allowed(self, edge):
+        """Is the edge allowed on the basis of its label.
+
+        Args:
+            edge (Edge): An edge.
+
+        Returns:
+            bool: True iff the edge allowed on the basis of its label.
+        """
+        for allowed in self.allowed_labels:
+            if allowed in edge.label:
+                return True
+        return False
+    
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
@@ -355,46 +388,35 @@ class Filter:
         Returns:
             NLPInstance: The filtered NLPInstance.
         """
-        # Filter edges:
-        # Filters out all edges that do not have at least one token with an allowed property value.
-        # If the set of allowed property values is empty this method just returns the original set and does nothing.
+        # print('FILTERING...')
+        # print('filter object:', self)
+        # print('Allowed propvals:', self.allowed_propvals)
+        # print('Allowed postfixes', self.allowed_postfix_types)
+        # print('Allowed labels', self.allowed_labels)
+        # Filter edges
+        # print('EDGES before filtering:')
+        # print([e.__dict__ for e in original.edges])
         edges = original.get_edges()
-        if len(self._allowed_properties) > 0:
-            new_edges = set()  # ArrayList<Edge>()
-            # Filter good edges...
-            for edge in edges:
-                if edge.start.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words) or \
-                        edge.end.properties_contain(substrings=self._allowed_properties, whole_word=self.whole_words):
-                    new_edges.add(edge)
-            edges = new_edges
-            if self._use_path:  # We only allow edges that are on the path of tokens that have the allowed properties.
+        if len(self.allowed_propvals) > 0:
+            edges = filter(self.edge_has_allowed_tokprop, edges)
+            if self.use_path:  # Only allow edges on the path of tokens having allowed props
                 edges = self.calculate_paths(edges)
-
-            if len(self._allowed_labels) > 0:
-                result = set()  # ArrayList<Edge>(original.size())
-                for edge in edges:  # Allowed prefixes and postfixes
-                    if (edge.get_type_prefix() == "" or edge.get_type_prefix() in self.allowed_prefix_types) and \
-                            (edge.get_type_postfix() == "" or edge.get_type_postfix() in self.allowed_postfix_types):
-
-                        for allowed in self._allowed_labels:
-                            if allowed in edge.label:
-                                result.add(edge)
-                                break
-                edges = result
-
+            if len(self.allowed_labels) > 0:
+                edges = filter(self.edge_label_is_allowed, edges)
+            edges = filter(self.edge_type_is_allowed, edges)
+                
         # Filter tokens
-        if len(self._allowed_strings) == 0 and not self.collaps:
+        if len(self.allowed_propvals) == 0 and not self.collaps:
             # Nothing to do...
             updated_tokens = original.tokens
             updated_edges = edges
             updated_split_points = original.split_points
         else:
             tokens = set()  # HashSet<Token>()
+            
             # first filter out tokens not containing allowed strings
-            if len(self._allowed_strings) > 0:
-                for t in original.tokens:
-                    if self.select_token(t):
-                        tokens.add(t)
+            if len(self.allowed_propvals) > 0:
+                tokens = set(filter(self.token_has_allowed_prop, original.tokens))
 
             if self.collaps:
                 for e in edges:
@@ -434,6 +456,11 @@ class Filter:
                     new_token = updated_tokens[new_token_index]
                     old_token = new2old[new_token]
                 updated_split_points.append(new_token_index)
-
-        return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
-                           split_points=updated_split_points)
+                
+        result = NLPInstance(tokens=updated_tokens,
+                             edges=updated_edges,
+                             render_type=original.render_type,
+                             split_points=updated_split_points)
+        # print('RESULT edges:', [e.__dict__ for e in result.edges])
+        return result
+    

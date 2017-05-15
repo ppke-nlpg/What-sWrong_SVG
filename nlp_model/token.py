@@ -3,7 +3,7 @@
 
 from .token_property import TokenProperty
 # import re # This was only needed for the commented out part in
-# the properties_contain method
+# the propvals_contain method
 from operator import attrgetter
 
 
@@ -93,7 +93,7 @@ class Token:
                                         key=attrgetter('level', 'name')))
         return sorted_properties
 
-    def get_property_types(self):
+    def get_properties(self):
         """Return all token properties.
 
         Note:
@@ -104,7 +104,7 @@ class Token:
         """
         return tuple(self.token_properties.keys())
 
-    def properties_contain(self, substrings: set, whole_word: bool=False) -> bool:
+    def propvals_contain(self, substrings: set, whole_word: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
 
         Args:
@@ -115,7 +115,7 @@ class Token:
 
         Returns:
             bool: True iff there is a property value that is equal to/contains
-            one of the strings in :substrings:.
+            one of the strings in `substrings`.
         """
         for curr_property in self.token_properties.values():
             for substr in substrings:

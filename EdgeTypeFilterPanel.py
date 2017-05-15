@@ -90,6 +90,7 @@ class EdgeTypeFilterPanel:
 
         # add false positive/negative and match check buttons
         def matchActionPerformed(value):
+            print("Match action performed!")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_postfix_type("Match")
             else:
@@ -99,6 +100,7 @@ class EdgeTypeFilterPanel:
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
+            print("Negative action performed")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_postfix_type("FN")
             else:
@@ -108,6 +110,7 @@ class EdgeTypeFilterPanel:
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
+            print("Positive action performed")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_postfix_type("FP")
             else:

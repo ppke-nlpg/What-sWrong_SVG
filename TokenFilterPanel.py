@@ -53,13 +53,13 @@ class TokenFilterPanel:
             self._canvas.update_nlp_graphics()
 
     def allowedChanged(self, text):  # keyReleased
-        self._tokenFilter.clear_allowed_strings()
+        self._tokenFilter.clear_allowed_propvals()
         for curr_property in text.split(','):
             if len(curr_property) > 0:
                 m = interval.match(curr_property)
                 if m:
                     curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                self._tokenFilter.add_allowed_string(curr_property)
+                self._tokenFilter.add_allowed_propval(curr_property)
         self._canvas.update_nlp_graphics()
 
     def wholeWordActionPerformed(self, value):
