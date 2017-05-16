@@ -4,8 +4,8 @@
 
 from NLPCanvas import NLPCanvas
 from CorpusLoader import CorpusLoader
-from nlp_model.nlp_instance import NLPInstance, nlp_diff
-from nlp_model.token_property import TokenProperty
+from lib.model.nlp_instance import NLPInstance, nlp_diff
+from lib.model.token_property import TokenProperty
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw

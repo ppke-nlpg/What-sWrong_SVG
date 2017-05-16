@@ -15,9 +15,9 @@ from NLPCanvas import NLPCanvas
 from TokenFilterPanel import TokenFilterPanel
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
-from nlp_model.filter import Filter
-from nlp_model.nlp_instance import RenderType
-from render.svg_writer import Scene
+from lib.model.filter import Filter
+from lib.model.nlp_instance import RenderType
+from lib.render.svg_writer import Scene
 
 
 # from CorpusLoader import CorpusLoader

@@ -8,8 +8,8 @@
 import sys
 import re
 
-from nlp_model.nlp_instance import NLPInstance
-from nlp_model.token_property import TokenProperty
+from lib.model.nlp_instance import NLPInstance
+from lib.model.token_property import TokenProperty
 from ioFormats.CorpusFormat import CorpusFormat
 
 """
