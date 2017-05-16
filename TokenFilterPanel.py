@@ -8,7 +8,7 @@ from operator import attrgetter
 from PyQt4 import QtGui
 
 from NLPCanvas import NLPCanvas
-from lib.model.filter import Filter
+from libwwnlp.model.filter import Filter
 
 """
  * A TokenFilterPanel controls a EdgeTokenAndTokenFilter and updates a NLPCanvas whenever the filter has been changed.

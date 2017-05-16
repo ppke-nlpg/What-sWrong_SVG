@@ -4,11 +4,11 @@
 
 from PyQt4 import QtGui, QtSvg
 
-from lib.model.nlp_instance import NLPInstance, RenderType
-from lib.model.filter import Filter
-from lib.render.aligment_renderer import AligmentRenderer
-from lib.render.single_sentence_renderer import SingleSentenceRenderer
-from lib.render.svg_writer import Scene
+from libwwnlp.model.nlp_instance import NLPInstance, RenderType
+from libwwnlp.model.filter import Filter
+from libwwnlp.render.aligment_renderer import AligmentRenderer
+from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
+from libwwnlp.render.svg_writer import Scene
 
 class NLPCanvas:
     """An NLPCanvas draws the tokens and edges of an NLPInstance.
