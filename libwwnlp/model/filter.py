@@ -53,16 +53,22 @@ class Filter:
             postfix-type in this set it can pass.
         allowed_labels: Allowed label substrings.
     """
-        
-    def __init__(self, allowed_labels=set(), allowed_prefix_types=set(),
-                 allowed_postfix_types={'FN','FP','Match'}, *allowed_propvals):
+
+    def __init__(self, allowed_labels: set=None, allowed_prefix_types: set=None,
+                 allowed_postfix_types: set=None, *allowed_propvals):
         """Initalize a new Filter instance.
-        
+
         Args:
             allowed_labels (set): A set of label substrings that are allowed.
             allowed_prefix_types (set): A set of prefixes that are allowed.
             allowed_propvals: Property values that are allowed.
         """
+        if allowed_labels is None:
+            allowed_labels = set()
+        if allowed_prefix_types is None:
+            allowed_prefix_types = set()
+        if allowed_postfix_types is None:
+            allowed_postfix_types = {'FN', 'FP', 'Match'}
         self.forbidden_properties = set()
         self.allowed_propvals = allowed_propvals or {''}
         self.propvals_whole_word = False
@@ -79,7 +85,7 @@ class Filter:
             string (str): The allowed property value.
         """
         self.allowed_propvals.add(string)
-        
+
     def remove_allowed_propval(self, property_value: str):
         """Remove an allowed property value.
 
@@ -139,10 +145,10 @@ class Filter:
 
     def allows_label(self, label: str):
         """Checks whether the filter allows the given label
-        
+
         Args:
             label: The label substring we want to check whether the filter allows it.
-        
+
         Returns:
             bool: True iff the filter allows the given label substring.
         """
@@ -173,7 +179,7 @@ class Filter:
 
     def add_allowed_prefix_type(self, t: str):
         """Adds an allowed prefix type.
-        
+
         This causes the filter to accept edges with the given prefix type.
 
         Args:
@@ -183,7 +189,7 @@ class Filter:
 
     def add_allowed_postfix_type(self, t: str):
         """Adds an allowed postfix type.
-        
+
         This causes the filter to accept edges with the given postfix type.
 
         Args:
@@ -208,7 +214,7 @@ class Filter:
 
         This causes the filter to stop accepting edges with the given postfix
         types.
-        
+
         Args:
             t (str): The postfix type to disallow.
         """
@@ -216,8 +222,8 @@ class Filter:
             self.allowed_postfix_types.remove(t)
 
     def allows_prefix(self, t: str):
-        """Does the filter allow the given 
-        
+        """Does the filter allow the given
+
         Args:
             t (str): The type to check whether it is allowed as prefix.
 
@@ -228,7 +234,7 @@ class Filter:
 
     def allows_postfix(self, t: str):
         """Does the filter allow the given postfix.
-        
+
         Args:
             t (str): The type to check whether it is allowed as postfix.
 
@@ -268,11 +274,9 @@ class Filter:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
                                 if not path2.issubset(path1) and next(iter(path1)).get_type_prefix() == \
                                         next(iter(path2)).get_type_prefix():
-                                    path = set()  # HashSet<Edge>
-                                    path.update(path1)
-                                    path.update(path2)
-                                    paths[start][to].add(frozenset(path))
-                                    paths[to][start].add(frozenset(path))
+                                    path = frozenset(path1 | path2)  # HashSet<Edge>
+                                    paths[start][to].add(path)
+                                    paths[to][start].add(path)
 
         result = set()  # ArrayList<Edge>()
         for p in paths_per_length:
@@ -284,7 +288,7 @@ class Filter:
 
     def token_has_allowed_prop(self, token):
         """Whether this filter should keep a specific token based on its prop. vals.
-        
+
         A token is to be kept if
         - the allowed_propvals set contains a range and the value of the
           token's `Index` property is within this range, or
@@ -319,7 +323,7 @@ class Filter:
             properties.
         """
         return self.token_has_allowed_prop(edge.start) or self.token_has_allowed_prop(edge.end)
-    
+
     def edge_type_is_allowed(self, edge):
         """Is the edge allowed on the basis of its type.
 
@@ -330,7 +334,7 @@ class Filter:
             bool: True iff the edge allowed on the basis of its label and type.
         """
         return ((edge.get_type_prefix() == "" or edge.get_type_prefix()
-                 in self.allowed_prefix_types) and 
+                 in self.allowed_prefix_types) and
                 (edge.get_type_postfix() == "" or edge.get_type_postfix()
                  in self.allowed_postfix_types))
 
@@ -347,7 +351,7 @@ class Filter:
             if allowed in edge.label:
                 return True
         return False
-    
+
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
@@ -376,13 +380,13 @@ class Filter:
         # print([e.__dict__ for e in original.edges])
         edges = original.get_edges()
         if len(self.allowed_propvals) > 0:
-            edges = filter(self.edge_has_allowed_tokprop, edges)
+            edges = {edge for edge in edges if self.edge_has_allowed_tokprop(edge)}
             if self.use_path:  # Only allow edges on the path of tokens having allowed props
                 edges = self.calculate_paths(edges)
             if len(self.allowed_labels) > 0:
-                edges = filter(self.edge_label_is_allowed, edges)
-            edges = filter(self.edge_type_is_allowed, edges)
-                
+                edges = {edge for edge in edges if self.edge_label_is_allowed(edge)}
+            edges = {edge for edge in edges if self.edge_type_is_allowed(edge)}
+
         # Filter tokens
         if len(self.allowed_propvals) == 0 and not self.collapse:
             # Nothing to do...
@@ -391,10 +395,10 @@ class Filter:
             updated_split_points = original.split_points
         else:
             tokens = set()  # HashSet<Token>()
-            
+
             # first filter out tokens not containing allowed strings
             if len(self.allowed_propvals) > 0:
-                tokens = set(filter(self.token_has_allowed_prop, original.tokens))
+                tokens = {token for token in original.tokens if self.token_has_allowed_prop(token)}
 
             if self.collapse:
                 for e in edges:
@@ -402,8 +406,8 @@ class Filter:
                         tokens.add(e.start)
                         tokens.add(e.end)
                     elif e.render_type == EdgeRenderType.span:
-                            for i in range(e.start.index, e.end.index + 1):
-                                tokens.add(original.get_token(index=i))
+                        for i in range(e.start.index, e.end.index + 1):
+                            tokens.add(original.get_token(index=i))
 
             _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
 
@@ -434,11 +438,10 @@ class Filter:
                     new_token = updated_tokens[new_token_index]
                     old_token = new2old[new_token]
                 updated_split_points.append(new_token_index)
-                
+
         result = NLPInstance(tokens=updated_tokens,
                              edges=updated_edges,
                              render_type=original.render_type,
                              split_points=updated_split_points)
         # print('RESULT edges:', [e.__dict__ for e in result.edges])
         return result
-    

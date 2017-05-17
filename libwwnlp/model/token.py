@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .token_property import TokenProperty
 # import re # This was only needed for the commented out part in
 # the propvals_contain method
 from operator import attrgetter
+from .token_property import TokenProperty
 
 
 class Token:
@@ -135,7 +135,7 @@ class Token:
 
         Args:
             token (Token): The token to merge with.
-            forbidden_properties (Set[TokenProperty]): Properites not to merge as they are forbidden. 
+            forbidden_properties (Set[TokenProperty]): Properites not to merge as they are forbidden.
         """
         for curr_property, value in token.token_properties.items():
             if forbidden_properties is None or curr_property not in forbidden_properties:

@@ -10,6 +10,7 @@ from libwwnlp.render.aligment_renderer import AligmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
 from libwwnlp.render.svg_writer import Scene
 
+
 class NLPCanvas:
     """An NLPCanvas draws the tokens and edges of an NLPInstance.
 

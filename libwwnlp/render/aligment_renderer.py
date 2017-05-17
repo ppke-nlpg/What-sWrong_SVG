@@ -28,7 +28,7 @@ class AligmentRenderer:
         self._token_layout2.to_split_point = 0
         self._token_layout2.from_split_point = 0
 
-    def render(self,  instance, scene: Scene):
+    def render(self, instance, scene: Scene):
         """Renders the given instance as a pair of aligned sentences.
 
         Args:

@@ -35,12 +35,12 @@ class DependencyLayout(AbstractEdgeLayout):
 
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
-        
+
         Args:
            edges: Edges to layout.
            bounds: Bounds of the tokens the edges connect.
            scene: Graphics object to draw on.
-            
+
         Returns:
            The dimensions of the drawn graph.
         """
@@ -195,7 +195,7 @@ class DependencyLayout(AbstractEdgeLayout):
             p2: The second point.
             p3: The third point.
             p4: The last point.
-        
+
         Returns:
             The given points as a tuple.
         """
@@ -255,7 +255,3 @@ class DependencyLayout(AbstractEdgeLayout):
                 return diff
             else:
                 return edge2.lexicographic_order(edge1)
-
-            
-
-                

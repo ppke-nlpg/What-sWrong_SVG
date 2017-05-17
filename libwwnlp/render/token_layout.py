@@ -9,6 +9,7 @@ Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
 """
 
+
 def middle(bounds):
     """Return the middle of a Bounds1D instance.
 

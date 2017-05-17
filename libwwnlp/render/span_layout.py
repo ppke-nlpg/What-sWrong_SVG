@@ -12,7 +12,7 @@ class SpanLayout(AbstractEdgeLayout):
 
     The label is written into these blocks. If there are multiple edge types
     then all spans of the same type appear in the same contiguous vertical area.
-    
+
     Attributes:
         revert (bool): Should the graph be upside-down reverted.
         separation_lines (bool): Should we draw separation lines between the
@@ -35,7 +35,7 @@ class SpanLayout(AbstractEdgeLayout):
 
     def set_type_order(self, edge_type, order):
         """Set the order/vertical layer in which the area of a type should be drawn.
-        
+
         Args:
             edge_type: The type we want to change the order for.
             order: the order/vertical layer in which the area of the given type should
@@ -61,9 +61,9 @@ class SpanLayout(AbstractEdgeLayout):
         This method calculates the needed token width for a given set of edges.
         That is, for all self-loops in the set of edges we calculate how wide the
         corresponding token need to be.
-        
+
         Args:
-            edges (set): The set of edges that can contain self-loops.  
+            edges (set): The set of edges that can contain self-loops.
             scene: The graphics object needed to find out the actual width of text.
 
         Returns:

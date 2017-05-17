@@ -207,7 +207,7 @@ class CorpusLoader:
         @filetypeComboBox.setter
         def filetypeComboBox(self, value):
             self._filetypeComboBox = value
-        
+
         """
          * The spinner to pick the first instance.
         """

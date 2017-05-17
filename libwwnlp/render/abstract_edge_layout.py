@@ -54,7 +54,7 @@ class AbstractEdgeLayout:
         self.default_stroke = None
         self.start = {}
         self.end = {}
-        self.shapes = {} 
+        self.shapes = {}
         self.selected = set()
         self.visible = set()
         self.max_width = 0
