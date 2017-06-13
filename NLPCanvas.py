@@ -8,7 +8,7 @@ from libwwnlp.model.nlp_instance import NLPInstance, RenderType
 from libwwnlp.model.filter import Filter
 from libwwnlp.render.aligment_renderer import AligmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
-from libwwnlp.render.svg_writer import Scene
+from libwwnlp.render.svg_writer import Scene, render_nlpgraphics
 
 
 class NLPCanvas:
@@ -96,7 +96,7 @@ class NLPCanvas:
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(Scene.export_nlp_graphics(self.renderer, self.filter_instance()))
+        rr = QtSvg.QSvgRenderer(render_nlpgraphics(self.renderer, self.filter_instance()))
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self.ui.graphicsView.show()

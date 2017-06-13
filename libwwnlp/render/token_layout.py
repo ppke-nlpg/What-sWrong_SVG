@@ -9,6 +9,7 @@ Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
 """
 
+FONT_DESC_SIZE = 3
 
 def middle(bounds):
     """Return the middle of a Bounds1D instance.
@@ -125,7 +126,7 @@ class TokenLayout:
 
         return result
 
-    def layout(self, instance: NLPInstance, token_widths: dict, g2d: Scene):
+    def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -137,13 +138,12 @@ class TokenLayout:
             token_widths (dict): if some tokens need extra space (for example
                 because they have self loops in a DependencyLayout the space
                 they need can be provided through this map.
-            g2d: The graphics object to draw to.
+            scene: The graphics object to draw to.
 
         Returns:
             The dimension of the drawn graph.
         """
-
-        old_scene_color = g2d.color
+        old_scene_color = scene.color
         tokens = instance.tokens
         if len(tokens) == 0:
             self.height = 1
@@ -152,38 +152,34 @@ class TokenLayout:
         self.text_layouts.clear()
         lastx = 0
         self.height = 0
-
-        g2d.color = (0, 0, 0)  # Black
-
+        scene.color = (0, 0, 0)  # Black
         if self.from_split_point == -1:
             from_token = 0
         else:
             from_token = instance.split_points[self.from_split_point]
-
         if self.to_split_point == -1:
             to_token = len(tokens)
         else:
             to_token = instance.split_points[self.to_split_point]
-
         for token_index in range(from_token, to_token):
             token = tokens[token_index]
             index = 0
-            lasty = self.base_line + self.row_height
+            lasty = self.base_line
             maxx = 0
             for prop in token.get_sorted_properties():
+                lasty += self.row_height
                 curr_property = token.get_property(prop)
                 if index == 0:
-                    g2d.color = (0, 0, 0)  # Black
+                    scene.color = (0, 0, 0)  # Black
                 else:
-                    g2d.color = (120, 120, 120)  # Grey
+                    scene.color = (120, 120, 120)  # Grey
                 if token.is_actual:
-                    g2d.color = (0, 102, 204)  # Blue
+                    scene.color = (0, 102, 204)  # Blue
                 else:
-                    g2d.color = (0, 0, 0)  # Black
-                g2d.add(TextToken(g2d, (lastx, lasty), curr_property, 12,
-                                  g2d.color))
-                lasty += self.row_height
-                labelwidth = Text(g2d, (0, 0), curr_property, 12, g2d.color).get_width()
+                    scene.color = (0, 0, 0)  # Black
+                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12,
+                                  scene.color))
+                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
                 if labelwidth > maxx:
                     maxx = labelwidth
                 self.text_layouts[(token, index+1)] = curr_property
@@ -191,16 +187,18 @@ class TokenLayout:
             required_width = token_widths.get(token)
             if required_width is not None and maxx < required_width:
                 maxx = required_width
-            self.bounds[token] = Rectangle(g2d, (lastx, self.base_line),
+            lasty += FONT_DESC_SIZE 
+            self.bounds[token] = Rectangle(scene, (lastx, self.base_line),
                                            maxx, lasty - self.base_line,
                                            (255, 255, 255), (0, 0, 0), 1)
+            # scene.add(self.bounds[token])
             lastx += maxx + self.margin
-            if lasty - self.row_height > self.height:
-                self.height = lasty - self.row_height
+            if lasty > self.height:
+                self.height = lasty
 
         self.width = lastx - self.margin
-        g2d.color = old_scene_color
-        return self.width + g2d.offsetx, self.height + 2 + g2d.offsety
+        scene.color = old_scene_color
+        return self.width, self.height
 
     def get_property_text_layout(self, vertex, index):
         """Returns the text layout for a given property and property index.

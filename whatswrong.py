@@ -17,7 +17,7 @@ from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, C
     CoNLL2009, MaltTab
 from libwwnlp.model.filter import Filter
 from libwwnlp.model.nlp_instance import RenderType
-from libwwnlp.render.svg_writer import Scene
+from libwwnlp.render.svg_writer import Scene, render_nlpgraphics
 
 
 # from CorpusLoader import CorpusLoader
@@ -177,7 +177,7 @@ class MyForm(QtGui.QMainWindow):
 
     def file_save(self):
         name = QtGui.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')  # todo ok like this?
-        Scene.export_nlp_graphics(self.canvas.renderer, self.canvas.filter_instance(), name)
+        render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name)
 
 
 def test(f):

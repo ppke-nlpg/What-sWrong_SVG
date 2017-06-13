@@ -50,39 +50,6 @@ class Scene(sw.drawing.Drawing):
         """
         return vect[0] + self.offsetx, vect[1] + self.offsety
 
-    @staticmethod
-    def export_nlp_graphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
-        """Export a Scene instance into the supported formats.
-
-        Args:
-            renderer (SingleSentenceRenderer or AlignmentRenderer): The renderer object.
-            filtered (NLPInstance): The filtered NLPInstane to be rendered.
-            filepath (str): The path of the outputfile.
-            output_type (str): The type of the output format.
-
-        Returns: The bytesting of the rendered object if needed.
-        """
-        svg_scene = Scene()  # TODO: Do this in a more clever way...
-
-        dim = renderer.render(filtered, svg_scene)
-
-        svg_scene = Scene(width=dim[0], height=dim[1])
-
-        renderer.render(filtered, svg_scene)
-
-        svg_bytes = svg_scene.tostring().encode('UTF-8')
-
-        if filepath is not None and output_type == 'SVG':
-            svg_scene.save(filepath)
-        elif filepath is None and output_type == 'SVG':
-            return svg_bytes
-        elif output_type == 'PS':
-            cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
-        elif output_type == 'PDF':
-            cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
-        else:
-            raise ValueError('{0} not a supported filetype!'.format(output_type))
-
 
 class Line(sw.shapes.Line):
     """A straight line between two points.
@@ -152,8 +119,7 @@ class Rectangle(sw.shapes.Rect):
             ry (int): Vertical radius of corner rounding.
         """
         super().__init__(insert=scene.translate_to(origin),
-                         height=height,
-                         width=width,
+                         size=(width, height),
                          shape_rendering='inherit',
                          fill=colorstr(fill_color),
                          stroke=colorstr(line_color),
@@ -177,8 +143,7 @@ class Text(sw.text.Text):
             color (tuple): Color to use for the text.
         """
         super().__init__(text,
-                         x=[origin[0]],
-                         y=[origin[1]],
+                         insert=origin,
                          fill=colorstr(color),
                          font_family='Courier New, Courier, monospace',
                          font_size=size,
@@ -237,3 +202,38 @@ def colorstr(rgb: tuple) -> str:
         str: The SVG color string corresponding to the triple.
     """
     return "rgb({0:d},{1:d},{2:d})".format(rgb[0], rgb[1], rgb[2])
+
+
+def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
+    """Render an NLPInstance into the supported formats.
+
+    Args:
+        renderer (SingleSentenceRenderer or AlignmentRenderer): The renderer object.
+        filtered (NLPInstance): The filtered NLPInstane to be rendered.
+        filepath (str): The path of the outputfile.
+        output_type (str): The type of the output format.
+
+    Returns: The bytesting of the rendered object if needed.
+    """
+    svg_scene = Scene(0,0)  # TODO: Do this in a more clever way...
+
+    dim = renderer.render(filtered, svg_scene)
+
+    svg_scene = Scene(width=dim[0], height=dim[1])
+
+    renderer.render(filtered, svg_scene)
+
+    svg_bytes = svg_scene.tostring().encode('UTF-8')
+
+    if filepath is not None and output_type == 'SVG':
+        svg_scene.save(filepath)
+    elif filepath is None and output_type == 'SVG':
+        return svg_bytes
+    elif output_type == 'PS':
+        cairosvg.svg2ps(bytestring=svg_bytes, write_to=filepath)
+    elif output_type == 'PDF':
+        cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
+    else:
+        raise ValueError('{0} not a supported filetype!'.format(output_type))
+
+    

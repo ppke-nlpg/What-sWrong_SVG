@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from .abstract_edge_layout import AbstractEdgeLayout
 from .svg_writer import Line, Rectangle, Scene, Text
 
+SPAN_RADIUS = 4
 
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
@@ -96,23 +97,22 @@ class SpanLayout(AbstractEdgeLayout):
         self.shapes.clear()
 
         depth = Counter()  # Counter<Edge>()
-        offset = Counter()  # Counter<Edge>()
+        # offset = Counter()  # Counter<Edge>()
         dominates = defaultdict(list)  # HashMultiMapLinkedList<Edge, Edge>()
 
         for over in edges:
             for under in edges:
                 order_over = self.get_order(over.get_type_prefix())
                 order_under = self.get_order(under.get_type_prefix())
-                if not (order_over is None and order_under is not None) or \
-                       (order_over is not None and order_under is None) or \
-                       (order_over != order_under and order_over > order_under) or \
-                       (order_over == order_under and (  # Also when both are None...
-                        over.covers(under) or over.covers_semi(under) or
-                        over.covers_exactly(under) and
-                        over.lexicographic_order(under) > 0 or
-                        over.overlaps(under) and over.get_min_index() < under.get_min_index())):
+                if over != under and (order_over is None and order_under is not None) or \
+                   (order_over is not None and order_under is None) or \
+                   (order_over != order_under and order_over > order_under) or \
+                   (order_over == order_under and (  # Also when both are None...
+                       over.covers(under) or over.covers_semi(under) or
+                       over.covers_exactly(under) and
+                       over.lexicographic_order(under) > 0 or
+                       over.overlaps(under) and over.get_min_index() < under.get_min_index())):
                     dominates[over].append(under)
-
         for edge in edges:
             self.calculate_depth(dominates, depth, edge)
 
@@ -126,6 +126,8 @@ class SpanLayout(AbstractEdgeLayout):
             max_height = (max_depth + 1) * self.height_per_level + 3
         else:
             max_height = 1
+
+
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
@@ -153,7 +155,8 @@ class SpanLayout(AbstractEdgeLayout):
             else:
                 span_level = depth[edge]
 
-            height = self.baseline + max_height - (span_level + 1) * self.height_per_level + offset[edge]
+                
+            height = self.baseline + max_height - (span_level + 1) * self.height_per_level # + offset[edge]
 
             buffer = 2
 
@@ -174,14 +177,15 @@ class SpanLayout(AbstractEdgeLayout):
             # connection
             if self.curve:
                 scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, self.height_per_level - 2 * buffer,
-                                    (255, 255, 255), (0, 0, 0), 1, rx=8, ry=8))
+                                    (255, 255, 255), (0, 0, 0), 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
             else:
                 scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, self.height_per_level - 2 * buffer,
                                     (255, 255, 255), (0, 0, 0), 1))
 
+                
             # write label in the middle under
-            labelx = min_x + (max_x - min_x) // 2 - labelwidth // 2
-            labely = height + self.height_per_level // 2
+            labelx = min_x + (max_x - min_x) // 2 # - labelwidth // 2
+            labely = height + self.height_per_level // 2 
 
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), 12, scene.color))  # Original fontsize=8
             scene.color = old
@@ -207,4 +211,4 @@ class SpanLayout(AbstractEdgeLayout):
                 height = self.baseline - 1 + d * self.height_per_level
                 scene.add(Line(scene, (0, height), (max_width, height), color=scene.color))
 
-        return max_width+scene.offsetx, max_height+scene.offsety
+        return max_width, max_height
