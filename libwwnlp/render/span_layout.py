@@ -8,6 +8,8 @@ from .svg_writer import Line, Rectangle, Scene, Text
 
 SPAN_RADIUS = 4
 
+FONT_SIZE = 12
+
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
 
@@ -73,7 +75,7 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}  # HashMap<Token, Integer>()
         for edge in edges:
             if edge.start == edge.end:
-                labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).get_width()  # Original fontsize = 8
+                labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()  # Original fontsize = 8
                 width = max(labelwidth, result.get(edge.start, labelwidth))  # oldWith is result[...]
                 result[edge.start] = width + self.total_text_margin
         return result
@@ -148,7 +150,7 @@ class SpanLayout(AbstractEdgeLayout):
             scene.color = self.get_color(edge.edge_type)
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, 12, scene.color).get_width()  # layout, Original fontsize = 8
+            labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()  # layout, Original fontsize = 8
             # draw lines
             if self.revert:
                 span_level = max_depth - depth[edge]
@@ -175,19 +177,20 @@ class SpanLayout(AbstractEdgeLayout):
                 max_x = middle + text_width // 2
 
             # connection
+            rect_height = self.height_per_level - 2 * buffer 
             if self.curve:
-                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, self.height_per_level - 2 * buffer,
+                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, rect_height,
                                     (255, 255, 255), (0, 0, 0), 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
             else:
-                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, self.height_per_level - 2 * buffer,
-                                    (255, 255, 255), (0, 0, 0), 1))
+                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, rect_height,
+                                    (255, 255, 255), (0, 0, 0)))
 
                 
             # write label in the middle under
-            labelx = min_x + (max_x - min_x) // 2 # - labelwidth // 2
-            labely = height + self.height_per_level // 2 
+            labelx = min_x + (max_x - min_x) // 2
+            labely = height-buffer + rect_height // 2
 
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), 12, scene.color))  # Original fontsize=8
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, scene.color))  # Original fontsize=8
             scene.color = old
             self.shapes[(min_x, height-buffer, max_x-min_x, self.height_per_level - 2 * buffer)] = edge
 
@@ -210,5 +213,4 @@ class SpanLayout(AbstractEdgeLayout):
                     d = (max_depth - d)
                 height = self.baseline - 1 + d * self.height_per_level
                 scene.add(Line(scene, (0, height), (max_width, height), color=scene.color))
-
-        return max_width, max_height
+        return max_width, max_height - 2 * buffer
