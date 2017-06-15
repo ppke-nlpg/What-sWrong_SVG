@@ -7,8 +7,8 @@ from .abstract_edge_layout import AbstractEdgeLayout
 from .svg_writer import Line, Rectangle, Scene, Text
 
 SPAN_RADIUS = 4
-
 FONT_SIZE = 12
+BUFFER_HEIGHT = 2
 
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
@@ -160,8 +160,6 @@ class SpanLayout(AbstractEdgeLayout):
                 
             height = self.baseline + max_height - (span_level + 1) * self.height_per_level # + offset[edge]
 
-            buffer = 2
-
             from_bounds = bounds[edge.start]
             to_bounds = bounds[edge.end]
             min_x = min(from_bounds.start, to_bounds.start)
@@ -177,22 +175,22 @@ class SpanLayout(AbstractEdgeLayout):
                 max_x = middle + text_width // 2
 
             # connection
-            rect_height = self.height_per_level - 2 * buffer 
+            rect_height = self.height_per_level - 2 * BUFFER_HEIGHT 
             if self.curve:
-                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, rect_height,
+                scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
                                     (255, 255, 255), (0, 0, 0), 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
             else:
-                scene.add(Rectangle(scene, (min_x, height-buffer), max_x-min_x, rect_height,
+                scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
                                     (255, 255, 255), (0, 0, 0)))
 
                 
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2
-            labely = height-buffer + rect_height // 2
+            labely = height-BUFFER_HEIGHT + rect_height // 2
 
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, scene.color))  # Original fontsize=8
             scene.color = old
-            self.shapes[(min_x, height-buffer, max_x-min_x, self.height_per_level - 2 * buffer)] = edge
+            self.shapes[(min_x, height-BUFFER_HEIGHT, max_x-min_x, self.height_per_level - 2 * BUFFER_HEIGHT)] = edge
 
         # int max_width = 0;
         max_width = max((bound.end for bound in bounds.values()), default=0)
@@ -213,4 +211,4 @@ class SpanLayout(AbstractEdgeLayout):
                     d = (max_depth - d)
                 height = self.baseline - 1 + d * self.height_per_level
                 scene.add(Line(scene, (0, height), (max_width, height), color=scene.color))
-        return max_width, max_height - 2 * buffer
+        return max_width, max_height - 2 * BUFFER_HEIGHT
