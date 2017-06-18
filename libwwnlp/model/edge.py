@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
+from collections import namedtuple
 
 
 class EdgeRenderType(Enum):
@@ -38,14 +39,14 @@ class Edge:
             both "dep" and "role" edges could have the render type
             EdgeRenderType#dependency. Then they are both drawn as directed
             edges in a dependency style graph.
-        is_final (bool): Is the edge final? Can be used for visualising
-            analysis steps in which some edges are not yet final (can be
-            removed later).
+        properties (Dict[str]): In addition to its type an edge can have
+            additional properties that are represented as a mapping from
+            property names to the corresponding property values.
     """
 
     def __init__(self, start, end, label: str, edge_type, note: str=None,
                  render_type: EdgeRenderType=EdgeRenderType.dependency,
-                 description: str="No Description", is_final: bool=True):
+                 description: str="No Description", properties: dict=None):
         """Initialize an Edge instance.
 
         Args:
@@ -57,7 +58,8 @@ class Edge:
                 to None.
             render_type (EdgeRenderType, optional): How to render the edge.
                 Defaults to EdgeRenderType.dependency.
-            is_final (bool, optional): Is the edge final? Defaults to True.
+            properties (Dict[str], optional): A mapping from edge property names
+                to the corresponding properties values.        
         """
         self.start = start
         self.end = end
@@ -66,37 +68,7 @@ class Edge:
         self.edge_type = edge_type
         self.render_type = render_type
         self.description = description
-        self.is_final = is_final
-
-    def get_type_prefix(self) -> str:
-        """Return the type prefix of the edge.
-
-        If the type of label is qualified with a <qualifier>: prefix this
-        method returns <qualifier>. Else it returns the complete type string.
-
-        Returns:
-            str: The prefix until ":" of the type string, or the complete type
-            string if no ":" is contained in the string.
-
-        """
-        index = self.edge_type.find(':')
-        if index == -1:
-            return self.edge_type
-        else:
-            return self.edge_type[0:index]
-
-    def get_type_postfix(self) -> str:
-        """Return the type postfix of the edge.
-
-        Returns:
-            str: If the type of label is "<prefix>:<postfix>" this method
-            returns <postfix>. Else it returns the empty string.
-        """
-        index = self.edge_type.find(':')
-        if index == -1:
-            return ""
-        else:
-            return self.edge_type[index+1:]
+        self.properties = {} if properties is None else properties
 
     def get_min_index(self) -> int:
         """Return the mimimal index of the tokens in this edge.

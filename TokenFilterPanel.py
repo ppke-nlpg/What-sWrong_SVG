@@ -46,20 +46,20 @@ class TokenFilterPanel:
         for index in range(0, len(self._list)):
             t = str(self._listModel[index])
             if self._list.isItemSelected(self._list.item(index)):
-                self._tokenFilter.remove_forbidden_property(name=t)
+                self._tokenFilter.remove_forbidden_token_property(name=t)
             else:
-                self._tokenFilter.add_forbidden_property(name=t)
+                self._tokenFilter.add_forbidden_token_property(name=t)
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
     def allowedChanged(self, text):  # keyReleased
-        self._tokenFilter.clear_allowed_propvals()
+        self._tokenFilter.clear_allowed_token_propvals()
         for curr_property in text.split(','):
             if len(curr_property) > 0:
                 m = interval.match(curr_property)
                 if m:
                     curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                self._tokenFilter.add_allowed_propval(curr_property)
+                self._tokenFilter.add_allowed_token_propval(curr_property)
         self._canvas.update_nlp_graphics()
 
     def wholeWordActionPerformed(self, value):
@@ -76,7 +76,7 @@ class TokenFilterPanel:
         for index, p in enumerate(sorted(self._canvas.usedProperties, key=attrgetter("name"))):
             self._listModel.append(p)
             self._list.addItem(p.name)
-            if p not in self._tokenFilter.forbidden_properties and \
+            if p not in self._tokenFilter.forbidden_token_properties and \
                     not self._list.isItemSelected(self._list.item(index)):
                 self._list.setItemSelected(self._list.item(index), True)
             else:

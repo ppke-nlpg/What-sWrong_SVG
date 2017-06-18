@@ -80,9 +80,9 @@ class EdgeTypeFilterPanel:
                 t = str(self._listModel[index])
                 self._justChanged.add(t)
                 if self._types.isItemSelected(self._types.item(index)):
-                    self._edgeTypeFilter.add_allowed_prefix_type(t)
+                    self._edgeTypeFilter.add_allowed_edge_type(t)
                 else:
-                    self._edgeTypeFilter.remove_allowed_prefix_type(t)
+                    self._edgeTypeFilter.remove_allowed_edge_type(t)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._types.itemSelectionChanged.connect(valueChanged)
@@ -91,9 +91,9 @@ class EdgeTypeFilterPanel:
         def matchActionPerformed(value):
             print("Match action performed!")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_postfix_type("Match")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "Match")
             else:
-                self._edgeTypeFilter.remove_allowed_postfix_type("Match")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "Match")
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._matches.stateChanged.connect(matchActionPerformed)
@@ -101,9 +101,9 @@ class EdgeTypeFilterPanel:
         def negativeActionPerformed(value):
             print("Negative action performed")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_postfix_type("FN")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FN")
             else:
-                self._edgeTypeFilter.remove_allowed_postfix_type("FN")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "FN")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
@@ -111,9 +111,9 @@ class EdgeTypeFilterPanel:
         def positiveActionPerformed(value):
             print("Positive action performed")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_postfix_type("FP")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FP")
             else:
-                self._edgeTypeFilter.remove_allowed_postfix_type("FP")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "FP")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
@@ -122,8 +122,8 @@ class EdgeTypeFilterPanel:
      * Separates the types in <code>usedTypes</code> into prefix and postfix types.
      *
      * @param usedTypes    the types to separate.
-     * @param prefixTypes  the target set for prefix types.
-     * @param postfixTypes the target set for postfix types.
+     * @param edge_types  the target set for prefix types.
+     * @param edge_properties the target set for postfix types.
     """
     # Incorporated into updateTypesList
 
@@ -134,48 +134,41 @@ class EdgeTypeFilterPanel:
         # TODO: deselecting items?
         for index in range(0, len(self._types)):
             t = str(self._types.item(index))
-            if self._edgeTypeFilter.allows_prefix(t):
+            if self._edgeTypeFilter.allows_edge_type(t):
                 self._types.setItemSelected(self._types.item(index), True)
 
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.
     """
     def updateTypesList(self):
-        prefixTypes = set()   # HashSet<String>()
-        postfixTypes = set()  # HashSet<String>()
+        edge_types = self._nlpCanvas.usedTypes
+        edge_properties = self._nlpCanvas.used_edge_properties
         # Separate Types...
-        for t in self._nlpCanvas.usedTypes:
-            index = t.find(':')
-            if index == -1:
-                prefixTypes.add(t)
-            else:
-                prefixTypes.add(t[0:index])
-                postfixTypes.add(t[index + 1:])
-
-        allTypes = list(sorted(prefixTypes))  # ArrayList<String>()
+        
+        # allTypes = list(sorted(edge_types))  # ArrayList<String>()
 
         # XXX Sholuld be enabled automatically
-        self._falseNegatives.setEnabled("FP" in postfixTypes)
-        self._edgeTypeFilter.add_allowed_postfix_type("FP")
-        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FP")])  # Checked(2) Not(0)
+        self._falseNegatives.setEnabled(('eval_status',"FP") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FP")
+        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property('eval_status', "FP")])  # Checked(2) Not(0)
 
-        self._falsePositives.setEnabled("FN" in postfixTypes)
-        self._edgeTypeFilter.add_allowed_postfix_type("FN")
-        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("FN")])  # Checked(2) Not(0)
+        self._falsePositives.setEnabled(('eval_status',"FN") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FN")
+        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property('eval_status', "FN")])  # Checked(2) Not(0)
 
-        self._matches.setEnabled("Match" in postfixTypes)
-        self._edgeTypeFilter.add_allowed_postfix_type("Match")
-        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_postfix("Match")])  # Checked(2), Not(0)
+        self._matches.setEnabled(('eval_status',"Match") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "Match")
+        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status", "Match")])  # Checked(2), Not(0)
 
         self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
 
         # self._types.clear()  # This makes too much refreshing
-        for t in allTypes:
-            item = QtGui.QListWidgetItem(t)
-            if t not in self._listModel:
-                self._listModel.append(t)
-                self._types.addItem(item)
-                item.setSelected(True)
+        # for t in allTypes:
+        #     item = QtGui.QListWidgetItem(t)
+        #     if t not in self._listModel:
+        #         self._listModel.append(t)
+        #         self._types.addItem(item)
+        #         item.setSelected(True)
 
     """
      * Updates the type list and the selection. Afterwards request for repaint is issued.

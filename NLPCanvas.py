@@ -35,6 +35,7 @@ class NLPCanvas:
         self.nlp_instance = None
         self.listeners = []
         self.change_listeners = []
+        self.used_edge_properties = set()
 
     def addListener(self, listener):
         """
@@ -76,6 +77,9 @@ class NLPCanvas:
         self.nlp_instance = nlp_instance
         self.usedTypes = {edge.edge_type for edge in self.nlp_instance.get_edges()}  # Union
         self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_properties()}  # UnionAll
+        self.used_edge_properties = set()
+        for edge in self.nlp_instance.get_edges():
+            self.used_edge_properties.update(edge.properties.items())
         self.fireInstanceChanged()
 
     def filter_instance(self):
@@ -92,7 +96,7 @@ class NLPCanvas:
         This takes into account all changes to the filter, NLP instance and
         drawing parameters.
         """
-        print('NLPCanvas#updateNLPGraphics')
+        # print('NLPCanvas#updateNLPGraphics')
         scene = QtGui.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()

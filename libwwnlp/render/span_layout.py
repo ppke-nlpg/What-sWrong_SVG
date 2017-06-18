@@ -104,8 +104,8 @@ class SpanLayout(AbstractEdgeLayout):
 
         for over in edges:
             for under in edges:
-                order_over = self.get_order(over.get_type_prefix())
-                order_under = self.get_order(under.get_type_prefix())
+                order_over = self.get_order(over.edge_type)
+                order_under = self.get_order(under.edge_type)
                 if over != under and (order_over is None and order_under is not None) or \
                    (order_over is not None and order_under is None) or \
                    (order_over != order_under and order_over > order_under) or \
@@ -200,10 +200,10 @@ class SpanLayout(AbstractEdgeLayout):
             min_depths = {}  # HashMap<String, Integer>()
             for edge in edges:
                 edge_depth = depth[edge]
-                type_depth = min_depths.get(edge.get_type_prefix())
+                type_depth = min_depths.get(edge.edge_type)
                 if type_depth is None or type_depth > edge_depth:
                     type_depth = edge_depth
-                    min_depths[edge.get_type_prefix()] = type_depth
+                    min_depths[edge.edge_type] = type_depth
 
             scene.color = (211, 211, 211)  # Color.LIGHT_GRAY
             for d in min_depths.values():

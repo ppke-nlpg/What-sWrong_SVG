@@ -5,6 +5,7 @@
 # and add_span
 
 from enum import Enum
+from copy import copy
 
 from .token import Token
 from .edge import EdgeRenderType, Edge
@@ -71,7 +72,7 @@ class NLPInstance:
 
     def add_edge(self, start: int, end: int, label: str=None,
                  edge_type: str=None, render_type: EdgeRenderType=None,
-                 desc=None, note: str=None, is_final: bool=True):
+                 desc=None, note: str=None, properties: dict=None):
         """Creates and adds an edge with the given properties.
 
         Args:
@@ -85,7 +86,8 @@ class NLPInstance:
                 None.
             note (str, optional): The note associated with the edge. Defaults
                 to None.
-            is_final (bool, optional): Is the edge final? Defaults to False.
+            properties (dict, optional): A dict mappint edge property names to
+                the corresponding values.
 
         Raises:
             KeyError: If there was no token at one of the given positions.
@@ -93,7 +95,7 @@ class NLPInstance:
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end],
                                    label, edge_type, note, render_type,
-                                   desc, is_final))
+                                   desc, properties))
         else:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
@@ -136,7 +138,7 @@ class NLPInstance:
                            format(start, end))
 
     def add_dependency(self, start: int, end: int, label, dep_type: str,
-                       desc: str=None, is_final: bool=True):
+                       desc: str=None, properties=None):
         """Creates and adds an edge with render type RenderType#dependency.
 
         Args:
@@ -147,17 +149,16 @@ class NLPInstance:
             label (str): The label of the edge.
             dep_type (str): The type of edge.
             desc (str, optional): The description of the span.
-            is_final (bool, optional): Whether the dependency is final.
-                Defaults to true.
+            properties (Dict[str]): A mapping from edge property names to the
+                corresponding values.
 
         Raises:
             KeyError: If there was no token at one of the given positions.
-
         """
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end],
                                    label, dep_type, description=desc,
-                                   is_final=is_final))
+                                   properties=properties))
         else:
             raise KeyError("Couldn't add edge: no token at positions {} and {}.".
                            format(start, end))
@@ -325,19 +326,24 @@ def nlp_diff(gold_instance: NLPInstance,
     false_positives = guess_identities - gold_identities
     matches = gold_identities & guess_identities
     for edge in false_negatives:
-        edge_type = edge.edge_type + ":FN"
+        properties = copy(edge.properties)
+        properties.update({'eval_status': "FN"})
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge_type,
-                      render_type=edge.render_type, desc=edge.description)
+                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
+                      render_type=edge.render_type, desc=edge.description,
+                      properties=properties)
     for edge in false_positives:
-        edge_type = edge.edge_type + ":FP"
+        properties = copy(edge.properties)
+        properties.update({'eval_status': "FP"})
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge_type,
-                      render_type=edge.render_type, desc=edge.description)
-
+                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
+                      render_type=edge.render_type, desc=edge.description,
+                      properties=properties)
     for edge in matches:
-        edge_type = edge.edge_type + ":Match"
+        properties = copy(edge.properties)
+        properties.update({'eval_status': "Match"})
         diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge_type,
-                      render_type=edge.render_type, desc=edge.description)
+                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
+                      render_type=edge.render_type, desc=edge.description,
+                      properties=properties)
     return diff

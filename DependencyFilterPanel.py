@@ -40,7 +40,7 @@ class DependencyFilterPanel:
             edgeTokenFilter.clear_allowed_property()
             split = text.split(",")
             for token_property in split:
-                edgeTokenFilter.add_allowed_propval(token_property)
+                edgeTokenFilter.add_allowed_token_propval(token_property)
             nlpCanvas.update_nlp_graphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 

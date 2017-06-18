@@ -128,17 +128,18 @@ class Token:
                     return True
         return False
 
-    def merge(self, token, forbidden_properties: set=None):
+    def merge(self, token, forbidden_token_properties: set=None):
         """Inserts all properties and values of the other token into this token.
 
         In case of clashes the value of the other token is taken.
 
         Args:
             token (Token): The token to merge with.
-            forbidden_properties (Set[TokenProperty]): Properites not to merge as they are forbidden.
+            forbidden_token_properties (Set[TokenProperty]): Properites not to
+                merge as they are forbidden.
         """
         for curr_property, value in token.token_properties.items():
-            if forbidden_properties is None or curr_property not in forbidden_properties:
+            if forbidden_token_properties is None or curr_property not in forbidden_token_properties:
                 self.token_properties[curr_property] = value
 
     def __eq__(self, other):
