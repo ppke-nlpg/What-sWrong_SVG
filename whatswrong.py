@@ -17,7 +17,7 @@ from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, C
     CoNLL2009, MaltTab
 from libwwnlp.model.filter import Filter
 from libwwnlp.model.nlp_instance import RenderType
-from libwwnlp.render.svg_writer import Scene, render_nlpgraphics
+from libwwnlp.render.svg_writer import render_nlpgraphics
 
 
 # from CorpusLoader import CorpusLoader

@@ -93,7 +93,7 @@ class AligmentRenderer:
         """Sets the margin between tokens.
 
         Args:
-            margin (int): The margin between tokens.
+            value (int): The margin between tokens.
         """
         self._token_layout1.margin = value
         self._token_layout2.margin = value

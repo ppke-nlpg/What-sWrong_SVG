@@ -11,6 +11,7 @@ Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 
 FONT_DESC_SIZE = 3
 
+
 def middle(bounds):
     """Return the middle of a Bounds1D instance.
 
@@ -177,8 +178,7 @@ class TokenLayout:
                     scene.color = (0, 102, 204)  # Blue
                 else:
                     scene.color = (0, 0, 0)  # Black
-                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12,
-                                  scene.color))
+                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, scene.color))
                 labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
                 if labelwidth > maxx:
                     maxx = labelwidth

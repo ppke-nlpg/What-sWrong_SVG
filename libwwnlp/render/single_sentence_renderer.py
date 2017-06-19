@@ -83,7 +83,6 @@ class SingleSentenceRenderer:
             if dim[0] > width:
                 width = dim[0]
 
-
         return width, height + 1
 
     def get_edge_at(self, point, radius):

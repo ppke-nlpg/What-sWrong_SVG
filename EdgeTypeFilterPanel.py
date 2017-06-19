@@ -148,15 +148,15 @@ class EdgeTypeFilterPanel:
         # allTypes = list(sorted(edge_types))  # ArrayList<String>()
 
         # XXX Sholuld be enabled automatically
-        self._falseNegatives.setEnabled(("eval_status_FP") in edge_properties)
+        self._falseNegatives.setEnabled("eval_status_FP" in edge_properties)
         self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
         self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FP")])  # Checked(2) Not(0)
 
-        self._falsePositives.setEnabled(("eval_status_FN") in edge_properties)
+        self._falsePositives.setEnabled("eval_status_FN" in edge_properties)
         self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
         self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FN")])  # Checked(2) Not(0)
 
-        self._matches.setEnabled(("eval_status_Match") in edge_properties)
+        self._matches.setEnabled("eval_status_Match" in edge_properties)
         self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
         self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_Match")])  # Checked(2), Not(0)
 

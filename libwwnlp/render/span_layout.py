@@ -10,6 +10,7 @@ SPAN_RADIUS = 4
 FONT_SIZE = 12
 BUFFER_HEIGHT = 2
 
+
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
 
@@ -75,7 +76,7 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}  # HashMap<Token, Integer>()
         for edge in edges:
             if edge.start == edge.end:
-                labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()  # Original fontsize = 8
+                labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()
                 width = max(labelwidth, result.get(edge.start, labelwidth))  # oldWith is result[...]
                 result[edge.start] = width + self.total_text_margin
         return result
@@ -129,7 +130,6 @@ class SpanLayout(AbstractEdgeLayout):
         else:
             max_height = 1
 
-
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
@@ -150,15 +150,14 @@ class SpanLayout(AbstractEdgeLayout):
             scene.color = self.get_color(edge.edge_type)
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()  # layout, Original fontsize = 8
+            labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE, scene.color).get_width()
             # draw lines
             if self.revert:
                 span_level = max_depth - depth[edge]
             else:
                 span_level = depth[edge]
 
-                
-            height = self.baseline + max_height - (span_level + 1) * self.height_per_level # + offset[edge]
+            height = self.baseline + max_height - (span_level + 1) * self.height_per_level  # + offset[edge]
 
             from_bounds = bounds[edge.start]
             to_bounds = bounds[edge.end]
@@ -181,14 +180,13 @@ class SpanLayout(AbstractEdgeLayout):
                                     (255, 255, 255), (0, 0, 0), 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
             else:
                 scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
-                                    (255, 255, 255), (0, 0, 0)))
+                                    (255, 255, 255), (0, 0, 0), 1))
 
-                
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2
             labely = height-BUFFER_HEIGHT + rect_height // 2
 
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, scene.color))  # Original fontsize=8
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, scene.color))
             scene.color = old
             self.shapes[(min_x, height-BUFFER_HEIGHT, max_x-min_x, self.height_per_level - 2 * BUFFER_HEIGHT)] = edge
 

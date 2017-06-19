@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
-from collections import namedtuple
 
 
 class EdgeRenderType(Enum):

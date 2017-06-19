@@ -5,10 +5,9 @@
 from PyQt4 import QtGui, QtSvg
 
 from libwwnlp.model.nlp_instance import NLPInstance, RenderType
-from libwwnlp.model.filter import Filter
 from libwwnlp.render.aligment_renderer import AligmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
-from libwwnlp.render.svg_writer import Scene, render_nlpgraphics
+from libwwnlp.render.svg_writer import render_nlpgraphics
 
 
 class NLPCanvas:

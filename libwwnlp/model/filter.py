@@ -333,8 +333,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its type.
         """
-        return (edge.edge_type == "" or edge.edge_type
-                 in self.allowed_edge_types)
+        return edge.edge_type == "" or edge.edge_type in self.allowed_edge_types
 
     def edge_properties_are_allowed(self, edge):
         """Is the edge allowed on the basis of its properties.
@@ -345,7 +344,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its properties.
         """
-        return edge.properties <= self.allowed_edge_properties
+        return edge.properties.issubset(self.allowed_edge_properties)
 
     def edge_label_is_allowed(self, edge):
         """Is the edge allowed on the basis of its label.
@@ -423,7 +422,8 @@ class Filter:
             updated_tokens = []  # ArrayList<Token>()
             for i, token in enumerate(_sorted):
                 new_token = Token(i)
-                new_token.merge(original.tokens[token.index], forbidden_token_properties=self.forbidden_token_properties)
+                new_token.merge(original.tokens[token.index],
+                                forbidden_token_properties=self.forbidden_token_properties)
                 old2new[token] = new_token
                 new2old[new_token] = token
                 updated_tokens.append(new_token)

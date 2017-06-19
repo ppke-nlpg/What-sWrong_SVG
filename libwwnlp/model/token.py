@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# import re # This was only needed for the commented out part in
-# the propvals_contain method
+# import re # This was only needed for the commented out part in the propvals_contain method
 from operator import attrgetter
 from .token_property import TokenProperty
 

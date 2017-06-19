@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# todo: further redesign when all part is implemented eg: merge add_dependency
-# and add_span
+# todo: further redesign when all part is implemented eg: merge add_dependency and add_span DONE?
 
 from enum import Enum
-from copy import copy
 
 from .token import Token
 from .edge import EdgeRenderType, Edge
@@ -325,21 +323,21 @@ def nlp_diff(gold_instance: NLPInstance,
     false_positives = guess_identities - gold_identities
     matches = gold_identities & guess_identities
     for edge in false_negatives:
-        properties = copy(edge.properties)
+        properties = set(edge.properties)  # shallow copy
         properties.add('eval_status_FN')
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge.edge_type,
                       render_type=edge.render_type, desc=edge.description,
                       properties=properties)
     for edge in false_positives:
-        properties = copy(edge.properties)
+        properties = set(edge.properties)  # shallow copy
         properties.add('eval_status_FP')
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge.edge_type,
                       render_type=edge.render_type, desc=edge.description,
                       properties=properties)
     for edge in matches:
-        properties = copy(edge.properties)
+        properties = set(edge.properties)  # shallow copy
         properties.add('eval_status_Match')
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge.edge_type,

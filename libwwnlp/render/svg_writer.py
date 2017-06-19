@@ -114,7 +114,7 @@ class Rectangle(sw.shapes.Rect):
             height: (int): The height of the rectangle.
             fill_color (tuple): Color to fill the rectangle with.
             line_color (tuple): Color to use for the rectangle's outline.
-            end (tuple): The line's ending point.
+            line_width (int): The line's ending point.
             rx (int): Horizontal radius of corner rounding.
             ry (int): Vertical radius of corner rounding.
         """
@@ -215,7 +215,7 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
 
     Returns: The bytesting of the rendered object if needed.
     """
-    svg_scene = Scene(0,0)  # TODO: Do this in a more clever way...
+    svg_scene = Scene(0, 0)  # TODO: Do this in a more clever way...
 
     dim = renderer.render(filtered, svg_scene)
 
@@ -235,5 +235,3 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
         cairosvg.svg2pdf(bytestring=svg_bytes, write_to=filepath)
     else:
         raise ValueError('{0} not a supported filetype!'.format(output_type))
-
-    
