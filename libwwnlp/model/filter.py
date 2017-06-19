@@ -68,7 +68,9 @@ class Filter:
         if allowed_edge_types is None:
             allowed_edge_types = set()
         if allowed_edge_properties is None:
-            allowed_edge_properties = {('eval_status','FN'), ('eval_status', 'FP'), ('eval_status', 'Match')}
+            allowed_edge_properties = {'eval_status_FN',
+                                       'eval_status_FP',
+                                       'eval_status_Match'}
         self.forbidden_token_properties = set()
         self.allowed_token_propvals = allowed_token_propvals or {''}
         self.propvals_whole_word = False
@@ -187,16 +189,15 @@ class Filter:
         """
         self.allowed_edge_types.add(t)
 
-    def add_allowed_edge_property(self, prop: str, value):
+    def add_allowed_edge_property(self, prop: str):
         """Adds an allowed property--value pair.
 
         This causes the filter to accept edges with the given property value.
 
         Args:
-            prop (str): The property name to add.
-            value: The value to add. 
+            prop (str): The property to add.
         """
-        self.allowed_edge_properties.add((prop, value))
+        self.allowed_edge_properties.add(prop)
 
     def remove_allowed_edge_type(self, t: str):
         """Disallows the given prefix type.
@@ -209,17 +210,16 @@ class Filter:
         if t in self.allowed_edge_types:
             self.allowed_edge_types.remove(t)
 
-    def remove_allowed_edge_property(self, property: str, value):
-        """Disallows the given edge property--value pair.
+    def remove_allowed_edge_property(self, prop: str):
+        """Disallows the given edge property.
 
         This causes the filter to stop accepting edges with the given property.
 
         Args:
             prop (str): The property name to disallow.
-            value: The value to disallow.
         """
-        if (property, value) in self.allowed_edge_properties:
-            self.allowed_edge_properties.remove((property, value))
+        if prop in self.allowed_edge_properties:
+            self.allowed_edge_properties.remove(prop)
 
     def allows_edge_type(self, t: str):
         """Does the filter allow the given
@@ -232,17 +232,16 @@ class Filter:
         """
         return t in self.allowed_edge_types
 
-    def allows_edge_property(self, prop: str, value):
+    def allows_edge_property(self, prop):
         """Does the filter allow the given property and value combination.
 
         Args:
             prop (str): The property name to check whether it is allowed.
-            value: The value to check whethet it's allowed. 
 
         Returns:
             bool: True iff the given property and values is allowed.
         """
-        return (prop, value) in self.allowed_edge_properties
+        return prop in self.allowed_edge_properties
 
     @staticmethod
     def calculate_paths(edges: set) -> set:
@@ -346,7 +345,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its properties.
         """
-        return set(edge.properties.items()) <= self.allowed_edge_properties
+        return edge.properties <= self.allowed_edge_properties
 
     def edge_label_is_allowed(self, edge):
         """Is the edge allowed on the basis of its label.

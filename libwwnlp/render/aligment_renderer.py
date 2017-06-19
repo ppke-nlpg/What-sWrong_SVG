@@ -51,9 +51,9 @@ class AligmentRenderer:
             width = dim[0]
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
-            if edge.edge_properties.get('eval_status', None) == "FP":
+            if 'eval_status_FP' in edge.edge_properties:
                 scene.color = (255, 0, 0)  # Red
-            elif edge_properties.get('eval_status', None) == "FN":
+            elif 'eval_status_FN' in edge.edge_properties:
                 scene.color = (0, 0, 255)  # Blue
             else:
                 scene.color = (0, 0, 0)    # Black

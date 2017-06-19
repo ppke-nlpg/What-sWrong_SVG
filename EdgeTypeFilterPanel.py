@@ -91,9 +91,9 @@ class EdgeTypeFilterPanel:
         def matchActionPerformed(value):
             print("Match action performed!")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "Match")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
             else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "Match")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_Match")
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._matches.stateChanged.connect(matchActionPerformed)
@@ -101,9 +101,9 @@ class EdgeTypeFilterPanel:
         def negativeActionPerformed(value):
             print("Negative action performed")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FN")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
             else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "FN")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_FN")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
@@ -111,9 +111,9 @@ class EdgeTypeFilterPanel:
         def positiveActionPerformed(value):
             print("Positive action performed")
             if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FP")
+                self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
             else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status", "FP")
+                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_FP")
 
             self._nlpCanvas.update_nlp_graphics()
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
@@ -148,17 +148,17 @@ class EdgeTypeFilterPanel:
         # allTypes = list(sorted(edge_types))  # ArrayList<String>()
 
         # XXX Sholuld be enabled automatically
-        self._falseNegatives.setEnabled(('eval_status',"FP") in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FP")
-        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property('eval_status', "FP")])  # Checked(2) Not(0)
+        self._falseNegatives.setEnabled(("eval_status_FP") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
+        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FP")])  # Checked(2) Not(0)
 
-        self._falsePositives.setEnabled(('eval_status',"FN") in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "FN")
-        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property('eval_status', "FN")])  # Checked(2) Not(0)
+        self._falsePositives.setEnabled(("eval_status_FN") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
+        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FN")])  # Checked(2) Not(0)
 
-        self._matches.setEnabled(('eval_status',"Match") in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status", "Match")
-        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status", "Match")])  # Checked(2), Not(0)
+        self._matches.setEnabled(("eval_status_Match") in edge_properties)
+        self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
+        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_Match")])  # Checked(2), Not(0)
 
         self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
 

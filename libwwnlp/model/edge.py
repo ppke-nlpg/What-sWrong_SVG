@@ -39,14 +39,13 @@ class Edge:
             both "dep" and "role" edges could have the render type
             EdgeRenderType#dependency. Then they are both drawn as directed
             edges in a dependency style graph.
-        properties (Dict[str]): In addition to its type an edge can have
-            additional properties that are represented as a mapping from
-            property names to the corresponding property values.
+        properties (Set[str]): In addition to its type an edge can have
+            additional properties that are represented simply as strings.
     """
 
     def __init__(self, start, end, label: str, edge_type, note: str=None,
                  render_type: EdgeRenderType=EdgeRenderType.dependency,
-                 description: str="No Description", properties: dict=None):
+                 description: str="No Description", properties: set=None):
         """Initialize an Edge instance.
 
         Args:
@@ -58,8 +57,8 @@ class Edge:
                 to None.
             render_type (EdgeRenderType, optional): How to render the edge.
                 Defaults to EdgeRenderType.dependency.
-            properties (Dict[str], optional): A mapping from edge property names
-                to the corresponding properties values.        
+            properties (Set[str], optional): A set of edge properties
+                represented as a set of strings.
         """
         self.start = start
         self.end = end
@@ -68,7 +67,7 @@ class Edge:
         self.edge_type = edge_type
         self.render_type = render_type
         self.description = description
-        self.properties = {} if properties is None else properties
+        self.properties = set() if properties is None else properties
 
     def get_min_index(self) -> int:
         """Return the mimimal index of the tokens in this edge.

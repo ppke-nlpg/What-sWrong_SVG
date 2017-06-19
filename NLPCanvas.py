@@ -79,7 +79,7 @@ class NLPCanvas:
         self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_properties()}  # UnionAll
         self.used_edge_properties = set()
         for edge in self.nlp_instance.get_edges():
-            self.used_edge_properties.update(edge.properties.items())
+            self.used_edge_properties.update(edge.properties)
         self.fireInstanceChanged()
 
     def filter_instance(self):

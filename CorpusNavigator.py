@@ -709,9 +709,9 @@ class CorpusNavigator:
             self._edgeTypeFilter.add_allowed_edge_type("chunk")
             self._edgeTypeFilter.add_allowed_edge_type("pos")
             self._edgeTypeFilter.add_allowed_edge_type("align")
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status', "FP")
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status', "FN")
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status', "Match")
+            self._edgeTypeFilter.add_allowed_edge_property('eval_status_FP')
+            self._edgeTypeFilter.add_allowed_edge_property('eval_status_FN')
+            self._edgeTypeFilter.add_allowed_edge_property('eval_status_Match')
 
             self._canvas.renderer.set_edge_type_order("pos", 0)
             self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
