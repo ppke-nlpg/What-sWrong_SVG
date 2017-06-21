@@ -14,7 +14,6 @@ class Scene(sw.drawing.Drawing):
     Attributes:
         offsetx (int): Horizontal offset.
         offsety (int): Vertical offset.
-        color (tuple): Scene color.
     """
 
     def __init__(self, width: int=400, height: int=400):
@@ -27,7 +26,6 @@ class Scene(sw.drawing.Drawing):
         super().__init__(size=(width, height))
         self.offsetx = 0
         self.offsety = 0
-        self.color = (0, 0, 0)
 
     def translate(self, offx: int, offy: int):
         """Shift the scene by the given offsets.
@@ -131,7 +129,7 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple=(0,0,0)):
         origin = scene.translate_to(origin)
         """Initialize a text object.
 

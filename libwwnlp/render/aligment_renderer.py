@@ -52,11 +52,11 @@ class AligmentRenderer:
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
             if 'eval_status_FP' in edge.edge_properties:
-                scene.color = (255, 0, 0)  # Red
+                edge_color  = (255, 0, 0)  # Red
             elif 'eval_status_FN' in edge.edge_properties:
-                scene.color = (0, 0, 255)  # Blue
+                edge_color = (0, 0, 255)  # Blue
             else:
-                scene.color = (0, 0, 0)    # Black
+                edge_color = (0, 0, 0)    # Black
             bound1 = token_xbounds1[edge.start]
             bound2 = token_xbounds2[edge.end]
             if self._is_curved:
@@ -64,11 +64,11 @@ class AligmentRenderer:
                 ctrl1 = (middle(bound1), height + self._height_factor // 2)
                 ctrl2 = (middle(bound2), height + self._height_factor // 2)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(QuadraticBezierCurve(scene, start, ctrl1, ctrl2, end, scene.color))
+                scene.add(QuadraticBezierCurve(scene, start, ctrl1, ctrl2, end, edge_color))
             else:
                 start = (middle(bound1), height)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(Line(scene, start, end, scene.color))
+                scene.add(Line(scene, start, end, edge_color))
 
         # add spans
         scene.translate(0, dim[1] + self._height_factor)

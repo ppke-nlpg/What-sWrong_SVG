@@ -113,7 +113,7 @@ class TokenLayout:
             lasty = self.base_line + self.row_height
             for prop in token.get_sorted_properties():
                 curr_property = token.get_property(prop)
-                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
+                labelwidth = Text(scene, (0, 0), curr_property, 12).get_width()
                 lasty += self.row_height
                 if labelwidth > maxx:
                     maxx = labelwidth
@@ -144,7 +144,6 @@ class TokenLayout:
         Returns:
             The dimension of the drawn graph.
         """
-        old_scene_color = scene.color
         tokens = instance.tokens
         if len(tokens) == 0:
             self.height = 1
@@ -153,7 +152,7 @@ class TokenLayout:
         self.text_layouts.clear()
         lastx = 0
         self.height = 0
-        scene.color = (0, 0, 0)  # Black
+        token_color = (0, 0, 0)  # Black
         if self.from_split_point == -1:
             from_token = 0
         else:
@@ -171,15 +170,11 @@ class TokenLayout:
                 lasty += self.row_height
                 curr_property = token.get_property(prop)
                 if index == 0:
-                    scene.color = (0, 0, 0)  # Black
+                    token_color = (0, 0, 0)  # Black
                 else:
-                    scene.color = (120, 120, 120)  # Grey
-                if token.is_actual:
-                    scene.color = (0, 102, 204)  # Blue
-                else:
-                    scene.color = (0, 0, 0)  # Black
-                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, scene.color))
-                labelwidth = Text(scene, (0, 0), curr_property, 12, scene.color).get_width()
+                    token_color = (120, 120, 120)  # Grey
+                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, token_color))
+                labelwidth = Text(scene, (0, 0), curr_property, 12, token_color).get_width()
                 if labelwidth > maxx:
                     maxx = labelwidth
                 self.text_layouts[(token, index+1)] = curr_property
@@ -197,7 +192,6 @@ class TokenLayout:
                 self.height = lasty
 
         self.width = lastx - self.margin
-        scene.color = old_scene_color
         return self.width, self.height
 
     def get_property_text_layout(self, vertex, index):

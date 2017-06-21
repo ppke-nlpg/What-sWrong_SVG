@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from .abstract_edge_layout import AbstractEdgeLayout
 from .svg_writer import Line, Scene, Text, QuadraticBezierCurve
 
+FONT_SIZE = 12
 
 class DependencyLayout(AbstractEdgeLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.
@@ -137,9 +138,7 @@ class DependencyLayout(AbstractEdgeLayout):
         # draw each edge
         edges_ |= all_loops
         for edge in edges_:
-            # set Color and remember old color
-            old = scene.color
-            scene.color = self.get_color(edge.edge_type)
+            edge_color = self.get_color(edge)
             # FIXME: do that more properly!
             height = self.baseline + max_height - (depth[edge] + 1) * self.height_per_level + offset[edge]
             if edge.start == edge.end:
@@ -154,34 +153,34 @@ class DependencyLayout(AbstractEdgeLayout):
             p3 = (p4[0], height)
             # connection
             if self.curve:
-                shape = self.create_curve_arrow(scene, p1, p2, p3, p4)
+                shape = self.create_curve_arrow(scene, p1, p2, p3, p4, edge_color)
             else:
-                shape = self.create_rect_arrow(scene, p1, p2, p3, p4)
+                shape = self.create_rect_arrow(scene, p1, p2, p3, p4, edge_color)
 
             x = (p4[0] - self.arrowsize, p4[1] - self.arrowsize)
             z = (p4[0] + self.arrowsize, p4[1] - self.arrowsize)
             y = (p4[0], p4[1])
-            scene.add(Line(scene, x, y, scene.color))
-            scene.add(Line(scene, z, y, scene.color))
+            
+            scene.add(Line(scene, x, y, edge_color))
+            scene.add(Line(scene, z, y, edge_color))
 
             # write label in the middle under
 
             # XXX Original fontsize is 8
-            Text(scene, (0, 0), edge.get_label_with_note(), 12, scene.color)
+            Text(scene, (0, 0), edge.get_label_with_note(), FONT_SIZE, edge_color)
             labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2  # - labelwith // 2
             # labely = height + 1
             labely = height + 10 + 1  # XXX layout.getAscent()
             # XXX Original fontsize is 8
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), 12, scene.color))
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, edge_color))
 
-            scene.color = old
             self.shapes[shape] = edge
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height
 
     @staticmethod
-    def create_rect_arrow(scene: Scene, p1, p2, p3, p4):
+    def create_rect_arrow(scene: Scene, p1, p2, p3, p4, color):
         """Create an rectangular path through the given points.
 
         The path starts at p1 the goes to p2, p3 and finally to p4.
@@ -192,17 +191,18 @@ class DependencyLayout(AbstractEdgeLayout):
             p2: The second point.
             p3: The third point.
             p4: The last point.
+            color: The arrow's color.
 
         Returns:
             The given points as a tuple.
         """
-        scene.add(Line(scene, p1, p2, scene.color))
-        scene.add(Line(scene, p2, p3, scene.color))
-        scene.add(Line(scene, p3, p4, scene.color))
+        scene.add(Line(scene, p1, p2, color))
+        scene.add(Line(scene, p2, p3, color))
+        scene.add(Line(scene, p3, p4, color))
         return p1, p2, p3, p4
 
     @staticmethod
-    def create_curve_arrow(scene: Scene, start: tuple, c1: tuple, c2: tuple, end: tuple):
+    def create_curve_arrow(scene: Scene, start: tuple, c1: tuple, c2: tuple, end: tuple, color):
         """Create an curved path around the given points in a scene.
 
         The path starts at `start` and ends at `end`. Points c1 and c2 are used as
@@ -214,13 +214,14 @@ class DependencyLayout(AbstractEdgeLayout):
             c1: The first control point.
             c2: The second control point.
             end: The end point.
+            color: The arrow's color.
 
         Return:
             The given points as a tuple.
         """
         middle = (c1[0] + (c2[0]-c1[0]) // 2, c1[1])
-        scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, scene.color))
-        scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, scene.color))
+        scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, color))
+        scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, color))
         return start, c1, c2, end
 
     @staticmethod

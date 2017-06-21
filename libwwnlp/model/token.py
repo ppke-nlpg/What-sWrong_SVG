@@ -15,22 +15,16 @@ class Token:
         index (int): The index of the token.
         token_properties (Dict[TokenProperty, Object]): A mapping from
             properties to values.
-        is_actual (bool): Whether the token is actually part of the analysis or
-            only provides context (e.g. in the case of a partial analysis
-            visualisation). Defaults to False.
     """
 
-    def __init__(self, index: int, is_actual: bool=False):
+    def __init__(self, index: int):
         """Creates a new token with the given index and actuality value.
 
         Args:
             index (int): The index of the token.
-            is_actual (bool, optional): Whether the token is actual. Defaults
-                to False.
         """
         self.index = index
         self.token_properties = {}
-        self.is_actual = is_actual
 
     def get_property(self, token_property) -> str:
         """Get the value of the given property.

@@ -22,9 +22,12 @@ class AbstractEdgeLayout:
         vertex_extra_space (int): How many extra pixels to start and end arrows
             from.
         curve (bool): Should the edges be curved.
-        colors (dict[str, color]): A mapping from string to colors. If an edge has a type
-            that matches one of the key strings it will get the corresponding
-            color.
+        type_colors (Dict[str, color]): A mapping from type names to colors.
+        property_colors (Dict[str, tuple]): A mapping from edge property names
+            to (color, level) pairs. If an edge has more than one properties
+            its color will be determined by ordering the corresponding pairs in
+            propert_colors first (ascending) by level an then by the property
+            name they belong to and using the color in the first pair.
         strokes (Dict[str, BasicStroke]): A mapping from string to strokes. If
             an edge has a type that matches one of the key strings it will get
             the corresponding stroke.
@@ -41,6 +44,7 @@ class AbstractEdgeLayout:
             by the #layout method after the layout process.
         max_width (int): The width of the layout. This property is to be set by
             the #layout method after the layout process.
+
     """
     def __init__(self):
         """Initialize an AbstractEdgeLayout instance.
@@ -49,7 +53,8 @@ class AbstractEdgeLayout:
         self.height_per_level = 15
         self.vertex_extra_space = 12
         self.curve = True
-        self.colors = {}
+        self.type_colors = {}
+        self.property_colors = {}
         self.strokes = {}
         self.default_stroke = None
         self.start = {}
@@ -67,7 +72,7 @@ class AbstractEdgeLayout:
             edge_type: The type of the edges we want to change the color for.
             color: The color of the edges of the given type.
         """
-        self.colors[edge_type] = color
+        self.type_colors[edge_type] = color
 
     def set_stroke(self, edge_type, stroke):
         """Set the stroke for edges of a certain type.
@@ -108,19 +113,23 @@ class AbstractEdgeLayout:
                 return self.strokes[substring]
         return self.default_stroke
 
-    def get_color(self, edge_type):
-        """Return the color for edges of the given type.
+    def get_color(self, edge):
+        """Return the color for edges of the given type and with the given property.
 
         Args:
             edge_type (str): The edge type we need the color for.
+            edge_properties (Set[str]): The edge properties we need the color for.
 
         Returns:
-            The color for the given edge type.
+            The color for the given edge type and properties.
         """
-        for substring in self.colors.keys():
-            if substring in edge_type:
-                return self.colors[substring]
-        return 0, 0, 0  # Black
+        props_with_color = edge.properties & self.property_colors.keys()
+        if not props_with_color:
+            return self.type_colors.get(edge.edge_type, (0, 0, 0)) # black
+        else:
+            min_level = min((x[1] for x in props_with_color), default=0)
+            minimals = [x for x in props_with_color if x[1] == min_level]
+            return sorted(minimals, key=lambda x: x[1])[0][0]
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.

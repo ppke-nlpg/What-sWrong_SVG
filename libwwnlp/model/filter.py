@@ -49,8 +49,8 @@ class Filter:
             filtering step.
         allowed_edge_types (Set[str]): The allowed edge types. If an edge has an
             edge type in this set it can pass.
-        allowed_edge_properties (Set[tuple]): The allowed property--value pairs. If
-            an edge has a propery--value pair in this set it can pass.
+        allowed_edge_properties (Set[str]): The allowed edge properties. If
+            an edge has a property in this set it can pass.
         allowed_labels: Allowed label substrings.
     """
 

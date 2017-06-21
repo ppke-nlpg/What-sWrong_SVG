@@ -209,7 +209,7 @@ class NLPInstance:
         self.tokens.append(token)
         self.token_map[token.index] = token
 
-    def add_token(self, index: int=None, is_actual: bool=False) -> Token:
+    def add_token(self, index: int=None) -> Token:
         """Add a token at the given index.
 
         This method can be used when we don't want to build the sentence in
@@ -223,14 +223,13 @@ class NLPInstance:
             index (int, optional): The position where the token should be
                 added. If not given then the position will be set to the number
                 of already present tokens.
-            is_actual (bool, optional): Is the token actual? Defaults to False.
 
         Returns:
             Token: The token that was added.
 
         """
         if index is None:
-            vertex = Token(len(self.tokens), is_actual)
+            vertex = Token(len(self.tokens))
             self.tokens.append(vertex)
             self.token_map[vertex.index] = vertex
         else:
