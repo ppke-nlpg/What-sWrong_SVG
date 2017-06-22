@@ -51,7 +51,7 @@ class Filter:
             edge type in this set it can pass.
         allowed_edge_properties (Set[str]): The allowed edge properties. If
             an edge has a property in this set it can pass.
-        allowed_labels: Allowed label substrings.
+        allowed_labels (Set[str]): Allowed label substrings.
     """
 
     def __init__(self, allowed_labels: set=None, allowed_edge_types: set=None,
@@ -72,7 +72,7 @@ class Filter:
                                        'eval_status_FP',
                                        'eval_status_Match'}
         self.forbidden_token_properties = set()
-        self.allowed_token_propvals = allowed_token_propvals or {''}
+        self.allowed_token_propvals = allowed_token_propvals or {''}  # TODO: handle properly
         self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
@@ -247,24 +247,30 @@ class Filter:
     def calculate_paths(edges: set) -> set:
         """Calculates all paths between all tokens of the provided edges.
 
+        Note on types:
+        Path (frozenset({Edge}))
+        paths (defaultdict({Token: defaultdict({Token: {Path}})})
+        paths_per_length ([Path])
+        result ({Edge})
+
         Args:
             edges (set): The edges (graph) to use for getting all paths.
 
         Returns:
             set: All paths defined through the provided edges.
         """
-        paths_per_length = []  # ArrayList<Paths>()
-        paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
+        paths_per_length = []
+        paths = defaultdict(lambda: defaultdict(set))
         # initialize
         for edge in edges:
-            path = frozenset({edge})  # HashSet<Edge>
+            path = frozenset({edge})
             paths[edge.start][edge.end].add(path)
             paths[edge.end][edge.start].add(path)
         first = paths
         while len(paths) > 0:
             paths_per_length.append(paths)
             previous = paths
-            paths = defaultdict(lambda: defaultdict(set))  # HashMap<Token, HashMap<Token, HashSet<Path>>>
+            paths = defaultdict(lambda: defaultdict(set))
             # go over each paths of the previous length and increase their size by one
             for start in previous.keys():
                 for over in previous[start].keys():
@@ -274,11 +280,11 @@ class Filter:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
                                 if not path2.issubset(path1) and next(iter(path1)).edge_type == \
                                         next(iter(path2)).edge_type:
-                                    path = frozenset(path1 | path2)  # HashSet<Edge>
+                                    path = frozenset(path1 | path2)
                                     paths[start][to].add(path)
                                     paths[to][start].add(path)
 
-        result = set()  # ArrayList<Edge>()
+        result = set()
         for p in paths_per_length:
             for start in p.keys():
                 for to in p[start].keys():
@@ -432,7 +438,8 @@ class Filter:
             updated_edges = set()  # HashSet<Edge>()
             for e in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
-                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description, properties=e.properties))
+                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description,
+                                       properties=e.properties))
             # find new split points (have to be changed because instance has
             # new token sequence)
             updated_split_points = []  # ArrayList<Integer>()

@@ -26,7 +26,7 @@ class AbstractEdgeLayout:
         property_colors (Dict[str, tuple]): A mapping from edge property names
             to (color, level) pairs. If an edge has more than one properties
             its color will be determined by ordering the corresponding pairs in
-            propert_colors first (ascending) by level an then by the property
+            property_colors first (ascending) by level an then by the property
             name they belong to and using the color in the first pair.
         strokes (Dict[str, BasicStroke]): A mapping from string to strokes. If
             an edge has a type that matches one of the key strings it will get
@@ -117,19 +117,16 @@ class AbstractEdgeLayout:
         """Return the color for edges of the given type and with the given property.
 
         Args:
-            edge_type (str): The edge type we need the color for.
-            edge_properties (Set[str]): The edge properties we need the color for.
+            edge (Edge): The edge we need the color for.
 
         Returns:
             The color for the given edge type and properties.
         """
         props_with_color = edge.properties & self.property_colors.keys()
         if not props_with_color:
-            return self.type_colors.get(edge.edge_type, (0, 0, 0)) # black
+            return self.type_colors.get(edge.edge_type, (0, 0, 0))  # Black
         else:
-            min_level = min((self.property_colors[x][1] for x in props_with_color), default=0)
-            minimals = [self.property_colors[x] for x in props_with_color if self.property_colors[x][1] == min_level]
-            return sorted(minimals, key=lambda x: x[1])[0][0]
+            return min((self.property_colors[x] for x in props_with_color), key=lambda x: x[1])[0]
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.

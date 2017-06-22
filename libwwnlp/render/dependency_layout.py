@@ -11,6 +11,7 @@ from .svg_writer import Line, Scene, Text, QuadraticBezierCurve
 
 FONT_SIZE = 12
 
+
 class DependencyLayout(AbstractEdgeLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.
 
@@ -37,6 +38,17 @@ class DependencyLayout(AbstractEdgeLayout):
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
 
+        Note on types:
+        loops (defaultdict({Token: [Edge]}))
+        all_loops ({Edge})
+        tokens ({Token})
+        depth (Counter(Edge))
+        offset (Counter(Edge))
+        dominates (defaultdict({Edge: [Edge]}))
+        vertex2edges (defaultdict({Token: [Edge]}))
+        start ({Edge: Point})
+        end ({Edge: Point})
+
         Args:
            edges: Edges to layout.
            bounds: Bounds of the tokens the edges connect.
@@ -47,14 +59,14 @@ class DependencyLayout(AbstractEdgeLayout):
         """
         edges_ = set(edges)
         if len(self.visible) > 0:
-            edges_ &= self.visible  # Intersection
+            edges_ &= self.visible
 
         # find out height of each edge
         self.shapes.clear()
 
-        loops = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
-        all_loops = set()  # HashSet<Edge>()
-        tokens = set()  # HashSet<Token>()
+        loops = defaultdict(list)
+        all_loops = set()
+        tokens = set()
         for edge in edges_:
             tokens.add(edge.start)
             tokens.add(edge.end)
@@ -64,9 +76,9 @@ class DependencyLayout(AbstractEdgeLayout):
 
         edges_ -= all_loops
 
-        depth = Counter()   # Counter<Edge>()
-        offset = Counter()  # Counter<Edge>()
-        dominates = defaultdict(list)  # HashMultiMapLinkedList<Edge, Edge>()
+        depth = Counter()
+        offset = Counter()
+        dominates = defaultdict(list)
 
         for over in edges_:
             for under in edges_:
@@ -100,13 +112,12 @@ class DependencyLayout(AbstractEdgeLayout):
             max_height += self.height_per_level // 2
 
         # build map from vertex to incoming/outgoing edges
-        vertex2edges = defaultdict(list)  # HashMultiMapLinkedList<Token, Edge>()
+        vertex2edges = defaultdict(list)
         for edge in edges_:
             vertex2edges[edge.start].append(edge)
             vertex2edges[edge.end].append(edge)
         # assign starting and end points of edges by sorting the edges per vertex
-        start = {}  # HashMap<Edge, Point>()
-        end = {}    # HashMap<Edge, Point>()
+        start, end = {}, {}
         for token in tokens:
             connections = vertex2edges[token]
             connections = sorted(connections,
@@ -161,13 +172,9 @@ class DependencyLayout(AbstractEdgeLayout):
             scene.add(Line(scene, z, y, edge_color))
 
             # write label in the middle under
-
-            # XXX Original fontsize is 8
             Text(scene, (0, 0), edge.get_label_with_note(), FONT_SIZE, edge_color)
-            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2  # - labelwith // 2
-            # labely = height + 1
-            labely = height + 10 + 1  # XXX layout.getAscent()
-            # XXX Original fontsize is 8
+            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2
+            labely = height + 10 + 1
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, edge_color))
 
             self.shapes[shape] = edge

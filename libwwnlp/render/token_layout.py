@@ -152,7 +152,6 @@ class TokenLayout:
         self.text_layouts.clear()
         lastx = 0
         self.height = 0
-        token_color = (0, 0, 0)  # Black
         if self.from_split_point == -1:
             from_token = 0
         else:
@@ -174,9 +173,7 @@ class TokenLayout:
                 else:
                     token_color = (120, 120, 120)  # Grey
                 scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, token_color))
-                labelwidth = Text(scene, (0, 0), curr_property, 12, token_color).get_width()
-                if labelwidth > maxx:
-                    maxx = labelwidth
+                maxx = max(maxx, Text(scene, (0, 0), curr_property, 12, token_color).get_width())
                 self.text_layouts[(token, index+1)] = curr_property
                 index += 1
             required_width = token_widths.get(token)
