@@ -126,7 +126,8 @@ class AbstractEdgeLayout:
         if not props_with_color:
             return self.type_colors.get(edge.edge_type, (0, 0, 0))  # Black
         else:
-            return min((self.property_colors[x] for x in props_with_color), key=lambda x: x[1])[0]
+            # sort first acc. to levels, second according to prop. names
+            return sorted((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color)[0][2]
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.
