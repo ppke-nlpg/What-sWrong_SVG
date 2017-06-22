@@ -432,7 +432,7 @@ class Filter:
             updated_edges = set()  # HashSet<Edge>()
             for e in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
-                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description))
+                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description, properties=e.properties))
             # find new split points (have to be changed because instance has
             # new token sequence)
             updated_split_points = []  # ArrayList<Integer>()

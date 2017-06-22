@@ -36,7 +36,6 @@ class DependencyFilterPanel:
         tokenTextField = gui.edgeFilterTokenLineEdit
 
         def tokenTextFieldChanged(text):
-            print("tokenTextFieldChanged")
             edgeTokenFilter.clear_allowed_property()
             split = text.split(",")
             for token_property in split:

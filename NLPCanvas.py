@@ -9,6 +9,9 @@ from libwwnlp.render.aligment_renderer import AligmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
 from libwwnlp.render.svg_writer import render_nlpgraphics
 
+MATCH_COLOR = (0, 0, 0)
+FN_COLOR = (255, 0, 0)
+FP_COLOR = (0, 0, 255)
 
 class NLPCanvas:
     """An NLPCanvas draws the tokens and edges of an NLPInstance.
@@ -25,6 +28,9 @@ class NLPCanvas:
         """Creates a new canvas with default size.
         """
         self.renderer = SingleSentenceRenderer()
+        self.renderer._dependency_layout.property_colors = {"eval_status_Match": (MATCH_COLOR, 2),
+                                                            "eval_status_FN": (FN_COLOR, 1),
+                                                            "eval_status_FP": (FP_COLOR, 1)}
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
                           RenderType.alignment: AligmentRenderer()}
         self.usedTypes = set()

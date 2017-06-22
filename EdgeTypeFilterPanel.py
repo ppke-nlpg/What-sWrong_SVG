@@ -72,7 +72,6 @@ class EdgeTypeFilterPanel:
         self.updateSelection()
 
         def valueChanged():
-            print("Edge type widget selection changed")
             self._justChanged.clear()
             if len(self._types) == 0 or len(self._listModel) == 0:
                 return
@@ -89,7 +88,6 @@ class EdgeTypeFilterPanel:
 
         # add false positive/negative and match check buttons
         def matchActionPerformed(value):
-            print("Match action performed!")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
             else:
@@ -99,7 +97,6 @@ class EdgeTypeFilterPanel:
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
-            print("Negative action performed")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
             else:
@@ -109,7 +106,6 @@ class EdgeTypeFilterPanel:
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
-            print("Positive action performed")
             if value == 2:  # Checked
                 self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
             else:

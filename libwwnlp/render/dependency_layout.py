@@ -144,12 +144,8 @@ class DependencyLayout(AbstractEdgeLayout):
             if edge.start == edge.end:
                 height -= self.height_per_level // 2
             p1 = start[edge]
-            if p1 is None:
-                print(edge)
             p2 = (p1[0], height)
             p4 = end[edge]
-            if p4 is None:
-                print(edges)
             p3 = (p4[0], height)
             # connection
             if self.curve:

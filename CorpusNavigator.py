@@ -256,7 +256,8 @@ class CorpusNavigator:
             diffCorpus = []  # ArrayList<NLPInstance>(Math.min(gold.size(), guess.size()))
             # self._diffCorpora[(gold, guess)] = diffCorpus
         for i in range(0, min(len(gold), len(guess))):
-            diffCorpus.append(nlp_diff(gold[i], guess[i]))
+            diffCorpus.append(nlp_diff(gold[i], guess[i], "eval_status_Match",
+                                       "eval_status_FN", "eval_status_FP"))
         # indices.put(diffCorpus, createIndex(diffCorpus))
         return diffCorpus
         # return nlp_diff(gold, guess)  # XX Current Working

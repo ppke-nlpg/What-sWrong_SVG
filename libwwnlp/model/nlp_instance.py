@@ -300,12 +300,15 @@ class NLPInstance:
 
 
 def nlp_diff(gold_instance: NLPInstance,
-             guess_instance: NLPInstance) -> NLPInstance:
+             guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:
     """Calculate the difference between two NLP instances in terms of their edges.
 
     Args:
         gold_instance (NLPInstance): The gold instance.
         guess_instance (NLPInstance): The guess instance.
+        match_prop (str): Edge property to add to matching edges.
+        fn_prop (str): Edge property to add to false negatives.
+        fp_prop (str): Edge property to add to false positives.
 
     Returns:
         NLPInstance: An NLPInstance indicating Matches, False Negatives and
@@ -321,23 +324,16 @@ def nlp_diff(gold_instance: NLPInstance,
     false_negatives = gold_identities - guess_identities
     false_positives = guess_identities - gold_identities
     matches = gold_identities & guess_identities
-    for edge in false_negatives:
+    diff_edges = false_negatives | matches | false_positives
+    for edge in diff_edges:
         properties = set(edge.properties)  # shallow copy
-        properties.add('eval_status_FN')
-        diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
-                      render_type=edge.render_type, desc=edge.description,
-                      properties=properties)
-    for edge in false_positives:
-        properties = set(edge.properties)  # shallow copy
-        properties.add('eval_status_FP')
-        diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
-                      render_type=edge.render_type, desc=edge.description,
-                      properties=properties)
-    for edge in matches:
-        properties = set(edge.properties)  # shallow copy
-        properties.add('eval_status_Match')
+        if edge in false_positives:
+            prop = fp_prop
+        elif edge in false_negatives:
+            prop = fn_prop
+        else:
+            prop = match_prop
+        properties.add(prop)
         diff.add_edge(start=edge.start.index, end=edge.end.index,
                       label=edge.label, note=edge.note, edge_type=edge.edge_type,
                       render_type=edge.render_type, desc=edge.description,
