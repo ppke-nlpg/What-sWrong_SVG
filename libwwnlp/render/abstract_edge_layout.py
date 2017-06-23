@@ -114,13 +114,13 @@ class AbstractEdgeLayout:
         return self.default_stroke
 
     def get_color(self, edge):
-        """Return the color for edges of the given type and with the given property.
+        """Return the color for the given edge.
 
         Args:
             edge (Edge): The edge we need the color for.
 
         Returns:
-            The color for the given edge type and properties.
+            The color for the given edge.
         """
         props_with_color = edge.properties & self.property_colors.keys()
         if not props_with_color:
