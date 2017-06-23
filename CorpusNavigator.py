@@ -222,8 +222,8 @@ class CorpusNavigator:
     # private JLabel ofHowMany;
 
     """
-     * The EdgeTypeAndLabelFilter that needs to be initialized when the navigator does not have a selected corpus and shows an
-     * example sentence.
+     * The EdgeTypeAndLabelFilter that needs to be initialized when the navigator does not have a selected corpus
+      and shows an example sentence.
     """
     # private EdgeTypeAndLabelFilter edgeTypeFilter;
 
@@ -315,8 +315,8 @@ class CorpusNavigator:
      * @param canvas         the canvas to control.
      * @param goldLoader     the loader of gold corpora.
      * @param guessLoader    the loader of guess corpora.
-     * @param edgeTypeFilter the EdgeTypeAndLabelFilter we need when no corpus is selected and a example sentence is chosen and
-     *                       passed to the NLPCanvas.
+     * @param edgeTypeFilter the EdgeTypeAndLabelFilter we need when no corpus is selected and a example sentence
+                             is chosen and passed to the NLPCanvas.
     """
     def __init__(self,  ui, canvas: NLPCanvas, scene=None, goldLoader: CorpusLoader=None,
                  guessLoader: CorpusLoader=None, edgeTypeFilter=None):

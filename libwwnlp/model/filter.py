@@ -179,15 +179,15 @@ class Filter:
         """
         self.allowed_labels.clear()
 
-    def add_allowed_edge_type(self, t: str):
+    def add_allowed_edge_type(self, edge_type: str):
         """Adds an allowed prefix type.
 
         This causes the filter to accept edges with the given prefix type.
 
         Args:
-            t (str): The allowed prefix type.
+            edge_type (str): The allowed prefix type.
         """
-        self.allowed_edge_types.add(t)
+        self.allowed_edge_types.add(edge_type)
 
     def add_allowed_edge_property(self, prop: str):
         """Adds an allowed property--value pair.
@@ -199,16 +199,16 @@ class Filter:
         """
         self.allowed_edge_properties.add(prop)
 
-    def remove_allowed_edge_type(self, t: str):
+    def remove_allowed_edge_type(self, edge_type: str):
         """Disallows the given prefix type.
 
         This causes the filter to stop accepting edges with the given type.
 
         Args:
-            t (str): The prefix type to disallow.
+            edge_type (str): The prefix type to disallow.
         """
-        if t in self.allowed_edge_types:
-            self.allowed_edge_types.remove(t)
+        if edge_type in self.allowed_edge_types:
+            self.allowed_edge_types.remove(edge_type)
 
     def remove_allowed_edge_property(self, prop: str):
         """Disallows the given edge property.
@@ -221,16 +221,16 @@ class Filter:
         if prop in self.allowed_edge_properties:
             self.allowed_edge_properties.remove(prop)
 
-    def allows_edge_type(self, t: str):
+    def allows_edge_type(self, edge_type: str):
         """Does the filter allow the given
 
         Args:
-            t (str): The type to check whether it is allowed as edge type.
+            edge_type (str): The type to check whether it is allowed as edge type.
 
         Returns:
             bool: True iff the given type is an allowed edge type.
         """
-        return t in self.allowed_edge_types
+        return edge_type in self.allowed_edge_types
 
     def allows_edge_property(self, prop):
         """Does the filter allow the given property and value combination.
@@ -274,21 +274,21 @@ class Filter:
             # go over each paths of the previous length and increase their size by one
             for start in previous.keys():
                 for over in previous[start].keys():
-                    for to in first[over].keys():  # One long paths...
+                    for end in first[over].keys():  # One long paths...
                         for path1 in previous[start][over]:
-                            for path2 in first[over][to]:
+                            for path2 in first[over][end]:
                                 # path1 and path2 are sets (same typed Edges) and we only check for type Prefix matching
                                 if not path2.issubset(path1) and next(iter(path1)).edge_type == \
                                         next(iter(path2)).edge_type:
                                     path = frozenset(path1 | path2)
-                                    paths[start][to].add(path)
-                                    paths[to][start].add(path)
+                                    paths[start][end].add(path)
+                                    paths[end][start].add(path)
 
         result = set()
-        for p in paths_per_length:
-            for start in p.keys():
-                for to in p[start].keys():
-                    result.update(p[start][to])  # Add all good paths...
+        for path in paths_per_length:
+            for start in path.keys():
+                for end in path[start].keys():
+                    result.update(path[start][end])  # Add all good paths...
 
         return result
 
@@ -308,9 +308,9 @@ class Filter:
         Returns:
             bool: True iff the token should be kept.
         """
-        for p in token.get_properties():
-            prop_name = p.name
-            prop_val = token.get_property(p)
+        for prop in token.get_properties():
+            prop_name = prop.name
+            prop_val = token.get_property(prop)
             for allowed in self.allowed_token_propvals:
                 if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
                    (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
@@ -403,7 +403,7 @@ class Filter:
                 edges = {edge for edge in edges if self.edge_type_is_allowed(edge)}
             if len(self.allowed_edge_properties) > 0:
                 edges = {edge for edge in edges if self.edge_properties_are_allowed(edge)}
-            
+
         # Filter tokens
         if len(self.allowed_token_propvals) == 0 and not self.collapse:
             # Nothing to do...
@@ -418,47 +418,41 @@ class Filter:
                 tokens = {token for token in original.tokens if self.token_has_allowed_prop(token)}
 
             if self.collapse:
-                for e in edges:
-                    if e.render_type == EdgeRenderType.dependency:
-                        tokens.add(e.start)
-                        tokens.add(e.end)
-                    elif e.render_type == EdgeRenderType.span:
-                        for i in range(e.start.index, e.end.index + 1):
+                for edge in edges:
+                    if edge.render_type == EdgeRenderType.dependency:
+                        tokens.add(edge.start)
+                        tokens.add(edge.end)
+                    elif edge.render_type == EdgeRenderType.span:
+                        for i in range(edge.start.index, edge.end.index + 1):
                             tokens.add(original.get_token(index=i))
 
             _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
 
-            old2new = {}
-            new2old = {}
-            updated_tokens = []
+            old2new, new2old, updated_tokens = {}, {}, []
             for i, token in enumerate(_sorted):
-                new_token = Token(i)
-                new_token.merge(original.tokens[token.index],
-                                forbidden_token_properties=self.forbidden_token_properties)
-                old2new[token] = new_token
-                new2old[new_token] = token
-                updated_tokens.append(new_token)
+                new_tok = Token(i)
+                new_tok.merge(original.tokens[token.index], forbidden_token_properties=self.forbidden_token_properties)
+                old2new[token] = new_tok
+                new2old[new_tok] = token
+                updated_tokens.append(new_tok)
 
             # Update edges and remove those that have vertices not in the new vertex set
             updated_edges = set()
-            for e in (e for e in edges if e.start in old2new and e.end in old2new):
-                updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
-                                       edge_type=e.edge_type, render_type=e.render_type, description=e.description,
-                                       properties=e.properties))
+            for edge in (e for e in edges if e.start in old2new and e.end in old2new):
+                updated_edges.add(Edge(start=old2new[edge.start], end=old2new[edge.end], label=edge.label,
+                                       note=edge.note, edge_type=edge.edge_type, render_type=edge.render_type,
+                                       description=edge.description, properties=edge.properties))
             # Find new split points (have to be changed because instance has new token sequence)
             updated_split_points = []
             new_token_index = 0
             for old_split_point in original.split_points:
-                new_token = updated_tokens[new_token_index]
-                old_token = new2old[new_token]
+                new_tok = updated_tokens[new_token_index]
+                old_token = new2old[new_tok]
                 while new_token_index + 1 < len(updated_tokens) and old_token.index < old_split_point:
                     new_token_index += 1
-                    new_token = updated_tokens[new_token_index]
-                    old_token = new2old[new_token]
+                    new_tok = updated_tokens[new_token_index]
+                    old_token = new2old[new_tok]
                 updated_split_points.append(new_token_index)
 
-        result = NLPInstance(tokens=updated_tokens,
-                             edges=updated_edges,
-                             render_type=original.render_type,
-                             split_points=updated_split_points)
-        return result
+        return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
+                           split_points=updated_split_points)

@@ -140,7 +140,7 @@ class EdgeTypeFilterPanel:
         edge_types = self._nlpCanvas.usedTypes
         edge_properties = self._nlpCanvas.used_edge_properties
         # Separate Types...
-        
+
         # allTypes = list(sorted(edge_types))  # ArrayList<String>()
 
         # XXX Sholuld be enabled automatically

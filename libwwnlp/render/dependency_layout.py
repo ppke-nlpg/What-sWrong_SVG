@@ -119,32 +119,30 @@ class DependencyLayout(AbstractEdgeLayout):
         # assign starting and end points of edges by sorting the edges per vertex
         start, end = {}, {}
         for token in tokens:
-            connections = vertex2edges[token]
-            connections = sorted(connections,
-                                 key=functools.cmp_to_key(lambda e1, e2:
-                                                          self.compare_edges(e1, e2, token)))
+
             # now put points along the token vertex wrt to ordering
             loops_on_vertex = loops[token]
             bounds_width = bounds[token].end - bounds[token].start
-            width = (bounds_width + self.vertex_extra_space) //\
-                    (len(connections) + 1 + len(loops_on_vertex) * 2)
-            x = (bounds[token].start - (self.vertex_extra_space // 2)) + width
+            width = (bounds_width + self.vertex_extra_space) // \
+                    (len(vertex2edges[token]) + 1 + len(loops_on_vertex) * 2)
+            x_coord = (bounds[token].start - (self.vertex_extra_space // 2)) + width
             for loop in loops_on_vertex:
-                point = (x, self.baseline + max_height)
+                point = (x_coord, self.baseline + max_height)
                 start[loop] = point
-                x += width
-            for edge in connections:
-                point = (x, self.baseline + max_height)
+                x_coord += width
+            for edge in sorted(vertex2edges[token], key=functools.cmp_to_key(
+                    lambda e1, e2, tok=token: self.compare_edges(e1, e2, tok))):
+                point = (x_coord, self.baseline + max_height)
                 if edge.start == token:
                     start[edge] = point
                 else:
                     end[edge] = point
-                x += width
+                x_coord += width
 
             for loop in loops_on_vertex:
-                point = (x, self.baseline + max_height)
+                point = (x_coord, self.baseline + max_height)
                 end[loop] = point
-                x += width
+                x_coord += width
 
         # draw each edge
         edges_ |= all_loops
@@ -154,27 +152,27 @@ class DependencyLayout(AbstractEdgeLayout):
             height = self.baseline + max_height - (depth[edge] + 1) * self.height_per_level + offset[edge]
             if edge.start == edge.end:
                 height -= self.height_per_level // 2
-            p1 = start[edge]
-            p2 = (p1[0], height)
-            p4 = end[edge]
-            p3 = (p4[0], height)
+            point1 = start[edge]
+            point2 = (point1[0], height)
+            point4 = end[edge]
+            point3 = (point4[0], height)
             # connection
             if self.curve:
-                shape = self.create_curve_arrow(scene, p1, p2, p3, p4, edge_color)
+                shape = self.create_curve_arrow(scene, point1, point2, point3, point4, edge_color)
             else:
-                shape = self.create_rect_arrow(scene, p1, p2, p3, p4, edge_color)
+                shape = self.create_rect_arrow(scene, point1, point2, point3, point4, edge_color)
 
-            x = (p4[0] - self.arrowsize, p4[1] - self.arrowsize)
-            z = (p4[0] + self.arrowsize, p4[1] - self.arrowsize)
-            y = (p4[0], p4[1])
-            
-            scene.add(Line(scene, x, y, edge_color))
-            scene.add(Line(scene, z, y, edge_color))
+            x_coord = (point4[0] - self.arrowsize, point4[1] - self.arrowsize)
+            z_coord = (point4[0] + self.arrowsize, point4[1] - self.arrowsize)
+            y_coord = (point4[0], point4[1])
+
+            scene.add(Line(scene, x_coord, y_coord, edge_color))
+            scene.add(Line(scene, z_coord, y_coord, edge_color))
 
             # write label in the middle under
             Text(scene, (0, 0), edge.get_label_with_note(), FONT_SIZE, edge_color)
-            labelx = min(p1[0], p3[0]) + abs(p1[0]-p3[0]) // 2
-            labely = height + 10 + 1
+            labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
+            labely = height + 11
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, edge_color))
 
             self.shapes[shape] = edge
@@ -183,49 +181,49 @@ class DependencyLayout(AbstractEdgeLayout):
         return max_width + self.arrowsize + 2, max_height
 
     @staticmethod
-    def create_rect_arrow(scene: Scene, p1, p2, p3, p4, color):
+    def create_rect_arrow(scene: Scene, point1, point2, point3, point4, color):
         """Create an rectangular path through the given points.
 
-        The path starts at p1 the goes to p2, p3 and finally to p4.
+        The path starts at p1 the goes to point2, p3 and finally to point4.
 
         Args:
             scene (Scene): The scene where the path should be created.
-            p1: The first point.
-            p2: The second point.
-            p3: The third point.
-            p4: The last point.
+            point1: The first point.
+            point2: The second point.
+            point3: The third point.
+            point4: The last point.
             color: The arrow's color.
 
         Returns:
             The given points as a tuple.
         """
-        scene.add(Line(scene, p1, p2, color))
-        scene.add(Line(scene, p2, p3, color))
-        scene.add(Line(scene, p3, p4, color))
-        return p1, p2, p3, p4
+        scene.add(Line(scene, point1, point2, color))
+        scene.add(Line(scene, point2, point3, color))
+        scene.add(Line(scene, point3, point4, color))
+        return point1, point2, point3, point4
 
     @staticmethod
-    def create_curve_arrow(scene: Scene, start: tuple, c1: tuple, c2: tuple, end: tuple, color):
+    def create_curve_arrow(scene: Scene, start: tuple, control_point1: tuple, control_point2: tuple, end: tuple, color):
         """Create an curved path around the given points in a scene.
 
-        The path starts at `start` and ends at `end`. Points c1 and c2 are used as
+        The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
         bezier control points.
 
         Args:
             scene (Scene): The scene where the path should be created.
             start: The start point.
-            c1: The first control point.
-            c2: The second control point.
+            control_point1: The first control point.
+            control_point2: The second control point.
             end: The end point.
             color: The arrow's color.
 
         Return:
             The given points as a tuple.
         """
-        middle = (c1[0] + (c2[0]-c1[0]) // 2, c1[1])
-        scene.add(QuadraticBezierCurve(scene, start, c1, c1, middle, color))
-        scene.add(QuadraticBezierCurve(scene, middle, c2, c2, end, color))
-        return start, c1, c2, end
+        middle = (control_point1[0] + (control_point2[0] - control_point1[0]) // 2, control_point1[1])
+        scene.add(QuadraticBezierCurve(scene, start, control_point1, control_point1, middle, color))
+        scene.add(QuadraticBezierCurve(scene, middle, control_point2, control_point2, end, color))
+        return start, control_point1, control_point2, end
 
     @staticmethod
     def compare_edges(edge1, edge2, token):

@@ -52,7 +52,7 @@ class AligmentRenderer:
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
             if 'eval_status_FP' in edge.edge_properties:
-                edge_color  = (255, 0, 0)  # Red
+                edge_color = (255, 0, 0)  # Red
             elif 'eval_status_FN' in edge.edge_properties:
                 edge_color = (0, 0, 255)  # Blue
             else:

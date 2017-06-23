@@ -116,21 +116,21 @@ class SpanLayout(AbstractEdgeLayout):
                 if over != under and (order_over is None and order_under is not None) or \
                    (order_over is not None and order_under is None) or \
                    (order_over != order_under and order_over > order_under) or \
-                   (order_over == order_under and (  # Also when both are None...
-                       over.covers(under) or over.covers_semi(under) or
-                       over.covers_exactly(under) and
-                       over.lexicographic_order(under) > 0 or
-                       over.overlaps(under) and over.get_min_index() < under.get_min_index())):
+                   (order_over == order_under and  # Also when both are None...
+                    (over.covers(under) or over.covers_semi(under) or
+                     over.covers_exactly(under) and
+                     over.lexicographic_order(under) > 0 or
+                     over.overlaps(under) and over.get_min_index() < under.get_min_index())):
                     dominates[over].append(under)
         for edge in edges:
             self.calculate_depth(dominates, depth, edge)
 
         # calculate max_height and max_width
-        most_common = depth.most_common(1)
-        if len(most_common) == 0:
+
+        if len(depth) == 0:
             max_depth = 0
         else:
-            max_depth = most_common[0][1]
+            max_depth = depth.most_common(1)[0][1]
         if len(edges) > 0:
             max_height = (max_depth + 1) * self.height_per_level + 3
         else:
@@ -179,7 +179,7 @@ class SpanLayout(AbstractEdgeLayout):
                 max_x = middle + text_width // 2
 
             # connection
-            rect_height = self.height_per_level - 2 * BUFFER_HEIGHT 
+            rect_height = self.height_per_level - 2 * BUFFER_HEIGHT
             if self.curve:
                 scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
                                     (255, 255, 255), edge_color, 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
@@ -202,9 +202,9 @@ class SpanLayout(AbstractEdgeLayout):
             for edge in edges:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
-            for d in min_depths.values():
+            for depth in min_depths.values():
                 if not self.revert:
-                    d = (max_depth - d)
-                height = self.baseline - 1 + d * self.height_per_level
-                scene.add(Line(scene, (0, height), (max_width, height), color=SEPARATOR_LINE_COLOR))  
+                    depth = (max_depth - depth)
+                height = self.baseline - 1 + depth * self.height_per_level
+                scene.add(Line(scene, (0, height), (max_width, height), color=SEPARATOR_LINE_COLOR))
         return max_width, max_height - 2 * BUFFER_HEIGHT

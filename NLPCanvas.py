@@ -13,6 +13,7 @@ MATCH_COLOR = (0, 0, 0)
 FN_COLOR = (255, 0, 0)
 FP_COLOR = (0, 0, 255)
 
+
 class NLPCanvas:
     """An NLPCanvas draws the tokens and edges of an NLPInstance.
 
@@ -28,6 +29,7 @@ class NLPCanvas:
         """Creates a new canvas with default size.
         """
         self.renderer = SingleSentenceRenderer()
+        # TODO: Here should not acces protected member, public function instead
         self.renderer._dependency_layout.property_colors = {"eval_status_Match": (MATCH_COLOR, 2),
                                                             "eval_status_FN": (FN_COLOR, 1),
                                                             "eval_status_FP": (FP_COLOR, 1)}
@@ -80,8 +82,8 @@ class NLPCanvas:
          * @param nlpInstance the new NLP instance.
         """
         self.nlp_instance = nlp_instance
-        self.usedTypes = {edge.edge_type for edge in self.nlp_instance.get_edges()}  # Union
-        self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_properties()}  # UnionAll
+        self.usedTypes = {edge.edge_type for edge in self.nlp_instance.get_edges()}
+        self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_properties()}
         self.used_edge_properties = set()
         for edge in self.nlp_instance.get_edges():
             self.used_edge_properties.update(edge.properties)

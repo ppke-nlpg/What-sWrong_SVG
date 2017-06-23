@@ -179,7 +179,7 @@ class TokenLayout:
             required_width = token_widths.get(token)
             if required_width is not None and maxx < required_width:
                 maxx = required_width
-            lasty += FONT_DESC_SIZE 
+            lasty += FONT_DESC_SIZE
             self.bounds[token] = Rectangle(scene, (lastx, self.base_line),
                                            maxx, lasty - self.base_line,
                                            (255, 255, 255), (0, 0, 0), 1)

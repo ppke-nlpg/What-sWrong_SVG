@@ -185,17 +185,14 @@ class AbstractEdgeLayout:
         radius.
         """
         # TODO: Should we implement this here or in the decendant classes?
-        pass
-        """
-        Rectangle2D cursor = new Rectangle.Double(p.getX() - radius // 2, p.getY() - radius // 2, radius, radius)
-            double maxY = Integer.MIN_VALUE
-            result = None
-            for s in shapes.keyS():
-                if (s.intersects(cursor) and s.getBounds().getY() > maxY:
-                    result = shapes.get(s);
-                    maxY = s.getBounds().getY();
-            return result
-        """
+        # Rectangle2D cursor = new Rectangle.Double(p.getX() - radius // 2, p.getY() - radius // 2, radius, radius)
+        #    double maxY = Integer.MIN_VALUE
+        #    result = None
+        #    for s in shapes.keyS():
+        #        if (s.intersects(cursor) and s.getBounds().getY() > maxY:
+        #            result = shapes.get(s);
+        #            maxY = s.getBounds().getY();
+        #    return result
 
     def calculate_depth(self, dominates, depth, root):
         """Count the number of edges under each edge and return the maximum.

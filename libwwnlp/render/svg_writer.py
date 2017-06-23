@@ -74,8 +74,7 @@ class QuadraticBezierCurve(sw.path.Path):
     """A quadratic Bezier curve.
     """
 
-    def __init__(self, scene, start: tuple, control1: tuple, control2: tuple,
-                 end: tuple, color: tuple, width: int=1):
+    def __init__(self, scene, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
         """Initialize a quadratic Bezier curve.
 
         Args:
@@ -129,7 +128,7 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple=(0,0,0)):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple=(0, 0, 0)):
         origin = scene.translate_to(origin)
         """Initialize a text object.
 
