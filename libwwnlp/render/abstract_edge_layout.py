@@ -52,8 +52,8 @@ class AbstractEdgeLayout:
         """Initialize an AbstractEdgeLayout instance.
         """
         self.baseline = -1
-        self.height_per_level = 15
-        self.vertex_extra_space = 12
+        self.height_per_level = 15  # TODO: Constants?
+        self.vertex_extra_space = 12  # TODO: Constants?
         self.curve = True
         self.type_colors = {}
         self.property_colors = {}

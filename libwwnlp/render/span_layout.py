@@ -36,7 +36,7 @@ class SpanLayout(AbstractEdgeLayout):
         self.revert = True
         self.separation_lines = True
         self.orders = {}
-        self.total_text_margin = 6
+        self.total_text_margin = 6  # TODO: Constants?
 
     def set_type_order(self, edge_type, order):
         """Set the order/vertical layer in which the area of a type should be drawn.
@@ -77,9 +77,9 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}
         for edge in edges:
             if edge.start == edge.end:
-                labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE).get_width()
-                width = max(labelwidth, result.get(edge.start, labelwidth))
-                result[edge.start] = width + self.total_text_margin
+                result[edge.start] = max(Text(scene, (0, 0), edge.label, FONT_SIZE).get_width(),
+                                         result.get(edge.start, 0))\
+                                     + self.total_text_margin
         return result
 
     def layout_edges(self, edges, bounds, scene: Scene):
@@ -182,10 +182,10 @@ class SpanLayout(AbstractEdgeLayout):
             rect_height = self.height_per_level - 2 * BUFFER_HEIGHT
             if self.curve:
                 scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
-                                    (255, 255, 255), edge_color, 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))
+                                    (255, 255, 255), edge_color, 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))  # TODO: Constants?
             else:
                 scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
-                                    (255, 255, 255), edge_color, 1))
+                                    (255, 255, 255), edge_color, 1))  # TODO: Constants?
 
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2

@@ -176,7 +176,7 @@ class TextToken(sw.text.Text):
                          x=[origin[0]],
                          y=[origin[1]],
                          fill=colorstr(color),
-                         font_family='Courier New, Courier, monospace',
+                         font_family='Courier New, Courier, monospace',    # TODO: Constants?
                          font_size=size,
                          text_rendering='inherit')
 
@@ -186,7 +186,7 @@ class TextToken(sw.text.Text):
         Returns:
             int: The width of the text.
         """
-        return len(self.text) * 6
+        return len(self.text) * 6  # TODO: Why 6 Documentation!
 
 
 def colorstr(rgb: tuple) -> str:

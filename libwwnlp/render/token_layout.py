@@ -61,7 +61,7 @@ class TokenLayout:
     def __init__(self):
         """Initialize a token layout with suitable default values.
         """
-        self.row_height = 14
+        self.row_height = 14  # TODO: Constants?
         self.base_line = 0
         self.margin = 20
         self.from_split_point = -1
@@ -111,7 +111,7 @@ class TokenLayout:
             maxx = 0
             lasty = self.base_line + self.row_height
             for prop_name in token.get_sorted_properties():
-                labelwidth = Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()
+                labelwidth = Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()  # TODO: Constants?
                 lasty += self.row_height
                 if labelwidth > maxx:
                     maxx = labelwidth
@@ -167,10 +167,10 @@ class TokenLayout:
                 lasty += self.row_height
                 curr_property_value = token.get_property(prop_name)
                 if index == 0:
-                    token_color = (0, 0, 0)  # Black
+                    token_color = (0, 0, 0)  # Black  # TODO: Constants?
                 else:
-                    token_color = (120, 120, 120)  # Grey
-                text_token = TextToken(scene, (lastx, lasty), curr_property_value, 12, token_color)
+                    token_color = (120, 120, 120)  # Grey  # TODO: Constants?
+                text_token = TextToken(scene, (lastx, lasty), curr_property_value, 12, token_color)  # TODO: Constants?
                 scene.add(text_token)
                 maxx = max(maxx, text_token.get_width())
                 self.text_layouts[(token, index+1)] = curr_property_value
@@ -179,9 +179,8 @@ class TokenLayout:
             if required_width is not None and maxx < required_width:
                 maxx = required_width
             lasty += FONT_DESC_SIZE
-            self.bounds[token] = Rectangle(scene, (lastx, self.base_line),
-                                           maxx, lasty - self.base_line,
-                                           (255, 255, 255), (0, 0, 0), 1)
+            self.bounds[token] = Rectangle(scene, (lastx, self.base_line), maxx, lasty - self.base_line,
+                                           (255, 255, 255), (0, 0, 0), 1)   # TODO: Constants?
             # scene.add(self.bounds[token])
             lastx += maxx + self.margin
             if lasty > self.height:
