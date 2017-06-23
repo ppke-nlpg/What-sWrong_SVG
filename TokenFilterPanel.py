@@ -44,22 +44,23 @@ class TokenFilterPanel:
         if len(self._list) == 0 or len(self._listModel) == 0:
             return
         for index in range(0, len(self._list)):
-            t = str(self._listModel[index])
+            t = self._listModel[index]
             if self._list.isItemSelected(self._list.item(index)):
-                self._tokenFilter.remove_forbidden_token_property(name=t)
+                if t in self._tokenFilter.forbidden_token_properties:
+                    self._tokenFilter.forbidden_token_properties.remove(t)
             else:
-                self._tokenFilter.add_forbidden_token_property(name=t)
+                self._tokenFilter.forbidden_token_properties.add(t)
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
     def allowedChanged(self, text):  # keyReleased
-        self._tokenFilter.clear_allowed_token_propvals()
+        self._tokenFilter.allowed_token_propvals.clear()
         for curr_property in text.split(','):
             if len(curr_property) > 0:
                 m = interval.match(curr_property)
                 if m:
                     curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                self._tokenFilter.add_allowed_token_propval(curr_property)
+                self._tokenFilter.allowed_token_propvals.add(curr_property)
         self._canvas.update_nlp_graphics()
 
     def wholeWordActionPerformed(self, value):
@@ -73,10 +74,10 @@ class TokenFilterPanel:
         self._updating = True
         self._listModel.clear()
         self._list.clear()
-        for index, p in enumerate(sorted(self._canvas.usedProperties, key=attrgetter("name"))):
-            self._listModel.append(p)
-            self._list.addItem(p.name)
-            if p not in self._tokenFilter.forbidden_token_properties and \
+        for index, p_name in enumerate(sorted(self._canvas.usedProperties)):
+            self._listModel.append(p_name)
+            self._list.addItem(p_name)
+            if p_name not in self._tokenFilter.forbidden_token_properties and \
                     not self._list.isItemSelected(self._list.item(index)):
                 self._list.setItemSelected(self._list.item(index), True)
             else:

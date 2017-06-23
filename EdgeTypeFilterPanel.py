@@ -76,52 +76,41 @@ class EdgeTypeFilterPanel:
             if len(self._types) == 0 or len(self._listModel) == 0:
                 return
             for index in range(0, len(self._types)):
-                t = str(self._listModel[index])
-                self._justChanged.add(t)
+                edge_type = str(self._listModel[index])
+                self._justChanged.add(edge_type)
                 if self._types.isItemSelected(self._types.item(index)):
-                    self._edgeTypeFilter.add_allowed_edge_type(t)
+                    self._edgeTypeFilter.allowed_edge_types.add(edge_type)
                 else:
-                    self._edgeTypeFilter.remove_allowed_edge_type(t)
+                    if edge_type in self._edgeTypeFilter.allowed_edge_types:
+                        self._edgeTypeFilter.allowed_edge_types.remove(edge_type)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._types.itemSelectionChanged.connect(valueChanged)
 
         # add false positive/negative and match check buttons
         def matchActionPerformed(value):
-            if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
-            else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_Match")
-            self._justChanged.clear()
-            self._nlpCanvas.update_nlp_graphics()
+            self._justChanged.clear()  # Why we need this here?
+            self._perform_match_action(value, "eval_status_Match")
+
         self._matches.stateChanged.connect(matchActionPerformed)
 
         def negativeActionPerformed(value):
-            if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
-            else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_FN")
+            self._perform_match_action(value, "eval_status_FN")
 
-            self._nlpCanvas.update_nlp_graphics()
         self._falseNegatives.stateChanged.connect(negativeActionPerformed)
 
         def positiveActionPerformed(value):
-            if value == 2:  # Checked
-                self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
-            else:
-                self._edgeTypeFilter.remove_allowed_edge_property("eval_status_FP")
-
-            self._nlpCanvas.update_nlp_graphics()
+            self._perform_match_action(value, "eval_status_FP")
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
 
-    """
-     * Separates the types in <code>usedTypes</code> into prefix and postfix types.
-     *
-     * @param usedTypes    the types to separate.
-     * @param edge_types  the target set for prefix types.
-     * @param edge_properties the target set for postfix types.
-    """
-    # Incorporated into updateTypesList
+    def _perform_match_action(self, value, eval_status):
+        if value == 2:  # Checked
+            self._edgeTypeFilter.allowed_edge_properties.add(eval_status)
+        else:
+            if eval_status in self._edgeTypeFilter.allowed_edge_properties:
+                self._edgeTypeFilter.allowed_edge_properties.remove(eval_status)
+
+        self._nlpCanvas.update_nlp_graphics()
 
     """
      * Updates the set of selected (set to be visible) edge types.
@@ -129,33 +118,27 @@ class EdgeTypeFilterPanel:
     def updateSelection(self):
         # TODO: deselecting items?
         for index in range(0, len(self._types)):
-            t = str(self._types.item(index))
-            if self._edgeTypeFilter.allows_edge_type(t):
+            edge_type = str(self._types.item(index))
+            if edge_type in self._edgeTypeFilter.allowed_edge_types:
                 self._types.setItemSelected(self._types.item(index), True)
+
+    @staticmethod
+    def _update_match_lists(edge_props, allowed_edge_props, match_class, name):
+        match_class.setEnabled(name in edge_props)
+        allowed_edge_props.add(name)
+        match_class.setCheckState(checkbox_val[name in allowed_edge_props])  # Checked(2) Not(0)
 
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.
     """
     def updateTypesList(self):
-        edge_types = self._nlpCanvas.usedTypes
-        edge_properties = self._nlpCanvas.used_edge_properties
-        # Separate Types...
-
-        # allTypes = list(sorted(edge_types))  # ArrayList<String>()
-
-        # XXX Sholuld be enabled automatically
-        self._falseNegatives.setEnabled("eval_status_FP" in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status_FP")
-        self._falseNegatives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FP")])  # Checked(2) Not(0)
-
-        self._falsePositives.setEnabled("eval_status_FN" in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status_FN")
-        self._falsePositives.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_FN")])  # Checked(2) Not(0)
-
-        self._matches.setEnabled("eval_status_Match" in edge_properties)
-        self._edgeTypeFilter.add_allowed_edge_property("eval_status_Match")
-        self._matches.setCheckState(checkbox_val[self._edgeTypeFilter.allows_edge_property("eval_status_Match")])  # Checked(2), Not(0)
-
+        # TODO: Sholuld be enabled automatically
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+                                 self._falsePositives, "eval_status_FP")
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+                                 self._falseNegatives, "eval_status_FN")
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+                                 self._matches, "eval_status_Match")
         self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
 
         # self._types.clear()  # This makes too much refreshing

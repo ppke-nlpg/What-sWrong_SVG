@@ -38,7 +38,7 @@ class Filter:
             true) or needs to have one value that contains a string in this set
             (otherwise). The set can also contain ranges, in that case a token
             matches this value if it has an `Index` property with a numerical
-            value within the range. See also #token_has_allowed_prop.
+            value within the range. See also #_token_has_allowed_prop.
         propvals_whole_word (bool): Should tokens be allowed only if they have a
             property value that equals one of the allowed strings or is it
             sufficient if one value contains one of the allowed strings.
@@ -72,7 +72,7 @@ class Filter:
                                        'eval_status_FP',
                                        'eval_status_Match'}
         self.forbidden_token_properties = set()
-        self.allowed_token_propvals = allowed_token_propvals or {''}  # TODO: handle properly
+        self.allowed_token_propvals = allowed_token_propvals
         self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
@@ -80,171 +80,8 @@ class Filter:
         self.allowed_edge_properties = allowed_edge_properties
         self.allowed_labels = allowed_labels
 
-    def add_allowed_token_propval(self, string: str):
-        """Add an allowed token property value.
-
-        Args:
-            string (str): The allowed token property value.
-        """
-        self.allowed_token_propvals.add(string)
-
-    def remove_allowed_token_propval(self, property_value: str):
-        """Remove an allowed token property value.
-
-        Args:
-            property_value (str): The token property value to remove from the
-            set of allowed property values.
-        """
-        self.allowed_token_propvals.remove(property_value)
-
-    def clear_allowed_token_propvals(self):
-        """Remove all allowed strings.
-
-        In this state the filter allows all tokens.
-        """
-        self.allowed_token_propvals.clear()
-
-    def add_forbidden_token_property(self, name: str):
-        """Add a property that is forbidden.
-
-        The corresponding values are removed from each token.
-
-        Args:
-            name (str): The name of the property to forbid.
-        """
-        self.forbidden_token_properties.add(TokenProperty(name))
-
-    def remove_forbidden_token_property(self, name: str):
-        """Remove a property that is forbidden.
-
-        The corresponding values will be shown again.
-
-        Args:
-            name (str): The name of the property to show again.
-        """
-        prop = TokenProperty(name)
-        if prop in self.forbidden_token_properties:
-            self.forbidden_token_properties.remove(prop)
-
-    def allows_property(self, property_value: str) -> bool:
-        """Returns whether the given value is an allowed property value.
-
-        Args:
-            property_value (str): The value to test.
-
-        Returns:
-            bool: Whether the given value is an allowed property value.
-        """
-        return property_value in self.allowed_token_propvals
-
-    def clear_allowed_property(self):
-        """Removes all allowed words.
-
-        Note that if no allowed words are specified the filter changes it's
-        behaviour and allows all edges.
-        """
-        self.allowed_token_propvals.clear()
-
-    def allows_label(self, label: str):
-        """Checks whether the filter allows the given label
-
-        Args:
-            label: The label substring we want to check whether the filter allows it.
-
-        Returns:
-            bool: True iff the filter allows the given label substring.
-        """
-        return label in self.allowed_labels
-
-    def add_allowed_label(self, label: str):
-        """Adds an allowed label substring.
-
-        Args:
-            label (str): The label that should be allowed.
-        """
-        self.allowed_labels.add(label)
-
-    def remove_allowed_label(self, label: str):
-        """Removes an allowed label substring.
-
-        Args:
-            label (str): The label substring to disallow.
-        """
-        self.allowed_labels.remove(label)
-
-    def clear_allowed_label(self):
-        """Removes all allowed label substrings.
-
-        In this state the filter allows all labels.
-        """
-        self.allowed_labels.clear()
-
-    def add_allowed_edge_type(self, edge_type: str):
-        """Adds an allowed prefix type.
-
-        This causes the filter to accept edges with the given prefix type.
-
-        Args:
-            edge_type (str): The allowed prefix type.
-        """
-        self.allowed_edge_types.add(edge_type)
-
-    def add_allowed_edge_property(self, prop: str):
-        """Adds an allowed property--value pair.
-
-        This causes the filter to accept edges with the given property value.
-
-        Args:
-            prop (str): The property to add.
-        """
-        self.allowed_edge_properties.add(prop)
-
-    def remove_allowed_edge_type(self, edge_type: str):
-        """Disallows the given prefix type.
-
-        This causes the filter to stop accepting edges with the given type.
-
-        Args:
-            edge_type (str): The prefix type to disallow.
-        """
-        if edge_type in self.allowed_edge_types:
-            self.allowed_edge_types.remove(edge_type)
-
-    def remove_allowed_edge_property(self, prop: str):
-        """Disallows the given edge property.
-
-        This causes the filter to stop accepting edges with the given property.
-
-        Args:
-            prop (str): The property name to disallow.
-        """
-        if prop in self.allowed_edge_properties:
-            self.allowed_edge_properties.remove(prop)
-
-    def allows_edge_type(self, edge_type: str):
-        """Does the filter allow the given
-
-        Args:
-            edge_type (str): The type to check whether it is allowed as edge type.
-
-        Returns:
-            bool: True iff the given type is an allowed edge type.
-        """
-        return edge_type in self.allowed_edge_types
-
-    def allows_edge_property(self, prop):
-        """Does the filter allow the given property and value combination.
-
-        Args:
-            prop (str): The property name to check whether it is allowed.
-
-        Returns:
-            bool: True iff the given property and values is allowed.
-        """
-        return prop in self.allowed_edge_properties
-
     @staticmethod
-    def calculate_paths(edges: set) -> set:
+    def _calculate_paths(edges: set) -> set:
         """Calculates all paths between all tokens of the provided edges.
 
         Note on types:
@@ -292,7 +129,7 @@ class Filter:
 
         return result
 
-    def token_has_allowed_prop(self, token):
+    def _token_has_allowed_prop(self, token):
         """Whether this filter should keep a specific token based on its prop. vals.
 
         A token is to be kept if
@@ -308,17 +145,19 @@ class Filter:
         Returns:
             bool: True iff the token should be kept.
         """
-        for prop in token.get_properties():
-            prop_name = prop.name
-            prop_val = token.get_property(prop)
-            for allowed in self.allowed_token_propvals:
-                if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
-                   (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
-                                                        not self.propvals_whole_word and allowed in prop_val)):
-                    return True
+        for prop_name in token.get_properties():
+            prop_val = token.get_property_by_name(prop_name)
+            if len(self.allowed_token_propvals) > 0:
+                for allowed in self.allowed_token_propvals:
+                    if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
+                       (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
+                                                            not self.propvals_whole_word and allowed in prop_val)):
+                        return True
+            else:
+                return True
         return False
 
-    def edge_has_allowed_tokprop(self, edge):
+    def _edge_has_allowed_tokprop(self, edge):
         """Is the edge allowed on the basis of its token properties.
 
         Args:
@@ -328,9 +167,9 @@ class Filter:
             bool: True iff at least one of the edge's end tokens has an allowed
             properties.
         """
-        return self.token_has_allowed_prop(edge.start) or self.token_has_allowed_prop(edge.end)
+        return self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)
 
-    def edge_type_is_allowed(self, edge):
+    def _edge_type_is_allowed(self, edge):
         """Is the edge allowed on the basis of its type.
 
         Args:
@@ -341,7 +180,7 @@ class Filter:
         """
         return edge.edge_type == "" or edge.edge_type in self.allowed_edge_types
 
-    def edge_properties_are_allowed(self, edge):
+    def _edge_properties_are_allowed(self, edge):
         """Is the edge allowed on the basis of its properties.
 
         Args:
@@ -352,7 +191,7 @@ class Filter:
         """
         return edge.properties.issubset(self.allowed_edge_properties)
 
-    def edge_label_is_allowed(self, edge):
+    def _edge_label_is_allowed(self, edge):
         """Is the edge allowed on the basis of its label.
 
         Args:
@@ -394,15 +233,15 @@ class Filter:
         """
         edges = original.get_edges()
         if len(self.allowed_token_propvals) > 0:
-            edges = {edge for edge in edges if self.edge_has_allowed_tokprop(edge)}
+            edges = {edge for edge in edges if self._edge_has_allowed_tokprop(edge)}
             if self.use_path:  # Only allow edges on the path of tokens having allowed props
-                edges = self.calculate_paths(edges)
+                edges = self._calculate_paths(edges)
             if len(self.allowed_labels) > 0:
-                edges = {edge for edge in edges if self.edge_label_is_allowed(edge)}
+                edges = {edge for edge in edges if self._edge_label_is_allowed(edge)}
             if len(self.allowed_edge_types) > 0:
-                edges = {edge for edge in edges if self.edge_type_is_allowed(edge)}
+                edges = {edge for edge in edges if self._edge_type_is_allowed(edge)}
             if len(self.allowed_edge_properties) > 0:
-                edges = {edge for edge in edges if self.edge_properties_are_allowed(edge)}
+                edges = {edge for edge in edges if self._edge_properties_are_allowed(edge)}
 
         # Filter tokens
         if len(self.allowed_token_propvals) == 0 and not self.collapse:
@@ -415,7 +254,7 @@ class Filter:
 
             # First filter out tokens not containing allowed strings
             if len(self.allowed_token_propvals) > 0:
-                tokens = {token for token in original.tokens if self.token_has_allowed_prop(token)}
+                tokens = {token for token in original.tokens if self._token_has_allowed_prop(token)}
 
             if self.collapse:
                 for edge in edges:

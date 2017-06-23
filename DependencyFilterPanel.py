@@ -21,25 +21,24 @@ class DependencyFilterPanel:
          * @param edgeLabelFilter The EdgeTypeAndLabelFilter to control through this panel.
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
-    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: Filter,
-                 edgeTokenFilter: Filter):
+    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: Filter, edgeTokenFilter: Filter):
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):
-            edgeLabelFilter.clear_allowed_label()
+            edgeLabelFilter.allowed_labels.clear()
             split = text.split(",")
             for label in split:
-                edgeLabelFilter.add_allowed_label(label)
+                edgeLabelFilter.allowed_labels.add(label)
             nlpCanvas.update_nlp_graphics()
         labelField.textEdited.connect(labelFieldChanged)
 
         tokenTextField = gui.edgeFilterTokenLineEdit
 
         def tokenTextFieldChanged(text):
-            edgeTokenFilter.clear_allowed_property()
+            edgeTokenFilter.allowed_token_propvals.clear()
             split = text.split(",")
             for token_property in split:
-                edgeTokenFilter.add_allowed_token_propval(token_property)
+                edgeTokenFilter.allowed_token_propvals.add(token_property)
             nlpCanvas.update_nlp_graphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 

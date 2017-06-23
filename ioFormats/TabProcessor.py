@@ -692,18 +692,6 @@ class CoNLL2008:
     """
     name = "CoNLL 2008"
 
-    @property
-    def ne(self):
-        return TokenProperty("Named Entity", 10)
-
-    @property
-    def bbn(self):
-        return TokenProperty("NamedEntity BBN", 11)
-
-    @property
-    def wn(self):
-        return TokenProperty("WordNet", 12)
-
     """
      * Returns the name of this processor.
      *
@@ -767,9 +755,9 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             instance.add_token(). \
-                add_property(token_property=self.ne, value=row[0]). \
-                add_property(token_property=self.bbn, value=row[1]). \
-                add_property(token_property=self.wn, value=row[2])
+                add_property("Named Entity", 10, row[0]). \
+                add_property("NamedEntity BBN", 11, value=row[1]). \
+                add_property("WordNet", 12, value=row[2])
         index = 1
         for row in rows:
             row = row.strip().split()
@@ -804,6 +792,7 @@ class CoNLL2009:
     """
     name = "CoNLL 2009"
 
+    """ TODO: Not used... Do we need Them?
     @property
     def ne(self) -> TokenProperty:
         return TokenProperty("Named Entity", 10)
@@ -815,7 +804,7 @@ class CoNLL2009:
     @property
     def wn(self) -> TokenProperty:
         return TokenProperty("WordNet", 12)
-
+    """
     """
      * Returns the name of this processor.
      *

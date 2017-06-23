@@ -37,6 +37,17 @@ class Token:
         """
         return self.token_properties[token_property]
 
+    def get_property_by_name(self, name: str) -> str:
+        """Get the value of the given property.
+
+        Args:
+            name (str): The property name to get the value for.
+
+        Returns:
+            The value of the given property.
+        """
+        return self.token_properties[TokenProperty(name)]
+
     def remove_property(self, name):
         """Remove the property value with the given name.
 
@@ -46,17 +57,19 @@ class Token:
         del self.token_properties[TokenProperty(name=name)]
         return self
 
-    def add_property(self, token_property: TokenProperty, value: str):
+    def add_property(self, name: str, level: int, value: str):
         """Add a property with the given value.
 
         Args:
-            token_property (TokenProperty): The property to be added.
+            name (str): The property name to be added.
+            level (str): The property level to be added.
             value (str): The value of the property to be added.
 
         Returns:
             Token: The token itself.
+
         """
-        self.token_properties[token_property] = value
+        self.token_properties[TokenProperty(name, level)] = value
         return self
 
     def add_named_prop(self, name: str, value: str, level=None):
@@ -95,7 +108,7 @@ class Token:
         Returns:
             tuple: A tuple containing the token's properties.
         """
-        return tuple(self.token_properties.keys())
+        return tuple((prop.name for prop in self.token_properties.keys()))
 
     def propvals_contain(self, substrings: set, whole_word: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
@@ -133,7 +146,7 @@ class Token:
                 merge as they are forbidden.
         """
         for curr_property, value in token.token_properties.items():
-            if forbidden_token_properties is None or curr_property not in forbidden_token_properties:
+            if forbidden_token_properties is None or curr_property.name not in forbidden_token_properties:
                 self.token_properties[curr_property] = value
 
     def __eq__(self, other):

@@ -539,7 +539,7 @@ class CorpusNavigator:
             instance = self._indices[index]
             sentence = ""
             for token in instance.tokens:
-                word = token.get_property(TokenProperty("Word"))
+                word = token.get_property_by_name("Word")
                 if sentence == "":
                     sentence += " " + word
                 else:
@@ -703,16 +703,16 @@ class CorpusNavigator:
             example.add_dependency(1, 4, "A1", "role")
             example.add_span(1, 1, "add.1", "sense")
             self._canvas.set_nlp_instance(example)
-            self._edgeTypeFilter.add_allowed_edge_type("dep")
-            self._edgeTypeFilter.add_allowed_edge_type("role")
-            self._edgeTypeFilter.add_allowed_edge_type("sense")
-            self._edgeTypeFilter.add_allowed_edge_type("ner")
-            self._edgeTypeFilter.add_allowed_edge_type("chunk")
-            self._edgeTypeFilter.add_allowed_edge_type("pos")
-            self._edgeTypeFilter.add_allowed_edge_type("align")
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status_FP')
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status_FN')
-            self._edgeTypeFilter.add_allowed_edge_property('eval_status_Match')
+            self._edgeTypeFilter.allowed_edge_types.add("dep")
+            self._edgeTypeFilter.allowed_edge_types.add("role")
+            self._edgeTypeFilter.allowed_edge_types.add("sense")
+            self._edgeTypeFilter.allowed_edge_types.add("ner")
+            self._edgeTypeFilter.allowed_edge_types.add("chunk")
+            self._edgeTypeFilter.allowed_edge_types.add("pos")
+            self._edgeTypeFilter.allowed_edge_types.add("align")
+            self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FP')
+            self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FN')
+            self._edgeTypeFilter.allowed_edge_properties.add('eval_status_Match')
 
             self._canvas.renderer.set_edge_type_order("pos", 0)
             self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)

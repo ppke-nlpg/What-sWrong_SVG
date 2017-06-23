@@ -205,7 +205,7 @@ class NLPInstance:
         """
         token = Token(len(self.tokens))
         for prop, val in props_and_vals:
-            token.add_property(prop, val)
+            token.add_property(prop.name, prop.level, val)
         self.tokens.append(token)
         self.token_map[token.index] = token
 
