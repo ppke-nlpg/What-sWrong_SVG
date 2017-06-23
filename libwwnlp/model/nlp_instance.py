@@ -40,10 +40,8 @@ class NLPInstance:
             alignment).
     """
 
-    def __init__(self, tokens: tuple or list=None,
-                 edges: set or frozenset=None,
-                 render_type: RenderType=RenderType.single,
-                 split_points: tuple or list=None):
+    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None,
+                 render_type: RenderType=RenderType.single, split_points: tuple or list=None):
         """Create an NLPInstance with the given tokens and edges.
 
         The passed collections will be copied and not changed.
@@ -68,8 +66,7 @@ class NLPInstance:
         if split_points is not None:
             self.split_points.extend(split_points)
 
-    def add_edge(self, start: int, end: int, label: str=None,
-                 edge_type: str=None, render_type: EdgeRenderType=None,
+    def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None, render_type: EdgeRenderType=None,
                  desc=None, note: str=None, properties: set=None):
         """Creates and adds an edge with the given properties.
 
@@ -91,26 +88,11 @@ class NLPInstance:
         """
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end],
-                                   label, edge_type, note, render_type,
-                                   desc, properties))
+                                   label, edge_type, note, render_type, desc, properties))
         else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
-                           format(start, end))
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
 
-    def is_valid_edge(self, start, end):
-        """Returns whether a valid edge can be drawn between two positions.
-
-        Args:
-            start (int): The start index of the edge.
-            end (int): The end index of the edge.
-
-        Returns:
-            bool: True iff there are tokens at the two given positions.
-        """
-        return start in self.token_map and end in self.token_map
-
-    def add_span(self, start: int, end: int, label: str, span_type: str,
-                 desc: str=None, properties=None):
+    def add_span(self, start: int, end: int, label: str, span_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with rendertype RenderType#span.
 
         Args:
@@ -129,14 +111,11 @@ class NLPInstance:
         """
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end], label,
-                                   span_type, render_type=EdgeRenderType.span,
-                                   description=desc, properties=properties))
+                                   span_type, render_type=EdgeRenderType.span, description=desc, properties=properties))
         else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
-                           format(start, end))
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
 
-    def add_dependency(self, start: int, end: int, label, dep_type: str,
-                       desc: str=None, properties=None):
+    def add_dependency(self, start: int, end: int, label, dep_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with render type RenderType#dependency.
 
         Args:
@@ -154,60 +133,9 @@ class NLPInstance:
         """
         if self.is_valid_edge(start, end):
             self.edges.append(Edge(self.token_map[start], self.token_map[end],
-                                   label, dep_type, description=desc,
-                                   properties=properties))
+                                   label, dep_type, description=desc, properties=properties))
         else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".
-                           format(start, end))
-
-    def add_tokens(self, tokens: list):
-        """Adds the given collection of tokens to this instance.
-
-        Args:
-            tokens (list): The tokens to add.
-        """
-        self.tokens.extend(tokens)
-        for token in tokens:
-            self.token_map[token.index] = token
-
-    def add_edges(self, edges: list):
-        """Adds the given collection of edges to this instance.
-
-        Args:
-            edges (tuple): The edges to add.
-        """
-        self.edges.extend(edges)
-
-    def merge(self, nlp):
-        """Merges the given instance with this instance.
-
-        A merge will add for every token i all properties of the token i of the
-        passed instance ``nlp``. It will also add every edge between i and i in
-        the given instance ``nlp`` as an edge between the tokens i and j of
-        this instance, using the same type, label and rendertype as the
-        original edge.
-
-        Args:
-            nlp (NLPInstance): The instance to merge into this instance.
-        """
-        for i in range(0, min(len(self.tokens), len(nlp.tokens))):
-            self.tokens[i].merge(nlp.tokens[i])
-        for edge in nlp.edges:
-            self.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label,
-                          edge_type=edge.edge_type, render_type=edge.render_type,
-                          note=edge.note, properties=edge.properties)
-
-    def add_token_with_properties(self, *props_and_vals):
-        """Add a token that has the provided properties and values.
-
-        Args:
-            props_and_vals: (<token_property>, <value>) pairs.
-        """
-        token = Token(len(self.tokens))
-        for prop, val in props_and_vals:
-            token.add_property(prop.name, prop.level, val)
-        self.tokens.append(token)
-        self.token_map[token.index] = token
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
 
     def add_token(self, index: int=None) -> Token:
         """Add a token at the given index.
@@ -240,23 +168,39 @@ class NLPInstance:
 
         return vertex
 
-    def consistify(self):
-        """Make the internal representations of the token sequence consistent.
-
-        If tokens were added with NLPInstance#add_token() this method ensures
-        that all internal representations of the token sequence are consistent.
-        """
-        self.tokens.extend(self.token_map.values())
-        self.tokens.sort()
-
-    def add_split_point(self, token_index: int):
-        """Add a split point token index.
+    def add_edges(self, edges: list):
+        """Adds the given collection of edges to this instance.
 
         Args:
-            token_index (int): A token index at which the instance should be
-            split.
+            edges (tuple): The edges to add.
         """
-        self.split_points.append(token_index)
+        for edge in edges:
+            if not self.is_valid_edge(edge.start, edge.end):
+                raise KeyError("Couldn't add edge {}: no token at positions {} and {}.".
+                               format(edge, edge.start, edge.end))
+        self.edges.extend(edges)
+
+    def add_tokens(self, tokens: list):
+        """Adds the given collection of tokens to this instance.
+
+        Args:
+            tokens (list): The tokens to add.
+        """
+        self.tokens.extend(tokens)
+        for token in tokens:
+            self.token_map[token.index] = token
+
+    def add_token_with_properties(self, *props_and_vals):
+        """Add a token that has the provided properties and values.
+
+        Args:
+            props_and_vals: (<token_property>, (<level>, <value>)) pairs.
+        """
+        token = Token(len(self.tokens))
+        for name, (level, val) in props_and_vals:
+            token.add_property(name, val, level)
+        self.tokens.append(token)
+        self.token_map[token.index] = token
 
     def get_edges(self, render_type: RenderType=None) -> frozenset:
         """Return all edges of this instance with a given render_type.
@@ -270,8 +214,7 @@ class NLPInstance:
             If no render type is specified then the set of all edges is
             returned.
         """
-        return frozenset({e for e in self.edges if
-                          e.render_type == render_type or render_type is None})
+        return frozenset({edge for edge in self.edges if edge.render_type == render_type or render_type is None})
 
     def get_token(self, index: int) -> Token:
         """Return the token at the given index.
@@ -283,6 +226,45 @@ class NLPInstance:
             Token: The token at the given index.
         """
         return self.token_map[index]
+
+    def is_valid_edge(self, start, end):
+        """Returns whether a valid edge can be drawn between two positions.
+
+        Args:
+            start (int): The start index of the edge.
+            end (int): The end index of the edge.
+
+        Returns:
+            bool: True iff there are tokens at the two given positions.
+        """
+        return start in self.token_map and end in self.token_map
+
+    def merge(self, nlp):
+        """Merges the given instance with this instance.
+
+        A merge will add for every token i all properties of the token i of the
+        passed instance ``nlp``. It will also add every edge between i and i in
+        the given instance ``nlp`` as an edge between the tokens i and j of
+        this instance, using the same type, label and rendertype as the
+        original edge.
+
+        Args:
+            nlp (NLPInstance): The instance to merge into this instance.
+        """
+        for i in range(min(len(self.tokens), len(nlp.tokens))):
+            self.tokens[i].merge(nlp.tokens[i])
+        for edge in nlp.edges:
+            self.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, edge_type=edge.edge_type,
+                          render_type=edge.render_type, note=edge.note, properties=edge.properties)
+
+    def consistify(self):
+        """Make the internal representations of the token sequence consistent.
+
+        If tokens were added with NLPInstance#add_token() this method ensures
+        that all internal representations of the token sequence are consistent.
+        """
+        self.tokens.extend(self.token_map.values())
+        self.tokens.sort()
 
     def __str__(self):
         """Return a string representation of this instance.
@@ -299,8 +281,7 @@ class NLPInstance:
         return "{0}\n{1}\n{2}".format(tokens, values, edges)
 
 
-def nlp_diff(gold_instance: NLPInstance,
-             guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:
+def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:
     """Calculate the difference between two NLP instances in terms of their edges.
 
     Args:
@@ -316,8 +297,7 @@ def nlp_diff(gold_instance: NLPInstance,
     """
     diff = NLPInstance()
     diff.render_type = gold_instance.render_type
-    for split_point in gold_instance.split_points:
-        diff.add_split_point(split_point)
+    diff.split_points = gold_instance.split_points[:]  # A token index at which the instance should be split.
     diff.add_tokens(gold_instance.tokens)
     gold_identities = gold_instance.get_edges()
     guess_identities = guess_instance.get_edges()
@@ -334,8 +314,7 @@ def nlp_diff(gold_instance: NLPInstance,
         else:
             prop = match_prop
         properties.add(prop)
-        diff.add_edge(start=edge.start.index, end=edge.end.index,
-                      label=edge.label, note=edge.note, edge_type=edge.edge_type,
-                      render_type=edge.render_type, desc=edge.description,
+        diff.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, note=edge.note,
+                      edge_type=edge.edge_type, render_type=edge.render_type, desc=edge.description,
                       properties=properties)
     return diff

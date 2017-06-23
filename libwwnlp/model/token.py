@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # import re # This was only needed for the commented out part in the propvals_contain method
-from operator import attrgetter
-from .token_property import TokenProperty
 
 
 class Token:
@@ -26,18 +24,7 @@ class Token:
         self.index = index
         self.token_properties = {}
 
-    def get_property(self, token_property) -> str:
-        """Get the value of the given property.
-
-        Args:
-            token_property (TokenProperty): The property to get the value for.
-
-        Returns:
-            The value of the given property.
-        """
-        return self.token_properties[token_property]
-
-    def get_property_by_name(self, name: str) -> str:
+    def get_property(self, name: str) -> str:
         """Get the value of the given property.
 
         Args:
@@ -46,33 +33,19 @@ class Token:
         Returns:
             The value of the given property.
         """
-        return self.token_properties[TokenProperty(name)]
+        if name in self.token_properties:
+            return self.token_properties[name][1]
 
-    def remove_property(self, name):
+    def remove_property(self, name: str):
         """Remove the property value with the given name.
 
         Args:
             name (str): The name of the property to remove.
         """
-        del self.token_properties[TokenProperty(name=name)]
+        del self.token_properties[name]
         return self
 
-    def add_property(self, name: str, level: int, value: str):
-        """Add a property with the given value.
-
-        Args:
-            name (str): The property name to be added.
-            level (str): The property level to be added.
-            value (str): The value of the property to be added.
-
-        Returns:
-            Token: The token itself.
-
-        """
-        self.token_properties[TokenProperty(name, level)] = value
-        return self
-
-    def add_named_prop(self, name: str, value: str, level=None):
+    def add_property(self, name: str, value: str, level=None):
         """Add a property with the given name and value.
 
         Args:
@@ -86,29 +59,16 @@ class Token:
             Token: The token itself.
         """
         level = level if level is not None else len(self.token_properties)
-        self.token_properties[TokenProperty(name, level)] = value
+        self.token_properties[name] = (level, value)
         return self
 
-    def get_sorted_properties(self) -> list:
+    def get_sorted_properties(self) -> tuple:
         """Return a list of sorted token properties.
 
         Returns:
-            list: The list of sorted token properties.
+            tuple: The list of sorted token properties.
         """
-        sorted_properties = list(sorted(self.token_properties.keys(),
-                                        key=attrgetter('level', 'name')))
-        return sorted_properties
-
-    def get_properties(self):
-        """Return all token properties.
-
-        Note:
-            To get the value of a property use Token#get_property.
-
-        Returns:
-            tuple: A tuple containing the token's properties.
-        """
-        return tuple((prop.name for prop in self.token_properties.keys()))
+        return tuple(name for lvl, name in sorted((lvl, name) for name, (lvl, _) in self.token_properties.items()))
 
     def propvals_contain(self, substrings: set, whole_word: bool=False) -> bool:
         """Check whether any of the property values contains the given strings.
@@ -123,15 +83,14 @@ class Token:
             bool: True iff there is a property value that is equal to/contains
             one of the strings in `substrings`.
         """
-        for curr_property in self.token_properties.values():
+        for _, curr_prop_val in self.token_properties.values():
             for substr in substrings:
                 # TODO: Do this properly...
                 # if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
                 #     start, end = substr.split("-")
-                #     if int(start) <= int(curr_property) <= int(end):
+                #     if int(start) <= int(curr_prop_val) <= int(end):
                 #         return True
-                if curr_property == substr or (not whole_word and substr in
-                                               curr_property):
+                if curr_prop_val == substr or (not whole_word and substr in curr_prop_val):
                     return True
         return False
 
@@ -145,9 +104,9 @@ class Token:
             forbidden_token_properties (Set[TokenProperty]): Properites not to
                 merge as they are forbidden.
         """
-        for curr_property, value in token.token_properties.items():
-            if forbidden_token_properties is None or curr_property.name not in forbidden_token_properties:
-                self.token_properties[curr_property] = value
+        for curr_prop_name, (lvl, value) in token.token_properties.items():
+            if forbidden_token_properties is None or curr_prop_name not in forbidden_token_properties:
+                self.token_properties[curr_prop_name] = (lvl, value)
 
     def __eq__(self, other):
         """Checks whether the two tokens have the same index.

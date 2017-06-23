@@ -5,7 +5,6 @@
 from NLPCanvas import NLPCanvas
 from CorpusLoader import CorpusLoader
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
-from libwwnlp.model.token_property import TokenProperty
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
@@ -539,7 +538,7 @@ class CorpusNavigator:
             instance = self._indices[index]
             sentence = ""
             for token in instance.tokens:
-                word = token.get_property_by_name("Word")
+                word = token.get_property("Word")
                 if sentence == "":
                     sentence += " " + word
                 else:
@@ -689,12 +688,12 @@ class CorpusNavigator:
             """
 
             example = NLPInstance()
-            example.add_token().add_named_prop("Word", "[root]").add_named_prop("Index", "0")
-            example.add_token().add_named_prop("Word", "Add").add_named_prop("Index", "1")
-            example.add_token().add_named_prop("Word", "a").add_named_prop("Index", "2")
-            example.add_token().add_named_prop("Word", "gold").add_named_prop("Index", "3")
-            example.add_token().add_named_prop("Word", "corpus").add_named_prop("Index", "4")
-            example.add_token().add_named_prop("Word", "!").add_named_prop("Index", "5")
+            example.add_token().add_property("Word", "[root]").add_property("Index", "0")
+            example.add_token().add_property("Word", "Add").add_property("Index", "1")
+            example.add_token().add_property("Word", "a").add_property("Index", "2")
+            example.add_token().add_property("Word", "gold").add_property("Index", "3")
+            example.add_token().add_property("Word", "corpus").add_property("Index", "4")
+            example.add_token().add_property("Word", "!").add_property("Index", "5")
             example.add_dependency(0, 1, "ROOT", "dep")
             example.add_dependency(0, 5, "PUNC", "dep")
             example.add_dependency(1, 4, "OBJ", "dep")

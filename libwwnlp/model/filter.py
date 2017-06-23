@@ -6,7 +6,6 @@ from operator import attrgetter
 
 from ..model.nlp_instance import NLPInstance
 from ..model.token import Token
-from ..model.token_property import TokenProperty
 from ..model.edge import Edge, EdgeRenderType
 
 
@@ -72,7 +71,7 @@ class Filter:
                                        'eval_status_FP',
                                        'eval_status_Match'}
         self.forbidden_token_properties = set()
-        self.allowed_token_propvals = allowed_token_propvals
+        self.allowed_token_propvals = allowed_token_propvals or {''}
         self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
@@ -145,8 +144,8 @@ class Filter:
         Returns:
             bool: True iff the token should be kept.
         """
-        for prop_name in token.get_properties():
-            prop_val = token.get_property_by_name(prop_name)
+        for prop_name in token.get_sorted_properties():
+            prop_val = token.get_property(prop_name)
             if len(self.allowed_token_propvals) > 0:
                 for allowed in self.allowed_token_propvals:
                     if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \

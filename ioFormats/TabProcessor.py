@@ -9,7 +9,6 @@ import sys
 import re
 
 from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.model.token_property import TokenProperty
 from ioFormats.CorpusFormat import CorpusFormat
 
 """
@@ -262,8 +261,8 @@ class CoNLL2000:
         for row in rows:
             chunk = row[2]
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index))
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index))
             instance.add_span(index, index, row[1], "pos")
             instance.add_span(index, index, chunk, "chunk (BIO)")
             index += 1
@@ -334,8 +333,8 @@ class CoNLL2002:
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index))
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index))
             instance.add_span(index, index, row[1], "ner (BIO)")
             index += 1
 
@@ -405,8 +404,8 @@ class CoNLL2003:
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index))
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index))
 
             instance.add_span(index, index, row[1], "pos")
             instance.add_span(index, index, row[2], "chunk (BIO")
@@ -479,8 +478,8 @@ class CoNLL2004:
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index))
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -557,8 +556,8 @@ class CoNLL2005:
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index))
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index))
             index += 1
         predicateCount = 0
         index = 0
@@ -632,16 +631,16 @@ class CoNLL2006:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.add_token().add_named_prop("Word", "-Root-")
+        instance.add_token().add_property("Word", "-Root-")
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[1]).\
-                add_named_prop(name="Index", value=row[0]).\
-                add_named_prop(name="Lemma", value=row[2]).\
-                add_named_prop(name="CPos", value=row[3]).\
-                add_named_prop(name="Pos", value=row[4]).\
-                add_named_prop(name="Feats", value=row[5])
+                add_property(name="Word", value=row[1]).\
+                add_property(name="Index", value=row[0]).\
+                add_property(name="Lemma", value=row[2]).\
+                add_property(name="CPos", value=row[3]).\
+                add_property(name="Pos", value=row[4]).\
+                add_property(name="Feats", value=row[5])
         for row in rows:
             row = row.strip().split()
             # dependency
@@ -650,7 +649,7 @@ class CoNLL2006:
                 instance.add_dependency(start=int(row[6]), end=mod, label=row[7], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
-                instance.tokens[mod].add_named_prop("DepMissing", "missing")
+                instance.tokens[mod].add_property("DepMissing", "missing")
             # role
         return instance
 
@@ -710,18 +709,18 @@ class CoNLL2008:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.add_token().add_named_prop("Word", "-Root-")
+        instance.add_token().add_property("Word", "-Root-")
         predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[1]).\
-                add_named_prop(name="Index", value=row[0]).\
-                add_named_prop(name="Lemma", value=row[2]).\
-                add_named_prop(name="Pos", value=row[3]).\
-                add_named_prop(name="Split Form", value=row[5]).\
-                add_named_prop(name="Split Lemma", value=row(6)).\
-                add_named_prop(name="Split PoS", value=row[7])
+                add_property(name="Word", value=row[1]).\
+                add_property(name="Index", value=row[0]).\
+                add_property(name="Lemma", value=row[2]).\
+                add_property(name="Pos", value=row[3]).\
+                add_property(name="Split Form", value=row[5]).\
+                add_property(name="Split Lemma", value=row(6)).\
+                add_property(name="Split PoS", value=row[7])
             if row[10] != "_":
                 index = int(row[0])
                 predicates.append(index)
@@ -755,9 +754,9 @@ class CoNLL2008:
         for row in rows:
             row = row.strip().split()
             instance.add_token(). \
-                add_property("Named Entity", 10, row[0]). \
-                add_property("NamedEntity BBN", 11, value=row[1]). \
-                add_property("WordNet", 12, value=row[2])
+                add_property("Named Entity", row[0], 10). \
+                add_property("NamedEntity BBN", row[1], 11). \
+                add_property("WordNet", row[2], 12)
         index = 1
         for row in rows:
             row = row.strip().split()
@@ -823,19 +822,19 @@ class CoNLL2009:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.add_token().add_named_prop(name="Word", value="-Root-")
+        instance.add_token().add_property(name="Word", value="-Root-")
         predicates = []  # ArrayList<Integer>()
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[1]).\
-                add_named_prop(name="Index", value=row[0]).\
-                add_named_prop(name="Lemma", value=row[2]).\
-                add_named_prop(name="PLemma", value=row[3]).\
-                add_named_prop(name="PoS", value=row[4]).\
-                add_named_prop(name="PPoS", value=row[5]).\
-                add_named_prop(name="Feat", value=row[6]).\
-                add_named_prop(name="PFeat", value=row[7])
+                add_property(name="Word", value=row[1]).\
+                add_property(name="Index", value=row[0]).\
+                add_property(name="Lemma", value=row[2]).\
+                add_property(name="PLemma", value=row[3]).\
+                add_property(name="PoS", value=row[4]).\
+                add_property(name="PPoS", value=row[5]).\
+                add_property(name="Feat", value=row[6]).\
+                add_property(name="PFeat", value=row[7])
             if row[13] != "_":
                 index = int(row[0])
                 predicates.append(index)
@@ -914,14 +913,14 @@ class MaltTab:
     @staticmethod  # XXX Currently static but maybe later it will be changed...
     def create(rows):
         instance = NLPInstance()
-        instance.add_token().add_named_prop(name="Word", value="-Root-")
+        instance.add_token().add_property(name="Word", value="-Root-")
         index = 1
         for row in rows:
             row = row.strip().split()
             instance.add_token().\
-                add_named_prop(name="Word", value=row[0]).\
-                add_named_prop(name="Index", value=str(index)).\
-                add_named_prop(name="Pos", value=row[1])
+                add_property(name="Word", value=row[0]).\
+                add_property(name="Index", value=str(index)).\
+                add_property(name="Pos", value=row[1])
             index += 1
         mod = 1
         for row in rows:
@@ -931,7 +930,7 @@ class MaltTab:
                 instance.add_dependency(start=int(row[2]), end=mod, label=row[3], dep_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
-                instance.tokens[mod].add_named_prop("DepMissing", "missing")
+                instance.tokens[mod].add_property("DepMissing", "missing")
             # role
             mod += 1
         return instance
@@ -998,11 +997,11 @@ class CCG:
         for i in range(2, len(sentence)):
             w_t_c = sentence[i].split("|")  # In Python this is not regex
             instance.add_token().\
-                add_named_prop(name="Word", value=w_t_c[0]).\
-                add_named_prop(name="Tag", value=w_t_c[1]).\
-                add_named_prop(name="Category", value=w_t_c[2]).\
-                add_named_prop(name="Index", value=str(i-1))
-        # instance.add_token().add_named_prop("Word", "-Root-")
+                add_property(name="Word", value=w_t_c[0]).\
+                add_property(name="Tag", value=w_t_c[1]).\
+                add_property(name="Category", value=w_t_c[2]).\
+                add_property(name="Index", value=str(i - 1))
+        # instance.add_token().add_property("Word", "-Root-")
 
         mod = 1
         for row in rows:
@@ -1013,7 +1012,7 @@ class CCG:
                     instance.add_edge(start=int(row[1]), end=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
                 except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                     print("Can't parse dependency", file=sys.stderr)
-                    instance.tokens[mod].add_named_prop("DepMissing", "missing")
+                    instance.tokens[mod].add_property("DepMissing", "missing")
                 mod += 1
         return instance
 

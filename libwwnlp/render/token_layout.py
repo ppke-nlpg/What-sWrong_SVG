@@ -71,8 +71,7 @@ class TokenLayout:
         self.width = 0
         self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict,
-                              scene):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, scene):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -111,9 +110,8 @@ class TokenLayout:
             token = tokens[token_index]
             maxx = 0
             lasty = self.base_line + self.row_height
-            for prop in token.get_sorted_properties():
-                curr_property = token.get_property(prop)
-                labelwidth = Text(scene, (0, 0), curr_property, 12).get_width()
+            for prop_name in token.get_sorted_properties():
+                labelwidth = Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()
                 lasty += self.row_height
                 if labelwidth > maxx:
                     maxx = labelwidth
@@ -165,16 +163,17 @@ class TokenLayout:
             index = 0
             lasty = self.base_line
             maxx = 0
-            for prop in token.get_sorted_properties():
+            for prop_name in token.get_sorted_properties():
                 lasty += self.row_height
-                curr_property = token.get_property(prop)
+                curr_property_value = token.get_property(prop_name)
                 if index == 0:
                     token_color = (0, 0, 0)  # Black
                 else:
                     token_color = (120, 120, 120)  # Grey
-                scene.add(TextToken(scene, (lastx, lasty), curr_property, 12, token_color))
-                maxx = max(maxx, Text(scene, (0, 0), curr_property, 12, token_color).get_width())
-                self.text_layouts[(token, index+1)] = curr_property
+                text_token = TextToken(scene, (lastx, lasty), curr_property_value, 12, token_color)
+                scene.add(text_token)
+                maxx = max(maxx, text_token.get_width())
+                self.text_layouts[(token, index+1)] = curr_property_value
                 index += 1
             required_width = token_widths.get(token)
             if required_width is not None and maxx < required_width:
