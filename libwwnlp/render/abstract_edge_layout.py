@@ -3,6 +3,8 @@
 
 from collections import namedtuple
 
+DEFAULT_EDGE_COLOR = (0, 0, 0) # black
+
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
 Point = namedtuple('Point', ['x', 'y'])
@@ -124,7 +126,7 @@ class AbstractEdgeLayout:
         """
         props_with_color = edge.properties & self.property_colors.keys()
         if not props_with_color:
-            return self.type_colors.get(edge.edge_type, (0, 0, 0))  # Black
+            return self.type_colors.get(edge.edge_type, DEFAULT_EDGE_COLOR) 
         else:
             # sort first acc. to levels, second according to prop. names
             return sorted((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color)[0][2]
