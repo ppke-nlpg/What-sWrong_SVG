@@ -112,6 +112,7 @@ class Token:
         """
         for curr_property in self.token_properties.values():
             for substr in substrings:
+                # TODO: Do this properly...
                 # if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
                 #     start, end = substr.split("-")
                 #     if int(start) <= int(curr_property) <= int(end):

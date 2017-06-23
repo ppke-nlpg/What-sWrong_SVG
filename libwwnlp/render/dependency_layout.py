@@ -150,7 +150,7 @@ class DependencyLayout(AbstractEdgeLayout):
         edges_ |= all_loops
         for edge in edges_:
             edge_color = self.get_color(edge)
-            # FIXME: do that more properly!
+            # TODO: Do that more properly!
             height = self.baseline + max_height - (depth[edge] + 1) * self.height_per_level + offset[edge]
             if edge.start == edge.end:
                 height -= self.height_per_level // 2

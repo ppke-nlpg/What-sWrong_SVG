@@ -3,7 +3,7 @@
 
 from collections import namedtuple
 
-DEFAULT_EDGE_COLOR = (0, 0, 0) # black
+DEFAULT_EDGE_COLOR = (0, 0, 0)  # Black
 
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
@@ -95,9 +95,9 @@ class AbstractEdgeLayout:
             The stroke for the given type.
         """
         if edge in self.selected:
-            # TODO:
-            # return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin()
-                #             , stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase())
+            # TODO: Should we implement this here or in the decendant classes?
+            # return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin(),
+            #                    stroke.getMiterLimit(), stroke.getDashArray(), stroke.getDashPhase())
             pass
         return self.strokes[edge.edge_type]
 
@@ -125,11 +125,9 @@ class AbstractEdgeLayout:
             The color for the given edge.
         """
         props_with_color = edge.properties & self.property_colors.keys()
-        if not props_with_color:
-            return self.type_colors.get(edge.edge_type, DEFAULT_EDGE_COLOR) 
-        else:
-            # sort first acc. to levels, second according to prop. names
-            return sorted((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color)[0][2]
+        # sort first acc. to levels, second according to prop. names, if no common color use the default...
+        return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
+                   default=(None, None, self.type_colors.get(edge.edge_type, DEFAULT_EDGE_COLOR)))[2]
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.
@@ -186,7 +184,7 @@ class AbstractEdgeLayout:
         Returns: The edge that crosses circle around the given point with the given
         radius.
         """
-        # TODO
+        # TODO: Should we implement this here or in the decendant classes?
         pass
         """
         Rectangle2D cursor = new Rectangle.Double(p.getX() - radius // 2, p.getY() - radius // 2, radius, radius)
@@ -215,9 +213,9 @@ class AbstractEdgeLayout:
         if len(dominates[root]) == 0:
             return 0
         maximum = max((self.calculate_depth(dominates, depth, children) for
-                       children in dominates[root]), default=0)
-        depth[root] = maximum + 1
-        return maximum + 1
+                       children in dominates[root]), default=0) + 1
+        depth[root] = maximum
+        return maximum
 
     def get_start(self, edge):
         """Return the point at the start of the given edge.

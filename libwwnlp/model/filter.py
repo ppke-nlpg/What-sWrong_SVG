@@ -315,7 +315,7 @@ class Filter:
                 if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
                    (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
                                                         not self.propvals_whole_word and allowed in prop_val)):
-                    return True  # In Python you can't break out of multiple loops!
+                    return True
         return False
 
     def edge_has_allowed_tokprop(self, edge):
@@ -378,6 +378,14 @@ class Filter:
         of the allowed label substrings. If the set of allowed substrings is
         empty then the original set of edges is returned as is.
 
+        Note on types:
+        tokens ({Token})
+        old2new ({Token: Token})
+        new2old ({Token: Token})
+        updated_tokens ([Token])
+        updated_edges ({Edge})
+        updated_split_points ([int])
+
         Args:
             original (NLPInstance): The original nlp instance.
 
@@ -385,7 +393,6 @@ class Filter:
             NLPInstance: The filtered NLPInstance.
         """
         edges = original.get_edges()
-        # print('edges before filtering:', [e.__dict__ for e in edges])        
         if len(self.allowed_token_propvals) > 0:
             edges = {edge for edge in edges if self.edge_has_allowed_tokprop(edge)}
             if self.use_path:  # Only allow edges on the path of tokens having allowed props
@@ -396,8 +403,6 @@ class Filter:
                 edges = {edge for edge in edges if self.edge_type_is_allowed(edge)}
             if len(self.allowed_edge_properties) > 0:
                 edges = {edge for edge in edges if self.edge_properties_are_allowed(edge)}
-        # print('allowed_edge_properties:', self.allowed_edge_properties)    
-        # print('edges after filtering:', [e.__dict__ for e in edges])        
             
         # Filter tokens
         if len(self.allowed_token_propvals) == 0 and not self.collapse:
@@ -406,9 +411,9 @@ class Filter:
             updated_edges = edges
             updated_split_points = original.split_points
         else:
-            tokens = set()  # HashSet<Token>()
+            tokens = set()
 
-            # first filter out tokens not containing allowed strings
+            # First filter out tokens not containing allowed strings
             if len(self.allowed_token_propvals) > 0:
                 tokens = {token for token in original.tokens if self.token_has_allowed_prop(token)}
 
@@ -423,9 +428,9 @@ class Filter:
 
             _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
 
-            old2new = {}  # HashMap<Token, Token>()
-            new2old = {}  # HashMap<Token, Token>()
-            updated_tokens = []  # ArrayList<Token>()
+            old2new = {}
+            new2old = {}
+            updated_tokens = []
             for i, token in enumerate(_sorted):
                 new_token = Token(i)
                 new_token.merge(original.tokens[token.index],
@@ -434,15 +439,14 @@ class Filter:
                 new2old[new_token] = token
                 updated_tokens.append(new_token)
 
-            # update edges and remove those that have vertices not in the new vertex set
-            updated_edges = set()  # HashSet<Edge>()
+            # Update edges and remove those that have vertices not in the new vertex set
+            updated_edges = set()
             for e in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[e.start], end=old2new[e.end], label=e.label, note=e.note,
                                        edge_type=e.edge_type, render_type=e.render_type, description=e.description,
                                        properties=e.properties))
-            # find new split points (have to be changed because instance has
-            # new token sequence)
-            updated_split_points = []  # ArrayList<Integer>()
+            # Find new split points (have to be changed because instance has new token sequence)
+            updated_split_points = []
             new_token_index = 0
             for old_split_point in original.split_points:
                 new_token = updated_tokens[new_token_index]
@@ -457,5 +461,4 @@ class Filter:
                              edges=updated_edges,
                              render_type=original.render_type,
                              split_points=updated_split_points)
-        # print('RESULT edges:', [e.__dict__ for e in result.edges])
         return result

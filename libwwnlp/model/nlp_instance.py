@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# todo: further redesign when all part is implemented eg: merge add_dependency and add_span DONE?
+# TODO: further redesign when all part is implemented eg: merge add_dependency and add_span DONE?
 
 from enum import Enum
 
