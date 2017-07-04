@@ -38,27 +38,6 @@ class SpanLayout(AbstractEdgeLayout):
         self.orders = {}
         self.total_text_margin = 6  # TODO: Constants?
 
-    def set_type_order(self, edge_type, order):
-        """Set the order/vertical layer in which the area of a type should be drawn.
-
-        Args:
-            edge_type: The type we want to change the order for.
-            order: the order/vertical layer in which the area of the given type should
-                be drawn.
-        """
-        self.orders[edge_type] = order
-
-    def get_order(self, edge_type) -> int:
-        """Return the order/vertical layer in which the area of a type should be drawn.
-
-        Args:
-            edge_type (str): The type we want to get the order for.
-
-        Returns:
-            The order/vertical layer in which the area of the given type should be drawn.
-        """
-        return self.orders.get(edge_type)
-
     def estimate_required_token_widths(self, edges, scene):
         """Return the required token widths for self-loops.
 
@@ -111,8 +90,8 @@ class SpanLayout(AbstractEdgeLayout):
 
         for over in edges:
             for under in edges:
-                order_over = self.get_order(over.edge_type)
-                order_under = self.get_order(under.edge_type)
+                order_over = self.orders.get(over.edge_type)
+                order_under = self.orders.get(under.edge_type)
                 if over != under and (order_over is None and order_under is not None) or \
                    (order_over is not None and order_under is None) or \
                    (order_over != order_under and order_over > order_under) or \
@@ -120,7 +99,7 @@ class SpanLayout(AbstractEdgeLayout):
                     (over.covers(under) or over.covers_semi(under) or
                      over.covers_exactly(under) and
                      over.lexicographic_order(under) > 0 or
-                     over.overlaps(under) and over.get_min_index() < under.get_min_index())):
+                     over.overlaps(under) and over.covers_left_end(under))):
                     dominates[over].append(under)
         for edge in edges:
             self.calculate_depth(dominates, depth, edge)

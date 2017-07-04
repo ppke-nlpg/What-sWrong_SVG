@@ -188,29 +188,3 @@ class TokenLayout:
 
         self.width = lastx - self.margin
         return self.width, self.height
-
-    def get_property_text_layout(self, vertex, index):
-        """Returns the text layout for a given property and property index.
-
-        Args:
-            vertex: The token for which we want the text layout of a propery
-                of it.
-            index: The index of the property in the stack.
-
-        Returns:
-            The text layout of the property value at index `index` of the stack
-            for the token.
-        """
-        return self.text_layouts[(vertex, index)]
-
-    def get_bounds(self, vertex):
-        """Gets the bounds of the property value stack of the given token.
-
-        Args:
-            vertex (Token): The token for which to get the bounds for.
-
-        Returns:
-            A bounding box around the stack of property values for the given
-            token.
-        """
-        return self.bounds[vertex]

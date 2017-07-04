@@ -262,7 +262,7 @@ class Filter:
                         tokens.add(edge.end)
                     elif edge.render_type == EdgeRenderType.span:
                         for i in range(edge.start.index, edge.end.index + 1):
-                            tokens.add(original.get_token(index=i))
+                            tokens.add(original.get_token(i))
 
             _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
 

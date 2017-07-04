@@ -160,4 +160,4 @@ class SingleSentenceRenderer:
             order: The order/vertical layer in which the area of the given type
                 should be drawn.
         """
-        self._span_layout.set_type_order(edge_type, order)
+        self._span_layout.orders[edge_type] = order

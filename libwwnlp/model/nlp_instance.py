@@ -40,7 +40,7 @@ class NLPInstance:
             alignment).
     """
 
-    def __init__(self, tokens: tuple or list=None, edges: set or frozenset=None,
+    def __init__(self, tokens: list=None, edges: set or frozenset=None,
                  render_type: RenderType=RenderType.single, split_points: tuple or list=None):
         """Create an NLPInstance with the given tokens and edges.
 
@@ -58,7 +58,7 @@ class NLPInstance:
         self.render_type = render_type
         self.split_points = []
         if tokens is not None:
-            self.tokens.extend(tokens)
+            self.tokens = tokens[:]  # copy list Must copy? # TODO: This could be deleted in favour fo token_map?
             for token in tokens:
                 self.token_map[token.index] = token
         if edges is not None:
