@@ -46,7 +46,6 @@ class SingleSentenceRenderer:
         Returns:
             tuple: The width and height of the drawn object.
         """
-        dependencies = instance.get_edges(EdgeRenderType.dependency)
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
@@ -55,35 +54,22 @@ class SingleSentenceRenderer:
         # find token bounds
         token_x_bounds = self._token_layout.estimate_token_bounds(instance, widths, scene)
 
-        width = 0
-        height = 0
-
         # place dependencies on top
-
-        dim = self._dependency_layout.layout_edges(dependencies, token_x_bounds, scene)
-        height += dim[1]
-        self._start_of_tokens = height
-        if dim[0] > width:
-            width = dim[0]
+        d_width, d_height = self._dependency_layout.layout_edges(instance.get_edges(EdgeRenderType.dependency),
+                                                                 token_x_bounds, scene)
 
         # add tokens
-        scene.translate(0, dim[1])
-        dim = self._token_layout.layout(instance, widths, scene)
-
-        height += dim[1]
-        self._start_of_tokens = height
-        if dim[0] > width:
-            width = dim[0]
+        scene.translate(0, d_height)
+        t_width, t_height = self._token_layout.layout(instance, widths, scene)
+        self._start_of_tokens = t_height
 
         # add spans
+        s_width, s_height = 0, 0
         if render_spans:
-            scene.translate(0, dim[1])
-            dim = self._span_layout.layout_edges(spans, token_x_bounds, scene)
-            height += dim[1]
-            if dim[0] > width:
-                width = dim[0]
+            scene.translate(0, t_height)
+            s_width, s_height = self._span_layout.layout_edges(spans, token_x_bounds, scene)
 
-        return width, height + 1
+        return max(d_width, t_width, s_width), sum((d_height, t_height, s_height, 1))  # TODO: Why +1?
 
     def get_edge_at(self, point, radius):
         """

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import itertools
 from collections import namedtuple
 from ..model.nlp_instance import NLPInstance
 from .svg_writer import Rectangle, Scene, Text, TextToken
@@ -76,7 +77,7 @@ class TokenLayout:
 
         Args:
             instance (NLPInstance): The NLPInstance to layout.
-            token_widths (dict): A map that defines some minomal widths for
+            token_widths (dict): A map that defines some minimal widths for
                 each token. The estimated bounds will fulfill the width
                 requirements specified by this map. If a token has no required
                 width its estimated width will be based on the length of its
@@ -108,16 +109,10 @@ class TokenLayout:
 
         for token_index in range(from_token, to_token):
             token = tokens[token_index]
-            maxx = 0
-            lasty = self.base_line + self.row_height
-            for prop_name in token.get_sorted_properties():
-                labelwidth = Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()  # TODO: Constants?
-                lasty += self.row_height
-                if labelwidth > maxx:
-                    maxx = labelwidth
-            required_width = token_widths.get(token)
-            if required_width is not None and maxx < required_width:
-                maxx = required_width
+            props = token.get_sorted_properties()
+            lasty = self.base_line + self.row_height*(len(props)+1)  # TODO: Constants?
+            maxx = max(itertools.chain((Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()
+                                        for prop_name in props), token_widths.values()), default=0)
             result[token] = Bounds1D(lastx, lastx+maxx)
             lastx += maxx + self.margin
             if lasty - self.row_height > self.height:

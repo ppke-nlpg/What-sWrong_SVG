@@ -3,6 +3,7 @@
 
 # TODO: further redesign when all part is implemented eg: merge add_dependency and add_span DONE?
 
+from typing import List
 from enum import Enum
 
 from .token import Token
@@ -28,7 +29,7 @@ class NLPInstance:
     annotated spans (such as NP chunks or NER entities).
 
     Attributes:
-        tokens (list): The tokens of this instance.
+        tokens (list(Token)): The tokens of this instance.
         edges (list): The edges of this instance.
         render_type (RenderType): How to render this instance.
         token_map (dict[int, Token]): A mapping from sentence indices to
@@ -40,7 +41,7 @@ class NLPInstance:
             alignment).
     """
 
-    def __init__(self, tokens: list=None, edges: set or frozenset=None,
+    def __init__(self, tokens: List[Token]=None, edges: set or frozenset=None,
                  render_type: RenderType=RenderType.single, split_points: tuple or list=None):
         """Create an NLPInstance with the given tokens and edges.
 
