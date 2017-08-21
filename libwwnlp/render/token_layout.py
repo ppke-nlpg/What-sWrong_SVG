@@ -167,7 +167,7 @@ class TokenLayout:
                     token_color = (120, 120, 120)  # Grey  # TODO: Constants?
                 text_token = TextToken(scene, (lastx, lasty), curr_property_value, 12, token_color)  # TODO: Constants?
                 scene.add(text_token)
-                maxx = max(maxx, text_token.get_width())
+                maxx = max(maxx, Text(scene, (0, 0), curr_property_value, 12, token_color).get_width())
                 self.text_layouts[(token, index+1)] = curr_property_value
                 index += 1
             required_width = token_widths.get(token)
