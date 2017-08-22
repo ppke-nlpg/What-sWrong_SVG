@@ -71,7 +71,7 @@ class Filter:
                                        'eval_status_FP',
                                        'eval_status_Match'}
         self.forbidden_token_properties = set()
-        self.allowed_token_propvals = allowed_token_propvals or {''}
+        self.allowed_token_propvals = allowed_token_propvals or {''}  # XXX Not pretty!
         self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
@@ -146,8 +146,8 @@ class Filter:
         """
         for prop_name in token.get_sorted_properties():
             prop_val = token.get_property(prop_name)
-            if len(self.allowed_token_propvals) > 0:
-                for allowed in self.allowed_token_propvals:
+            if len(self.allowed_token_propvals) > 0:         # XXX Move to separate function to be more semantic...
+                for allowed in self.allowed_token_propvals:  # XXX Maybe move Index to some parameter?
                     if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
                        (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
                                                             not self.propvals_whole_word and allowed in prop_val)):
@@ -166,7 +166,7 @@ class Filter:
             bool: True iff at least one of the edge's end tokens has an allowed
             properties.
         """
-        return self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)
+        return self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)   # XXX Eliminate onleliner...
 
     def _edge_type_is_allowed(self, edge):
         """Is the edge allowed on the basis of its type.
@@ -177,7 +177,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its type.
         """
-        return edge.edge_type == "" or edge.edge_type in self.allowed_edge_types
+        return edge.edge_type == "" or edge.edge_type in self.allowed_edge_types  # XXX Eliminate onleliner...
 
     def _edge_properties_are_allowed(self, edge):
         """Is the edge allowed on the basis of its properties.
@@ -188,7 +188,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its properties.
         """
-        return edge.properties.issubset(self.allowed_edge_properties)
+        return edge.properties.issubset(self.allowed_edge_properties)  # XXX What if both emtpy? Eliminate onleliner...
 
     def _edge_label_is_allowed(self, edge):
         """Is the edge allowed on the basis of its label.
@@ -199,10 +199,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its label.
         """
-        for allowed in self.allowed_labels:
-            if allowed in edge.label:
-                return True
-        return False
+        return bool(self.allowed_labels & edge.label)   # XXX What if both emtpy? Eliminate onleliner...
 
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.

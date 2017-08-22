@@ -276,10 +276,9 @@ class NLPInstance:
         Returns:
             str: A string representation of this instance.
         """
-        tokens = ", ".join(str(token) for token in self.tokens)
-        values = ", ".join(str(v) for v in self.token_map.values())
-        edges = ", ".join(str(e) for e in self.edges)
-        return "{0}\n{1}\n{2}".format(tokens, values, edges)
+        return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
+                                      ", ".join(str(value) for value in self.token_map.values()),
+                                      ", ".join(str(edge) for edge in self.edges))
 
 
 def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:

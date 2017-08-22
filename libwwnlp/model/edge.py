@@ -147,7 +147,7 @@ class Edge:
         return (self.start.index >= token.index and
                 self.end.index >= token.index)
 
-    def covers_left_end(self, edge) -> bool:  # TODO: This is not redundant?
+    def covers_left_end(self, edge) -> bool:
         """Check whether this edge's left end covers the specified edge's left end.
 
         Args:
@@ -270,11 +270,10 @@ class Edge:
         """Returns a string representation of this edge.
 
         Returns:
-            str: A string representation of this edge that shows label, type
-            and the indices of the start and end tokens.
+            str: A string representation of this edge that shows label, type and the indices of the start
+             and end tokens.
         """
-        return "{0}-{1}->{2}({3})".format(self.start.index, self.label,
-                                          self.end.index, self.edge_type)
+        return "{0}-{1}->{2}({3})".format(self.start.index, self.label, self.end.index, self.edge_type)
 
     def __hash__(self):
         """Returns a hashcode based on type, label, note, from and to token.

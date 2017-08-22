@@ -121,8 +121,7 @@ class Token:
         Returns:
             bool: True iff the two tokens have the same index.
         """
-        return (other is not None and isinstance(other, self.__class__) and
-                self.index == other.index)
+        return other is not None and isinstance(other, self.__class__) and self.index == other.index
 
     def __hash__(self):
         """Returns the index of the token as its hashcode.
@@ -138,5 +137,4 @@ class Token:
         Returns:
             str: A string representation of this token.
         """
-        props = ", ".join(str(prop) for prop in self.token_properties)
-        return "{0}:{1}".format(self.index, props)
+        return "{0}:{1}".format(self.index, ", ".join(str(prop) for prop in self.token_properties))
