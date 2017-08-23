@@ -67,11 +67,9 @@ class Filter:
         if allowed_edge_types is None:
             allowed_edge_types = set()
         if allowed_edge_properties is None:
-            allowed_edge_properties = {'eval_status_FN',
-                                       'eval_status_FP',
-                                       'eval_status_Match'}
+            allowed_edge_properties = {'eval_status_FN', 'eval_status_FP', 'eval_status_Match'}
         self.forbidden_token_properties = set()
-        self.allowed_token_propvals = allowed_token_propvals or {''}  # XXX Not pretty!
+        self.allowed_token_propvals = set(allowed_token_propvals)  # *allowed_token_propvals is a tuple!
         self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
@@ -147,11 +145,15 @@ class Filter:
         if len(self.allowed_token_propvals) == 0:
             return True
         for prop_name in token.get_sorted_properties():
-            prop_val = token.get_property(prop_name)         # XXX Move to separate function to be more semantic...
+            prop_val = token.get_property(prop_name)
             for allowed in self.allowed_token_propvals:  # XXX Maybe move Index to some parameter?
-                if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
-                   (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
-                                                        not self.propvals_whole_word and allowed in prop_val)):
+                # 1) If prop is Index and constraint is a range: is in range?
+                # 2) Constraint not range:
+                # 2a)If not whole word: containment
+                # 2b) Otherwise: full match
+                if ((prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or
+                   (not isinstance(allowed, range) and (not self.propvals_whole_word and allowed in prop_val or
+                                                        prop_val == allowed))):
                     return True
 
         return False
@@ -202,12 +204,8 @@ class Filter:
             updated_edges = edges
             updated_split_points = original.split_points
         else:
+            # Collapse tokens to the required edges
             tokens = set()
-
-            # First filter out tokens not containing allowed strings
-            if len(self.allowed_token_propvals) > 0:
-                tokens = {token for token in original.tokens if self._token_has_allowed_prop(token)}
-
             if self.collapse:
                 for edge in edges:
                     if edge.render_type == EdgeRenderType.dependency:
@@ -217,22 +215,28 @@ class Filter:
                         for i in range(edge.start.index, edge.end.index + 1):
                             tokens.add(original.get_token(i))
 
-            _sorted = sorted(tokens, key=attrgetter("index"))  # This sould be non-capital index!
+            # Add further explicitly allowed tokens
+            if len(self.allowed_token_propvals) > 0:
+                tokens = {token for token in original.tokens if self._token_has_allowed_prop(token)}
 
+            # XXX Why do we need to create new tokens?
+            # Compute bidirectional mapping between the new and old indexes and create new tokens
             old2new, new2old, updated_tokens = {}, {}, []
-            for i, token in enumerate(_sorted):
+            for i, token in enumerate(sorted(tokens, key=attrgetter("index"))):  # This sould be non-capital index!
                 new_tok = Token(i)
                 new_tok.merge(original.tokens[token.index], forbidden_token_properties=self.forbidden_token_properties)
                 old2new[token] = new_tok
                 new2old[new_tok] = token
                 updated_tokens.append(new_tok)
 
+            # XXX Why do we need to create new edges?
             # Update edges and remove those that have vertices not in the new vertex set
             updated_edges = set()
             for edge in (e for e in edges if e.start in old2new and e.end in old2new):
                 updated_edges.add(Edge(start=old2new[edge.start], end=old2new[edge.end], label=edge.label,
                                        note=edge.note, edge_type=edge.edge_type, render_type=edge.render_type,
                                        description=edge.description, properties=edge.properties))
+
             # Find new split points (have to be changed because instance has new token sequence)
             updated_split_points = []
             new_token_index = 0
