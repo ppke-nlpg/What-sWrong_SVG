@@ -189,7 +189,7 @@ class Filter:
             if self.use_path:  # Only allow edges on the path of tokens having allowed props
                 edges = self._calculate_paths(edges)
             if len(self.allowed_labels) > 0:
-                edges = {edge for edge in edges if edge.label.issubset(self.allowed_labels)}
+                edges = {edge for edge in edges if self.allowed_labels & edge.label}  # They might have different labels also!
             if len(self.allowed_edge_types) > 0:
                 edges = {edge for edge in edges if edge.edge_type == "" or edge.edge_type in self.allowed_edge_types}
             if len(self.allowed_edge_properties) > 0:
