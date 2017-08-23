@@ -188,7 +188,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its properties.
         """
-        return edge.properties.issubset(self.allowed_edge_properties)  # XXX What if both emtpy? Eliminate onleliner...
+        return edge.properties.issubset(self.allowed_edge_properties)  # XXX Eliminate onleliner...
 
     def _edge_label_is_allowed(self, edge):
         """Is the edge allowed on the basis of its label.
@@ -199,7 +199,7 @@ class Filter:
         Returns:
             bool: True iff the edge allowed on the basis of its label.
         """
-        return bool(self.allowed_labels & edge.label)   # XXX What if both emtpy? Eliminate onleliner...
+        return edge.label.issubset(self.allowed_labels)   # XXX Eliminate onleliner...
 
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
