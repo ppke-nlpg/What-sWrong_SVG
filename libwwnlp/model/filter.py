@@ -122,7 +122,7 @@ class Filter:
         for path in paths_per_length:
             for start in path.keys():
                 for end in path[start].keys():
-                    result.update(path[start][end])  # Add all good paths...
+                    result.update(*path[start][end])  # Flatten and add all good paths...
 
         return result
 
