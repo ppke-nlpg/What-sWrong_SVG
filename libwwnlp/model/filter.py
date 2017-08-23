@@ -144,16 +144,16 @@ class Filter:
         Returns:
             bool: True iff the token should be kept.
         """
+        if len(self.allowed_token_propvals) == 0:
+            return True
         for prop_name in token.get_sorted_properties():
-            prop_val = token.get_property(prop_name)
-            if len(self.allowed_token_propvals) > 0:         # XXX Move to separate function to be more semantic...
-                for allowed in self.allowed_token_propvals:  # XXX Maybe move Index to some parameter?
-                    if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
-                       (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
-                                                            not self.propvals_whole_word and allowed in prop_val)):
-                        return True
-            else:
-                return True
+            prop_val = token.get_property(prop_name)         # XXX Move to separate function to be more semantic...
+            for allowed in self.allowed_token_propvals:  # XXX Maybe move Index to some parameter?
+                if (prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or \
+                   (not isinstance(allowed, range) and (self.propvals_whole_word and prop_val == allowed or
+                                                        not self.propvals_whole_word and allowed in prop_val)):
+                    return True
+
         return False
 
     def filter(self, original: NLPInstance) -> NLPInstance:
