@@ -45,20 +45,20 @@ class DependencyFilterPanel:
         usePath = gui.onlyPathCheckBox
 
         def usePathAction(value):
-            edgeTokenFilter.usePath = value == 2  # checked
+            edgeTokenFilter.use_path = value == 2  # checked
             nlpCanvas.update_nlp_graphics()
         usePath.stateChanged.connect(usePathAction)
 
         collapse = gui.collapsCheckBox
 
         def collapseAction(value):
-            edgeTokenFilter.collaps = value == 2  # checked
+            edgeTokenFilter.collapse = value == 2  # checked
             nlpCanvas.update_nlp_graphics()
         collapse.stateChanged.connect(collapseAction)
 
         wholeWords = gui.edgeFilterWholeWordsCheckBox
 
         def wholeWordsAction(value):
-            edgeTokenFilter.whole_words = value == 2  # checked
+            edgeTokenFilter.propvals_whole_word = value == 2  # checked
             nlpCanvas.update_nlp_graphics()
         wholeWords.stateChanged.connect(wholeWordsAction)

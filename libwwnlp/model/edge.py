@@ -42,7 +42,7 @@ class Edge:
             additional properties that are represented simply as strings.
     """
 
-    def __init__(self, start, end, label: str, edge_type, note: str=None,
+    def __init__(self, start, end, label: str, edge_type: str, note: str=None,
                  render_type: EdgeRenderType=EdgeRenderType.dependency,
                  description: str="No Description", properties: set=None):
         """Initialize an Edge instance.

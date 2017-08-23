@@ -70,9 +70,9 @@ class Filter:
             allowed_edge_properties = {'eval_status_FN', 'eval_status_FP', 'eval_status_Match'}
         self.forbidden_token_properties = set()
         self.allowed_token_propvals = set(allowed_token_propvals)  # *allowed_token_propvals is a tuple!
-        self.propvals_whole_word = False
         self.use_path = False
         self.collapse = False
+        self.propvals_whole_word = False
         self.allowed_edge_types = allowed_edge_types
         self.allowed_edge_properties = allowed_edge_properties
         self.allowed_labels = allowed_labels
