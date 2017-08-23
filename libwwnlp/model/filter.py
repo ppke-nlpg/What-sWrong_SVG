@@ -156,51 +156,6 @@ class Filter:
                 return True
         return False
 
-    def _edge_has_allowed_tokprop(self, edge):
-        """Is the edge allowed on the basis of its token properties.
-
-        Args:
-            edge (Edge): An edge.
-
-        Returns:
-            bool: True iff at least one of the edge's end tokens has an allowed
-            properties.
-        """
-        return self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)   # XXX Eliminate onleliner...
-
-    def _edge_type_is_allowed(self, edge):
-        """Is the edge allowed on the basis of its type.
-
-        Args:
-            edge (Edge): An edge.
-
-        Returns:
-            bool: True iff the edge allowed on the basis of its type.
-        """
-        return edge.edge_type == "" or edge.edge_type in self.allowed_edge_types  # XXX Eliminate onleliner...
-
-    def _edge_properties_are_allowed(self, edge):
-        """Is the edge allowed on the basis of its properties.
-
-        Args:
-            edge (Edge): An edge.
-
-        Returns:
-            bool: True iff the edge allowed on the basis of its properties.
-        """
-        return edge.properties.issubset(self.allowed_edge_properties)  # XXX Eliminate onleliner...
-
-    def _edge_label_is_allowed(self, edge):
-        """Is the edge allowed on the basis of its label.
-
-        Args:
-            edge (Edge): An edge.
-
-        Returns:
-            bool: True iff the edge allowed on the basis of its label.
-        """
-        return edge.label.issubset(self.allowed_labels)   # XXX Eliminate onleliner...
-
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
@@ -229,15 +184,16 @@ class Filter:
         """
         edges = original.get_edges()
         if len(self.allowed_token_propvals) > 0:
-            edges = {edge for edge in edges if self._edge_has_allowed_tokprop(edge)}
+            edges = {edge for edge in edges  # At least one of the edge's end tokens has an allowed property
+                     if self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)}
             if self.use_path:  # Only allow edges on the path of tokens having allowed props
                 edges = self._calculate_paths(edges)
             if len(self.allowed_labels) > 0:
-                edges = {edge for edge in edges if self._edge_label_is_allowed(edge)}
+                edges = {edge for edge in edges if edge.label.issubset(self.allowed_labels)}
             if len(self.allowed_edge_types) > 0:
-                edges = {edge for edge in edges if self._edge_type_is_allowed(edge)}
+                edges = {edge for edge in edges if edge.edge_type == "" or edge.edge_type in self.allowed_edge_types}
             if len(self.allowed_edge_properties) > 0:
-                edges = {edge for edge in edges if self._edge_properties_are_allowed(edge)}
+                edges = {edge for edge in edges if edge.properties.issubset(self.allowed_edge_properties)}
 
         # Filter tokens
         if len(self.allowed_token_propvals) == 0 and not self.collapse:
