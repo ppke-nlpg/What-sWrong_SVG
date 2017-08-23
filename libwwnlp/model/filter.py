@@ -184,18 +184,21 @@ class Filter:
         Returns:
             NLPInstance: The filtered NLPInstance.
         """
-        edges = original.get_edges()
-        if len(self.allowed_token_propvals) > 0:
-            edges = {edge for edge in edges  # At least one of the edge's end tokens has an allowed property
-                     if self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)}
-            if self.use_path:  # Only allow edges on the path of tokens having allowed props
-                edges = self._calculate_paths(edges)
-            if len(self.allowed_labels) > 0:
-                edges = {edge for edge in edges if self.allowed_labels & edge.label}  # They might have different labels also!
-            if len(self.allowed_edge_types) > 0:
-                edges = {edge for edge in edges if edge.edge_type == "" or edge.edge_type in self.allowed_edge_types}
-            if len(self.allowed_edge_properties) > 0:
-                edges = {edge for edge in edges if edge.properties.issubset(self.allowed_edge_properties)}
+        edges = {edge for edge in original.get_edges()
+                 # At least one of the edge's end tokens has an allowed property if there is any
+                 if (len(self.allowed_token_propvals) == 0 or
+                     self._token_has_allowed_prop(edge.start) or self._token_has_allowed_prop(edge.end)) and
+                 # Edge label in explicitly alowed labels
+                 (len(self.allowed_labels) == 0 or edge.label in self.allowed_labels) and
+                 # Edge type in explicitly allowed types
+                 (len(self.allowed_edge_types) == 0 or edge.edge_type == "" or
+                  edge.edge_type in self.allowed_edge_types) and
+                 # Edge has explicitly allowed properties
+                 (len(self.allowed_edge_properties) == 0 or self.allowed_edge_properties & edge.properties)
+                 }
+        # Only allow edges on the path of tokens having allowed props
+        if self.use_path:
+            edges = self._calculate_paths(edges)
 
         # Filter tokens
         if len(self.allowed_token_propvals) == 0 and not self.collapse:
