@@ -109,9 +109,9 @@ class TokenLayout:
 
         for token_index in range(from_token, to_token):
             token = tokens[token_index]
-            props = token.get_sorted_properties()
+            props = token.get_property_names()
             lasty = self.base_line + self.row_height*(len(props)+1)  # TODO: Constants?
-            maxx = max(itertools.chain((Text(scene, (0, 0), token.get_property(prop_name), 12).get_width()
+            maxx = max(itertools.chain((Text(scene, (0, 0), token.get_property_value(prop_name), 12).get_width()
                                         for prop_name in props), token_widths.values()), default=0)
             result[token] = Bounds1D(lastx, lastx+maxx)
             lastx += maxx + self.margin
@@ -158,9 +158,9 @@ class TokenLayout:
             index = 0
             lasty = self.base_line
             maxx = 0
-            for prop_name in token.get_sorted_properties():
+            for prop_name in token.get_property_names():
                 lasty += self.row_height
-                curr_property_value = token.get_property(prop_name)
+                curr_property_value = token.get_property_value(prop_name)
                 if index == 0:
                     token_color = (0, 0, 0)  # Black  # TODO: Constants?
                 else:

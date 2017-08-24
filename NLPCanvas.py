@@ -83,7 +83,7 @@ class NLPCanvas:
         """
         self.nlp_instance = nlp_instance
         self.usedTypes = {edge.edge_type for edge in self.nlp_instance.get_edges()}
-        self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_sorted_properties()}
+        self.usedProperties = {prop for token in self.nlp_instance.tokens for prop in token.get_property_names()}
         self.used_edge_properties = set()
         for edge in self.nlp_instance.get_edges():
             self.used_edge_properties.update(edge.properties)

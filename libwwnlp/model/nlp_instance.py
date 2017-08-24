@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# TODO: further redesign when all part is implemented eg: merge add_dependency and add_span DONE?
+# TODO: Merge add_dependency and add_span to add_edge?
 
 from typing import List
 from enum import Enum
@@ -229,7 +229,7 @@ class NLPInstance:
         If tokens were added with NLPInstance#add_token() this method ensures
         that all internal representations of the token sequence are consistent.
         """
-        self.tokens.extend(self.token_map.values())
+        self.tokens.extend(self.token_map.values())  # TODO: Do we still need this?
         self.tokens.sort()
 
     def __str__(self):

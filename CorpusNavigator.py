@@ -5,6 +5,7 @@
 from NLPCanvas import NLPCanvas
 from CorpusLoader import CorpusLoader
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
+from libwwnlp.model.edge import EdgeRenderType
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
@@ -538,7 +539,7 @@ class CorpusNavigator:
             instance = self._indices[index]
             sentence = ""
             for token in instance.tokens:
-                word = token.get_property("Word")
+                word = token.get_property_value("Word")
                 if sentence == "":
                     sentence += " " + word
                 else:
@@ -694,13 +695,13 @@ class CorpusNavigator:
             example.add_token().add_property("Word", "gold").add_property("Index", "3")
             example.add_token().add_property("Word", "corpus").add_property("Index", "4")
             example.add_token().add_property("Word", "!").add_property("Index", "5")
-            example.add_dependency(0, 1, "ROOT", "dep")
-            example.add_dependency(0, 5, "PUNC", "dep")
-            example.add_dependency(1, 4, "OBJ", "dep")
-            example.add_dependency(4, 2, "DET", "dep")
-            example.add_dependency(4, 3, "MOD", "dep")
-            example.add_dependency(1, 4, "A1", "role")
-            example.add_span(1, 1, "add.1", "sense")
+            example.add_edge(0, 1, "ROOT", "dep", render_type=EdgeRenderType.dependency)
+            example.add_edge(0, 5, "PUNC", "dep", render_type=EdgeRenderType.dependency)
+            example.add_edge(1, 4, "OBJ", "dep", render_type=EdgeRenderType.dependency)
+            example.add_edge(4, 2, "DET", "dep", render_type=EdgeRenderType.dependency)
+            example.add_edge(4, 3, "MOD", "dep", render_type=EdgeRenderType.dependency)
+            example.add_edge(1, 4, "A1", "role", render_type=EdgeRenderType.dependency)
+            example.add_edge(1, 1, "add.1", "sense", render_type=EdgeRenderType.span)
             self._canvas.set_nlp_instance(example)
             self._edgeTypeFilter.allowed_edge_types.add("dep")
             self._edgeTypeFilter.allowed_edge_types.add("role")

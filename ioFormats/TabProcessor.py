@@ -647,7 +647,7 @@ class CoNLL2006:
             mod = int(row[0])
             try:
                 instance.add_dependency(start=int(row[6]), end=mod, label=row[7], edge_type="dep")
-            except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
+            except (ValueError, IndexError, KeyError):
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_property("DepMissing", "missing")
             # role
@@ -928,7 +928,7 @@ class MaltTab:
             # dependency
             try:
                 instance.add_dependency(start=int(row[2]), end=mod, label=row[3], edge_type="dep")
-            except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
+            except (ValueError, IndexError, KeyError):
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_property("DepMissing", "missing")
             # role
@@ -1009,8 +1009,9 @@ class CCG:
             if row[0] != "<s>" and not re.match("<\\s>$", row[0]):
                 # dependency
                 try:
-                    instance.add_edge(start=int(row[1]), end=int(row[0]), label=row[2] + "_" + row[3], edge_type="dep")
-                except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
+                    instance.add_dependency(start=int(row[1]), end=int(row[0]), label=row[2] + "_" + row[3],
+                                            edge_type="dep")
+                except (ValueError, IndexError, KeyError):
                     print("Can't parse dependency", file=sys.stderr)
                     instance.tokens[mod].add_property("DepMissing", "missing")
                 mod += 1

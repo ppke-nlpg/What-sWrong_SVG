@@ -145,8 +145,8 @@ class Filter:
         """
         if len(allowed_token_propvals) == 0:
             return True
-        for prop_name in token.get_sorted_properties():
-            prop_val = token.get_property(prop_name)
+        for prop_name in token.get_property_names():
+            prop_val = token.get_property_value(prop_name)
             for allowed in allowed_token_propvals:  # XXX Maybe move Index to some parameter?
                 # 1) If prop is Index and constraint is a range: is in range?
                 # 2) Constraint not range:

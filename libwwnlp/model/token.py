@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# import re # This was only needed for the commented out part in the propvals_contain method
-
 
 class Token:
     """A Token represents a word in an utterance.
@@ -11,8 +9,7 @@ class Token:
 
     Attributes:
         index (int): The index of the token.
-        token_properties (Dict[TokenProperty, Object]): A mapping from
-            properties to values.
+        token_properties (Dict[TokenProperty, Object]): A mapping from properties to values.
     """
 
     def __init__(self, index: int):
@@ -23,27 +20,6 @@ class Token:
         """
         self.index = index
         self.token_properties = {}
-
-    def get_property(self, name: str) -> str:
-        """Get the value of the given property.
-
-        Args:
-            name (str): The property name to get the value for.
-
-        Returns:
-            The value of the given property.
-        """
-        if name in self.token_properties:
-            return self.token_properties[name][1]
-
-    def remove_property(self, name: str):
-        """Remove the property value with the given name.
-
-        Args:
-            name (str): The name of the property to remove.
-        """
-        del self.token_properties[name]
-        return self
 
     def add_property(self, name: str, value: str, level=None):
         """Add a property with the given name and value.
@@ -62,7 +38,16 @@ class Token:
         self.token_properties[name] = (level, value)
         return self
 
-    def get_sorted_properties(self) -> tuple:
+    def remove_property(self, name: str):
+        """Remove the property value with the given name.
+
+        Args:
+            name (str): The name of the property to remove.
+        """
+        del self.token_properties[name]
+        return self
+
+    def get_property_names(self) -> tuple:
         """Return a list of sorted token properties.
 
         Returns:
@@ -70,29 +55,17 @@ class Token:
         """
         return tuple(name for lvl, name in sorted((lvl, name) for name, (lvl, _) in self.token_properties.items()))
 
-    def propvals_contain(self, substrings: set, whole_word: bool=False) -> bool:
-        """Check whether any of the property values contains the given strings.
+    def get_property_value(self, name: str) -> str:
+        """Get the value of the given property.
 
         Args:
-            substrings (set): Set of strings to check.
-            whole_word (bool, optional): Should we check for complete words or
-                is it enough for the given strings to be substrings of the
-                token value. Defaults to False.
+            name (str): The property name to get the value for.
 
         Returns:
-            bool: True iff there is a property value that is equal to/contains
-            one of the strings in `substrings`.
+            The value of the given property.
         """
-        for _, curr_prop_val in self.token_properties.values():
-            for substr in substrings:
-                # TODO: Do this properly...
-                # if re.match("\d+-\d+$", substr):  # Full string match in JAVA!
-                #     start, end = substr.split("-")
-                #     if int(start) <= int(curr_prop_val) <= int(end):
-                #         return True
-                if curr_prop_val == substr or (not whole_word and substr in curr_prop_val):
-                    return True
-        return False
+        if name in self.token_properties:
+            return self.token_properties[name][1]
 
     def merge(self, token, forbidden_token_properties: set=None):
         """Inserts all properties and values of the other token into this token.
