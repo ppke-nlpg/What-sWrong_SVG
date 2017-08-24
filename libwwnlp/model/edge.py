@@ -91,7 +91,7 @@ class Edge:
             str: label with note in parentheses.
         """
         note = ""
-        if self.note is not None:
+        if self.note is not None and len(self.note) > 0:
             note = "(" + self.note + ")"
         return self.label + note
 

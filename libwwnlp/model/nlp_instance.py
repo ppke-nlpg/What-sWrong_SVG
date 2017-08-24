@@ -138,48 +138,13 @@ class NLPInstance:
 
     def add_span(self, start: int, end: int, label: str, edge_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with rendertype RenderType#span.
-
-        Args:
-            start (int): Index of the token the edge should start at. The token
-                at the given index must already exist in the sentence.
-            end (int): Index of the token the edge should end at. The token at
-                the given index must already exist in the sentence.
-            label (str): The label of the edge.
-            edge_type (str): The type of edge.
-            desc (str, optional): The description of the span.
-            properties (Set[str], optional): A set containing property names.
-
-        Raises:
-            KeyError: If there was no token at one of the given positions.
-
         """
-        if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, "",
-                                   render_type=EdgeRenderType.span, description=desc, properties=properties))
-        else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+        self.add_edge(start, end, label, edge_type, EdgeRenderType.span, desc, "", properties)
 
     def add_dependency(self, start: int, end: int, label, edge_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with render type RenderType#dependency.
-
-        Args:
-            start (int): Index of the token the edge should start at. The token
-                at the given index must already exist in the sentence.
-            end (int): Index of the token the edge should end at. The token at
-                the given index must already exist in the sentence.
-            label (str): The label of the edge.
-            edge_type (str): The type of edge.
-            desc (str, optional): The description of the span.
-            properties (Set[str]): A set containing property names.
-
-        Raises:
-            KeyError: If there was no token at one of the given positions.
         """
-        if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, "",
-                                   render_type=EdgeRenderType.dependency, description=desc, properties=properties))
-        else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+        self.add_edge(start, end, label, edge_type, EdgeRenderType.dependency, desc, "", properties)
 
     def add_tokens(self, tokens: list):
         """Adds the given collection of tokens to this instance.
