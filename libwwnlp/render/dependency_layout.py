@@ -9,8 +9,6 @@ from collections import Counter, defaultdict
 from .abstract_edge_layout import AbstractEdgeLayout
 from .svg_writer import Line, Scene, Text, QuadraticBezierCurve
 
-FONT_SIZE = 12
-
 
 class DependencyLayout(AbstractEdgeLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.
@@ -33,7 +31,8 @@ class DependencyLayout(AbstractEdgeLayout):
 
     def __init__(self):
         super().__init__()
-        self.arrowsize = 2
+        self.arrowsize = 2  # TODO: Constants?
+        self.font_size = 12  # TODO: Constants?
 
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
@@ -156,7 +155,7 @@ class DependencyLayout(AbstractEdgeLayout):
             point2 = (point1[0], height)
             point4 = end[edge]
             point3 = (point4[0], height)
-            # connection
+
             if self.curve:
                 shape = self.create_curve_arrow(scene, point1, point2, point3, point4, edge_color)
             else:
@@ -166,19 +165,19 @@ class DependencyLayout(AbstractEdgeLayout):
             z_coord = (point4[0] + self.arrowsize, point4[1] - self.arrowsize)
             y_coord = (point4[0], point4[1])
 
-            scene.add(Line(scene, x_coord, y_coord, edge_color))
+            scene.add(Line(scene, x_coord, y_coord, edge_color))  # TODO: What is this?
             scene.add(Line(scene, z_coord, y_coord, edge_color))
 
             # write label in the middle under
-            Text(scene, (0, 0), edge.get_label_with_note(), FONT_SIZE, edge_color)
+            Text(scene, (0, 0), edge.get_label_with_note(), self.font_size, edge_color)  # TODO: What is this?
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
-            labely = height + 11
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, edge_color))
+            labely = height + 11  # TODO: Constants?
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, edge_color))
 
             self.shapes[shape] = edge
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
-        return max_width + self.arrowsize + 2, max_height
+        return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
 
     @staticmethod
     def create_rect_arrow(scene: Scene, point1, point2, point3, point4, color):

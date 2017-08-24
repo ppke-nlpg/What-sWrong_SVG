@@ -6,11 +6,6 @@ from collections import Counter, defaultdict
 from .abstract_edge_layout import AbstractEdgeLayout
 from .svg_writer import Line, Rectangle, Scene, Text
 
-SPAN_RADIUS = 4
-FONT_SIZE = 12
-BUFFER_HEIGHT = 2
-SEPARATOR_LINE_COLOR = (211, 211, 211)  # Color.LIGHT_GRAY
-
 
 class SpanLayout(AbstractEdgeLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
@@ -37,6 +32,12 @@ class SpanLayout(AbstractEdgeLayout):
         self.separation_lines = True
         self.orders = {}
         self.total_text_margin = 6  # TODO: Constants?
+        self.span_radius = 4  # TODO: Constants?
+        self.font_size = 12  # TODO: Constants?
+        self.buffer_height = 2  # TODO: Constants?
+        self.separator_line_color = (211, 211, 211)  # Color.LIGHT_GRAY  # TODO: Constants?
+        self.span_line_width = 1  # TODO: Constants?
+        self.span_fill_color = (255, 255, 255)  # TODO: Constants?
 
     def estimate_required_token_widths(self, edges, scene):
         """Return the required token widths for self-loops.
@@ -56,9 +57,9 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}
         for edge in edges:
             if edge.start == edge.end:
-                result[edge.start] = max(Text(scene, (0, 0), edge.label, FONT_SIZE).get_width(),
-                                         result.get(edge.start, 0))\
-                                     + self.total_text_margin
+                result[edge.start] = self.total_text_margin + max(0, Text(scene, (0, 0), edge.label,
+                                                                          self.font_size).get_width(),
+                                                                  result.get(edge.start))
         return result
 
     def layout_edges(self, edges, bounds, scene: Scene):
@@ -105,13 +106,12 @@ class SpanLayout(AbstractEdgeLayout):
             self.calculate_depth(dominates, depth, edge)
 
         # calculate max_height and max_width
-
         if len(depth) == 0:
             max_depth = 0
         else:
             max_depth = depth.most_common(1)[0][1]
         if len(edges) > 0:
-            max_height = (max_depth + 1) * self.height_per_level + 3
+            max_height = (max_depth + 1) * self.height_per_level + 3  # TODO: Constants?
         else:
             max_height = 1
 
@@ -122,9 +122,9 @@ class SpanLayout(AbstractEdgeLayout):
         # build map from vertex to incoming/outgoing edges
         vertex2edges = defaultdict(list)
         for edge in edges:
+            # assign starting and end points of edges by sorting the edges per vertex
             vertex2edges[edge.start].append(edge)
             vertex2edges[edge.end].append(edge)
-        # assign starting and end points of edges by sorting the edges per vertex
 
         max_width = 0
 
@@ -134,7 +134,7 @@ class SpanLayout(AbstractEdgeLayout):
             edge_color = self.get_color(edge)
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, FONT_SIZE).get_width()
+            labelwidth = Text(scene, (0, 0), edge.label, self.font_size).get_width()
             # draw lines
             if self.revert:
                 span_level = max_depth - depth[edge]
@@ -142,6 +142,8 @@ class SpanLayout(AbstractEdgeLayout):
                 span_level = depth[edge]
 
             height = self.baseline + max_height - (span_level + 1) * self.height_per_level
+            height_minus_buffer = height - self.buffer_height
+            rect_height = self.height_per_level - 2 * self.buffer_height
 
             from_bounds = bounds[edge.start]
             to_bounds = bounds[edge.end]
@@ -157,21 +159,17 @@ class SpanLayout(AbstractEdgeLayout):
                 min_x = middle - text_width // 2
                 max_x = middle + text_width // 2
 
-            # connection
-            rect_height = self.height_per_level - 2 * BUFFER_HEIGHT
-            if self.curve:
-                scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
-                                    (255, 255, 255), edge_color, 1, rx=SPAN_RADIUS, ry=SPAN_RADIUS))  # TODO: Constants?
-            else:
-                scene.add(Rectangle(scene, (min_x, height-BUFFER_HEIGHT), max_x-min_x, rect_height,
-                                    (255, 255, 255), edge_color, 1))  # TODO: Constants?
+            # If curved int(self.curve) = 1 else 0
+            scene.add(Rectangle(scene, (min_x, height_minus_buffer), max_x - min_x, rect_height,
+                                self.span_fill_color, edge_color, self.span_line_width,
+                                rx=self.span_radius * int(self.curve), ry=self.span_radius * int(self.curve)))
 
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2
-            labely = height-BUFFER_HEIGHT + rect_height // 2
+            labely = height_minus_buffer + rect_height // 2
 
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), FONT_SIZE, edge_color))
-            self.shapes[(min_x, height-BUFFER_HEIGHT, max_x-min_x, self.height_per_level - 2 * BUFFER_HEIGHT)] = edge
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, edge_color))
+            self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
 
@@ -183,7 +181,7 @@ class SpanLayout(AbstractEdgeLayout):
 
             for depth in min_depths.values():
                 if not self.revert:
-                    depth = (max_depth - depth)
+                    depth = max_depth - depth
                 height = self.baseline - 1 + depth * self.height_per_level
-                scene.add(Line(scene, (0, height), (max_width, height), color=SEPARATOR_LINE_COLOR))
-        return max_width, max_height - 2 * BUFFER_HEIGHT
+                scene.add(Line(scene, (0, height), (max_width, height), color=self.separator_line_color))
+        return max_width, max_height - 2 * self.buffer_height

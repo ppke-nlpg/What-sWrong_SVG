@@ -27,6 +27,9 @@ class AligmentRenderer:
         self._is_curved = True
         self._token_layout2.to_split_point = 0
         self._token_layout2.from_split_point = 0
+        self.fp_color = (255, 0, 0)   # Red    # TODO: Constants?
+        self.fn_color = (0, 0, 255)   # Blue   # TODO: Constants?
+        self.match_color = (0, 0, 0)  # Black  # TODO: Constants?
 
     def render(self, instance, scene: Scene):
         """Renders the given instance as a pair of aligned sentences.
@@ -52,11 +55,11 @@ class AligmentRenderer:
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
             if 'eval_status_FP' in edge.edge_properties:
-                edge_color = (255, 0, 0)  # Red  # TODO: Constants?
+                edge_color = self.fp_color
             elif 'eval_status_FN' in edge.edge_properties:
-                edge_color = (0, 0, 255)  # Blue  # TODO: Constants?
+                edge_color = self.fn_color
             else:
-                edge_color = (0, 0, 0)    # Black  # TODO: Constants?
+                edge_color = self.match_color
             bound1 = token_xbounds1[edge.start]
             bound2 = token_xbounds2[edge.end]
             if self._is_curved:
