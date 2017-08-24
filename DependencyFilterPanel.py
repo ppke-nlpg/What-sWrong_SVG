@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Untested
+
+import re
 
 from NLPCanvas import NLPCanvas
 from libwwnlp.model.filter import Filter
@@ -11,6 +12,8 @@ from libwwnlp.model.filter import Filter
  *
  * @author Sebastian Riedel
 """
+
+interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class DependencyFilterPanel:
@@ -36,9 +39,13 @@ class DependencyFilterPanel:
 
         def tokenTextFieldChanged(text):
             edgeTokenFilter.allowed_token_propvals.clear()
-            split = text.split(",")
-            for token_property in split:
-                edgeTokenFilter.allowed_token_propvals.add(token_property)
+            split = text.split(',')
+            for tok_property in split:
+                if len(tok_property) > 0:
+                    m = interval.match(tok_property)
+                    if m:
+                        tok_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
+                edgeTokenFilter.allowed_token_propvals.add(tok_property)
             nlpCanvas.update_nlp_graphics()
         tokenTextField.textEdited.connect(tokenTextFieldChanged)
 
