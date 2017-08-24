@@ -67,77 +67,6 @@ class NLPInstance:
         if split_points is not None:
             self.split_points.extend(split_points)
 
-    def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None, render_type: EdgeRenderType=None,
-                 desc=None, note: str=None, properties: set=None):
-        """Creates and adds an edge with the given properties.
-
-        Args:
-            start (int): The index of the start token.
-            end (int): The index of the end token.
-            label (str, optional): The label of the edge. Defaults to None.
-            edge_type (str, optional): The type of the edge.  Defaults to None.
-            render_type (EdgeRenderType, optional): The render type of the
-                edge. Defaults to None.
-            desc (str, optional): The description of the edge. Defaults to
-                None.
-            note (str, optional): The note associated with the edge. Defaults
-                to None.
-            properties (set, optional): A set containing edge property names.
-
-        Raises:
-            KeyError: If there was no token at one of the given positions.
-        """
-        if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end],
-                                   label, edge_type, note, render_type, desc, properties))
-        else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
-
-    def add_span(self, start: int, end: int, label: str, span_type: str, desc: str=None, properties=None):
-        """Creates and adds an edge with rendertype RenderType#span.
-
-        Args:
-            start (int): Index of the token the edge should start at. The token
-                at the given index must already exist in the sentence.
-            end (int): Index of the token the edge should end at. The token at
-                the given index must already exist in the sentence.
-            label (str): The label of the edge.
-            span_type (str): The type of edge.
-            desc (str, optional): The description of the span.
-            properties (Set[str], optional): A set containing property names.
-
-        Raises:
-            KeyError: If there was no token at one of the given positions.
-
-        """
-        if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end], label,
-                                   span_type, render_type=EdgeRenderType.span, description=desc, properties=properties))
-        else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
-
-    def add_dependency(self, start: int, end: int, label, dep_type: str, desc: str=None, properties=None):
-        """Creates and adds an edge with render type RenderType#dependency.
-
-        Args:
-            start (int): Index of the token the edge should start at. The token
-                at the given index must already exist in the sentence.
-            end (int): Index of the token the edge should end at. The token at
-                the given index must already exist in the sentence.
-            label (str): The label of the edge.
-            dep_type (str): The type of edge.
-            desc (str, optional): The description of the span.
-            properties (Set[str]): A set containing property names.
-
-        Raises:
-            KeyError: If there was no token at one of the given positions.
-        """
-        if self.is_valid_edge(start, end):
-            self.edges.append(Edge(self.token_map[start], self.token_map[end],
-                                   label, dep_type, description=desc, properties=properties))
-        else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
-
     def add_token(self, index: int=None) -> Token:
         """Add a token at the given index.
 
@@ -169,28 +98,6 @@ class NLPInstance:
 
         return vertex
 
-    def add_edges(self, edges: list):
-        """Adds the given collection of edges to this instance.
-
-        Args:
-            edges (tuple): The edges to add.
-        """
-        for edge in edges:
-            if not self.is_valid_edge(edge.start, edge.end):
-                raise KeyError("Couldn't add edge {}: no token at positions {} and {}.".
-                               format(edge, edge.start, edge.end))
-        self.edges.extend(edges)
-
-    def add_tokens(self, tokens: list):
-        """Adds the given collection of tokens to this instance.
-
-        Args:
-            tokens (list): The tokens to add.
-        """
-        self.tokens.extend(tokens)
-        for token in tokens:
-            self.token_map[token.index] = token
-
     def add_token_with_properties(self, *props_and_vals):
         """Add a token that has the provided properties and values.
 
@@ -202,6 +109,99 @@ class NLPInstance:
             token.add_property(name, val, level)
         self.tokens.append(token)
         self.token_map[token.index] = token
+
+    def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None, render_type: EdgeRenderType=None,
+                 desc=None, note: str=None, properties: set=None):
+        """Creates and adds an edge with the given properties.
+
+        Args:
+            start (int): The index of the start token.
+            end (int): The index of the end token.
+            label (str, optional): The label of the edge. Defaults to None.
+            edge_type (str, optional): The type of the edge.  Defaults to None.
+            render_type (EdgeRenderType, optional): The render type of the
+                edge. Defaults to None.
+            desc (str, optional): The description of the edge. Defaults to
+                None.
+            note (str, optional): The note associated with the edge. Defaults
+                to None.
+            properties (set, optional): A set containing edge property names.
+
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, note,
+                                   render_type, desc, properties))
+        else:
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+
+    def add_span(self, start: int, end: int, label: str, edge_type: str, desc: str=None, properties=None):
+        """Creates and adds an edge with rendertype RenderType#span.
+
+        Args:
+            start (int): Index of the token the edge should start at. The token
+                at the given index must already exist in the sentence.
+            end (int): Index of the token the edge should end at. The token at
+                the given index must already exist in the sentence.
+            label (str): The label of the edge.
+            edge_type (str): The type of edge.
+            desc (str, optional): The description of the span.
+            properties (Set[str], optional): A set containing property names.
+
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, "",
+                                   render_type=EdgeRenderType.span, description=desc, properties=properties))
+        else:
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+
+    def add_dependency(self, start: int, end: int, label, edge_type: str, desc: str=None, properties=None):
+        """Creates and adds an edge with render type RenderType#dependency.
+
+        Args:
+            start (int): Index of the token the edge should start at. The token
+                at the given index must already exist in the sentence.
+            end (int): Index of the token the edge should end at. The token at
+                the given index must already exist in the sentence.
+            label (str): The label of the edge.
+            edge_type (str): The type of edge.
+            desc (str, optional): The description of the span.
+            properties (Set[str]): A set containing property names.
+
+        Raises:
+            KeyError: If there was no token at one of the given positions.
+        """
+        if self.is_valid_edge(start, end):
+            self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, "",
+                                   render_type=EdgeRenderType.dependency, description=desc, properties=properties))
+        else:
+            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+
+    def add_tokens(self, tokens: list):
+        """Adds the given collection of tokens to this instance.
+
+        Args:
+            tokens (list): The tokens to add.
+        """
+        self.tokens.extend(tokens)
+        for token in tokens:
+            self.token_map[token.index] = token
+
+    def add_edges(self, edges: list):
+        """Adds the given collection of edges to this instance.
+
+        Args:
+            edges (tuple): The edges to add.
+        """
+        for edge in edges:
+            if not self.is_valid_edge(edge.start, edge.end):
+                raise KeyError("Couldn't add edge {}: no token at positions {} and {}.".
+                               format(edge, edge.start, edge.end))
+        self.edges.extend(edges)
 
     def get_edges(self, render_type: RenderType=None) -> frozenset:
         """Return all edges of this instance with a given render_type.

@@ -646,7 +646,7 @@ class CoNLL2006:
             # dependency
             mod = int(row[0])
             try:
-                instance.add_dependency(start=int(row[6]), end=mod, label=row[7], dep_type="dep")
+                instance.add_dependency(start=int(row[6]), end=mod, label=row[7], edge_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_property("DepMissing", "missing")
@@ -843,9 +843,9 @@ class CoNLL2009:
             row = row.strip().split()
             # dependency
             if row[8] != "_":
-                instance.add_dependency(start=int(row[8]), end=int(row[0]), label=row[10], dep_type="dep")
+                instance.add_dependency(start=int(row[8]), end=int(row[0]), label=row[10], edge_type="dep")
             if row[9] != "_":
-                instance.add_dependency(start=int(row[9]), end=int(row[0]), label=row[11], dep_type="pdep")
+                instance.add_dependency(start=int(row[9]), end=int(row[0]), label=row[11], edge_type="pdep")
             # role
             for col in range(14, len(row)):
                 label = row[col]
@@ -853,7 +853,7 @@ class CoNLL2009:
                     pred = predicates[col-14]
                     arg = int(row[0])
                     # if arg != pred:
-                    instance.add_dependency(start=pred, end=arg, label=label, dep_type="role")
+                    instance.add_dependency(start=pred, end=arg, label=label, edge_type="role")
         return instance
 
     """
@@ -927,7 +927,7 @@ class MaltTab:
             row = row.strip().split()
             # dependency
             try:
-                instance.add_dependency(start=int(row[2]), end=mod, label=row[3], dep_type="dep")
+                instance.add_dependency(start=int(row[2]), end=mod, label=row[3], edge_type="dep")
             except:  # XXX TRACK DOWN POSSIBLE EXCEPTION TYPES!
                 print("Can't parse dependency", file=sys.stderr)
                 instance.tokens[mod].add_property("DepMissing", "missing")

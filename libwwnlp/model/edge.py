@@ -43,7 +43,7 @@ class Edge:
     """
 
     def __init__(self, start, end, label: str, edge_type: str, note: str=None,
-                 render_type: EdgeRenderType=EdgeRenderType.dependency,
+                 render_type: EdgeRenderType=None,
                  description: str="No Description", properties: set=None):
         """Initialize an Edge instance.
 
@@ -64,7 +64,7 @@ class Edge:
         self.label = label
         self.note = note
         self.edge_type = edge_type
-        self.render_type = render_type
+        self.render_type = render_type if render_type is not None else EdgeRenderType.dependency
         self.description = description
         self.properties = set() if properties is None else properties
 
