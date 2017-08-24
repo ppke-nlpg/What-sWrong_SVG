@@ -63,29 +63,19 @@ class Filter:
             allowed_edge_types (set): A set of prefixes that are allowed.
             allowed_token_propvals: Property values that are allowed.
         """
-        if allowed_labels is None:
-            allowed_labels = set()
-        if allowed_edge_types is None:
-            allowed_edge_types = set()
-        if allowed_edge_properties is None:
-            allowed_edge_properties = {'eval_status_FN', 'eval_status_FP', 'eval_status_Match'}
-        if allowed_token_propvals is None:
-            allowed_token_propvals = set()
-        if tok_allowed_token_propvals is None:
-            tok_allowed_token_propvals = set()
-
         self.forbidden_token_properties = set()
         # Edge filter
-        self.allowed_token_propvals = allowed_token_propvals
+        self.allowed_token_propvals = set() if allowed_token_propvals is None else allowed_token_propvals
         self.use_path = False
         self.collapse = False
         self.propvals_whole_word = False
-        self.allowed_edge_types = allowed_edge_types
-        self.allowed_edge_properties = allowed_edge_properties
-        self.allowed_labels = allowed_labels
+        self.allowed_edge_types = set() if allowed_edge_types is None else allowed_edge_types
+        self.allowed_edge_properties = {'eval_status_FN', 'eval_status_FP', 'eval_status_Match'} \
+            if allowed_edge_properties is None else allowed_edge_properties
+        self.allowed_labels = set() if allowed_labels is None else allowed_labels
         # Token filter
         self.tok_propvals_whole_word = False
-        self.tok_allowed_token_propvals = tok_allowed_token_propvals
+        self.tok_allowed_token_propvals = set() if tok_allowed_token_propvals is None else tok_allowed_token_propvals
 
     @staticmethod
     def _calculate_paths(edges: set) -> set:
@@ -206,7 +196,7 @@ class Filter:
                  # Edge type in explicitly allowed types
                  (len(self.allowed_edge_types) == 0 or edge.edge_type == "" or
                   edge.edge_type in self.allowed_edge_types) and
-                 # Edge has explicitly allowed properties
+                 # Edge has explicitly allowed properties (False positive, False negative, Match)
                  (len(self.allowed_edge_properties) == 0 or self.allowed_edge_properties & edge.properties)
                  }
 
