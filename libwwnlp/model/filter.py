@@ -201,8 +201,8 @@ class Filter:
                  if (len(self.allowed_token_propvals) == 0 or
                      self._token_has_allowed_prop(edge.start, self.allowed_token_propvals, self.propvals_whole_word) or
                      self._token_has_allowed_prop(edge.end, self.allowed_token_propvals, self.propvals_whole_word)) and
-                 # Edge label in explicitly alowed labels
-                 (len(self.allowed_labels) == 0 or edge.label in self.allowed_labels) and
+                 # Edge label in explicitly alowed labels (partial match allowed)
+                 (len(self.allowed_labels) == 0 or any(label in edge.label for label in self.allowed_labels)) and
                  # Edge type in explicitly allowed types
                  (len(self.allowed_edge_types) == 0 or edge.edge_type == "" or
                   edge.edge_type in self.allowed_edge_types) and

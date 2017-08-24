@@ -29,7 +29,7 @@ class DependencyFilterPanel:
 
         def labelFieldChanged(text):
             edgeLabelFilter.allowed_labels.clear()
-            split = text.split(",")
+            split = text.split(',')
             for label in split:
                 edgeLabelFilter.allowed_labels.add(label)
             nlpCanvas.update_nlp_graphics()
