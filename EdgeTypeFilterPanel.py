@@ -89,7 +89,7 @@ class EdgeTypeFilterPanel:
 
         # add false positive/negative and match check buttons
         def matchActionPerformed(value):
-            self._justChanged.clear()  # Why we need this here?
+            self._justChanged.clear()  # TODO: Why we need this here?
             self._perform_match_action(value, "eval_status_Match")
 
         self._matches.stateChanged.connect(matchActionPerformed)
@@ -101,6 +101,7 @@ class EdgeTypeFilterPanel:
 
         def positiveActionPerformed(value):
             self._perform_match_action(value, "eval_status_FP")
+
         self._falsePositives.stateChanged.connect(positiveActionPerformed)
 
     def _perform_match_action(self, value, eval_status):

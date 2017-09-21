@@ -128,6 +128,7 @@ class SingleSentenceRenderer:
         """
         return self._dependency_layout.curve
 
+    # TODO: Simplify
     def set_edge_type_color(self, edge_type, color):
         """Set the color for edges of a certain type.
 

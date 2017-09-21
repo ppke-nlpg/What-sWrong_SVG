@@ -57,9 +57,9 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}
         for edge in edges:
             if edge.start == edge.end:
-                result[edge.start] = self.total_text_margin + max(0, Text(scene, (0, 0), edge.label,
-                                                                          self.font_size).get_width(),
-                                                                  result.get(edge.start))
+                result[edge.start] = self.total_text_margin + max(Text(scene, (0, 0), edge.label,
+                                                                       self.font_size).get_width(),
+                                                                  result.get(edge.start, 0))
         return result
 
     def layout_edges(self, edges, bounds, scene: Scene):
