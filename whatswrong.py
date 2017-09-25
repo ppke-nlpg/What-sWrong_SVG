@@ -4,7 +4,7 @@
 import sys
 from os.path import basename
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from CorpusNavigator import CorpusNavigator
 from DependencyFilterPanel import DependencyFilterPanel
@@ -23,9 +23,9 @@ from libwwnlp.render.svg_writer import render_nlpgraphics
 # from CorpusLoader import CorpusLoader
 
 
-class MyWindow(QtGui.QMainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None, corp_type: str=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()
         self.ui.setupUi(self)
@@ -59,9 +59,9 @@ class MyWindow(QtGui.QMainWindow):
         self.close()
 
 
-class MyForm(QtGui.QMainWindow):
+class MyForm(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButtonAddGold.clicked.connect(self.browse_gold_folder)
@@ -88,13 +88,13 @@ class MyForm(QtGui.QMainWindow):
 
     def browse_gold_folder(self):
         # app =
-        QtGui.QMainWindow()
+        QtWidgets.QMainWindow()
         myapp2 = MyWindow(self, corp_type="gold")
         myapp2.show()
 
     def browse_guess_folder(self):
         # app =
-        QtGui.QMainWindow()
+        QtWidgets.QMainWindow()
         myapp2 = MyWindow(self, corp_type="guess")
         myapp2.show()
 
@@ -112,7 +112,7 @@ class MyForm(QtGui.QMainWindow):
         self.refresh()
 
     def choosenFile(self, factory, corp_type):
-        directory = QtGui.QFileDialog.getOpenFileName(QtGui.QFileDialog())  # todo ok like this?
+        directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]  # todo ok like this?
         corpus = []
         if corp_type == "gold":
             self.goldMap[basename(directory)] = corpus  # CorpusLoader(directory)
@@ -122,7 +122,7 @@ class MyForm(QtGui.QMainWindow):
         f = open(directory)
         l = list(f.readlines())
 
-        item = QtGui.QListWidgetItem(basename(directory))
+        item = QtWidgets.QListWidgetItem(basename(directory))
 
         rows = []
         instanceNr = 0
@@ -146,11 +146,11 @@ class MyForm(QtGui.QMainWindow):
 
         if corp_type == "gold":
             self.ui.selectGoldListWidget.addItem(item)
-            self.ui.selectGoldListWidget.setItemSelected(item, True)
+            self.ui.selectGoldListWidget.item(0).setSelected(True)
 
         if corp_type == "guess":
             self.ui.selectGuessListWidget.addItem(item)
-            self.ui.selectGuessListWidget.setItemSelected(item, True)
+            self.ui.selectGuessListWidget.item(0).setSelected(True)
 
     def refresh(self):
         selectedGold = self.ui.selectGoldListWidget.selectedItems()
@@ -171,23 +171,24 @@ class MyForm(QtGui.QMainWindow):
         self.refresh()
 
     def svgdraw(self):  # instance
-        scene = QtGui.QGraphicsScene()
+        scene = QtWidgets.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         self.ui.graphicsView.show()
 
     def file_save(self):
-        name = QtGui.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')  # todo ok like this?
+        name = QtWidgets.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')[0]  # todo ok like this?
         render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name)
 
 
 def test(f):
-    testapp = QtGui.QApplication(sys.argv)
+    testapp = QtWidgets.QApplication(sys.argv)
     mytestapp = MyForm()
     mytestapp.choosen(MaltTab(), list(open(f).readlines()))
     mytestapp.show()
     mytestapp.raise_()
 
     sys.exit(testapp.exec_())
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "DEBUG":
@@ -196,7 +197,7 @@ if __name__ == "__main__":
             filename = sys.argv[2]
         test(filename)
         exit(1)
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     myapp = MyForm()
     myapp.show()
     myapp.raise_()

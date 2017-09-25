@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Todo: Export to PDF, EPS, etc.
 
-from PyQt4 import QtGui, QtSvg
+from PyQt5 import QtWidgets, QtSvg
 
 from libwwnlp.model.nlp_instance import NLPInstance, RenderType
 from libwwnlp.render.aligment_renderer import AligmentRenderer
@@ -104,7 +104,7 @@ class NLPCanvas:
         drawing parameters.
         """
         # print('NLPCanvas#updateNLPGraphics')
-        scene = QtGui.QGraphicsScene()
+        scene = QtWidgets.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
         rr = QtSvg.QSvgRenderer(render_nlpgraphics(self.renderer, self.filter_instance()))

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Untangle GUI stuff...
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from NLPCanvas import NLPCanvas
 from libwwnlp.model.filter import Filter
@@ -40,7 +40,7 @@ class EdgeTypeFilterPanel:
 
         self._listModel = []
         self._types = gui.edgeTypeListWidget
-        self._types.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self._types.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         """
          * The checkbox for showing matches,

@@ -5,7 +5,7 @@
 import re
 from operator import attrgetter
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from NLPCanvas import NLPCanvas
 from libwwnlp.model.filter import Filter
@@ -28,7 +28,7 @@ class TokenFilterPanel:
 
         self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
-        self._list.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self._list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self._list.itemActivated.connect(self.valueChanged)  # XXX itemSelectionChanged
 
         self._allowed = gui.tokenFilterTokenLineEdit
@@ -45,7 +45,7 @@ class TokenFilterPanel:
             return
         for index in range(0, len(self._list)):
             t = self._listModel[index]
-            if self._list.isItemSelected(self._list.item(index)):
+            if self._list.item(index) in self._list.selectedItems():
                 if t in self._tokenFilter.forbidden_token_properties:
                     self._tokenFilter.forbidden_token_properties.remove(t)
             else:
@@ -78,10 +78,10 @@ class TokenFilterPanel:
             self._listModel.append(p_name)
             self._list.addItem(p_name)
             if p_name not in self._tokenFilter.forbidden_token_properties and \
-                    not self._list.isItemSelected(self._list.item(index)):
-                self._list.setItemSelected(self._list.item(index), True)
+                    not self._list.item(index) in self._list.selectedItems():
+                self._list.item(index).setSelected(True)
             else:
-                self._list.setItemSelected(self._list.item(index), False)  # Explicitly unselect
+                self._list.item(index).setSelected(False)  # Explicitly unselect
         self._updating = False
 
     """
