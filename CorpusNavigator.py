@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 # HIÁNYOS!
 
-from NLPCanvas import NLPCanvas
 from CorpusLoader import CorpusLoader
-from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
+from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
+from libwwnlp.NLPCanvas import NLPCanvas
 from libwwnlp.model.edge import EdgeRenderType
+from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
 """
  * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
@@ -318,7 +319,7 @@ class CorpusNavigator:
      * @param edgeTypeFilter the EdgeTypeAndLabelFilter we need when no corpus is selected and a example sentence
                              is chosen and passed to the NLPCanvas.
     """
-    def __init__(self,  ui, canvas: NLPCanvas, scene=None, goldLoader: CorpusLoader=None,
+    def __init__(self,  ui, canvas: Qt5NLPCanvas, scene=None, goldLoader: CorpusLoader=None,
                  guessLoader: CorpusLoader=None, edgeTypeFilter=None):
         """
         super(new GridBagLayout());
@@ -420,7 +421,7 @@ class CorpusNavigator:
         self._gold = goldLoader
         self._scene = scene
         self._canvas = canvas
-        # self._canvas = NLPCanvas(ui)
+        # self._canvas = Qt5NLPCanvas(ui)
         self._edgeTypeFilter = edgeTypeFilter
 
         self._instance = None
@@ -676,6 +677,7 @@ class CorpusNavigator:
                 self._canvas.renderer.set_edge_type_color("FN", (000, 000, 255))  # Blue
                 self._canvas.renderer.set_edge_type_color("FP", (255, 000, 000))  # Red
                 self._canvas.set_nlp_instance(self._instance)
+                self._canvas.fireInstanceChanged()
                 self._canvas.update_nlp_graphics()
         else:
             """
@@ -703,6 +705,7 @@ class CorpusNavigator:
             example.add_edge(1, 4, "A1", "role", render_type=EdgeRenderType.dependency)
             example.add_edge(1, 1, "add.1", "sense", render_type=EdgeRenderType.span)
             self._canvas.set_nlp_instance(example)
+            self._canvas.fireInstanceChanged()
             self._edgeTypeFilter.allowed_edge_types.add("dep")
             self._edgeTypeFilter.allowed_edge_types.add("role")
             self._edgeTypeFilter.allowed_edge_types.add("sense")

@@ -3,11 +3,10 @@
 # Untangle GUI stuff...
 
 import re
-from operator import attrgetter
 
 from PyQt5 import QtWidgets
 
-from NLPCanvas import NLPCanvas
+from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
 from libwwnlp.model.filter import Filter
 
 """
@@ -20,7 +19,7 @@ interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class TokenFilterPanel:
-    def __init__(self, gui, canvas: NLPCanvas, tokenFilter: Filter):
+    def __init__(self, gui, canvas: Qt5NLPCanvas, tokenFilter: Filter):
         self._tokenFilter = tokenFilter
 
         self._canvas = canvas

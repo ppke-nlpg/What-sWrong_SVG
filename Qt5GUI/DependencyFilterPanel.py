@@ -3,7 +3,7 @@
 
 import re
 
-from NLPCanvas import NLPCanvas
+from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
 from libwwnlp.model.filter import Filter
 
 """
@@ -24,7 +24,7 @@ class DependencyFilterPanel:
          * @param edgeLabelFilter The EdgeTypeAndLabelFilter to control through this panel.
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
-    def __init__(self, gui, nlpCanvas: NLPCanvas, edgeLabelFilter: Filter, edgeTokenFilter: Filter):
+    def __init__(self, gui, nlpCanvas: Qt5NLPCanvas, edgeLabelFilter: Filter, edgeTokenFilter: Filter):
         labelField = gui.labelLineEdit
 
         def labelFieldChanged(text):

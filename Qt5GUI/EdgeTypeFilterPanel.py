@@ -4,7 +4,7 @@
 
 from PyQt5 import QtWidgets
 
-from NLPCanvas import NLPCanvas
+from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
 from libwwnlp.model.filter import Filter
 
 """
@@ -23,7 +23,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas: NLPCanvas, edgeTypeFilter: Filter):
+    def __init__(self, gui, canvas: Qt5NLPCanvas, edgeTypeFilter: Filter):
         """
          * The canvas to request the update after the filter has been changed.
         """

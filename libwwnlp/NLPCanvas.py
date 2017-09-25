@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 # Todo: Export to PDF, EPS, etc.
 
-from PyQt5 import QtWidgets, QtSvg
-
-from libwwnlp.model.nlp_instance import NLPInstance, RenderType
+from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.aligment_renderer import AligmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
-from libwwnlp.render.svg_writer import render_nlpgraphics
 
 MATCH_COLOR = (0, 0, 0)
 FN_COLOR = (255, 0, 0)
@@ -25,7 +22,7 @@ class NLPCanvas:
     vs straight edges, antialiasing etc.).
     """
 
-    def __init__(self, ui):
+    def __init__(self):
         """Creates a new canvas with default size.
         """
         self.renderer = SingleSentenceRenderer()
@@ -38,41 +35,8 @@ class NLPCanvas:
         self.usedTypes = set()
         self.usedProperties = set()
         self.filter = None
-        self.ui = ui
         self.nlp_instance = None
-        self.listeners = []
-        self.change_listeners = []
         self.used_edge_properties = set()
-
-    def addListener(self, listener):
-        """
-         * Adds a new listener.
-         *
-         * @param listener the listener to add.
-        """
-        self.listeners.append(listener)
-
-    def addChangeListener(self, change_listener):
-        """
-         * Adds a change listener to this canvas.
-         *
-         * @param changeListener the listener to add.
-        """
-        self.change_listeners.append(change_listener)
-
-    def fireChanged(self):
-        """
-         * Fired whenever this canvas is changed.
-        """
-        for changeListener in self.change_listeners:
-            changeListener.stateChanged()
-
-    def fireInstanceChanged(self):
-        """
-         * Notifies all listeners about an instance change event.
-        """
-        for l in self.listeners:
-            l.instanceChanged()
 
     def set_nlp_instance(self, nlp_instance):
         """
@@ -87,7 +51,6 @@ class NLPCanvas:
         self.used_edge_properties = set()
         for edge in self.nlp_instance.get_edges():
             self.used_edge_properties.update(edge.properties)
-        self.fireInstanceChanged()
 
     def filter_instance(self):
         """Just calls the filter on the current instance.
@@ -96,22 +59,6 @@ class NLPCanvas:
             NLPInstance: The filtered instance.
         """
         return self.filter.filter(self.nlp_instance)
-
-    def update_nlp_graphics(self):
-        """Updates the current graph.
-
-        This takes into account all changes to the filter, NLP instance and
-        drawing parameters.
-        """
-        # print('NLPCanvas#updateNLPGraphics')
-        scene = QtWidgets.QGraphicsScene()
-        self.ui.graphicsView.setScene(scene)
-        br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(render_nlpgraphics(self.renderer, self.filter_instance()))
-        br.setSharedRenderer(rr)
-        scene.addItem(br)
-        self.ui.graphicsView.show()
-        self.fireChanged()
 
     def clear(self):
         """Clears the current instance.
