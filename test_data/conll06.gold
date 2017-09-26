@@ -1,0 +1,50 @@
+1	Глава	_	N	Nc	_	0	ROOT	0	ROOT
+2	трета	_	M	Mo	gen=f|num=s|def=i	1	mod	1	mod
+
+1	НАРОДНО	_	A	An	gen=n|num=s|def=i	2	mod	2	mod
+2	СЪБРАНИЕ	_	N	Nc	gen=n|num=s|def=i	0	ROOT	0	ROOT
+
+1	Народното	_	A	An	gen=n|num=s|def=d	2	mod	2	mod
+2	събрание	_	N	Nc	gen=n|num=s|def=i	3	subj	3	subj
+3	осъществява	_	V	Vpi	trans=t|mood=i|tense=r|pers=3|num=s	0	ROOT	0	ROOT
+4	законодателната	_	A	Af	gen=f|num=s|def=d	5	mod	5	mod
+5	власт	_	N	Nc	_	3	obj	3	obj
+6	и	_	C	Cp	_	3	conj	3	conj
+7	упражнява	_	V	Vpi	trans=t|mood=i|tense=r|pers=3|num=s	3	conjarg	3	conjarg
+8	парламентарен	_	A	Am	gen=m|num=s|def=i	9	mod	9	mod
+9	контрол	_	N	Nc	gen=m|num=s|def=i	7	obj	7	obj
+10	.	_	Punct	Punct	_	3	punct	3	punct
+
+1	Народното	_	A	An	gen=n|num=s|def=d	2	mod	2	mod
+2	събрание	_	N	Nc	gen=n|num=s|def=i	4	subj	4	subj
+3	се	_	P	Pp	ref=r|form=s|case=a	4	comp	4	comp
+4	състои	_	V	Vpi	trans=i|mood=i|tense=r|pers=3|num=s	0	ROOT	0	ROOT
+5	от	_	R	R	_	4	indobj	4	indobj
+6	240	_	M	Mc	_	8	mod	8	mod
+7	народни	_	A	A	num=p|def=i	8	mod	8	mod
+8	представители	_	N	Nc	gen=m|num=p|def=i	5	prepcomp	5	prepcomp
+9	.	_	Punct	Punct	_	4	punct	4	punct
+
+1	Народното	_	A	An	gen=n|num=s|def=d	2	mod	2	mod
+2	събрание	_	N	Nc	gen=n|num=s|def=i	4	subj	4	subj
+3	се	_	P	Pp	ref=r|form=s|case=a	4	comp	4	comp
+4	избира	_	V	Vpi	trans=t|mood=i|tense=r|pers=3|num=s	0	ROOT	0	ROOT
+5	за	_	R	R	_	4	adjunct	4	adjunct
+6	срок	_	N	Nc	gen=m|num=s|def=i	5	prepcomp	5	prepcomp
+7	от	_	R	R	_	6	mod	6	mod
+8	четири	_	M	Mc	_	9	mod	9	mod
+9	години	_	N	Nc	gen=f|num=p|def=i	7	prepcomp	7	prepcomp
+10	.	_	Punct	Punct	_	4	punct	4	punct
+
+1	За	_	R	R	_	5	indobj	4	adjunct
+2	народен	_	A	Am	gen=m|num=s|def=i	3	mod	3	mod
+3	представител	_	N	Nc	gen=m|num=s|def=i	1	prepcomp	1	prepcomp
+4	може	_	V	Vni	imtrans=i|mood=i|tense=r|pers=3|num=s	0	ROOT	0	ROOT
+5	да	_	T	Tx	_	4	xcomp	4	xcomp
+6	бъде	_	V	Vyp	type=aux|aspect=p|trans=t|mood=i|tense=r|pers=3|num=s	5	comp	5	comp
+7	избиран	_	V	Vpi	trans=t|vform=c|voice=v|num=s|gen=m|def=i	5	comp	5	comp
+8	български	_	A	Am	gen=m|num=s|def=i	9	mod	9	mod
+9	гражданин	_	N	Nc	gen=m|num=s|def=i	5	subj	5	subj
+10	,	_	Punct	Punct	_	12	punct	12	punct
+11	който	_	P	Pr	ref=e|case=n|num=s|gen=m	12	subj	12	subj
+12	няма	_	V	Vpi	trans=t|mood=i|tense=r|pers=3|num=s	9	xmod	9	xmod

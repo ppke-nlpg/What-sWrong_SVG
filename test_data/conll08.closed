@@ -1,0 +1,1799 @@
+1	The	the	DT	DT	The	the	DT	2	NMOD	_	_	_	_	_
+2	economy	economy	NN	NN	economy	economy	NN	4	NMOD	_	A1	_	_	_
+3	's	's	POS	POS	's	's	POS	2	SUFFIX	_	_	_	_	_
+4	temperature	temperature	NN	NN	temperature	temperature	NN	5	SBJ	temperature.01	A2	A1	_	_
+5	will	will	MD	MD	will	will	MD	0	ROOT	_	_	AM-MOD	_	_
+6	be	be	VB	VB	be	be	VB	5	VC	_	_	_	_	_
+7	taken	take	VBN	VBN	taken	take	VBN	6	VC	take.01	_	_	_	_
+8	from	from	IN	IN	from	from	IN	7	CLR	_	_	A2	_	_
+9	several	several	JJ	JJ	several	several	DT	11	NMOD	_	_	_	_	_
+10	vantage	vantage	NN	NN	vantage	vantage	NN	11	NMOD	_	_	_	A1	_
+11	points	point	NNS	NNS	points	point	NNS	8	PMOD	point.02	_	_	_	_
+12	this	this	DT	DT	this	this	DT	13	NMOD	_	_	_	_	_
+13	week	week	NN	NN	week	week	NN	7	TMP	_	_	AM-TMP	_	_
+14	,	,	,	,	,	,	,	7	P	_	_	_	_	_
+15	with	with	IN	IN	with	with	IN	7	ADV	_	_	AM-ADV	_	_
+16	readings	reading	NNS	NNS	readings	reading	NNS	15	PMOD	reading.01	_	_	_	_
+17	on	on	IN	IN	on	on	IN	16	NMOD	_	_	_	_	A1
+18	trade	trade	NN	NN	trade	trade	NN	17	PMOD	_	_	_	_	_
+19	,	,	,	,	,	,	,	18	P	_	_	_	_	_
+20	output	output	NN	NN	output	output	NN	18	COORD	_	_	_	_	_
+21	,	,	,	,	,	,	,	20	P	_	_	_	_	_
+22	housing	housing	NN	NN	housing	housing	NN	20	COORD	_	_	_	_	_
+23	and	and	CC	CC	and	and	CC	22	COORD	_	_	_	_	_
+24	inflation	inflation	NN	NN	inflation	inflation	NN	23	CONJ	_	_	_	_	_
+25	.	.	.	.	.	.	.	5	P	_	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	4	NMOD	_	_	_
+2	most	most	RBS	RBS	most	most	RBS	3	AMOD	_	_	_
+3	troublesome	troublesome	JJ	JJ	troublesome	troublesome	JJ	4	NMOD	_	_	_
+4	report	report	NN	NN	report	report	NN	5	SBJ	_	_	_
+5	may	may	MD	MD	may	may	MD	0	ROOT	_	_	_
+6	be	be	VB	VB	be	be	VB	5	VC	_	_	_
+7	the	the	DT	DT	the	the	DT	11	NMOD	_	_	_
+8	August	august	NNP	NNP	August	august	NNP	11	NMOD	_	_	AM-TMP
+9	merchandise	merchandise	NN	NN	merchandise	merchandise	NN	10	NMOD	_	A1	_
+10	trade	trade	NN	NN	trade	trade	NN	11	NMOD	trade.01	_	_
+11	deficit	deficit	NN	NN	deficit	deficit	NN	6	PRD	deficit.01	_	A1
+12	due	due	JJ	JJ	due	due	JJ	13	AMOD	_	_	_
+13	out	out	IN	IN	out	out	IN	11	APPO	_	_	_
+14	tomorrow	tomorrow	NN	NN	tomorrow	tomorrow	NN	13	TMP	_	_	_
+15	.	.	.	.	.	.	.	5	P	_	_	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_	_
+2	trade	trade	NN	NN	trade	trade	NN	3	NMOD	_	A1	_	_	_	_
+3	gap	gap	NN	NN	gap	gap	NN	4	SBJ	gap.01	_	A1	A1	_	_
+4	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_
+5	expected	expect	VBN	VBN	expected	expect	VBN	4	VC	expect.01	_	_	_	_	_
+6	to	to	TO	TO	to	to	TO	5	OPRD	_	_	C-A1	_	_	_
+7	widen	widen	VB	VB	widen	widen	VB	6	IM	widen.01	SU	_	_	_	_
+8	to	to	TO	TO	to	to	TO	7	DIR	_	A2	_	A4	_	_
+9	about	about	IN	IN	about	about	IN	10	DEP	_	_	_	_	_	_
+10	$	$	$	$	$	$	$	8	PMOD	_	_	_	_	_	_
+11	9	9	CD	CD	9	9	CD	10	DEP	_	_	_	_	_	_
+12	billion	billion	CD	CD	billion	billion	CD	10	DEP	_	_	_	_	_	_
+13	from	from	IN	IN	from	from	IN	7	DIR	_	_	_	A3	_	_
+14	July	july	NNP	NNP	July	july	NNP	16	NMOD	_	_	_	_	_	_
+15	's	's	POS	POS	's	's	POS	14	SUFFIX	_	_	_	_	_	_
+16	$	$	$	$	$	$	$	13	PMOD	_	_	_	_	_	_
+17	7.6	7.6	CD	CD	7.6	7.6	CD	16	DEP	_	_	_	_	_	_
+18	billion	billion	CD	CD	billion	billion	CD	16	DEP	_	_	_	_	_	_
+19	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_
+20	according	accord	VBG	VBG	according	accord	VBG	5	ADV	_	_	AM-ADV	_	_	_
+21	to	to	TO	TO	to	to	TO	20	PMOD	_	_	_	_	_	_
+22	a	a	DT	DT	a	a	DT	23	NMOD	_	_	_	_	_	_
+23	survey	survey	NN	NN	survey	survey	NN	21	PMOD	survey.01	_	_	_	_	_
+24	by	by	IN	IN	by	by	IN	23	NMOD	_	_	_	_	A0	_
+25	MMS	mm	NNP	NNP	MMS	mm	NNS	26	NAME	_	_	_	_	_	_
+26	International	international	NNP	NNP	International	international	NNP	24	PMOD	_	_	_	_	_	_
+27	,	,	,	,	,	,	,	26	P	_	_	_	_	_	_
+28	a	a	DT	DT	a	a	DT	29	NMOD	_	_	_	_	_	_
+29	unit	unit	NN	NN	unit	unit	NN	26	APPO	unit.01	_	_	_	_	_
+30	of	of	IN	IN	of	of	IN	29	NMOD	_	_	_	_	_	A1
+31	McGraw-Hill	mcgraw-hill	NNP	NNP	McGraw	mcgraw	NNP	33	NAME	_	_	_	_	_	_
+32	_	_	_	_	-	-	HYPH	33	NAME	_	_	_	_	_	_
+33	_	_	_	_	Hill	hill	NNP	37	NMOD	_	_	_	_	_	_
+34	Inc.	inc.	NNP	NNP	Inc.	inc.	NNP	33	POSTHON	_	_	_	_	_	_
+35	,	,	,	,	,	,	,	37	P	_	_	_	_	_	_
+36	New	new	NNP	NNP	New	new	NNP	37	NAME	_	_	_	_	_	_
+37	York	york	NNP	NNP	York	york	NNP	30	PMOD	_	_	_	_	_	_
+38	.	.	.	.	.	.	.	4	P	_	_	_	_	_	_
+
+1	Thursday	thursday	NNP	NNP	Thursday	thursday	NNP	3	NMOD	_	AM-TMP	_	_	_	_	_	_
+2	's	's	POS	POS	's	's	POS	1	SUFFIX	_	_	_	_	_	_	_	_
+3	report	report	NN	NN	report	report	NN	10	SBJ	report.01	_	_	A1	A1	_	_	_
+4	on	on	IN	IN	on	on	IN	3	NMOD	_	A1	_	_	_	_	_	_
+5	the	the	DT	DT	the	the	DT	9	NMOD	_	_	_	_	_	_	_	_
+6	September	september	NNP	NNP	September	september	NNP	9	NMOD	_	_	AM-TMP	_	_	_	_	_
+7	consumer	consumer	NN	NN	consumer	consumer	NN	9	NMOD	_	_	_	_	_	_	_	_
+8	price	price	NN	NN	price	price	NN	9	NMOD	_	_	_	_	_	_	_	_
+9	index	index	NN	NN	index	index	NN	4	PMOD	index.01	_	A1	_	_	_	_	_
+10	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_	_	_
+11	expected	expect	VBN	VBN	expected	expect	VBN	10	VC	expect.01	_	_	_	_	_	_	_
+12	to	to	TO	TO	to	to	TO	11	OPRD	_	_	_	C-A1	_	_	_	_
+13	rise	rise	VB	VB	rise	rise	VB	12	IM	rise.01	_	_	_	_	_	_	_
+14	,	,	,	,	,	,	,	13	P	_	_	_	_	_	_	_	_
+15	although	although	IN	IN	although	although	IN	13	ADV	_	_	_	_	AM-ADV	_	_	_
+16	not	not	RB	RB	not	not	RB	15	ADV	_	_	_	_	_	_	_	_
+17	as	as	RB	RB	as	as	IN	16	AMOD	_	_	_	_	_	_	_	_
+18	sharply	sharply	RB	RB	sharply	sharply	RB	16	AMOD	_	_	_	_	_	_	_	_
+19	as	as	IN	IN	as	as	IN	16	AMOD	_	_	_	_	_	_	_	_
+20	the	the	DT	DT	the	the	DT	23	NMOD	_	_	_	_	_	_	_	_
+21	0.9	0.9	CD	CD	0.9	0.9	CD	22	NMOD	_	_	_	_	_	_	_	_
+22	%	%	NN	NN	%	%	NN	23	NMOD	_	_	_	_	_	A2	_	_
+23	gain	gain	NN	NN	gain	gain	NN	19	PMOD	gain.01	_	_	_	_	_	A1	_
+24	reported	report	VBN	VBN	reported	report	VBN	23	APPO	report.01	_	_	_	_	SU	_	_
+25	Friday	friday	NNP	NNP	Friday	friday	NNP	24	TMP	_	_	_	_	_	_	AM-TMP	_
+26	in	in	IN	IN	in	in	IN	24	LOC	_	_	_	_	_	A1	AM-LOC	_
+27	the	the	DT	DT	the	the	DT	30	NMOD	_	_	_	_	_	_	_	_
+28	producer	producer	NN	NN	producer	producer	NN	30	NMOD	_	_	_	_	_	_	_	_
+29	price	price	NN	NN	price	price	NN	30	NMOD	_	_	_	_	_	_	_	_
+30	index	index	NN	NN	index	index	NN	26	PMOD	index.01	_	_	_	_	_	_	A1
+31	.	.	.	.	.	.	.	10	P	_	_	_	_	_	_	_	_
+
+1	That	that	DT	DT	That	that	DT	2	NMOD	_	_	_	_	_	_	_
+2	gain	gain	NN	NN	gain	gain	NN	3	SBJ	_	A1	_	_	_	_	_
+3	was	be	VBD	VBD	was	be	VBD	0	ROOT	_	_	_	_	_	_	_
+4	being	be	VBG	VBG	being	be	VBG	3	VC	_	_	_	_	_	_	_
+5	cited	cite	VBD	VBD	cited	cite	VBD	4	VC	cite.01	_	_	_	_	_	_
+6	as	as	IN	IN	as	as	IN	5	CLR	_	A2	_	_	_	_	_
+7	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_	_	_	_
+8	reason	reason	NN	NN	reason	reason	NN	6	PMOD	reason.01	_	_	_	_	_	_
+9	the	the	DT	DT	the	the	DT	11	NMOD	_	_	_	_	_	_	_
+10	stock	stock	NN	NN	stock	stock	NN	11	NMOD	_	_	_	_	_	_	_
+11	market	market	NN	NN	market	market	NN	12	SBJ	_	_	_	_	_	_	_
+12	was	be	VBD	VBD	was	be	VBD	8	NMOD	_	_	A1	_	_	_	_
+13	down	down	IN	IN	down	down	IN	12	PRD	_	_	_	_	_	_	_
+14	early	early	RB	RB	early	early	RB	12	TMP	_	_	_	_	_	_	_
+15	in	in	IN	IN	in	in	IN	14	AMOD	_	_	_	_	_	_	_
+16	Friday	friday	NNP	NNP	Friday	friday	NNP	18	NMOD	_	_	_	AM-TMP	_	_	_
+17	's	's	POS	POS	's	's	POS	16	SUFFIX	_	_	_	_	_	_	_
+18	session	session	NN	NN	session	session	NN	15	PMOD	session.01	_	_	_	_	_	_
+19	,	,	,	,	,	,	,	12	P	_	_	_	_	_	_	_
+20	before	before	IN	IN	before	before	IN	12	TMP	_	_	_	_	_	_	_
+21	it	it	PRP	PRP	it	it	PRP	22	SBJ	_	_	_	_	A1	A1	_
+22	got	get	VBD	VBD	got	get	VBD	20	SUB	get.03	_	_	_	_	_	_
+23	started	start	VBN	VBN	started	start	VBN	22	OPRD	start.01	_	_	_	A2	_	_
+24	on	on	IN	IN	on	on	IN	23	CLR	_	_	_	_	_	AM-LOC	_
+25	its	its	PRP$	PRP$	its	its	PRP$	30	NMOD	_	_	_	_	_	_	A1
+26	reckless	reckless	JJ	JJ	reckless	reckless	JJ	30	NMOD	_	_	_	_	_	_	AM-MNR
+27	190-point	190-point	JJ	JJ	190	190	CD	29	HMOD	_	_	_	_	_	_	_
+28	_	_	_	_	-	-	HYPH	27	HYPH	_	_	_	_	_	_	_
+29	_	_	_	_	point	point	NN	30	NMOD	_	_	_	_	_	_	A2
+30	plunge	plunge	NN	NN	plunge	plunge	NN	24	PMOD	plunge.01	_	_	_	_	_	_
+31	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_	_
+
+1	Economists	economist	NNS	NNS	Economists	economist	NNS	2	SBJ	_	A1	_	_	_	_	_	_
+2	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_	_	_
+3	divided	divide	VBN	VBN	divided	divide	VBN	2	VC	divide.02	_	_	_	_	_	_	_
+4	as	as	IN	IN	as	as	IN	3	ADV	_	AM-CAU	_	_	_	_	_	_
+5	to	to	TO	TO	to	to	TO	4	PMOD	_	_	_	_	_	_	_	_
+6	how	how	WRB	WRB	how	how	WRB	9	NMOD	_	_	A2	_	_	_	_	_
+7	much	much	JJ	JJ	much	much	JJ	6	AMOD	_	_	_	_	_	_	_	_
+8	manufacturing	manufacture	VBG	VBG	manufacturing	manufacture	VBG	9	NMOD	_	_	A1	_	_	_	_	_
+9	strength	strength	NN	NN	strength	strength	NN	13	OBJ	strength.01	_	_	_	A1	_	_	_
+10	they	they	PRP	PRP	they	they	PRP	11	SBJ	_	_	_	A0	A0	_	_	_
+11	expect	expect	VBP	VBP	expect	expect	VBP	5	PMOD	expect.01	_	_	_	_	_	_	_
+12	to	to	TO	TO	to	to	TO	11	OPRD	_	_	_	A1	_	_	_	_
+13	see	see	VB	VB	see	see	VB	12	IM	see.01	_	_	_	_	_	_	_
+14	in	in	IN	IN	in	in	IN	13	LOC	_	_	_	_	AM-LOC	_	_	_
+15	September	september	NNP	NNP	September	september	NNP	16	NMOD	_	_	_	_	_	AM-TMP	_	_
+16	reports	report	NNS	NNS	reports	report	NNS	14	PMOD	report.01	_	_	_	_	_	_	_
+17	on	on	IN	IN	on	on	IN	16	NMOD	_	_	_	_	_	A1	_	_
+18	industrial	industrial	JJ	JJ	industrial	industrial	JJ	19	NMOD	_	_	_	_	_	_	AM-LOC	_
+19	production	production	NN	NN	production	production	NN	17	PMOD	production.01	_	_	_	_	_	_	_
+20	and	and	CC	CC	and	and	CC	19	COORD	_	_	_	_	_	_	_	_
+21	capacity	capacity	NN	NN	capacity	capacity	NN	22	NMOD	_	_	_	_	_	_	_	A1
+22	utilization	utilization	NN	NN	utilization	utilization	NN	20	CONJ	utilization.01	_	_	_	_	_	_	_
+23	,	,	,	,	,	,	,	16	P	_	_	_	_	_	_	_	_
+24	also	also	RB	RB	also	also	RB	16	APPO	_	_	_	_	_	_	_	_
+25	due	due	JJ	JJ	due	due	JJ	24	AMOD	_	_	_	_	_	_	_	_
+26	tomorrow	tomorrow	NN	NN	tomorrow	tomorrow	NN	24	TMP	_	_	_	_	_	_	_	_
+27	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_	_	_
+
+1	Meanwhile	meanwhile	RB	RB	Meanwhile	meanwhile	RB	10	ADV	_	_	AM-TMP	_
+2	,	,	,	,	,	,	,	10	P	_	_	_	_
+3	September	september	NNP	NNP	September	september	NNP	5	NMOD	_	AM-TMP	_	_
+4	housing	housing	NN	NN	housing	housing	NN	5	NMOD	_	A1	_	_
+5	starts	start	NNS	NNS	starts	start	NNS	10	SBJ	start.02	A2	A1	A1
+6	,	,	,	,	,	,	,	5	P	_	_	_	_
+7	due	due	JJ	JJ	due	due	JJ	5	APPO	_	_	_	_
+8	Wednesday	wednesday	NNP	NNP	Wednesday	wednesday	NNP	7	AMOD	_	_	_	_
+9	,	,	,	,	,	,	,	5	P	_	_	_	_
+10	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_
+11	thought	think	VBN	VBN	thought	think	VBN	10	VC	think.01	_	_	_
+12	to	to	TO	TO	to	to	TO	11	OPRD	_	_	C-A1	_
+13	have	have	VB	VB	have	have	VB	12	IM	_	_	_	_
+14	inched	inch	VBN	VBN	inched	inch	VBN	13	VC	inch.01	_	_	_
+15	upward	upward	RB	RB	upward	upward	RB	14	ADV	_	_	_	A5
+16	.	.	.	.	.	.	.	10	P	_	_	_	_
+
+1	``	``	``	``	``	``	``	3	P	_	_	_	_	_
+2	There	there	EX	EX	There	there	EX	3	SBJ	_	_	_	_	_
+3	's	be	VBZ	VBZ	's	be	VBZ	15	OBJ	_	_	_	A1	_
+4	a	a	DT	DT	a	a	DT	5	NMOD	_	_	_	_	_
+5	possibility	possibility	NN	NN	possibility	possibility	NN	3	PRD	possibility.01	A2	_	_	_
+6	of	of	IN	IN	of	of	IN	5	NMOD	_	A1	_	_	_
+7	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_	_
+8	surprise	surprise	NN	NN	surprise	surprise	NN	6	PMOD	_	_	_	_	_
+9	''	''	''	''	''	''	''	8	P	_	_	_	_	_
+10	in	in	IN	IN	in	in	IN	8	LOC	_	_	_	_	_
+11	the	the	DT	DT	the	the	DT	13	NMOD	_	_	_	_	_
+12	trade	trade	NN	NN	trade	trade	NN	13	NMOD	_	_	A1	_	_
+13	report	report	NN	NN	report	report	NN	10	PMOD	report.01	_	_	_	_
+14	,	,	,	,	,	,	,	15	P	_	_	_	_	_
+15	said	say	VBD	VBD	said	say	VBD	0	ROOT	say.01	_	_	_	_
+16	Michael	michael	NNP	NNP	Michael	michael	NNP	17	NAME	_	_	_	_	_
+17	Englund	englund	NNP	NNP	Englund	englund	NNP	15	SBJ	_	_	_	A0	_
+18	,	,	,	,	,	,	,	17	P	_	_	_	_	_
+19	director	director	NN	NN	director	director	NN	17	APPO	director.01	_	_	_	A0
+20	of	of	IN	IN	of	of	IN	19	NMOD	_	_	_	_	A1
+21	research	research	NN	NN	research	research	NN	20	PMOD	_	_	_	_	_
+22	at	at	IN	IN	at	at	IN	19	NMOD	_	_	_	_	A2
+23	MMS	mm	NNP	NNP	MMS	mm	NNS	22	PMOD	_	_	_	_	_
+24	.	.	.	.	.	.	.	15	P	_	_	_	_	_
+
+1	A	a	DT	DT	A	a	DT	2	NMOD	_	_	_	_	_	_	_
+2	widening	widening	NN	NN	widening	widening	NN	17	SBJ	widening.01	_	_	A0	_	_	_
+3	of	of	IN	IN	of	of	IN	2	NMOD	_	A1	_	_	_	_	_
+4	the	the	DT	DT	the	the	DT	5	NMOD	_	_	_	_	_	_	_
+5	deficit	deficit	NN	NN	deficit	deficit	NN	3	PMOD	_	_	_	_	_	_	_
+6	,	,	,	,	,	,	,	17	P	_	_	_	_	_	_	_
+7	if	if	IN	IN	if	if	IN	17	ADV	_	_	_	AM-ADV	_	_	_
+8	it	it	PRP	PRP	it	it	PRP	9	SBJ	_	_	A1	_	_	_	_
+9	were	be	VBD	VBD	were	be	VBD	7	SUB	_	_	_	_	_	_	_
+10	combined	combine	VBN	VBN	combined	combine	VBN	9	VC	combine.01	_	_	_	_	_	_
+11	with	with	IN	IN	with	with	IN	10	CLR	_	_	A2	_	_	_	_
+12	a	a	DT	DT	a	a	DT	15	NMOD	_	_	_	_	_	_	_
+13	stubbornly	stubbornly	RB	RB	stubbornly	stubbornly	RB	14	AMOD	_	_	_	_	_	_	_
+14	strong	strong	JJ	JJ	strong	strong	JJ	15	NMOD	_	_	_	_	_	_	_
+15	dollar	dollar	NN	NN	dollar	dollar	NN	11	PMOD	_	_	_	_	_	_	_
+16	,	,	,	,	,	,	,	17	P	_	_	_	_	_	_	_
+17	would	would	MD	MD	would	would	MD	0	ROOT	_	_	_	AM-MOD	_	_	_
+18	exacerbate	exacerbate	VB	VB	exacerbate	exacerbate	VB	17	VC	exacerbate.01	_	_	_	_	_	_
+19	trade	trade	NN	NN	trade	trade	NN	20	NMOD	_	_	_	_	A2	_	_
+20	problems	problem	NNS	NNS	problems	problem	NNS	18	OBJ	problem.01	_	_	A1	_	_	_
+21	--	--	:	:	--	--	:	17	P	_	_	_	_	_	_	_
+22	but	but	CC	CC	but	but	CC	17	COORD	_	_	_	_	_	_	_
+23	the	the	DT	DT	the	the	DT	24	NMOD	_	_	_	_	_	_	_
+24	dollar	dollar	NN	NN	dollar	dollar	NN	25	SBJ	_	_	_	_	_	A1	_
+25	weakened	weaken	VBD	VBD	weakened	weaken	VBD	22	CONJ	weaken.01	_	_	_	_	_	_
+26	Friday	friday	NNP	NNP	Friday	friday	NNP	25	TMP	_	_	_	_	_	AM-TMP	_
+27	as	as	IN	IN	as	as	IN	25	TMP	_	_	_	_	_	AM-ADV	_
+28	stocks	stocks	NNS	NNS	stocks	stocks	NNS	29	SBJ	_	_	_	_	_	_	A1
+29	plummeted	plummet	VBD	VBD	plummeted	plummet	VBD	27	SUB	plummet.01	_	_	_	_	_	_
+30	.	.	.	.	.	.	.	17	P	_	_	_	_	_	_	_
+
+1	In	in	IN	IN	In	in	IN	10	ADV	_	AM-DIS	_	_	_	_
+2	any	any	DT	DT	any	any	DT	3	NMOD	_	_	_	_	_	_
+3	event	event	NN	NN	event	event	NN	1	PMOD	_	_	_	_	_	_
+4	,	,	,	,	,	,	,	10	P	_	_	_	_	_	_
+5	Mr.	mr.	NNP	NNP	Mr.	mr.	NNP	6	TITLE	_	_	_	_	_	_
+6	Englund	englund	NNP	NNP	Englund	englund	NNP	10	SBJ	_	A0	_	_	_	_
+7	and	and	CC	CC	and	and	CC	6	COORD	_	_	_	_	_	_
+8	many	many	JJ	JJ	many	many	DT	9	NMOD	_	_	_	_	_	_
+9	others	others	NNS	NNS	others	others	NNS	7	CONJ	_	_	_	_	_	_
+10	say	say	VBP	VBP	say	say	VBP	0	ROOT	say.01	_	_	_	_	_
+11	that	that	IN	IN	that	that	IN	10	OBJ	_	A1	_	_	_	_
+12	the	the	DT	DT	the	the	DT	14	NMOD	_	_	_	_	_	_
+13	easy	easy	JJ	JJ	easy	easy	JJ	14	NMOD	_	_	AM-MNR	_	_	_
+14	gains	gain	NNS	NNS	gains	gain	NNS	20	SBJ	gain.01	_	A2	_	_	A1
+15	in	in	IN	IN	in	in	IN	14	NMOD	_	_	A1	_	_	_
+16	narrowing	narrow	VBG	VBG	narrowing	narrow	VBG	15	PMOD	narrow.01	_	_	_	_	_
+17	the	the	DT	DT	the	the	DT	19	NMOD	_	_	_	_	_	_
+18	trade	trade	NN	NN	trade	trade	NN	19	NMOD	_	_	_	_	A1	_
+19	gap	gap	NN	NN	gap	gap	NN	16	OBJ	gap.01	_	_	A1	_	_
+20	have	have	VBP	VBP	have	have	VBP	11	SUB	_	_	_	_	_	_
+21	already	already	RB	RB	already	already	RB	20	TMP	_	_	_	_	_	AM-TMP
+22	been	be	VBN	VBN	been	be	VBN	20	VC	_	_	_	_	_	_
+23	made	make	VBN	VBN	made	make	VBN	22	VC	make.01	_	_	_	_	_
+24	.	.	.	.	.	.	.	10	P	_	_	_	_	_	_
+
+1	``	``	``	``	``	``	``	26	P	_	_	_	_	_
+2	Trade	trade	NN	NN	Trade	trade	NN	3	SBJ	_	_	_	_	_
+3	is	be	VBZ	VBZ	is	be	VBZ	26	OBJ	_	_	_	_	A1
+4	definitely	definitely	RB	RB	definitely	definitely	RB	3	ADV	_	AM-ADV	_	_	_
+5	going	go	VBG	VBG	going	go	VBG	3	VC	go.04	_	_	_	_
+6	to	to	TO	TO	to	to	TO	5	VC	_	_	_	_	_
+7	be	be	VB	VB	be	be	VB	6	IM	_	_	_	_	_
+8	more	more	RBR	RBR	more	more	RBR	10	AMOD	_	_	_	_	_
+9	politically	politically	RB	RB	politically	politically	RB	10	AMOD	_	_	_	_	_
+10	sensitive	sensitive	JJ	JJ	sensitive	sensitive	JJ	7	PRD	_	_	_	_	_
+11	over	over	IN	IN	over	over	IN	7	TMP	_	_	_	_	_
+12	the	the	DT	DT	the	the	DT	17	NMOD	_	_	_	_	_
+13	next	next	JJ	JJ	next	next	JJ	17	NMOD	_	_	_	_	_
+14	six	six	CD	CD	six	six	CD	17	NMOD	_	_	_	_	_
+15	or	or	CC	CC	or	or	CC	14	COORD	_	_	_	_	_
+16	seven	seven	CD	CD	seven	seven	CD	15	CONJ	_	_	_	_	_
+17	months	month	NNS	NNS	months	month	NNS	11	PMOD	_	_	_	_	_
+18	as	as	IN	IN	as	as	IN	7	TMP	_	_	_	_	_
+19	improvement	improvement	NN	NN	improvement	improvement	NN	20	SBJ	_	_	A1	A1	_
+20	begins	begin	VBZ	VBZ	begins	begin	VBZ	18	SUB	begin.01	_	_	_	_
+21	to	to	TO	TO	to	to	TO	20	OPRD	_	_	C-A1	_	_
+22	slow	slow	VB	VB	slow	slow	VB	21	IM	slow.01	_	_	_	_
+23	,	,	,	,	,	,	,	26	P	_	_	_	_	_
+24	''	''	''	''	''	''	''	26	P	_	_	_	_	_
+25	he	he	PRP	PRP	he	he	PRP	26	SBJ	_	_	_	_	A0
+26	said	say	VBD	VBD	said	say	VBD	0	ROOT	say.01	_	_	_	_
+27	.	.	.	.	.	.	.	26	P	_	_	_	_	_
+
+1	Exports	export	NNS	NNS	Exports	export	NNS	2	SBJ	_	A1	A1	A2	_	_
+2	are	be	VBP	VBP	are	be	VBP	23	OBJ	_	_	_	_	_	A1
+3	thought	think	VBN	VBN	thought	think	VBN	2	VC	think.01	_	_	_	_	_
+4	to	to	TO	TO	to	to	TO	3	OPRD	_	C-A1	_	_	_	_
+5	have	have	VB	VB	have	have	VB	4	IM	_	_	_	_	_	_
+6	risen	rise	VBN	VBN	risen	rise	VBN	5	VC	rise.01	_	_	_	_	_
+7	strongly	strongly	RB	RB	strongly	strongly	RB	6	ADV	_	_	A2	_	_	_
+8	in	in	IN	IN	in	in	IN	7	TMP	_	_	_	_	_	_
+9	August	august	NNP	NNP	August	august	NNP	8	PMOD	_	_	_	_	_	_
+10	,	,	,	,	,	,	,	7	P	_	_	_	_	_	_
+11	but	but	CC	CC	but	but	CC	7	COORD	_	_	_	_	_	_
+12	probably	probably	RB	RB	probably	probably	RB	13	AMOD	_	_	_	_	_	_
+13	not	not	RB	RB	not	not	RB	11	CONJ	_	_	_	_	_	_
+14	enough	enough	RB	RB	enough	enough	RB	13	AMOD	_	_	_	_	_	_
+15	to	to	TO	TO	to	to	TO	13	AMOD	_	_	_	_	_	_
+16	offset	offset	VB	VB	offset	offset	VB	15	IM	offset.01	_	_	_	_	_
+17	the	the	DT	DT	the	the	DT	18	NMOD	_	_	_	_	_	_
+18	jump	jump	NN	NN	jump	jump	NN	16	OBJ	jump.01	_	_	A1	_	_
+19	in	in	IN	IN	in	in	IN	18	NMOD	_	_	_	_	A1	_
+20	imports	import	NNS	NNS	imports	import	NNS	19	PMOD	_	_	_	_	_	_
+21	,	,	,	,	,	,	,	23	P	_	_	_	_	_	_
+22	economists	economist	NNS	NNS	economists	economist	NNS	23	SBJ	_	_	_	_	_	A0
+23	said	say	VBD	VBD	said	say	VBD	0	ROOT	say.01	_	_	_	_	_
+24	.	.	.	.	.	.	.	23	P	_	_	_	_	_	_
+
+1	Views	view	NNS	NNS	Views	view	NNS	5	SBJ	view.02	_	_	A1	_	_	_	_	_	_	_	_	_
+2	on	on	IN	IN	on	on	IN	1	NMOD	_	A1	_	_	_	_	_	_	_	_	_	_	_
+3	manufacturing	manufacture	VBG	VBG	manufacturing	manufacture	VBG	4	NMOD	_	_	A1	_	_	_	_	_	_	_	_	_	_
+4	strength	strength	NN	NN	strength	strength	NN	2	PMOD	strength.01	_	A2	_	_	_	_	_	_	_	_	_	_
+5	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_	_	_	_	_	_	_	_
+6	split	split	VBN	VBN	split	split	VBN	5	PRD	split.01	_	_	_	_	_	_	_	_	_	_	_	_
+7	between	between	IN	IN	between	between	IN	6	AMOD	_	_	_	A2	_	_	_	_	_	_	_	_	_
+8	economists	economist	NNS	NNS	economists	economist	NNS	7	PMOD	_	_	_	_	A0	_	_	_	_	_	_	_	_
+9	who	who	WP	WP	who	who	WP	10	SBJ	_	_	_	_	R-A0	_	_	_	_	_	_	_	_
+10	read	read	VBP	VBP	read	read	VBP	8	NMOD	read.01	_	_	_	_	_	_	_	_	_	_	_	_
+11	September	september	NNP	NNP	September	september	NNP	14	NMOD	_	_	_	_	_	AM-TMP	_	_	_	_	_	_	_
+12	's	's	POS	POS	's	's	POS	11	SUFFIX	_	_	_	_	_	_	_	_	_	_	_	_	_
+13	low	low	JJ	JJ	low	low	JJ	14	NMOD	_	_	_	_	_	A2	_	_	_	_	_	_	_
+14	level	level	NN	NN	level	level	NN	10	OBJ	level.01	_	_	_	A1	_	_	_	_	_	_	_	_
+15	of	of	IN	IN	of	of	IN	14	NMOD	_	_	_	_	_	A1	_	_	_	_	_	_	_
+16	factory	factory	NN	NN	factory	factory	NN	17	NMOD	_	_	_	_	_	_	A2	_	_	_	_	_	_
+17	job	job	NN	NN	job	job	NN	18	NMOD	job.01	_	_	_	_	_	A1	_	_	_	_	_	_
+18	growth	growth	NN	NN	growth	growth	NN	15	PMOD	growth.01	_	_	_	_	_	_	A1	_	_	_	_	_
+19	as	as	IN	IN	as	as	IN	10	ADV	_	_	_	_	AM-ADV	_	_	_	_	_	_	_	_
+20	a	a	DT	DT	a	a	DT	21	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+21	sign	sign	NN	NN	sign	sign	NN	19	PMOD	sign.01	_	_	_	_	_	_	_	A0	_	_	_	_
+22	of	of	IN	IN	of	of	IN	21	NMOD	_	_	_	_	_	_	_	_	A1	_	_	_	_
+23	a	a	DT	DT	a	a	DT	24	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+24	slowdown	slowdown	NN	NN	slowdown	slowdown	NN	22	PMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+25	and	and	CC	CC	and	and	CC	8	COORD	_	_	_	_	_	_	_	_	_	_	_	_	_
+26	those	those	DT	DT	those	those	DT	25	CONJ	_	_	_	_	_	_	_	_	_	A0	_	_	_
+27	who	who	WP	WP	who	who	WP	28	SBJ	_	_	_	_	_	_	_	_	_	R-A0	_	_	_
+28	use	use	VBP	VBP	use	use	VBP	26	NMOD	use.01	_	_	_	_	_	_	_	_	_	_	_	_
+29	the	the	DT	DT	the	the	DT	35	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+30	somewhat	somewhat	RB	RB	somewhat	somewhat	RB	32	AMOD	_	_	_	_	_	_	_	_	_	_	AM-EXT	_	_
+31	more	more	JJR	JJR	more	more	DT	30	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+32	comforting	comfort	VBG	VBG	comforting	comfort	VBG	35	NMOD	comfort.01	_	_	_	_	_	_	_	_	_	_	_	_
+33	total	total	JJ	JJ	total	total	JJ	35	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+34	employment	employment	NN	NN	employment	employment	NN	35	NMOD	_	_	_	_	_	_	_	_	_	_	_	A1	_
+35	figures	figure	NNS	NNS	figures	figure	NNS	28	OBJ	figure.02	_	_	_	_	_	_	_	_	A1	A1	A2	_
+36	in	in	IN	IN	in	in	IN	28	ADV	_	_	_	_	_	_	_	_	_	AM-LOC	_	_	_
+37	their	their	PRP$	PRP$	their	their	PRP$	38	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	A0
+38	calculations	calculation	NNS	NNS	calculations	calculation	NNS	36	PMOD	calculation.01	_	_	_	_	_	_	_	_	_	_	_	_
+39	.	.	.	.	.	.	.	5	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_	_	_	_	_	_
+2	wide	wide	JJ	JJ	wide	wide	JJ	3	NMOD	_	A2	_	_	_	_	_	_	_	_
+3	range	range	NN	NN	range	range	NN	11	SBJ	range.01	_	_	_	_	A0	_	_	_	_
+4	of	of	IN	IN	of	of	IN	3	NMOD	_	A1	_	_	_	_	_	_	_	_
+5	estimates	estimate	NNS	NNS	estimates	estimate	NNS	4	PMOD	estimate.01	_	A2	_	_	_	_	_	_	_
+6	for	for	IN	IN	for	for	IN	5	NMOD	_	_	A1	_	_	_	_	_	_	_
+7	the	the	DT	DT	the	the	DT	10	NMOD	_	_	_	_	_	_	_	_	_	_
+8	industrial	industrial	JJ	JJ	industrial	industrial	JJ	9	NMOD	_	_	_	A0	_	_	_	_	_	_
+9	output	output	NN	NN	output	output	NN	10	NMOD	output.01	_	_	A1	_	_	_	_	_	_
+10	number	number	NN	NN	number	number	NN	6	PMOD	number.03	_	_	_	A1	_	_	_	_	_
+11	underscores	underscore	VBZ	VBZ	underscores	underscore	VBZ	0	ROOT	underscore.01	_	_	_	_	_	_	_	_	_
+12	the	the	DT	DT	the	the	DT	13	NMOD	_	_	_	_	_	_	_	_	_	_
+13	differences	difference	NNS	NNS	differences	difference	NNS	11	OBJ	_	_	_	_	_	A1	_	_	_	_
+14	:	:	:	:	:	:	:	11	P	_	_	_	_	_	_	_	_	_	_
+15	The	the	DT	DT	The	the	DT	16	NMOD	_	_	_	_	_	_	_	_	_	_
+16	forecasts	forecast	NNS	NNS	forecasts	forecast	NNS	17	SBJ	forecast.01	_	_	_	_	_	_	A1	_	_
+17	run	run	VBD	VBD	run	run	VBD	11	COORD	run.04	_	_	_	_	_	SU	_	_	_
+18	from	from	IN	IN	from	from	IN	17	DIR	_	_	_	_	_	_	_	A3	_	_
+19	a	a	DT	DT	a	a	DT	20	NMOD	_	_	_	_	_	_	_	_	_	_
+20	drop	drop	NN	NN	drop	drop	NN	18	PMOD	drop.01	_	_	_	_	_	_	_	_	_
+21	of	of	IN	IN	of	of	IN	20	NMOD	_	_	_	_	_	_	_	_	A2	_
+22	0.5	0.5	CD	CD	0.5	0.5	CD	23	NMOD	_	_	_	_	_	_	_	_	_	_
+23	%	%	NN	NN	%	%	NN	21	PMOD	_	_	_	_	_	_	_	_	_	_
+24	to	to	TO	TO	to	to	TO	17	DIR	_	_	_	_	_	_	_	A4	_	_
+25	an	an	DT	DT	an	an	DT	26	NMOD	_	_	_	_	_	_	_	_	_	_
+26	increase	increase	NN	NN	increase	increase	NN	24	PMOD	increase.01	_	_	_	_	_	_	_	_	_
+27	of	of	IN	IN	of	of	IN	26	NMOD	_	_	_	_	_	_	_	_	_	A2
+28	0.4	0.4	CD	CD	0.4	0.4	CD	29	NMOD	_	_	_	_	_	_	_	_	_	_
+29	%	%	NN	NN	%	%	NN	27	PMOD	_	_	_	_	_	_	_	_	_	_
+30	,	,	,	,	,	,	,	17	P	_	_	_	_	_	_	_	_	_	_
+31	according	accord	VBG	VBG	according	accord	VBG	17	ADV	_	_	_	_	_	_	_	AM-ADV	_	_
+32	to	to	TO	TO	to	to	TO	31	PMOD	_	_	_	_	_	_	_	_	_	_
+33	MMS	mm	NNP	NNP	MMS	mm	NNS	32	PMOD	_	_	_	_	_	_	_	_	_	_
+34	.	.	.	.	.	.	.	11	P	_	_	_	_	_	_	_	_	_	_
+
+1	A	a	DT	DT	A	a	DT	2	NMOD	_	_	_	_	_	_	_	_	_
+2	rebound	rebound	NN	NN	rebound	rebound	NN	16	SBJ	rebound.01	_	_	A0	A0	_	A1	A0	_
+3	in	in	IN	IN	in	in	IN	2	NMOD	_	A1	_	_	_	_	_	_	_
+4	energy	energy	NN	NN	energy	energy	NN	5	NMOD	_	_	A1	_	_	_	_	_	_
+5	prices	price	NNS	NNS	prices	price	NNS	3	PMOD	price.01	_	A2	_	_	_	_	_	_
+6	,	,	,	,	,	,	,	2	P	_	_	_	_	_	_	_	_	_
+7	which	which	WDT	WDT	which	which	WDT	8	SBJ	_	_	_	R-A0	R-A0	_	_	_	_
+8	helped	help	VBD	VBD	helped	help	VBD	2	NMOD	help.01	_	_	_	_	_	_	_	_
+9	push	push	VB	VB	push	push	VB	8	VC	push.01	_	_	A1	_	_	_	_	_
+10	up	up	RP	RP	up	up	RP	9	PRT	_	_	_	_	A2	_	_	_	_
+11	the	the	DT	DT	the	the	DT	14	NMOD	_	_	_	_	_	_	_	_	_
+12	producer	producer	NN	NN	producer	producer	NN	14	NMOD	_	_	_	_	_	_	_	_	_
+13	price	price	NN	NN	price	price	NN	14	NMOD	_	_	_	_	_	_	_	_	_
+14	index	index	NN	NN	index	index	NN	9	OBJ	index.01	_	_	_	A1	A1	_	_	_
+15	,	,	,	,	,	,	,	2	P	_	_	_	_	_	_	_	_	_
+16	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_	_	_	_
+17	expected	expect	VBN	VBN	expected	expect	VBN	16	VC	expect.01	_	_	_	_	_	_	_	_
+18	to	to	TO	TO	to	to	TO	17	OPRD	_	_	_	_	_	_	C-A1	_	_
+19	do	do	VB	VB	do	do	VB	18	IM	do.02	_	_	_	_	_	_	_	_
+20	the	the	DT	DT	the	the	DT	21	NMOD	_	_	_	_	_	_	_	_	_
+21	same	same	JJ	JJ	same	same	JJ	19	OBJ	_	_	_	_	_	_	_	A1	_
+22	in	in	IN	IN	in	in	IN	19	ADV	_	_	_	_	_	_	_	AM-LOC	_
+23	the	the	DT	DT	the	the	DT	26	NMOD	_	_	_	_	_	_	_	_	_
+24	consumer	consumer	NN	NN	consumer	consumer	NN	25	NMOD	_	_	_	_	_	_	_	_	_
+25	price	price	NN	NN	price	price	NN	26	NMOD	_	_	_	_	_	_	_	_	_
+26	report	report	NN	NN	report	report	NN	22	PMOD	report.01	_	_	_	_	_	_	_	A1
+27	.	.	.	.	.	.	.	16	P	_	_	_	_	_	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_	_
+2	consensus	consensus	NN	NN	consensus	consensus	NN	3	NMOD	_	A0	_	_	_	_
+3	view	view	NN	NN	view	view	NN	4	SBJ	view.02	_	A0	_	_	_
+4	expects	expect	VBZ	VBZ	expects	expect	VBZ	0	ROOT	expect.01	_	_	_	_	_
+5	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_	_	_
+6	0.4	0.4	CD	CD	0.4	0.4	CD	7	NMOD	_	_	_	_	_	_
+7	%	%	NN	NN	%	%	NN	8	NMOD	perc-sign.01	_	_	_	A2	_
+8	increase	increase	NN	NN	increase	increase	NN	4	OBJ	increase.01	_	A1	SU	_	_
+9	in	in	IN	IN	in	in	IN	8	NMOD	_	_	_	A1	A1	_
+10	the	the	DT	DT	the	the	DT	12	NMOD	_	_	_	_	_	_
+11	September	september	NNP	NNP	September	september	NNP	12	NMOD	_	_	_	_	_	_
+12	CPI	cpi	NNP	NNP	CPI	cpi	NNP	9	PMOD	_	_	_	_	_	_
+13	after	after	IN	IN	after	after	IN	4	TMP	_	_	AM-TMP	_	_	_
+14	a	a	DT	DT	a	a	DT	16	NMOD	_	_	_	_	_	_
+15	flat	flat	JJ	JJ	flat	flat	JJ	16	NMOD	_	_	_	_	_	AM-MNR
+16	reading	reading	NN	NN	reading	reading	NN	13	PMOD	reading.01	_	_	_	_	_
+17	in	in	IN	IN	in	in	IN	16	TMP	_	_	_	_	_	AM-TMP
+18	August	august	NNP	NNP	August	august	NNP	17	PMOD	_	_	_	_	_	_
+19	.	.	.	.	.	.	.	4	P	_	_	_	_	_	_
+
+1	Robert	robert	NNP	NNP	Robert	robert	NNP	3	NAME	_	_	_	_	_	_
+2	H.	h.	NNP	NNP	H.	h.	NNP	3	NAME	_	_	_	_	_	_
+3	Chandross	chandross	NNP	NNP	Chandross	chandross	NNP	15	SBJ	_	_	_	_	_	_
+4	,	,	,	,	,	,	,	3	P	_	_	_	_	_	_
+5	an	an	DT	DT	an	an	DT	6	NMOD	_	_	_	_	_	_
+6	economist	economist	NN	NN	economist	economist	NN	3	APPO	economist.01	A0	_	_	_	_
+7	for	for	IN	IN	for	for	IN	6	NMOD	_	A2	_	_	_	_
+8	Lloyd	lloyd	NNP	NNP	Lloyd	lloyd	NNP	10	NAME	_	_	_	_	_	_
+9	's	's	POS	POS	's	's	POS	10	NAME	_	_	_	_	_	_
+10	Bank	bank	NNP	NNP	Bank	bank	NNP	7	PMOD	_	_	_	_	_	_
+11	in	in	IN	IN	in	in	IN	10	LOC	_	_	_	_	_	_
+12	New	new	NNP	NNP	New	new	NNP	13	NAME	_	_	_	_	_	_
+13	York	york	NNP	NNP	York	york	NNP	11	PMOD	_	_	_	_	_	_
+14	,	,	,	,	,	,	,	3	P	_	_	_	_	_	_
+15	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_
+16	among	among	IN	IN	among	among	IN	15	PRD	_	_	_	_	_	_
+17	those	those	DT	DT	those	those	DT	16	PMOD	_	_	A0	_	_	_
+18	expecting	expect	VBG	VBG	expecting	expect	VBG	17	APPO	expect.01	_	_	_	_	_
+19	a	a	DT	DT	a	a	DT	22	NMOD	_	_	_	_	_	_
+20	more	more	RBR	RBR	more	more	RBR	21	AMOD	_	_	_	_	_	_
+21	moderate	moderate	JJ	JJ	moderate	moderate	JJ	22	NMOD	_	_	_	AM-MNR	_	_
+22	gain	gain	NN	NN	gain	gain	NN	18	OBJ	gain.01	_	A1	A2	_	_
+23	in	in	IN	IN	in	in	IN	22	LOC	_	_	_	A1	_	_
+24	the	the	DT	DT	the	the	DT	25	NMOD	_	_	_	_	_	_
+25	CPI	cpi	NNP	NNP	CPI	cpi	NNP	23	PMOD	_	_	_	_	_	_
+26	than	than	IN	IN	than	than	IN	22	NMOD	_	_	_	_	_	_
+27	in	in	IN	IN	in	in	IN	26	PMOD	_	_	_	_	_	_
+28	prices	price	NNS	NNS	prices	price	NNS	27	PMOD	price.01	_	_	_	A2	A1
+29	at	at	IN	IN	at	at	IN	28	LOC	_	_	_	_	AM-LOC	_
+30	the	the	DT	DT	the	the	DT	32	NMOD	_	_	_	_	_	_
+31	producer	producer	NN	NN	producer	producer	NN	32	NMOD	_	_	_	_	_	A2
+32	level	level	NN	NN	level	level	NN	29	PMOD	level.01	_	_	_	_	_
+33	.	.	.	.	.	.	.	15	P	_	_	_	_	_	_
+
+1	``	``	``	``	``	``	``	23	P	_	_	_	_	_
+2	Auto	auto	NN	NN	Auto	auto	NN	3	NMOD	_	A1	_	_	_
+3	prices	price	NNS	NNS	prices	price	NNS	4	SBJ	price.01	A2	A0	A0	_
+4	had	have	VBD	VBD	had	have	VBD	23	OBJ	have.03	_	_	SU	A1
+5	a	a	DT	DT	a	a	DT	7	NMOD	_	_	_	_	_
+6	big	big	JJ	JJ	big	big	JJ	7	NMOD	_	_	_	AM-EXT	_
+7	effect	effect	NN	NN	effect	effect	NN	4	OBJ	effect.01	_	A1	A1	_
+8	in	in	IN	IN	in	in	IN	4	LOC	_	_	AM-LOC	A2	_
+9	the	the	DT	DT	the	the	DT	10	NMOD	_	_	_	_	_
+10	PPI	ppi	NNP	NNP	PPI	ppi	NNP	8	PMOD	_	_	_	_	_
+11	,	,	,	,	,	,	,	4	P	_	_	_	_	_
+12	and	and	CC	CC	and	and	CC	4	COORD	_	_	_	_	_
+13	at	at	IN	IN	at	at	IN	18	LOC	_	_	_	_	_
+14	the	the	DT	DT	the	the	DT	16	NMOD	_	_	_	_	_
+15	CPI	cpi	NNP	NNP	CPI	cpi	NNP	16	NMOD	_	_	_	_	_
+16	level	level	NN	NN	level	level	NN	13	PMOD	_	_	_	_	_
+17	they	they	PRP	PRP	they	they	PRP	18	SBJ	_	_	_	_	_
+18	wo	wo	MD	MD	wo	wo	MD	12	CONJ	_	_	_	_	_
+19	n't	not	RB	RB	n't	not	RB	18	ADV	_	_	_	_	_
+20	,	,	,	,	,	,	,	23	P	_	_	_	_	_
+21	''	''	''	''	''	''	''	23	P	_	_	_	_	_
+22	he	he	PRP	PRP	he	he	PRP	23	SBJ	_	_	_	_	A0
+23	said	say	VBD	VBD	said	say	VBD	0	ROOT	say.01	_	_	_	_
+24	.	.	.	.	.	.	.	23	P	_	_	_	_	_
+
+1	Food	food	NN	NN	Food	food	NN	2	NMOD	_	A1	_	_	_	_	_	_
+2	prices	price	NNS	NNS	prices	price	NNS	3	SBJ	price.01	A2	A1	_	_	_	_	_
+3	are	be	VBP	VBP	are	be	VBP	19	OBJ	_	_	_	_	_	_	A1	_
+4	expected	expect	VBN	VBN	expected	expect	VBN	3	VC	expect.01	_	_	_	_	_	_	_
+5	to	to	TO	TO	to	to	TO	4	OPRD	_	_	C-A1	_	_	_	_	_
+6	be	be	VB	VB	be	be	VB	5	IM	_	_	_	_	_	_	_	_
+7	unchanged	unchanged	JJ	JJ	unchanged	unchanged	JJ	6	PRD	_	_	_	_	_	_	_	_
+8	,	,	,	,	,	,	,	3	P	_	_	_	_	_	_	_	_
+9	but	but	CC	CC	but	but	CC	3	COORD	_	_	_	_	_	_	_	_
+10	energy	energy	NN	NN	energy	energy	NN	11	NMOD	_	_	_	A1	_	_	_	_
+11	costs	costs	NNS	NNS	costs	costs	NNS	12	SBJ	cost.01	_	_	_	A1	A1	_	_
+12	jumped	jump	VBD	VBD	jumped	jump	VBD	9	CONJ	jump.01	_	_	_	_	SU	_	_
+13	as	as	RB	RB	as	as	RB	16	NMOD	_	_	_	_	_	_	_	_
+14	much	much	RB	RB	much	much	JJ	16	NMOD	_	_	_	_	_	_	_	_
+15	as	as	IN	IN	as	as	IN	16	NMOD	_	_	_	_	_	_	_	_
+16	4	4	CD	CD	4	4	CD	17	NMOD	_	_	_	_	_	_	_	_
+17	%	%	NN	NN	%	%	NN	12	OBJ	perc-sign.01	_	_	_	A2	_	_	_
+18	,	,	,	,	,	,	,	19	P	_	_	_	_	_	_	_	_
+19	said	say	VBD	VBD	said	say	VBD	0	ROOT	say.01	_	_	_	_	_	_	_
+20	Gary	gary	NNP	NNP	Gary	gary	NNP	21	NAME	_	_	_	_	_	_	_	_
+21	Ciminero	ciminero	NNP	NNP	Ciminero	ciminero	NNP	19	SBJ	_	_	_	_	_	_	A0	_
+22	,	,	,	,	,	,	,	21	P	_	_	_	_	_	_	_	_
+23	economist	economist	NN	NN	economist	economist	NN	21	APPO	economist.01	_	_	_	_	_	_	A0
+24	at	at	IN	IN	at	at	IN	23	LOC	_	_	_	_	_	_	_	A2
+25	Fleet\/Norstar	fleet\/norstar	NNP	NNP	Fleet	fleet	NNP	29	NAME	_	_	_	_	_	_	_	_
+26	_	_	_	_	/	/	:	25	COORD	_	_	_	_	_	_	_	_
+27	_	_	_	_	Norstar	norstar	NNP	26	CONJ	_	_	_	_	_	_	_	_
+28	Financial	financial	NNP	NNP	Financial	financial	NNP	29	NAME	_	_	_	_	_	_	_	_
+29	Group	group	NNP	NNP	Group	group	NNP	24	PMOD	_	_	_	_	_	_	_	_
+30	.	.	.	.	.	.	.	19	P	_	_	_	_	_	_	_	_
+
+1	He	he	PRP	PRP	He	he	PRP	3	SBJ	_	A0	_	_	_	_
+2	also	also	RB	RB	also	also	RB	3	ADV	_	AM-DIS	_	_	_	_
+3	says	say	VBZ	VBZ	says	say	VBZ	0	ROOT	say.01	_	_	_	_	_
+4	he	he	PRP	PRP	he	he	PRP	5	SBJ	_	_	A0	_	_	_
+5	thinks	think	VBZ	VBZ	thinks	think	VBZ	3	OBJ	think.01	A1	_	_	_	_
+6	``	``	``	``	``	``	``	8	P	_	_	_	_	_	_
+7	core	core	NN	NN	core	core	NN	8	NMOD	core.02	_	_	_	_	_
+8	inflation	inflation	NN	NN	inflation	inflation	NN	20	SBJ	_	_	_	A1	A0	_
+9	,	,	,	,	,	,	,	8	P	_	_	_	_	_	_
+10	''	''	''	''	''	''	''	8	P	_	_	_	_	_	_
+11	which	which	WDT	WDT	which	which	WDT	12	SBJ	_	_	_	_	R-A0	_
+12	excludes	exclude	VBZ	VBZ	excludes	exclude	VBZ	8	NMOD	exclude.01	_	_	_	_	_
+13	the	the	DT	DT	the	the	DT	18	NMOD	_	_	_	_	_	_
+14	volatile	volatile	JJ	JJ	volatile	volatile	JJ	18	NMOD	_	_	_	_	_	_
+15	food	food	NN	NN	food	food	NN	18	NMOD	_	_	_	_	_	_
+16	and	and	CC	CC	and	and	CC	15	COORD	_	_	_	_	_	A1
+17	energy	energy	NN	NN	energy	energy	NN	16	CONJ	_	_	_	_	_	_
+18	prices	price	NNS	NNS	prices	price	NNS	12	OBJ	price.01	_	_	_	A1	A2
+19	,	,	,	,	,	,	,	8	P	_	_	_	_	_	_
+20	was	be	VBD	VBD	was	be	VBD	5	OBJ	_	_	A1	_	_	_
+21	strong	strong	JJ	JJ	strong	strong	JJ	20	PRD	_	_	_	_	_	_
+22	last	last	JJ	JJ	last	last	JJ	23	NMOD	_	_	_	_	_	_
+23	month	month	NN	NN	month	month	NN	20	TMP	_	_	_	_	_	_
+24	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_
+
+1	He	he	PRP	PRP	He	he	PRP	2	SBJ	_	A0	_	_	_	_
+2	expects	expect	VBZ	VBZ	expects	expect	VBZ	0	ROOT	expect.01	_	_	_	_	_
+3	a	a	DT	DT	a	a	DT	4	NMOD	_	_	_	_	_	_
+4	gain	gain	NN	NN	gain	gain	NN	2	OBJ	gain.01	A1	_	_	_	_
+5	of	of	IN	IN	of	of	IN	4	NMOD	_	_	A2	_	_	_
+6	as	as	RB	RB	as	as	RB	7	DEP	_	_	_	_	_	_
+7	much	much	JJ	JJ	much	much	JJ	10	NMOD	_	_	_	_	_	_
+8	as	as	IN	IN	as	as	IN	7	DEP	_	_	_	_	_	_
+9	0.5	0.5	CD	CD	0.5	0.5	CD	7	DEP	_	_	_	_	_	_
+10	%	%	NN	NN	%	%	NN	5	PMOD	_	_	_	_	_	_
+11	in	in	IN	IN	in	in	IN	4	NMOD	_	_	A1	_	_	_
+12	core	core	NN	NN	core	core	NN	13	NMOD	core.02	_	_	_	_	_
+13	inflation	inflation	NN	NN	inflation	inflation	NN	11	PMOD	_	_	_	A1	_	_
+14	after	after	IN	IN	after	after	IN	4	TMP	_	_	AM-TMP	_	_	_
+15	a	a	DT	DT	a	a	DT	16	NMOD	_	_	_	_	_	_
+16	summer	summer	NN	NN	summer	summer	NN	14	PMOD	summer.01	_	_	_	_	_
+17	of	of	IN	IN	of	of	IN	16	NMOD	_	_	_	_	A1	_
+18	far	far	JJ	JJ	far	far	JJ	20	NMOD	_	_	_	_	_	_
+19	smaller	smaller	JJR	JJR	smaller	smaller	JJR	18	AMOD	_	_	_	_	_	A2
+20	increases	increase	NNS	NNS	increases	increase	NNS	17	PMOD	increase.01	_	_	_	_	_
+21	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_
+
+1	Housing	housing	NN	NN	Housing	housing	NN	2	NMOD	_	A1	_	_	_	_
+2	starts	start	NNS	NNS	starts	start	NNS	3	SBJ	start.02	A2	A1	A1	_	A0
+3	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_
+4	expected	expect	VBN	VBN	expected	expect	VBN	3	VC	expect.01	_	_	_	_	_
+5	to	to	TO	TO	to	to	TO	4	OPRD	_	_	C-A1	_	_	_
+6	quicken	quicken	VB	VB	quicken	quicken	VB	5	IM	quicken.01	_	_	_	SU	_
+7	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_	_	_
+8	bit	bit	NN	NN	bit	bit	NN	6	OBJ	_	_	_	A2	_	_
+9	from	from	IN	IN	from	from	IN	6	ADV	from.SU	_	_	A3	_	SU
+10	August	august	NNP	NNP	August	august	NNP	13	NMOD	_	_	_	_	_	AM-TMP
+11	's	's	POS	POS	's	's	POS	10	SUFFIX	_	_	_	_	_	_
+12	annual	annual	JJ	JJ	annual	annual	JJ	13	NMOD	_	_	_	_	_	AM-TMP
+13	pace	pace	NN	NN	pace	pace	NN	9	PMOD	pace.01	_	_	_	_	_
+14	of	of	IN	IN	of	of	IN	13	NMOD	_	_	_	_	_	A2
+15	1,350,000	1,350,000	CD	CD	1,350,000	1,350,000	CD	16	NMOD	_	_	_	_	_	_
+16	units	unit	NNS	NNS	units	unit	NNS	14	PMOD	_	_	_	_	_	_
+17	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_
+
+1	Economists	economist	NNS	NNS	Economists	economist	NNS	2	SBJ	_	A0	_	_	_	_	_	_	_
+2	say	say	VBP	VBP	say	say	VBP	0	ROOT	say.01	_	_	_	_	_	_	_	_
+3	an	an	DT	DT	an	an	DT	5	NMOD	_	_	_	_	_	_	_	_	_
+4	August	august	NNP	NNP	August	august	NNP	5	NMOD	_	_	AM-TMP	_	_	_	_	_	_
+5	rebound	rebound	NN	NN	rebound	rebound	NN	11	SBJ	rebound.01	_	_	_	A0	_	_	_	_
+6	in	in	IN	IN	in	in	IN	5	NMOD	_	_	A1	_	_	_	_	_	_
+7	permits	permit	NNS	NNS	permits	permit	NNS	6	PMOD	permit.01	_	_	A0	_	_	_	_	_
+8	for	for	IN	IN	for	for	IN	7	NMOD	_	_	_	A1	_	_	_	_	_
+9	multifamily	multifamily	RB	RB	multifamily	multifamily	RB	10	NMOD	_	_	_	_	_	_	_	_	_
+10	units	unit	NNS	NNS	units	unit	NNS	8	PMOD	_	_	_	_	_	_	_	_	_
+11	signaled	signal	VBD	VBD	signaled	signal	VBD	2	OBJ	signal.01	A1	_	_	_	_	_	_	_
+12	an	an	DT	DT	an	an	DT	13	NMOD	_	_	_	_	_	_	_	_	_
+13	increase	increase	NN	NN	increase	increase	NN	11	OBJ	increase.01	_	_	_	A1	A2	_	_	_
+14	in	in	IN	IN	in	in	IN	13	NMOD	_	_	_	_	_	A1	_	_	_
+15	September	september	NNP	NNP	September	september	NNP	16	NMOD	_	_	_	_	_	_	AM-TMP	_	_
+16	starts	start	NNS	NNS	starts	start	NNS	14	PMOD	start.02	_	_	_	_	_	A2	_	_
+17	,	,	,	,	,	,	,	11	P	_	_	_	_	_	_	_	_	_
+18	though	though	IN	IN	though	though	IN	11	ADV	_	_	_	_	AM-ADV	_	_	_	_
+19	activity	activity	NN	NN	activity	activity	NN	20	SBJ	_	_	_	_	_	_	_	A1	A1
+20	remains	remain	VBZ	VBZ	remains	remain	VBZ	18	SUB	remain.01	_	_	_	_	_	_	_	_
+21	fairly	fairly	RB	RB	fairly	fairly	RB	22	AMOD	_	_	_	_	_	_	_	_	_
+22	modest	modest	JJ	JJ	modest	modest	JJ	20	PRD	_	_	_	_	_	_	_	A3	_
+23	by	by	IN	IN	by	by	IN	20	ADV	_	_	_	_	_	_	_	AM-ADV	_
+24	historical	historical	JJ	JJ	historical	historical	JJ	25	NMOD	_	_	_	_	_	_	_	_	A0
+25	standards	standard	NNS	NNS	standards	standard	NNS	23	PMOD	standard.01	_	_	_	_	_	_	_	A2
+26	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_	_	_	_
+
+1	Two-Way	two-way	NNP	NNP	Two	two	CD	3	HMOD	_
+2	_	_	_	_	-	-	HYPH	1	HYPH	_
+3	_	_	_	_	Way	way	NNP	4	NMOD	_
+4	Street	street	NNP	NNP	Street	street	NNP	0	ROOT	_
+
+1	If	if	IN	IN	If	if	IN	14	ADV	_	_	_	_	_	_	_
+2	the	the	DT	DT	the	the	DT	9	NMOD	_	_	_	_	_	_	_
+3	sixty-day	sixty-day	JJ	JJ	sixty	sixty	CD	5	HMOD	_	_	_	_	_	_	_
+4	_	_	_	_	-	-	HYPH	3	HYPH	_	_	_	_	_	_	_
+5	_	_	_	_	day	day	NN	9	NMOD	_	_	_	_	_	_	_
+6	plant-closing	plant-closing	JJ	JJ	plant	plant	NN	8	HMOD	_	_	_	_	_	_	_
+7	_	_	_	_	-	-	HYPH	6	HYPH	_	_	_	_	_	_	_
+8	_	_	_	_	closing	close	VBG	9	NMOD	_	_	_	_	_	_	_
+9	law	law	NN	NN	law	law	NN	10	SBJ	law.01	A3	_	_	_	_	_
+10	's	be	VBZ	VBZ	's	be	VBZ	1	SUB	_	_	_	_	_	_	_
+11	fair	fair	JJ	JJ	fair	fair	JJ	10	PRD	_	_	_	_	_	_	_
+12	,	,	,	,	,	,	,	14	P	_	_	_	_	_	_	_
+13	Why	why	WRB	WRB	Why	why	WRB	14	DEP	_	_	AM-CAU	_	_	_	_
+14	should	should	MD	MD	should	should	MD	0	ROOT	_	_	AM-MOD	_	_	_	_
+15	we	we	PRP	PRP	we	we	PRP	14	SBJ	_	_	A0	_	_	_	_
+16	not	not	RB	RB	not	not	RB	14	ADV	_	_	AM-NEG	_	_	_	_
+17	then	then	RB	RB	then	then	RB	14	ADV	_	_	AM-DIS	_	_	_	_
+18	amend	amend	VB	VB	amend	amend	VB	14	VC	amend.01	_	_	_	_	_	_
+19	the	the	DT	DT	the	the	DT	20	NMOD	_	_	_	_	_	_	_
+20	writ	writ	NN	NN	writ	writ	NN	18	OBJ	_	_	A1	A0	_	_	_
+21	To	to	TO	TO	To	to	TO	18	CLR	_	_	A2	_	_	_	_
+22	require	require	VB	VB	require	require	VB	21	IM	require.01	_	_	_	_	_	_
+23	that	that	IN	IN	that	that	IN	22	OBJ	_	_	_	A1	_	_	_
+24	all	all	DT	DT	all	all	DT	25	NMOD	_	_	_	_	_	_	_
+25	employees	employee	NNS	NNS	employees	employee	NNS	26	SBJ	_	_	_	_	A0	A0	_
+26	give	give	VBP	VBP	give	give	VBP	23	SUB	give.01	_	_	_	_	SU	_
+27	Similar	similar	JJ	JJ	Similar	similar	JJ	28	NMOD	_	_	_	_	_	_	_
+28	notice	notice	NN	NN	notice	notice	NN	26	OBJ	notice.02	_	_	_	A1	_	_
+29	before	before	IN	IN	before	before	IN	26	TMP	_	_	_	_	AM-TMP	_	_
+30	they	they	PRP	PRP	they	they	PRP	31	SBJ	_	_	_	_	_	_	A0
+31	quit	quit	VBP	VBP	quit	quit	VBP	29	SUB	quit.01	_	_	_	_	_	_
+32	?	?	.	.	?	?	.	14	P	_	_	_	_	_	_	_
+
+1	--	--	:	:	--	--	:	4	P	_
+2	Rollin	rollin	NNP	NNP	Rollin	rollin	NNP	4	NAME	_
+3	S.	s.	NNP	NNP	S.	s.	NNP	4	NAME	_
+4	Trexler	trexler	NNP	NNP	Trexler	trexler	NNP	0	ROOT	_
+5	.	.	.	.	.	.	.	4	P	_
+
+1	Candid	candid	NNP	NNP	Candid	candid	NNP	2	NAME	_
+2	Comment	comment	NNP	NNP	Comment	comment	NNP	0	ROOT	_
+
+1	When	when	WRB	WRB	When	when	WRB	5	TMP	_	_	R-AM-TMP	_	_	_
+2	research	research	NN	NN	research	research	NN	3	NMOD	_	A1	_	_	_	_
+3	projects	project	NNS	NNS	projects	project	NNS	4	SBJ	project.01	_	A1	_	_	_
+4	are	be	VBP	VBP	are	be	VBP	12	TMP	_	_	_	_	_	_
+5	curtailed	curtail	VBN	VBN	curtailed	curtail	VBN	4	VC	curtail.01	_	_	_	_	_
+6	due	due	JJ	JJ	due	due	JJ	7	DEP	_	_	_	_	_	_
+7	to	to	TO	TO	to	to	TO	5	PRP	_	_	AM-CAU	_	_	_
+8	government	government	NN	NN	government	government	NN	9	NMOD	_	_	_	A0	A0	_
+9	funding	funding	NN	NN	funding	funding	NN	10	NMOD	funding.01	_	_	_	A1	_
+10	cuts	cut	NNS	NNS	cuts	cut	NNS	7	PMOD	cut.02	_	_	SU	_	_
+11	,	,	,	,	,	,	,	12	P	_	_	_	_	_	_
+12	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_
+13	we	we	PRP	PRP	we	we	PRP	12	SBJ	_	_	_	_	_	A1
+14	``	``	``	``	``	``	``	15	P	_	_	_	_	_	_
+15	caught	catch	VBN	VBN	caught	catch	VBN	12	VC	catch.02	_	_	_	_	_
+16	with	with	IN	IN	with	with	IN	15	CLR	_	_	_	_	_	A2
+17	our	our	PRP$	PRP$	our	our	PRP$	18	NMOD	_	_	_	_	_	_
+18	grants	grant	NNS	NNS	grants	grant	NNS	19	SBJ	_	_	_	_	_	_
+19	down	down	IN	IN	down	down	IN	16	SUB	_	_	_	_	_	_
+20	''	''	''	''	''	''	''	15	P	_	_	_	_	_	_
+21	?	?	.	.	?	?	.	12	P	_	_	_	_	_	_
+
+1	--	--	:	:	--	--	:	3	P	_
+2	C.E.	c.e.	NNP	NNP	C.E.	c.e.	NNP	3	NAME	_
+3	Friedman	friedman	NNP	NNP	Friedman	friedman	NNP	0	ROOT	_
+4	.	.	.	.	.	.	.	3	P	_
+
+1	Assuming	assume	VBG	VBG	Assuming	assume	VBG	24	ADV	assume.02	_	_	_	_	_	AM-ADV	_
+2	the	the	DT	DT	the	the	DT	4	NMOD	_	_	_	_	_	_	_	_
+3	stock	stock	NN	NN	stock	stock	NN	4	NMOD	_	_	_	_	_	_	_	_
+4	market	market	NN	NN	market	market	NN	5	SBJ	_	_	A1	A0	_	_	_	_
+5	does	do	VBZ	VBZ	does	do	VBZ	1	OBJ	_	A1	_	_	_	_	_	_
+6	n't	not	RB	RB	n't	not	RB	5	ADV	_	_	AM-NEG	AM-NEG	_	_	_	_
+7	crash	crash	VB	VB	crash	crash	VB	5	VC	crash.01	_	_	_	_	_	_	_
+8	again	again	RB	RB	again	again	RB	7	TMP	_	_	AM-TMP	_	_	_	_	_
+9	and	and	CC	CC	and	and	CC	7	COORD	_	_	_	_	_	_	_	_
+10	completely	completely	RB	RB	completely	completely	RB	11	ADV	_	_	_	AM-EXT	_	_	_	_
+11	discredit	discredit	VB	VB	discredit	discredit	VB	9	CONJ	discredit.01	_	_	_	_	_	_	_
+12	yuppies	yuppie	NNS	NNS	yuppies	yuppie	NNS	11	OBJ	_	_	_	A1	_	_	_	_
+13	and	and	CC	CC	and	and	CC	12	COORD	_	_	_	_	_	_	_	_
+14	trading	trading	NN	NN	trading	trading	NN	15	NMOD	trading.01	_	_	_	_	_	_	_
+15	rooms	rooms	NNS	NNS	rooms	rooms	NNS	13	CONJ	_	_	_	_	AM-LOC	_	_	_
+16	,	,	,	,	,	,	,	24	P	_	_	_	_	_	_	_	_
+17	American	american	JJ	JJ	American	american	JJ	19	NMOD	_	_	_	_	_	AM-LOC	_	_
+18	television	television	NN	NN	television	television	NN	19	NMOD	_	_	_	_	_	A1	_	_
+19	audiences	audience	NNS	NNS	audiences	audience	NNS	24	SBJ	audience.01	_	_	_	_	A0	A0	_
+20	in	in	IN	IN	in	in	IN	24	TMP	_	_	_	_	_	_	AM-TMP	_
+21	a	a	DT	DT	a	a	DT	23	NMOD	_	_	_	_	_	_	_	_
+22	few	few	JJ	JJ	few	few	DT	23	NMOD	_	_	_	_	_	_	_	_
+23	months	month	NNS	NNS	months	month	NNS	20	PMOD	_	_	_	_	_	_	_	_
+24	may	may	MD	MD	may	may	MD	0	ROOT	_	_	_	_	_	_	AM-MOD	_
+25	be	be	VB	VB	be	be	VB	24	VC	_	_	_	_	_	_	_	_
+26	seeing	see	VBG	VBG	seeing	see	VBG	25	VC	see.01	_	_	_	_	_	_	_
+27	Britain	britain	NNP	NNP	Britain	britain	NNP	29	NMOD	_	_	_	_	_	_	_	A0
+28	's	's	POS	POS	's	's	POS	27	SUFFIX	_	_	_	_	_	_	_	_
+29	concept	concept	NN	NN	concept	concept	NN	26	OBJ	concept.01	_	_	_	_	_	A1	_
+30	of	of	IN	IN	of	of	IN	29	NMOD	_	_	_	_	_	_	_	A1
+31	both	both	DT	DT	both	both	DT	30	PMOD	_	_	_	_	_	_	_	_
+32	.	.	.	.	.	.	.	24	P	_	_	_	_	_	_	_	_
+
+1	``	``	``	``	``	``	``	3	P	_	_	_	_
+2	Capital	capital	NNP	NNP	Capital	capital	NN	3	NMOD	_	_	_	_
+3	City	city	NNP	NNP	City	city	NN	5	SBJ	_	_	_	_
+4	''	''	''	''	''	''	''	3	P	_	_	_	_
+5	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_
+6	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_
+7	weekly	weekly	JJ	JJ	weekly	weekly	JJ	8	NMOD	_	_	_	_
+8	series	series	NN	NN	series	series	NN	5	PRD	_	A1	_	_
+9	that	that	WDT	WDT	that	that	WDT	10	SBJ	_	R-A1	_	_
+10	premiered	premiere	VBD	VBD	premiered	premiere	VBD	8	NMOD	premiere.01	_	_	_
+11	here	here	RB	RB	here	here	RB	10	LOC-CLR	_	AM-LOC	_	_
+12	three	three	CD	CD	three	three	CD	13	NMOD	_	_	_	_
+13	weeks	week	NNS	NNS	weeks	week	NNS	14	AMOD	_	_	_	_
+14	ago	ago	IN	IN	ago	ago	IN	10	TMP-CLR	_	AM-TMP	_	_
+15	amid	amid	IN	IN	amid	amid	IN	10	LOC	_	AM-LOC	_	_
+16	unprecedented	unprecedented	JJ	JJ	unprecedented	unprecedented	JJ	17	NMOD	_	_	_	_
+17	hype	hype	NN	NN	hype	hype	NN	15	PMOD	hype.01	_	_	_
+18	by	by	IN	IN	by	by	IN	17	NMOD	_	_	A0	_
+19	its	its	PRP$	PRP$	its	its	PRP$	20	NMOD	_	_	_	A1
+20	producer	producer	NN	NN	producer	producer	NN	18	PMOD	producer.02	_	_	A0
+21	,	,	,	,	,	,	,	20	P	_	_	_	_
+22	Thames	thames	NNP	NNP	Thames	thames	NNP	23	NAME	_	_	_	_
+23	Television	television	NNP	NNP	Television	television	NNP	20	APPO	_	_	_	_
+24	.	.	.	.	.	.	.	5	P	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_
+2	early	early	JJ	JJ	early	early	JJ	3	NMOD	_	AM-TMP	_	_	_
+3	episodes	episode	NNS	NNS	episodes	episode	NNS	4	SBJ	episode.01	_	A0	_	_
+4	make	make	VBP	VBP	make	make	VBP	0	ROOT	make.02	_	_	_	_
+5	you	you	PRP	PRP	you	you	PRP	4	OBJ	_	_	A1	_	_
+6	long	long	JJ	JJ	long	long	VBP	4	OPRD	_	_	A2	_	_
+7	for	for	IN	IN	for	for	IN	6	CLR	_	_	_	_	_
+8	a	a	DT	DT	a	a	DT	9	NMOD	_	_	_	_	_
+9	rerun	rerun	NN	NN	rerun	rerun	NN	7	PMOD	rerun.01	_	_	_	_
+10	of	of	IN	IN	of	of	IN	9	NMOD	_	_	_	A1	_
+11	the	the	DT	DT	the	the	DT	12	NMOD	_	_	_	_	_
+12	crash	crash	NN	NN	crash	crash	NN	10	PMOD	crash.01	_	_	_	_
+13	of	of	IN	IN	of	of	IN	12	NMOD	_	_	_	_	AM-TMP
+14	1987	1987	CD	CD	1987	1987	CD	13	PMOD	_	_	_	_	_
+15	.	.	.	.	.	.	.	4	P	_	_	_	_	_
+
+1	Let	let	VB	VB	Let	let	VB	0	ROOT	let.01	_	_
+2	's	's	PRP	PRP	's	's	POS	1	OBJ	_	A1	A0
+3	make	make	VB	VB	make	make	VB	1	OPRD	make.02	C-A1	_
+4	that	that	DT	DT	that	that	DT	3	OBJ	_	_	A1
+5	1929	1929	CD	CD	1929	1929	CD	3	OPRD	_	_	A2
+6	,	,	,	,	,	,	,	3	P	_	_	_
+7	just	just	RB	RB	just	just	RB	8	ADV	_	_	_
+8	to	to	TO	TO	to	to	TO	3	PRP	_	_	AM-PNC
+9	be	be	VB	VB	be	be	VB	8	IM	_	_	_
+10	sure	sure	JJ	JJ	sure	sure	JJ	9	PRD	_	_	_
+11	.	.	.	.	.	.	.	1	P	_	_	_
+
+1	According	accord	VBG	VBG	According	accord	VBG	33	ADV	_	_	_	_	_	_	_	_	_	_	_	_	_
+2	to	to	TO	TO	to	to	TO	1	PMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+3	the	the	DT	DT	the	the	DT	4	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+4	program	program	NN	NN	program	program	NN	7	NMOD	_	A3	_	_	_	_	_	_	_	_	_	_	_
+5	's	's	POS	POS	's	's	POS	4	SUFFIX	_	_	_	_	_	_	_	_	_	_	_	_	_
+6	publicity	publicity	NN	NN	publicity	publicity	NN	7	NMOD	_	A1	_	_	_	_	_	_	_	_	_	_	_
+7	prospectus	prospectus	NN	NN	prospectus	prospectus	NN	2	PMOD	prospectus.01	_	_	_	_	_	_	_	_	_	_	_	_
+8	,	,	,	,	,	,	,	33	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+9	``	``	``	``	``	``	``	11	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+10	Capital	capital	NNP	NNP	Capital	capital	NNP	11	NAME	_	_	_	_	_	_	_	_	_	_	_	_	_
+11	City	city	NNP	NNP	City	city	NNP	33	SBJ	_	_	A1	A0	_	_	_	_	_	_	_	_	_
+12	,	,	,	,	,	,	,	11	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+13	''	''	''	''	''	''	''	11	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+14	set	set	VBN	VBN	set	set	VBN	11	APPO	set.01	_	_	_	_	_	_	_	_	_	_	_	_
+15	at	at	IN	IN	at	at	IN	14	LOC-CLR	_	_	A2	_	_	_	_	_	_	_	_	_	_
+16	Shane	shane	NNP	NNP	Shane	shane	NNP	17	NAME	_	_	_	_	_	_	_	_	_	_	_	_	_
+17	Longman	longman	NNP	NNP	Longman	longman	NNP	15	PMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+18	,	,	,	,	,	,	,	17	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+19	a	a	DT	DT	a	a	DT	25	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+20	fictional	fictional	JJ	JJ	fictional	fictional	JJ	25	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+21	mid-sized	mid-sized	JJ	JJ	mid	mid	JJ	23	HMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+22	_	_	_	_	-	-	HYPH	21	HYPH	_	_	_	_	_	_	_	_	_	_	_	_	_
+23	_	_	_	_	sized	sized	NN	25	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+24	securities	security	NNS	NNS	securities	security	NNS	25	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+25	firm	firm	JJ	JJ	firm	firm	NN	17	APPO	_	_	_	_	_	_	_	_	_	_	_	_	_
+26	with	with	IN	IN	with	with	IN	25	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+27	#	#	#	#	#	#	#	29	DEP	_	_	_	_	_	_	_	_	_	_	_	_	_
+28	500	500	CD	CD	500	500	CD	29	DEP	_	_	_	_	_	_	_	_	_	_	_	_	_
+29	million	million	CD	CD	million	million	CD	30	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+30	capital	capital	NN	NN	capital	capital	NN	26	PMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+31	,	,	,	,	,	,	,	11	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+32	``	``	``	``	``	``	``	33	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+33	follows	follow	VBZ	VBZ	follows	follow	VBZ	0	ROOT	follow.02	_	_	_	_	_	_	_	_	_	_	_	_
+34	the	the	DT	DT	the	the	DT	35	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+35	fortunes	fortune	NNS	NNS	fortunes	fortune	NNS	33	OBJ	fortune.01	_	_	A1	A2	_	_	_	_	_	_	_	_
+36	of	of	IN	IN	of	of	IN	35	NMOD	_	_	_	_	A1	_	_	_	_	_	_	_	_
+37	a	a	DT	DT	a	a	DT	41	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+38	close-knit	close-knit	JJ	JJ	close	close	RB	40	HMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+39	_	_	_	_	-	-	HYPH	38	HYPH	_	_	_	_	_	_	_	_	_	_	_	_	_
+40	_	_	_	_	knit	knit	JJ	41	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+41	team	team	NN	NN	team	team	NN	36	PMOD	team.01	_	_	_	_	_	_	_	_	_	_	_	_
+42	of	of	IN	IN	of	of	IN	41	NMOD	_	_	_	_	_	A1	_	_	_	_	_	_	_
+43	young	young	JJ	JJ	young	young	JJ	48	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+44	,	,	,	,	,	,	,	48	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+45	high-flying	high-flying	JJ	JJ	high	high	RB	47	HMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+46	_	_	_	_	-	-	HYPH	45	HYPH	_	_	_	_	_	_	_	_	_	_	_	_	_
+47	_	_	_	_	flying	fly	VBG	48	NMOD	_	_	_	_	_	_	AM-MNR	_	_	_	_	_	_
+48	dealers	dealer	NNS	NNS	dealers	dealer	NNS	42	PMOD	dealer.01	_	_	_	_	_	A0	A1	_	_	_	_	_
+49	,	,	,	,	,	,	,	48	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+50	hired	hire	VBN	VBN	hired	hire	VBN	48	APPO	hire.01	_	_	_	_	_	_	_	_	_	_	_	_
+51	for	for	IN	IN	for	for	IN	50	CLR	_	_	_	_	_	_	_	AM-CAU	_	_	_	_	_
+52	their	their	PRP$	PRP$	their	their	PRP$	54	NMOD	_	_	_	_	_	_	_	_	A0	_	A0	A1	A1
+53	particular	particular	JJ	JJ	particular	particular	JJ	54	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_
+54	blend	blend	NN	NN	blend	blend	NN	51	PMOD	blend.01	_	_	_	_	_	_	_	_	SU	_	_	_
+55	of	of	IN	IN	of	of	IN	54	NMOD	of.SU	_	_	_	_	_	_	_	A1	_	SU	SU	SU
+56	style	style	NN	NN	style	style	NN	55	PMOD	style.01	_	_	_	_	_	_	_	_	_	A2	_	_
+57	,	,	,	,	,	,	,	56	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+58	genius	genius	NN	NN	genius	genius	NN	56	COORD	genius.02	_	_	_	_	_	_	_	_	_	_	A2	_
+59	and	and	CC	CC	and	and	CC	58	COORD	_	_	_	_	_	_	_	_	_	_	_	_	_
+60	energy	energy	NN	NN	energy	energy	NN	59	CONJ	energy.01	_	_	_	_	_	_	_	_	_	_	_	_
+61	.	.	.	.	.	.	.	33	P	_	_	_	_	_	_	_	_	_	_	_	_	_
+
+1	But	but	CC	CC	But	but	CC	11	DEP	_	_	AM-DIS	_	_	_	_	_	_	_
+2	with	with	IN	IN	with	with	IN	11	CLR	_	_	AM-MNR	_	_	_	_	_	_	_
+3	all	all	PDT	PDT	all	all	PDT	5	NMOD	_	_	_	_	_	_	_	_	_	_
+4	the	the	DT	DT	the	the	DT	5	NMOD	_	_	_	_	_	_	_	_	_	_
+5	money	money	NN	NN	money	money	NN	2	PMOD	_	_	_	_	_	_	_	_	_	_
+6	and	and	CC	CC	and	and	CC	5	COORD	_	_	_	_	_	_	_	_	_	_
+7	glamour	glamour	NN	NN	glamour	glamour	NN	6	CONJ	glamour.01	A2	_	_	_	_	_	_	_	_
+8	of	of	IN	IN	of	of	IN	5	NMOD	_	A1	_	_	_	_	_	_	_	_
+9	high	high	JJ	JJ	high	high	JJ	10	NMOD	_	_	_	_	_	_	_	_	_	_
+10	finance	finance	NN	NN	finance	finance	NN	8	PMOD	_	_	_	_	_	_	_	_	_	_
+11	come	come	VBP	VBP	come	come	VBP	0	ROOT	come.01	_	_	_	_	_	_	_	_	_
+12	the	the	DT	DT	the	the	DT	14	NMOD	_	_	_	_	_	_	_	_	_	_
+13	relentless	relentless	JJ	JJ	relentless	relentless	JJ	14	NMOD	_	_	_	AM-MNR	_	_	_	_	_	_
+14	pressures	pressure	NNS	NNS	pressures	pressure	NNS	28	NMOD	pressure.01	_	_	_	_	_	_	_	_	_
+15	to	to	TO	TO	to	to	TO	14	NMOD	_	_	_	A2	_	_	_	_	_	_
+16	do	do	VB	VB	do	do	VB	15	IM	do.02	_	_	_	_	_	_	_	_	_
+17	well	well	RB	RB	well	well	RB	16	CLR	_	_	_	_	AM-MNR	_	_	_	_	_
+18	;	;	:	:	;	;	:	28	P	_	_	_	_	_	_	_	_	_	_
+19	pressure	pressure	NN	NN	pressure	pressure	NN	28	NMOD	pressure.01	_	_	_	_	_	_	_	_	_
+20	to	to	TO	TO	to	to	TO	19	NMOD	_	_	_	_	_	A2	_	_	_	_
+21	pull	pull	VB	VB	pull	pull	VB	20	IM	pull.03	_	_	_	_	_	_	_	_	_
+22	off	off	RP	RP	off	off	RP	21	PRT	_	_	_	_	_	_	_	_	_	_
+23	another	another	DT	DT	another	another	CD	24	NMOD	_	_	_	_	_	_	_	_	_	_
+24	million	million	CD	CD	million	million	CD	21	OBJ	_	_	_	_	_	_	A1	_	_	_
+25	before	before	IN	IN	before	before	IN	21	TMP	_	_	_	_	_	_	AM-TMP	_	_	_
+26	lunch	lunch	NN	NN	lunch	lunch	NN	25	PMOD	_	_	_	_	_	_	_	_	_	_
+27	;	;	:	:	;	;	:	28	P	_	_	_	_	_	_	_	_	_	_
+28	pressure	pressure	NN	NN	pressure	pressure	NN	11	SBJ	pressure.01	_	A1	_	_	_	_	_	_	_
+29	to	to	TO	TO	to	to	TO	28	NMOD	_	_	_	_	_	_	_	A2	_	_
+30	anticipate	anticipate	VB	VB	anticipate	anticipate	VB	29	IM	anticipate.01	_	_	_	_	_	_	_	_	_
+31	the	the	DT	DT	the	the	DT	32	NMOD	_	_	_	_	_	_	_	_	_	_
+32	market	market	NN	NN	market	market	NN	30	OBJ	_	_	_	_	_	_	_	_	A1	_
+33	by	by	IN	IN	by	by	IN	30	CLR	_	_	_	_	_	_	_	_	AM-MNR	_
+34	a	a	DT	DT	a	a	DT	35	NMOD	_	_	_	_	_	_	_	_	_	_
+35	fraction	fraction	NN	NN	fraction	fraction	NN	33	PMOD	fraction.01	_	_	_	_	_	_	_	_	_
+36	of	of	IN	IN	of	of	IN	35	NMOD	_	_	_	_	_	_	_	_	_	A1
+37	a	a	DT	DT	a	a	DT	38	NMOD	_	_	_	_	_	_	_	_	_	_
+38	second	second	NN	NN	second	second	NN	36	PMOD	_	_	_	_	_	_	_	_	_	_
+39	...	...	:	:	...	...	:	11	P	_	_	_	_	_	_	_	_	_	_
+40	''	''	''	''	''	''	''	11	P	_	_	_	_	_	_	_	_	_	_
+
+1	You	you	PRP	PRP	You	you	PRP	2	SBJ	_	_	_	_
+2	need	need	MD	MD	need	need	MD	0	ROOT	_	_	_	_
+3	n't	not	RB	RB	n't	not	RB	2	ADV	_	_	_	_
+4	be	be	VB	VB	be	be	VB	2	VC	_	_	_	_
+5	a	a	DT	DT	a	a	DT	10	NMOD	_	_	_	_
+6	high-powered	high-powered	JJ	JJ	high	high	RB	8	HMOD	_	_	_	_
+7	_	_	_	_	-	-	HYPH	6	HYPH	_	_	_	_
+8	_	_	_	_	powered	powered	JJ	10	NMOD	_	_	_	_
+9	securities	security	NNS	NNS	securities	security	NNS	10	NMOD	_	A1	_	_
+10	lawyer	lawyer	NN	NN	lawyer	lawyer	NN	4	PRD	lawyer.01	A0	A0	_
+11	to	to	TO	TO	to	to	TO	4	PRP	_	_	_	_
+12	realize	realize	VB	VB	realize	realize	VB	11	IM	realize.01	_	_	_
+13	the	the	DT	DT	the	the	DT	14	NMOD	_	_	_	_
+14	prospectus	prospectus	NN	NN	prospectus	prospectus	NN	15	SBJ	_	_	_	_
+15	is	be	VBZ	VBZ	is	be	VBZ	12	OBJ	_	_	A1	_
+16	guilty	guilty	JJ	JJ	guilty	guilty	JJ	15	PRD	_	_	_	_
+17	of	of	IN	IN	of	of	IN	16	AMOD	_	_	_	_
+18	less	less	RBR	RBR	less	less	JJR	17	PMOD	_	_	_	_
+19	than	than	IN	IN	than	than	IN	18	NMOD	_	_	_	_
+20	full	full	JJ	JJ	full	full	JJ	21	NMOD	_	_	_	AM-MNR
+21	disclosure	disclosure	NN	NN	disclosure	disclosure	NN	19	PMOD	disclosure.01	_	_	A1
+22	.	.	.	.	.	.	.	2	P	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	4	NMOD	_	_	_	_	_	_	_
+2	slickly	slickly	RB	RB	slickly	slickly	RB	3	AMOD	_	AM-MNR	_	_	_	_	_
+3	produced	produce	VBD	VBD	produced	produce	VBN	4	APPO	produce.01	_	_	_	_	_	_
+4	series	series	NN	NN	series	series	NN	5	SBJ	_	A1	A1	_	_	_	_
+5	has	have	VBZ	VBZ	has	have	VBZ	0	ROOT	_	_	_	_	_	_	_
+6	been	be	VBN	VBN	been	be	VBN	5	VC	_	_	_	_	_	_	_
+7	criticized	criticize	VBN	VBN	criticized	criticize	VBN	6	VC	criticize.01	_	_	_	_	_	_
+8	by	by	IN	IN	by	by	IN	7	LGS	_	_	A0	_	_	_	_
+9	London	london	NNP	NNP	London	london	NNP	12	NMOD	_	_	_	AM-LOC	_	_	_
+10	's	's	POS	POS	's	's	POS	9	SUFFIX	_	_	_	_	_	_	_
+11	financial	financial	JJ	JJ	financial	financial	JJ	12	NMOD	_	_	_	A1	_	_	_
+12	cognoscenti	cognoscenti	NNS	NNS	cognoscenti	cognoscenti	NN	8	PMOD	cognoscenti.01	_	_	A0	_	_	_
+13	as	as	IN	IN	as	as	IN	7	CLR	_	_	A2	_	_	_	_
+14	inaccurate	inaccurate	JJ	JJ	inaccurate	inaccurate	JJ	13	PMOD	_	_	_	_	_	_	_
+15	in	in	IN	IN	in	in	IN	14	AMOD	_	_	_	_	_	_	_
+16	detail	detail	NN	NN	detail	detail	NN	15	PMOD	_	_	_	_	_	_	_
+17	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_	_
+18	but	but	CC	CC	but	but	CC	5	COORD	_	_	_	_	_	_	_
+19	its	its	PRP$	PRP$	its	its	PRP$	21	NMOD	_	_	_	_	A1	_	_
+20	major	major	JJ	JJ	major	major	JJ	21	NMOD	_	_	_	_	_	_	_
+21	weakness	weakness	NN	NN	weakness	weakness	NN	22	SBJ	weakness.01	_	_	_	A2	_	_
+22	is	be	VBZ	VBZ	is	be	VBZ	18	CONJ	_	_	_	_	_	_	_
+23	its	its	PRP$	PRP$	its	its	PRP$	25	NMOD	_	_	_	_	_	A0	_
+24	unrealistic	unrealistic	JJ	JJ	unrealistic	unrealistic	JJ	25	NMOD	_	_	_	_	_	AM-MNR	_
+25	depiction	depiction	NN	NN	depiction	depiction	NN	22	PRD	depiction.01	_	_	_	_	_	_
+26	of	of	IN	IN	of	of	IN	25	NMOD	_	_	_	_	_	A1	_
+27	the	the	DT	DT	the	the	DT	28	NMOD	_	_	_	_	_	_	_
+28	characters	character	NNS	NNS	characters	character	NNS	33	NMOD	_	_	_	_	_	_	A0
+29	'	'	POS	POS	'	'	POS	28	SUFFIX	_	_	_	_	_	_	_
+30	professional	professional	JJ	JJ	professional	professional	JJ	33	NMOD	_	_	_	_	_	_	_
+31	and	and	CC	CC	and	and	CC	30	COORD	_	_	_	_	_	_	A1
+32	private	private	JJ	JJ	private	private	JJ	31	CONJ	_	_	_	_	_	_	_
+33	lives	life	NNS	NNS	lives	life	NNS	26	PMOD	life.01	_	_	_	_	_	_
+34	.	.	.	.	.	.	.	5	P	_	_	_	_	_	_	_
+
+1	Turned	turn	VBN	VBN	Turned	turn	VBN	13	ADV	turn.02	_	_	_	AM-ADV
+2	loose	loose	RB	RB	loose	loose	RB	1	CLR	_	A2	_	_	_
+3	in	in	IN	IN	in	in	IN	1	CLR	_	AM-LOC	_	_	_
+4	Shane	shane	NNP	NNP	Shane	shane	NNP	5	NAME	_	_	A0	A1	_
+5	Longman	longman	NNP	NNP	Longman	longman	NNP	8	NMOD	_	_	_	_	_
+6	's	's	POS	POS	's	's	POS	5	SUFFIX	_	_	_	_	_
+7	trading	trading	NN	NN	trading	trading	NN	8	NMOD	trading.01	_	_	_	_
+8	room	room	NN	NN	room	room	NN	3	PMOD	room.02	_	AM-LOC	_	_
+9	,	,	,	,	,	,	,	13	P	_	_	_	_	_
+10	the	the	DT	DT	the	the	DT	12	NMOD	_	_	_	_	_
+11	yuppie	yuppie	NN	NN	yuppie	yuppie	NN	12	NMOD	_	_	_	_	_
+12	dealers	dealer	NNS	NNS	dealers	dealer	NNS	13	SBJ	_	A1	_	_	A0
+13	do	do	VBP	VBP	do	do	VBP	0	ROOT	do.02	_	_	_	_
+14	little	little	RB	RB	little	little	RB	13	OBJ	_	_	_	_	A1
+15	right	right	RB	RB	right	right	JJ	14	NMOD	_	_	_	_	_
+16	.	.	.	.	.	.	.	13	P	_	_	_	_	_
+
+1	Judging	judge	VBG	VBG	Judging	judge	VBG	18	ADV	judge.01	_	_	_	_	AM-ADV
+2	by	by	IN	IN	by	by	IN	1	CLR	_	A3	_	_	_	_
+3	the	the	DT	DT	the	the	DT	4	NMOD	_	_	_	_	_	_
+4	money	money	NN	NN	money	money	NN	2	PMOD	_	_	A1	_	_	_
+5	lost	lose	VBN	VBN	lost	lose	VBN	4	APPO	lose.02	_	_	_	_	_
+6	and	and	CC	CC	and	and	CC	4	COORD	_	_	_	_	_	_
+7	mistakes	mistake	NNS	NNS	mistakes	mistake	NNS	6	CONJ	_	_	_	A1	_	_
+8	made	make	VBN	VBN	made	make	VBN	7	APPO	make.01	_	_	_	_	_
+9	in	in	IN	IN	in	in	IN	4	LOC	_	_	AM-LOC	AM-TMP	_	_
+10	the	the	DT	DT	the	the	DT	12	NMOD	_	_	_	_	_	_
+11	early	early	JJ	JJ	early	early	JJ	12	NMOD	_	_	_	_	AM-TMP	_
+12	episodes	episode	NNS	NNS	episodes	episode	NNS	9	PMOD	episode.01	_	_	_	_	_
+13	,	,	,	,	,	,	,	18	P	_	_	_	_	_	_
+14	Shane	shane	NNP	NNP	Shane	shane	NNP	15	NAME	_	_	_	_	_	_
+15	Longman	longman	NNP	NNP	Longman	longman	NNP	17	NMOD	_	_	_	_	_	_
+16	's	's	POS	POS	's	's	POS	15	SUFFIX	_	_	_	_	_	_
+17	capital	capital	NN	NN	capital	capital	NN	18	SBJ	_	_	_	_	_	A1
+18	should	should	MD	MD	should	should	MD	0	ROOT	_	_	_	_	_	AM-MOD
+19	be	be	VB	VB	be	be	VB	18	VC	_	_	_	_	_	_
+20	just	just	RB	RB	just	just	RB	19	PRD	_	_	_	_	_	AM-ADV
+21	about	about	IN	IN	about	about	IN	20	AMOD	_	_	_	_	_	_
+22	exhausted	exhaust	VBN	VBN	exhausted	exhaust	VBN	20	AMOD	exhaust.01	_	_	_	_	_
+23	by	by	IN	IN	by	by	IN	19	TMP	_	_	_	_	_	AM-TMP
+24	the	the	DT	DT	the	the	DT	27	NMOD	_	_	_	_	_	_
+25	final	final	JJ	JJ	final	final	JJ	27	NMOD	_	_	_	_	_	_
+26	13th	13th	JJ	JJ	13th	13th	JJ	27	NMOD	_	_	_	_	_	_
+27	week	week	NN	NN	week	week	NN	23	PMOD	_	_	_	_	_	_
+28	.	.	.	.	.	.	.	18	P	_	_	_	_	_	_
+
+1	In	in	IN	IN	In	in	IN	6	LOC	_	_	_	AM-LOC	_	_
+2	the	the	DT	DT	the	the	DT	4	NMOD	_	_	_	_	_	_
+3	opening	open	VBG	VBG	opening	open	VBG	4	NMOD	open.01	_	AM-TMP	_	_	_
+4	episode	episode	NN	NN	episode	episode	NN	1	PMOD	episode.01	A1	_	_	_	_
+5	we	we	PRP	PRP	we	we	PRP	6	SBJ	_	_	_	A0	_	_
+6	learn	learn	VBP	VBP	learn	learn	VBP	0	ROOT	learn.01	_	_	_	_	_
+7	that	that	IN	IN	that	that	IN	6	OBJ	_	_	_	A1	_	_
+8	Michelle	michelle	NNP	NNP	Michelle	michelle	NNP	15	SBJ	_	_	_	_	_	A0
+9	,	,	,	,	,	,	,	8	P	_	_	_	_	_	_
+10	a	a	DT	DT	a	a	DT	13	NMOD	_	_	_	_	_	_
+11	junior	junior	JJ	JJ	junior	junior	JJ	13	NMOD	_	_	_	_	_	_
+12	bond	bond	NN	NN	bond	bond	NN	13	NMOD	_	_	_	_	A1	_
+13	trader	trader	NN	NN	trader	trader	NN	8	APPO	trader.01	_	_	_	A0	_
+14	,	,	,	,	,	,	,	8	P	_	_	_	_	_	_
+15	has	have	VBZ	VBZ	has	have	VBZ	7	SUB	_	_	_	_	_	_
+16	indeed	indeed	RB	RB	indeed	indeed	RB	15	ADV	_	_	_	_	_	AM-ADV
+17	pulled	pull	VBN	VBN	pulled	pull	VBN	15	VC	pull.03	_	_	_	_	_
+18	off	off	RP	RP	off	off	RP	17	PRT	_	_	_	_	_	_
+19	another	another	DT	DT	another	another	CD	20	NMOD	_	_	_	_	_	_
+20	million	million	CD	CD	million	million	CD	17	OBJ	_	_	_	_	_	A1
+21	before	before	IN	IN	before	before	IN	17	TMP	_	_	_	_	_	AM-TMP
+22	lunch	lunch	NN	NN	lunch	lunch	NN	21	PMOD	_	_	_	_	_	_
+23	.	.	.	.	.	.	.	6	P	_	_	_	_	_	_
+
+1	Trouble	trouble	NN	NN	Trouble	trouble	NN	2	SBJ	_	_
+2	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_
+3	,	,	,	,	,	,	,	2	P	_	_
+4	she	she	PRP	PRP	she	she	PRP	5	SBJ	_	A0
+5	has	have	VBZ	VBZ	has	have	VBZ	2	PRD	_	_
+6	lost	lose	VBN	VBN	lost	lose	VBN	5	VC	lose.02	_
+7	it	it	PRP	PRP	it	it	PRP	6	OBJ	_	A1
+8	just	just	RB	RB	just	just	RB	6	MNR	_	AM-MNR
+9	as	as	RB	RB	as	as	IN	8	AMOD	_	_
+10	quickly	quickly	RB	RB	quickly	quickly	RB	8	AMOD	_	_
+11	.	.	.	.	.	.	.	2	P	_	_
+
+1	Rather	rather	RB	RB	Rather	rather	RB	2	ADV	_	_	_	_	_	_	_
+2	than	than	IN	IN	than	than	IN	14	ADV	_	_	_	AM-DIS	_	_	_
+3	keep	keep	VB	VB	keep	keep	VB	2	SUB	keep.02	_	SU	_	_	_	_
+4	the	the	DT	DT	the	the	DT	5	NMOD	_	_	_	_	_	_	_
+5	loss	loss	NN	NN	loss	loss	NN	3	OBJ	_	A1	_	_	_	_	_
+6	a	a	DT	DT	a	a	DT	7	NMOD	_	_	_	_	_	_	_
+7	secret	secret	NN	NN	secret	secret	NN	3	OPRD	secret.01	C-A1	A1	_	_	_	_
+8	from	from	IN	IN	from	from	IN	7	NMOD	_	_	A2	_	_	_	_
+9	the	the	DT	DT	the	the	DT	11	NMOD	_	_	_	_	_	_	_
+10	outside	outside	JJ	JJ	outside	outside	JJ	11	NMOD	_	_	_	_	_	_	_
+11	world	world	NN	NN	world	world	NN	8	PMOD	_	_	_	_	_	_	_
+12	,	,	,	,	,	,	,	14	P	_	_	_	_	_	_	_
+13	Michelle	michelle	NNP	NNP	Michelle	michelle	NNP	14	SBJ	_	A0	A0	A0	_	A0	A0
+14	blabs	blab	VBZ	VBZ	blabs	blab	VBZ	0	ROOT	blab.01	_	_	_	_	_	_
+15	about	about	IN	IN	about	about	IN	14	CLR	_	_	_	A1	_	_	_
+16	it	it	PRP	PRP	it	it	PRP	15	PMOD	_	_	_	_	_	_	_
+17	to	to	TO	TO	to	to	TO	14	CLR	_	_	_	A2	_	_	_
+18	a	a	DT	DT	a	a	DT	20	NMOD	_	_	_	_	_	_	_
+19	sandwich	sandwich	NN	NN	sandwich	sandwich	NN	20	NMOD	_	_	_	_	A1	_	_
+20	man	man	NN	NN	man	man	NN	17	PMOD	man.01	_	_	_	A0	_	_
+21	while	while	IN	IN	while	while	IN	14	TMP	_	_	_	AM-TMP	_	_	_
+22	ordering	order	VBG	VBG	ordering	order	VBG	21	SUB	order.02	_	_	_	_	_	SU
+23	lunch	lunch	NN	NN	lunch	lunch	NN	22	OBJ	lunch.01	_	_	_	_	A1	_
+24	over	over	IN	IN	over	over	IN	22	MNR	_	_	_	_	_	AM-MNR	_
+25	the	the	DT	DT	the	the	DT	26	NMOD	_	_	_	_	_	_	_
+26	phone	phone	NN	NN	phone	phone	NN	24	PMOD	_	_	_	_	_	_	_
+27	.	.	.	.	.	.	.	14	P	_	_	_	_	_	_	_
+
+1	Little	little	JJ	JJ	Little	little	JJ	2	NMOD	_	A2	_	_
+2	chance	chance	NN	NN	chance	chance	NN	0	ROOT	chance.01	_	_	_
+3	that	that	IN	IN	that	that	IN	2	NMOD	_	A1	_	_
+4	Shane	shane	NNP	NNP	Shane	shane	NNP	5	NAME	_	_	_	_
+5	Longman	longman	NNP	NNP	Longman	longman	NNP	6	SBJ	_	_	_	A0
+6	is	be	VBZ	VBZ	is	be	VBZ	3	SUB	_	_	_	_
+7	going	go	VBG	VBG	going	go	VBG	6	VC	go.04	_	_	AM-MOD
+8	to	to	TO	TO	to	to	TO	7	VC	_	_	_	_
+9	recoup	recoup	VB	VB	recoup	recoup	VB	8	IM	recoup.01	_	_	_
+10	today	today	NN	NN	today	today	NN	9	TMP	_	_	_	AM-TMP
+11	.	.	.	.	.	.	.	2	P	_	_	_	_
+
+1	Traders	trader	NNS	NNS	Traders	trader	NNS	2	SBJ	trader.01	A0	A0	A0	A0	_	A0	_	_
+2	spend	spend	VBP	VBP	spend	spend	VBP	0	ROOT	spend.02	_	_	_	_	SU	_	_	_
+3	the	the	DT	DT	the	the	DT	4	NMOD	_	_	_	_	_	_	_	_	_
+4	morning	morning	NN	NN	morning	morning	NN	2	CLR	_	_	A1	_	_	_	_	_	_
+5	frantically	frantically	RB	RB	frantically	frantically	RB	6	MNR	_	_	_	AM-MNR	_	_	_	_	_
+6	selling	sell	VBG	VBG	selling	sell	VBG	2	OPRD	sell.01	SU	A2	_	SU	_	_	_	_
+7	bonds	bond	NNS	NNS	bonds	bond	NNS	6	OBJ	bond.01	A1	_	A1	_	_	_	_	_
+8	,	,	,	,	,	,	,	2	P	_	_	_	_	_	_	_	_	_
+9	in	in	IN	IN	in	in	IN	2	ADV	in.SU	_	AM-CAU	_	_	_	SU	_	_
+10	the	the	DT	DT	the	the	DT	11	NMOD	_	_	_	_	_	_	_	_	_
+11	belief	belief	NN	NN	belief	belief	NN	9	PMOD	belief.01	_	_	_	_	_	_	_	_
+12	that	that	IN	IN	that	that	IN	11	NMOD	_	_	_	_	_	_	A1	_	_
+13	the	the	DT	DT	the	the	DT	17	NMOD	_	_	_	_	_	_	_	_	_
+14	U.S.	u.s.	NNP	NNP	U.S.	u.s.	NNP	17	NMOD	_	_	_	_	_	_	_	A0	_
+15	monthly	monthly	JJ	JJ	monthly	monthly	JJ	17	NMOD	_	_	_	_	_	_	_	AM-TMP	_
+16	trade	trade	NN	NN	trade	trade	NN	17	NMOD	_	_	_	_	_	_	_	A1	_
+17	figures	figure	NNS	NNS	figures	figure	NNS	18	SBJ	figure.02	_	_	_	_	_	_	A2	A0
+18	will	will	MD	MD	will	will	MD	12	SUB	_	_	_	_	_	_	_	_	AM-MOD
+19	look	look	VB	VB	look	look	VB	18	VC	look.02	_	_	_	_	_	_	_	_
+20	lousy	lousy	JJ	JJ	lousy	lousy	JJ	19	PRD	_	_	_	_	_	_	_	_	A1
+21	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_	_	_	_
+
+1	Ah	ah	UH	UH	Ah	ah	UH	5	DEP	_
+2	,	,	,	,	,	,	,	5	P	_
+3	perfidious	perfidious	JJ	JJ	perfidious	perfidious	JJ	4	NMOD	_
+4	Columbia	columbia	NNP	NNP	Columbia	columbia	NNP	5	DEP	_
+5	!	!	.	.	!	!	.	0	ROOT	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_	_
+2	trade	trade	NN	NN	trade	trade	NN	3	NMOD	_	A1	_	_	_	_
+3	figures	figure	NNS	NNS	figures	figure	NNS	4	SBJ	figure.02	A2	A1	_	_	_
+4	turn	turn	VBP	VBP	turn	turn	VBP	0	ROOT	turn.11	_	_	_	_	_
+5	out	out	RP	RP	out	out	RP	4	PRT	_	_	_	_	_	_
+6	well	well	RB	RB	well	well	RB	4	CLR	_	_	A2	_	_	_
+7	,	,	,	,	,	,	,	4	P	_	_	_	_	_	_
+8	and	and	CC	CC	and	and	CC	4	COORD	_	_	_	_	_	_
+9	all	all	PDT	PDT	all	all	PDT	13	NMOD	_	_	_	_	_	_
+10	those	those	DT	DT	those	those	DT	13	NMOD	_	_	_	_	_	_
+11	recently	recently	RB	RB	recently	recently	RB	12	AMOD	_	_	_	AM-TMP	_	_
+12	unloaded	unload	VBN	VBN	unloaded	unload	VBN	13	NMOD	unload.01	_	_	_	_	_
+13	bonds	bond	NNS	NNS	bonds	bond	NNS	14	SBJ	_	_	_	A1	A1	A1
+14	spurt	spurt	VBP	VBP	spurt	spurt	VBP	8	CONJ	spurt.02	_	_	_	_	SU
+15	in	in	IN	IN	in	in	IN	14	ADV	_	_	_	_	AM-ADV	_
+16	price	price	NN	NN	price	price	NN	15	PMOD	price.01	_	_	_	_	A2
+17	.	.	.	.	.	.	.	4	P	_	_	_	_	_	_
+
+1	So	so	RB	RB	So	so	RB	2	NMOD	_	_	_
+2	much	much	RB	RB	much	much	RB	13	ADV	_	_	_
+3	for	for	IN	IN	for	for	IN	13	DEP	_	_	_
+4	anticipating	anticipate	VBG	VBG	anticipating	anticipate	VBG	3	PMOD	anticipate.01	_	_
+5	the	the	DT	DT	the	the	DT	6	NMOD	_	_	_
+6	market	market	NN	NN	market	market	NN	4	OBJ	_	A1	_
+7	by	by	IN	IN	by	by	IN	4	CLR	_	AM-MNR	_
+8	a	a	DT	DT	a	a	DT	9	NMOD	_	_	_
+9	fraction	fraction	NN	NN	fraction	fraction	NN	7	PMOD	fraction.01	_	_
+10	of	of	IN	IN	of	of	IN	9	NMOD	_	_	A1
+11	a	a	DT	DT	a	a	DT	12	NMOD	_	_	_
+12	second	second	NN	NN	second	second	NN	10	PMOD	_	_	_
+13	.	.	.	.	.	.	.	0	ROOT	_	_	_
+
+1	And	and	CC	CC	And	and	CC	9	DEP	_	_	_	_	_	_	_	_	_
+2	a	a	DT	DT	a	a	DT	4	NMOD	_	_	_	_	_	_	_	_	_
+3	large	large	JJ	JJ	large	large	JJ	4	NMOD	_	A2	_	_	_	_	_	_	_
+4	slice	slice	NN	NN	slice	slice	NN	9	SBJ	slice.01	_	_	A1	_	_	_	_	A0
+5	of	of	IN	IN	of	of	IN	4	NMOD	_	A1	_	_	_	_	_	_	_
+6	the	the	DT	DT	the	the	DT	8	NMOD	_	_	_	_	_	_	_	_	_
+7	first	first	JJ	JJ	first	first	JJ	8	NMOD	_	_	AM-TMP	_	_	_	_	_	_
+8	episode	episode	NN	NN	episode	episode	NN	5	PMOD	episode.01	_	_	_	_	_	_	_	_
+9	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_	_	_	_
+10	devoted	devote	VBN	VBN	devoted	devote	VBN	9	VC	devote.01	_	_	_	_	_	_	_	_
+11	to	to	TO	TO	to	to	TO	10	CLR	_	_	_	A2	_	_	_	_	_
+12	efforts	effort	NNS	NNS	efforts	effort	NNS	11	PMOD	effort.01	_	_	_	_	_	_	_	_
+13	to	to	TO	TO	to	to	TO	12	NMOD	_	_	_	_	A1	_	_	_	_
+14	get	get	VB	VB	get	get	VB	13	IM	get.04	_	_	_	_	_	SU	_	_
+15	rid	rid	JJ	JJ	rid	rid	VBN	14	PRD	rid.01	_	_	_	_	A2	_	SU	_
+16	of	of	IN	IN	of	of	IN	15	AMOD	of.SU	_	_	_	_	A1	_	_	SU
+17	some	some	DT	DT	some	some	DT	21	NMOD	_	_	_	_	_	_	_	_	_
+18	nearly	nearly	RB	RB	nearly	nearly	RB	19	AMOD	_	_	_	_	_	_	_	_	_
+19	worthless	worthless	JJ	JJ	worthless	worthless	JJ	21	NMOD	_	_	_	_	_	_	_	_	A3
+20	Japanese	japanese	JJ	JJ	Japanese	japanese	JJ	21	NMOD	_	_	_	_	_	_	_	_	A2
+21	bonds	bond	NNS	NNS	bonds	bond	NNS	16	PMOD	bond.01	_	_	_	_	_	_	_	_
+22	(	-lrb-	(	(	(	-lrb-	(	25	P	_	_	_	_	_	_	_	_	_
+23	since	since	IN	IN	since	since	IN	25	TMP	_	_	_	_	_	_	_	_	_
+24	when	when	WRB	WRB	when	when	WRB	23	PMOD	_	_	_	_	_	_	_	_	_
+25	is	be	VBZ	VBZ	is	be	VBZ	10	PRN	_	_	_	_	_	_	_	_	_
+26	anything	anything	NN	NN	anything	anything	NN	25	SBJ	_	_	_	_	_	_	_	_	_
+27	Japanese	japanese	JJ	JJ	Japanese	japanese	JJ	26	APPO	_	_	_	_	_	_	_	_	_
+28	nearly	nearly	RB	RB	nearly	nearly	RB	29	AMOD	_	_	_	_	_	_	_	_	_
+29	worthless	worthless	JJ	JJ	worthless	worthless	JJ	25	PRD	_	_	_	_	_	_	_	_	_
+30	nowadays	nowadays	RB	RB	nowadays	nowadays	RB	25	TMP	_	_	_	_	_	_	_	_	_
+31	?	?	.	.	?	?	.	25	P	_	_	_	_	_	_	_	_	_
+32	)	-rrb-	)	)	)	-rrb-	)	25	P	_	_	_	_	_	_	_	_	_
+33	.	.	.	.	.	.	.	9	P	_	_	_	_	_	_	_	_	_
+
+1	Surprisingly	surprisingly	RB	RB	Surprisingly	surprisingly	RB	5	ADV	_	AM-ADV	_	_	_	_	_	_	_	_	_
+2	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_	_	_	_	_	_
+3	Shane	shane	NNP	NNP	Shane	shane	NNP	4	NAME	_	_	_	_	_	_	_	_	_	_	_
+4	Longman	longman	NNP	NNP	Longman	longman	NNP	5	SBJ	_	A0	A0	_	_	_	_	_	_	_	_
+5	survives	survive	VBZ	VBZ	survives	survive	VBZ	0	ROOT	survive.01	_	_	_	_	_	_	_	_	_	_
+6	the	the	DT	DT	the	the	DT	7	NMOD	_	_	_	_	_	_	_	_	_	_	_
+7	week	week	NN	NN	week	week	NN	5	OBJ	_	A1	_	_	_	_	_	_	_	_	_
+8	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_	_	_	_	_	_
+9	only	only	RB	RB	only	only	RB	10	ADV	_	_	AM-ADV	_	_	_	_	_	_	_	_
+10	to	to	TO	TO	to	to	TO	5	ADV	_	AM-ADV	_	_	_	_	_	_	_	_	_
+11	have	have	VB	VB	have	have	VB	10	IM	have.04	_	_	_	_	_	_	_	_	_	_
+12	a	a	DT	DT	a	a	DT	14	NMOD	_	_	_	_	_	_	_	_	_	_	_
+13	senior	senior	JJ	JJ	senior	senior	JJ	14	NMOD	_	_	_	A3	_	_	_	_	_	_	_
+14	executive	executive	NN	NN	executive	executive	NN	11	OBJ	executive.01	_	A1	A0	A0	_	A1	_	_	_	_
+15	innocently	innocently	RB	RB	innocently	innocently	RB	16	MNR	_	_	_	_	AM-MNR	_	_	_	_	_	_
+16	bumble	bumble	VB	VB	bumble	bumble	VB	11	OPRD	bumble.01	_	C-A1	_	_	SU	_	_	_	_	_
+17	his	his	PRP$	PRP$	his	his	PRP$	18	NMOD	_	_	_	_	_	A0	_	_	_	_	_
+18	way	way	NN	NN	way	way	NN	16	OBJ	way.02	_	_	_	A1	_	_	_	_	_	_
+19	into	into	IN	IN	into	into	IN	16	DIR	_	_	_	_	AM-DIR	A1	_	_	_	_	_
+20	becoming	become	VBG	VBG	becoming	become	VBG	19	PMOD	become.01	_	_	_	_	_	_	_	_	_	_
+21	the	the	DT	DT	the	the	DT	22	NMOD	_	_	_	_	_	_	_	_	_	_	_
+22	target	target	NN	NN	target	target	NN	20	PRD	target.01	_	_	_	_	_	A2	A1	SU	_	A1
+23	of	of	IN	IN	of	of	IN	22	NMOD	of.SU	_	_	_	_	_	_	A0	_	_	SU
+24	a	a	DT	DT	a	a	DT	28	NMOD	_	_	_	_	_	_	_	_	_	_	_
+25	criminal	criminal	JJ	JJ	criminal	criminal	JJ	28	NMOD	_	_	_	_	_	_	_	_	_	_	AM-MNR
+26	insider	insider	NN	NN	insider	insider	NN	27	NMOD	_	_	_	_	_	_	_	_	_	A0	_
+27	trading	trading	NN	NN	trading	trading	NN	28	NMOD	trading.01	_	_	_	_	_	_	_	_	_	_
+28	investigation	investigation	NN	NN	investigation	investigation	NN	23	PMOD	investigation.01	_	_	_	_	_	_	_	_	_	A2
+29	.	.	.	.	.	.	.	5	P	_	_	_	_	_	_	_	_	_	_	_
+
+1	Instead	instead	RB	RB	Instead	instead	RB	2	DEP	_	_	_	_	_	_	_	_	_
+2	of	of	IN	IN	of	of	IN	24	ADV	_	_	_	_	_	_	_	AM-ADV	_
+3	closing	close	VBG	VBG	closing	close	VBG	2	PMOD	close.01	_	SU	_	_	_	_	_	_
+4	ranks	rank	NNS	NNS	ranks	rank	NNS	3	OBJ	rank.03	A1	_	_	_	_	_	_	_
+5	to	to	TO	TO	to	to	TO	3	PRP	_	AM-PNC	_	_	_	_	_	_	_
+6	protect	protect	VB	VB	protect	protect	VB	5	IM	protect.01	_	_	_	_	_	_	_	_
+7	the	the	DT	DT	the	the	DT	8	NMOD	_	_	_	_	_	_	_	_	_
+8	firm	firm	NN	NN	firm	firm	NN	10	NMOD	_	_	_	_	A1	_	_	_	_
+9	's	's	POS	POS	's	's	POS	8	SUFFIX	_	_	_	_	_	_	_	_	_
+10	reputation	reputation	NN	NN	reputation	reputation	NN	6	OBJ	reputation.01	_	_	A1	_	_	_	_	_
+11	,	,	,	,	,	,	,	24	P	_	_	_	_	_	_	_	_	_
+12	the	the	DT	DT	the	the	DT	13	NMOD	_	_	_	_	_	_	_	_	_
+13	executive	executive	NN	NN	executive	executive	NN	16	NMOD	_	_	_	_	_	A1	_	_	_
+14	's	's	POS	POS	's	's	POS	13	SUFFIX	_	_	_	_	_	_	_	_	_
+15	internal	internal	JJ	JJ	internal	internal	JJ	16	NMOD	_	_	_	_	_	AM-LOC	_	_	_
+16	rivals	rival	NNS	NNS	rivals	rival	NNS	24	SBJ	rival.01	A0	A0	A0	_	A0	A1	A0	_
+17	,	,	,	,	,	,	,	16	P	_	_	_	_	_	_	_	_	_
+18	led	lead	VBN	VBN	led	lead	VBN	16	APPO	lead.02	_	_	_	_	_	_	_	_
+19	by	by	IN	IN	by	by	IN	18	LGS	_	_	_	_	_	_	A0	_	_
+20	a	a	DT	DT	a	a	DT	22	NMOD	_	_	_	_	_	_	_	_	_
+21	loutish	loutish	JJ	JJ	loutish	loutish	JJ	22	NMOD	_	_	_	_	_	_	_	_	_
+22	American	american	NNP	NNP	American	american	JJ	19	PMOD	_	_	_	_	_	_	_	_	_
+23	,	,	,	,	,	,	,	16	P	_	_	_	_	_	_	_	_	_
+24	demand	demand	VBP	VBP	demand	demand	VBP	0	ROOT	demand.01	_	_	_	_	_	_	_	_
+25	his	his	PRP$	PRP$	his	his	PRP$	26	NMOD	_	_	_	_	_	_	_	_	A0
+26	resignation	resignation	NN	NN	resignation	resignation	NN	24	OBJ	resignation.01	_	_	_	_	_	_	A1	_
+27	.	.	.	.	.	.	.	24	P	_	_	_	_	_	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	2	NMOD	_	_	_	_	_	_	_
+2	plot	plot	NN	NN	plot	plot	NN	3	SBJ	_	A1	_	_	_	_	_
+3	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_	_
+4	thwarted	thwart	VBN	VBN	thwarted	thwart	VBN	3	VC	thwart.01	_	_	_	_	_	_
+5	when	when	WRB	WRB	when	when	WRB	22	ADV	_	_	_	_	_	R-AM-TMP	_
+6	the	the	DT	DT	the	the	DT	7	NMOD	_	_	_	_	_	_	_
+7	firm	firm	NN	NN	firm	firm	NN	10	NMOD	_	_	A1	_	_	_	_
+8	's	's	POS	POS	's	's	POS	7	SUFFIX	_	_	_	_	_	_	_
+9	major	major	JJ	JJ	major	major	JJ	10	NMOD	_	_	_	_	_	_	_
+10	stockholder	stockholder	NN	NN	stockholder	stockholder	NN	22	SBJ	stockholder.01	_	A0	_	_	A1	A0
+11	,	,	,	,	,	,	,	10	P	_	_	_	_	_	_	_
+12	kelp	kelp	NN	NN	kelp	kelp	NN	13	NMOD	_	_	_	A1	_	_	_
+13	farming	farming	NN	NN	farming	farming	NN	10	NMOD	farming.01	_	_	_	_	_	_
+14	on	on	IN	IN	on	on	IN	13	NMOD	_	_	_	AM-LOC	_	_	_
+15	the	the	DT	DT	the	the	DT	17	NMOD	_	_	_	_	_	_	_
+16	other	other	JJ	JJ	other	other	JJ	17	NMOD	_	_	_	_	_	_	_
+17	side	side	NN	NN	side	side	NN	14	PMOD	side.01	_	_	_	_	_	_
+18	of	of	IN	IN	of	of	IN	17	NMOD	_	_	_	_	A1	_	_
+19	the	the	DT	DT	the	the	DT	20	NMOD	_	_	_	_	_	_	_
+20	globe	globe	NN	NN	globe	globe	NN	18	PMOD	_	_	_	_	_	_	_
+21	,	,	,	,	,	,	,	10	P	_	_	_	_	_	_	_
+22	hurries	hurry	VBZ	VBZ	hurries	hurry	VBZ	4	TMP	hurry.01	AM-TMP	_	_	_	_	_
+23	home	home	RB	RB	home	home	NN	22	DIR	_	_	_	_	_	AM-DIR	_
+24	to	to	TO	TO	to	to	TO	22	PRP	_	_	_	_	_	A2	_
+25	support	support	VB	VB	support	support	VB	24	IM	support.01	_	_	_	_	_	_
+26	the	the	DT	DT	the	the	DT	27	NMOD	_	_	_	_	_	_	_
+27	executive	executive	NN	NN	executive	executive	NN	25	OBJ	_	_	_	_	_	_	A1
+28	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_	_
+
+1	But	but	CC	CC	But	but	CC	4	DEP	_	AM-DIS
+2	the	the	DT	DT	the	the	DT	3	NMOD	_	_
+3	investigation	investigation	NN	NN	investigation	investigation	NN	4	SBJ	_	A1
+4	continues	continue	VBZ	VBZ	continues	continue	VBZ	0	ROOT	continue.01	_
+5	.	.	.	.	.	.	.	4	P	_	_
+
+1	If	if	IN	IN	If	if	IN	21	ADV	_	_	_	_	AM-ADV	_	_
+2	you	you	PRP	PRP	you	you	PRP	3	SBJ	_	A0	A0	_	_	_	_
+3	can	can	MD	MD	can	can	MD	1	SUB	_	AM-MOD	_	_	_	_	_
+4	swallow	swallow	VB	VB	swallow	swallow	VB	3	VC	swallow.01	_	SU	_	_	_	_
+5	the	the	DT	DT	the	the	DT	6	NMOD	_	_	_	_	_	_	_
+6	premise	premise	NN	NN	premise	premise	NN	4	OBJ	premise.01	A1	_	_	_	_	_
+7	that	that	IN	IN	that	that	IN	6	NMOD	_	_	A1	_	_	_	_
+8	the	the	DT	DT	the	the	DT	9	NMOD	_	_	_	_	_	_	_
+9	rewards	reward	NNS	NNS	rewards	reward	NNS	13	SBJ	reward.01	_	_	_	_	_	_
+10	for	for	IN	IN	for	for	IN	9	NMOD	_	_	_	A2	_	_	_
+11	such	such	JJ	JJ	such	such	DT	12	NMOD	_	_	_	_	_	_	_
+12	ineptitude	ineptitude	NN	NN	ineptitude	ineptitude	NN	10	PMOD	_	_	_	_	_	_	_
+13	are	be	VBP	VBP	are	be	VBP	7	SUB	_	_	_	_	_	_	_
+14	six-figure	six-figure	JJ	JJ	six	six	CD	16	HMOD	_	_	_	_	_	_	_
+15	_	_	_	_	-	-	HYPH	14	HYPH	_	_	_	_	_	_	_
+16	_	_	_	_	figure	figure	NN	17	NMOD	_	_	_	_	_	_	_
+17	salaries	salary	NNS	NNS	salaries	salary	NNS	13	PRD	_	_	_	_	_	_	_
+18	,	,	,	,	,	,	,	21	P	_	_	_	_	_	_	_
+19	you	you	PRP	PRP	you	you	PRP	21	SBJ	_	_	_	_	A1	A1	_
+20	still	still	RB	RB	still	still	RB	21	ADV	_	_	_	_	AM-TMP	_	_
+21	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_	_
+22	left	leave	VBN	VBN	left	leave	VBN	21	VC	leave.01	_	_	_	_	_	_
+23	puzzled	puzzle	VBN	VBN	puzzled	puzzle	VBN	22	OPRD	puzzle.01	_	_	_	A2	_	_
+24	,	,	,	,	,	,	,	21	P	_	_	_	_	_	_	_
+25	because	because	IN	IN	because	because	IN	21	PRP	_	_	_	_	AM-CAU	_	_
+26	few	few	JJ	JJ	few	few	DT	30	SBJ	_	_	_	_	_	_	A0
+27	of	of	IN	IN	of	of	IN	26	NMOD	_	_	_	_	_	_	_
+28	the	the	DT	DT	the	the	DT	29	NMOD	_	_	_	_	_	_	_
+29	yuppies	yuppie	NNS	NNS	yuppies	yuppie	NNS	27	PMOD	_	_	_	_	_	_	_
+30	consume	consume	VBP	VBP	consume	consume	VBP	25	SUB	consume.01	_	_	_	_	_	_
+31	very	very	RB	RB	very	very	RB	30	MNR	_	_	_	_	_	_	AM-MNR
+32	conspicuously	conspicuously	RB	RB	conspicuously	conspicuously	RB	31	AMOD	_	_	_	_	_	_	_
+33	.	.	.	.	.	.	.	21	P	_	_	_	_	_	_	_
+
+1	In	in	IN	IN	In	in	IN	5	ADV	_	_	AM-DIS
+2	fact	fact	NN	NN	fact	fact	NN	1	PMOD	fact.01	_	_
+3	,	,	,	,	,	,	,	5	P	_	_	_
+4	few	few	JJ	JJ	few	few	DT	5	SBJ	_	_	A0
+5	consume	consume	VBP	VBP	consume	consume	VBP	0	ROOT	consume.01	A1	_
+6	much	much	RB	RB	much	much	NN	5	OBJ	_	_	A1
+7	of	of	IN	IN	of	of	IN	6	NMOD	_	_	_
+8	anything	anything	NN	NN	anything	anything	NN	7	PMOD	_	_	_
+9	.	.	.	.	.	.	.	5	P	_	_	_
+
+1	Two	two	CD	CD	Two	two	CD	2	SBJ	_	A0
+2	share	share	NN	NN	share	share	VBP	0	ROOT	_	SU
+3	a	a	DT	DT	a	a	DT	4	NMOD	_	_
+4	house	house	NN	NN	house	house	NN	2	OBJ	house.01	A1
+5	almost	almost	RB	RB	almost	almost	RB	6	AMOD	_	_
+6	devoid	devoid	JJ	JJ	devoid	devoid	JJ	4	APPO	_	_
+7	of	of	IN	IN	of	of	IN	6	AMOD	_	_
+8	furniture	furniture	NN	NN	furniture	furniture	NN	7	PMOD	_	_
+9	.	.	.	.	.	.	.	2	P	_	_
+
+1	Michelle	michelle	NNP	NNP	Michelle	michelle	NNP	2	SBJ	_	A0	_	_	_	_	_	_	_	_	_	_	_	_
+2	lives	live	VBZ	VBZ	lives	live	VBZ	0	ROOT	live.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+3	in	in	IN	IN	in	in	IN	2	LOC-CLR	_	AM-LOC	_	_	_	_	_	_	_	_	_	_	_	_
+4	a	a	DT	DT	a	a	DT	6	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+5	hotel	hotel	NN	NN	hotel	hotel	NN	6	NMOD	_	_	A1	_	_	_	_	_	_	_	_	_	_	_
+6	room	room	NN	NN	room	room	NN	3	PMOD	room.02	_	_	_	_	_	_	_	_	_	_	_	_	_
+7	,	,	,	,	,	,	,	2	P	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+8	and	and	CC	CC	and	and	CC	2	COORD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+9	although	although	IN	IN	although	although	IN	19	ADV	_	_	_	_	AM-ADV	_	_	_	_	_	_	_	_	_
+10	she	she	PRP	PRP	she	she	PRP	11	SBJ	_	_	_	A0	_	_	_	_	_	_	_	_	_	_
+11	drives	drive	VBZ	VBZ	drives	drive	VBZ	9	SUB	drive.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+12	a	a	DT	DT	a	a	DT	16	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+13	canary-colored	canary-colored	JJ	JJ	canary	canary	NN	15	HMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+14	_	_	_	_	-	-	HYPH	13	HYPH	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+15	_	_	_	_	colored	colored	JJ	16	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+16	Porsche	porsche	NNP	NNP	Porsche	porsche	NNP	11	OBJ	_	_	_	A1	_	_	_	_	_	_	_	_	_	_
+17	,	,	,	,	,	,	,	19	P	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+18	she	she	PRP	PRP	she	she	PRP	19	SBJ	_	_	_	_	A0	A0	A0	A0	_	_	_	_	_	_
+19	has	have	VBZ	VBZ	has	have	VBZ	8	CONJ	have.03	_	_	_	_	SU	_	_	_	_	_	_	_	_
+20	n't	not	RB	RB	n't	not	RB	19	ADV	_	_	_	_	AM-NEG	_	_	_	_	_	_	_	_	_
+21	time	time	NN	NN	time	time	NN	19	OBJ	time.01	_	_	_	A1	_	AM-TMP	AM-TMP	_	_	_	_	_	_
+22	to	to	TO	TO	to	to	TO	21	NMOD	_	_	_	_	_	A1	_	_	_	_	_	_	_	_
+23	clean	clean	VB	VB	clean	clean	VB	22	IM	clean.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+24	or	or	CC	CC	or	or	CC	23	COORD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+25	repair	repair	VB	VB	repair	repair	VB	24	CONJ	repair.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+26	it	it	PRP	PRP	it	it	PRP	23	OBJ	_	_	_	_	_	_	A1	A1	_	_	_	_	_	_
+27	;	;	:	:	;	;	:	19	P	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+28	the	the	DT	DT	the	the	DT	32	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+29	beat-up	beat-up	JJ	JJ	beat	beat	NN	31	AMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+30	_	_	_	_	-	-	HYPH	29	HYPH	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+31	_	_	_	_	up	up	RP	32	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+32	vehicle	vehicle	NN	NN	vehicle	vehicle	NN	33	SBJ	_	_	_	_	_	_	_	_	A1	_	_	_	_	_
+33	can	can	MD	MD	can	can	MD	19	COORD	_	_	_	_	_	_	_	_	AM-MOD	_	_	_	_	_
+34	be	be	VB	VB	be	be	VB	33	VC	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+35	started	start	VBN	VBN	started	start	VBN	34	VC	start.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+36	only	only	RB	RB	only	only	RB	37	PMOD	_	_	_	_	_	_	_	_	AM-ADV	_	_	_	_	_
+37	with	with	IN	IN	with	with	IN	35	ADV	_	_	_	_	_	_	_	_	A2	_	_	_	_	_
+38	a	a	DT	DT	a	a	DT	40	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+39	huge	huge	JJ	JJ	huge	huge	JJ	40	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+40	pair	pair	NN	NN	pair	pair	NN	37	PMOD	pair.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+41	of	of	IN	IN	of	of	IN	40	NMOD	_	_	_	_	_	_	_	_	_	A1	_	_	_	_
+42	pliers	pliers	NNS	NNS	pliers	pliers	NNS	41	PMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+43	because	because	IN	IN	because	because	IN	35	PRP	_	_	_	_	_	_	_	_	AM-CAU	_	_	_	_	_
+44	the	the	DT	DT	the	the	DT	46	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+45	ignition	ignition	NN	NN	ignition	ignition	NN	46	NMOD	_	_	_	_	_	_	_	_	_	_	A1	_	_	_
+46	key	key	NN	NN	key	key	NN	47	SBJ	key.01	_	_	_	_	_	_	_	_	_	A0	A1	_	A2
+47	has	have	VBZ	VBZ	has	have	VBZ	43	SUB	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+48	broken	break	VBN	VBN	broken	break	VBN	47	VC	break.04	_	_	_	_	_	_	_	_	_	_	_	SU	_
+49	off	off	RP	RP	off	off	RP	48	PRT	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+50	in	in	IN	IN	in	in	IN	48	LOC	in.SU	_	_	_	_	_	_	_	_	_	_	AM-LOC	_	SU
+51	the	the	DT	DT	the	the	DT	52	NMOD	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+52	lock	lock	NN	NN	lock	lock	NN	50	PMOD	lock.01	_	_	_	_	_	_	_	_	_	_	_	_	_
+53	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_	_	_	_	_	_	_	_	_
+
+1	And	and	CC	CC	And	and	CC	3	DEP	_	_	_	_	_	_
+2	it	it	PRP	PRP	it	it	PRP	3	SBJ	_	_	_	_	_	_
+3	takes	take	VBZ	VBZ	takes	take	VBZ	0	ROOT	take.01	_	_	_	_	_
+4	Declan	declan	NNP	NNP	Declan	declan	NNP	3	OBJ	_	A2	_	_	A1	_
+5	,	,	,	,	,	,	,	4	P	_	_	_	_	_	_
+6	the	the	DT	DT	the	the	DT	10	NMOD	_	_	_	_	_	_
+7	obligatory	obligatory	JJ	JJ	obligatory	obligatory	JJ	10	NMOD	_	_	_	_	_	_
+8	ladies	lady	NNS	NNS	ladies	lady	NNS	10	NMOD	_	_	A1	_	_	_
+9	'	'	POS	POS	'	'	POS	8	SUFFIX	_	_	_	_	_	_
+10	man	man	NN	NN	man	man	NN	4	APPO	man.02	_	A0	_	_	_
+11	of	of	IN	IN	of	of	IN	10	NMOD	_	_	_	_	_	_
+12	the	the	DT	DT	the	the	DT	13	NMOD	_	_	_	_	_	_
+13	cast	cast	NN	NN	cast	cast	NN	11	PMOD	_	_	_	_	_	_
+14	,	,	,	,	,	,	,	4	P	_	_	_	_	_	_
+15	until	until	IN	IN	until	until	IN	3	TMP	_	A1	_	_	_	_
+16	the	the	DT	DT	the	the	DT	18	NMOD	_	_	_	_	_	_
+17	third	third	JJ	JJ	third	third	JJ	18	NMOD	_	_	_	AM-TMP	_	_
+18	episode	episode	NN	NN	episode	episode	NN	15	PMOD	episode.01	_	_	_	_	_
+19	to	to	TO	TO	to	to	TO	3	EXTR	_	A0	_	_	_	_
+20	get	get	VB	VB	get	get	VB	19	IM	get.03	_	_	_	_	_
+21	past	past	IN	IN	past	past	IN	20	DIR	_	_	_	_	A2	_
+22	first	first	JJ	JJ	first	first	JJ	23	NMOD	_	_	_	_	_	_
+23	base	base	NN	NN	base	base	NN	21	PMOD	_	_	_	_	_	_
+24	with	with	IN	IN	with	with	IN	20	ADV	_	_	_	_	AM-ADV	_
+25	any	any	DT	DT	any	any	DT	24	PMOD	_	_	_	_	_	_
+26	of	of	IN	IN	of	of	IN	25	NMOD	_	_	_	_	_	_
+27	his	his	PRP$	PRP$	his	his	PRP$	28	NMOD	_	_	_	_	_	A0
+28	prey	prey	NN	NN	prey	prey	NN	26	PMOD	prey.01	_	_	_	_	A1
+29	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_
+
+1	Perhaps	perhaps	RB	RB	Perhaps	perhaps	RB	7	ADV	_	_	_	_	_	_	_
+2	the	the	DT	DT	the	the	DT	3	NMOD	_	_	_	_	_	_	_
+3	explanation	explanation	NN	NN	explanation	explanation	NN	7	SBJ	explanation.01	_	_	_	_	_	_
+4	for	for	IN	IN	for	for	IN	3	NMOD	_	A1	_	_	_	_	_
+5	these	these	DT	DT	these	these	DT	6	NMOD	_	_	_	_	_	_	_
+6	anomalies	anomaly	NNS	NNS	anomalies	anomaly	NNS	4	PMOD	_	_	_	_	_	_	_
+7	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_	_	_
+8	that	that	IN	IN	that	that	IN	7	PRD	_	_	_	_	_	_	_
+9	class-conscious	class-conscious	JJ	JJ	class	class	NN	11	HMOD	_	_	_	_	_	_	_
+10	_	_	_	_	-	-	HYPH	9	HYPH	_	_	_	_	_	_	_
+11	_	_	_	_	conscious	conscious	JJ	12	NMOD	_	_	_	_	_	_	_
+12	Britain	britain	NNP	NNP	Britain	britain	NNP	13	SBJ	_	_	A0	_	A0	_	_
+13	is	be	VBZ	VBZ	is	be	VBZ	8	SUB	_	_	_	_	_	_	_
+14	n't	not	RB	RB	n't	not	RB	13	ADV	_	_	_	_	_	_	_
+15	ready	ready	JJ	JJ	ready	ready	JJ	13	PRD	_	_	_	_	_	_	_
+16	to	to	TO	TO	to	to	TO	15	AMOD	_	_	_	_	_	_	_
+17	come	come	VB	VB	come	come	VB	16	IM	come.14	_	_	SU	_	_	_
+18	to	to	TO	TO	to	to	TO	17	CLR	to.SU	_	_	_	SU	_	_
+19	terms	terms	NNS	NNS	terms	terms	NNS	18	PMOD	term.03	_	A1	_	_	_	_
+20	with	with	IN	IN	with	with	IN	19	NMOD	_	_	A2	_	A2	_	_
+21	the	the	DT	DT	the	the	DT	22	NMOD	_	_	_	_	_	_	_
+22	wealth	wealth	NN	NN	wealth	wealth	NN	20	PMOD	_	_	_	_	_	A1	_
+23	created	create	VBN	VBN	created	create	VBN	22	APPO	create.01	_	_	_	_	_	_
+24	by	by	IN	IN	by	by	IN	23	LGS	_	_	_	_	_	A0	_
+25	the	the	DT	DT	the	the	DT	30	NMOD	_	_	_	_	_	_	_
+26	Thatcherian	thatcherian	JJ	JJ	Thatcherian	thatcherian	JJ	30	NMOD	_	_	_	_	_	_	A0
+27	free-enterprise	free-enterprise	NN	NN	free	free	JJ	29	HMOD	_	_	_	_	_	_	_
+28	_	_	_	_	-	-	HYPH	27	HYPH	_	_	_	_	_	_	_
+29	_	_	_	_	enterprise	enterprise	NN	30	NMOD	_	_	_	_	_	_	_
+30	regime	regime	NN	NN	regime	regime	NN	24	PMOD	regime.01	_	_	_	_	_	_
+31	.	.	.	.	.	.	.	7	P	_	_	_	_	_	_	_
+
+1	After	after	IN	IN	After	after	IN	5	ADV	_	_
+2	all	all	DT	DT	all	all	DT	1	PMOD	_	_
+3	,	,	,	,	,	,	,	5	P	_	_
+4	this	this	DT	DT	this	this	DT	5	SBJ	_	_
+5	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_
+6	n't	not	RB	RB	n't	not	RB	5	ADV	_	_
+7	old	old	JJ	JJ	old	old	JJ	8	NMOD	_	_
+8	money	money	NN	NN	money	money	NN	5	PRD	_	_
+9	,	,	,	,	,	,	,	8	P	_	_
+10	but	but	CC	CC	but	but	CC	8	COORD	_	_
+11	new	new	JJ	JJ	new	new	JJ	12	NMOD	_	_
+12	money	money	NN	NN	money	money	NN	10	CONJ	_	_
+13	,	,	,	,	,	,	,	12	P	_	_
+14	and	and	CC	CC	and	and	CC	12	COORD	_	_
+15	in	in	IN	IN	in	in	IN	20	LOC	_	_
+16	many	many	JJ	JJ	many	many	DT	17	NMOD	_	_
+17	cases	case	NNS	NNS	cases	case	NNS	15	PMOD	case.05	_
+18	,	,	,	,	,	,	,	20	P	_	_
+19	young	young	JJ	JJ	young	young	JJ	20	NMOD	_	_
+20	money	money	NN	NN	money	money	NN	14	CONJ	_	A2
+21	.	.	.	.	.	.	.	5	P	_	_
+
+1	This	this	DT	DT	This	this	DT	2	NMOD	_	_	_	_
+2	attitude	attitude	NN	NN	attitude	attitude	NN	3	SBJ	_	A1	_	_
+3	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_
+4	clearly	clearly	RB	RB	clearly	clearly	RB	5	ADV	_	AM-MNR	_	_
+5	illustrated	illustrate	VBN	VBN	illustrated	illustrate	VBN	3	VC	illustrate.01	_	_	_
+6	in	in	IN	IN	in	in	IN	5	LOC-CLR	_	AM-LOC	_	_
+7	the	the	DT	DT	the	the	DT	8	NMOD	_	_	_	_
+8	treatment	treatment	NN	NN	treatment	treatment	NN	6	PMOD	treatment.04	_	_	_
+9	of	of	IN	IN	of	of	IN	8	NMOD	_	_	A1	_
+10	Max	max	NNP	NNP	Max	max	NNP	9	PMOD	_	_	_	_
+11	,	,	,	,	,	,	,	10	P	_	_	_	_
+12	the	the	DT	DT	the	the	DT	14	NMOD	_	_	_	_
+13	trading	trading	NN	NN	trading	trading	NN	14	NMOD	trading.01	_	_	_
+14	room	room	NN	NN	room	room	NN	18	NMOD	_	_	_	AM-LOC
+15	's	's	POS	POS	's	's	POS	14	SUFFIX	_	_	_	_
+16	most	most	RBS	RBS	most	most	RBS	17	AMOD	_	_	_	_
+17	flamboyant	flamboyant	JJ	JJ	flamboyant	flamboyant	JJ	18	NMOD	_	_	_	_
+18	character	character	NN	NN	character	character	NN	10	APPO	_	_	_	_
+19	.	.	.	.	.	.	.	3	P	_	_	_	_
+
+1	Yuppily	yuppily	RB	RB	Yuppily	yuppily	RB	5	ADV	_	AM-ADV	_	_	AM-ADV	_
+2	enough	enough	RB	RB	enough	enough	RB	1	AMOD	_	_	_	_	_	_
+3	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_
+4	he	he	PRP	PRP	he	he	PRP	5	SBJ	_	A0	_	_	A0	A0
+5	lives	live	VBZ	VBZ	lives	live	VBZ	0	ROOT	live.01	_	_	_	_	_
+6	in	in	IN	IN	in	in	IN	5	LOC-CLR	_	AM-LOC	_	_	_	_
+7	a	a	DT	DT	a	a	DT	11	NMOD	_	_	_	_	_	_
+8	lavishly	lavishly	RB	RB	lavishly	lavishly	RB	9	AMOD	_	_	AM-MNR	_	_	_
+9	furnished	furnish	VBN	VBN	furnished	furnish	VBN	11	NMOD	furnish.01	_	_	_	_	_
+10	converted	convert	VBN	VBN	converted	convert	VBN	11	NMOD	convert.01	_	_	_	_	_
+11	church	church	NN	NN	church	church	NN	6	PMOD	_	_	A1	A1	_	_
+12	,	,	,	,	,	,	,	5	P	_	_	_	_	_	_
+13	wears	wear	VBZ	VBZ	wears	wear	VBZ	5	COORD	wear.01	_	_	_	_	_
+14	designer	designer	NN	NN	designer	designer	NN	15	NMOD	_	_	_	_	_	_
+15	clothes	clothes	NNS	NNS	clothes	clothes	NNS	13	OBJ	_	_	_	_	A1	_
+16	and	and	CC	CC	and	and	CC	13	COORD	_	_	_	_	_	_
+17	drives	drive	VBZ	VBZ	drives	drive	VBZ	16	CONJ	drive.01	_	_	_	_	_
+18	an	an	DT	DT	an	an	DT	20	NMOD	_	_	_	_	_	_
+19	antique	antique	JJ	JJ	antique	antique	JJ	20	NMOD	_	_	_	_	_	_
+20	car	car	NN	NN	car	car	NN	17	OBJ	_	_	_	_	_	A1
+21	.	.	.	.	.	.	.	5	P	_	_	_	_	_	_
+
+1	But	but	CC	CC	But	but	CC	17	DEP	_	_	AM-DIS
+2	apparently	apparently	RB	RB	apparently	apparently	RB	3	ADV	_	AM-ADV	_
+3	to	to	TO	TO	to	to	TO	17	PRP	_	_	AM-PNC
+4	make	make	VB	VB	make	make	VB	3	IM	make.02	_	_
+5	him	him	PRP	PRP	him	him	PRP	4	OBJ	_	A1	_
+6	palatable	palatable	JJ	JJ	palatable	palatable	JJ	9	AMOD	_	_	_
+7	,	,	,	,	,	,	,	9	P	_	_	_
+8	even	even	RB	RB	even	even	RB	9	AMOD	_	_	_
+9	lovable	lovable	JJ	JJ	lovable	lovable	JJ	4	DEP	_	A2	_
+10	,	,	,	,	,	,	,	9	P	_	_	_
+11	to	to	TO	TO	to	to	TO	9	AMOD	_	_	_
+12	the	the	DT	DT	the	the	DT	13	NMOD	_	_	_
+13	masses	masses	NNS	NNS	masses	masses	NNS	11	PMOD	_	_	_
+14	,	,	,	,	,	,	,	17	P	_	_	_
+15	the	the	DT	DT	the	the	DT	16	NMOD	_	_	_
+16	script	script	NN	NN	script	script	NN	17	SBJ	_	_	A0
+17	inflates	inflate	VBZ	VBZ	inflates	inflate	VBZ	0	ROOT	inflate.01	_	_
+18	pony-tailed	pony-tailed	JJ	JJ	pony	pony	NN	20	HMOD	_	_	_
+19	_	_	_	_	-	-	HYPH	18	HYPH	_	_	_
+20	_	_	_	_	tailed	tailed	NN	17	OBJ	_	_	A1
+21	Max	max	NNP	NNP	Max	max	NNP	20	APPO	_	_	_
+22	into	into	IN	IN	into	into	IN	17	CLR	_	_	A4
+23	an	an	DT	DT	an	an	DT	25	NMOD	_	_	_
+24	eccentric	eccentric	JJ	JJ	eccentric	eccentric	JJ	25	NMOD	_	_	_
+25	genius	genius	NN	NN	genius	genius	NN	22	PMOD	_	_	_
+26	,	,	,	,	,	,	,	25	P	_	_	_
+27	master	master	NN	NN	master	master	NN	25	APPO	_	_	_
+28	of	of	IN	IN	of	of	IN	27	NMOD	_	_	_
+29	11	11	CD	CD	11	11	CD	31	NMOD	_	_	_
+30	Chinese	chinese	JJ	JJ	Chinese	chinese	JJ	31	NMOD	_	_	_
+31	dialects	dialect	NNS	NNS	dialects	dialect	NNS	28	PMOD	_	_	_
+32	.	.	.	.	.	.	.	17	P	_	_	_
+
+1	He	he	PRP	PRP	He	he	PRP	2	SBJ	_	A0	_	_	_	_	_	_	_
+2	takes	take	VBZ	VBZ	takes	take	VBZ	0	ROOT	take.01	_	_	_	_	_	_	_	_
+3	his	his	PRP$	PRP$	his	his	PRP$	4	NMOD	_	_	_	_	_	_	_	_	_
+4	wash	wash	NN	NN	wash	wash	NN	2	OBJ	_	A1	_	_	_	_	_	_	_
+5	to	to	TO	TO	to	to	TO	2	DIR	_	AM-DIR	_	_	_	_	_	_	_
+6	the	the	DT	DT	the	the	DT	7	NMOD	_	_	_	_	_	_	_	_	_
+7	laundromat	laundromat	NN	NN	laundromat	laundromat	NN	5	PMOD	_	_	_	_	_	_	_	_	_
+8	,	,	,	,	,	,	,	7	P	_	_	_	_	_	_	_	_	_
+9	where	where	WRB	WRB	where	where	WRB	17	LOC	_	_	AM-LOC	_	_	_	_	_	_
+10	he	he	PRP	PRP	he	he	PRP	11	SBJ	_	_	A0	_	_	_	_	_	_
+11	meets	meet	VBZ	VBZ	meets	meet	VBZ	7	NMOD	meet.02	_	_	_	_	_	_	_	_
+12	a	a	DT	DT	a	a	DT	15	NMOD	_	_	_	_	_	_	_	_	_
+13	punky	punky	JJ	JJ	punky	punky	JJ	15	NMOD	_	_	_	_	_	_	_	_	_
+14	French	french	JJ	JJ	French	french	JJ	15	NMOD	_	_	_	_	_	_	_	_	_
+15	girl	girl	NN	NN	girl	girl	NN	11	OBJ	_	_	A1	A0	_	_	_	A0	A0
+16	who	who	WP	WP	who	who	WP	17	SBJ	_	_	_	R-A0	_	_	_	R-A0	R-A0
+17	dupes	dupe	VBZ	VBZ	dupes	dupe	VBZ	15	NMOD	dupe.01	_	_	_	_	_	_	_	_
+18	him	him	PRP	PRP	him	him	PRP	17	OBJ	_	_	_	A1	A0	_	_	_	_
+19	into	into	IN	IN	into	into	IN	17	CLR	_	_	_	A2	_	_	_	_	_
+20	providing	provide	VBG	VBG	providing	provide	VBG	19	PMOD	provide.01	_	_	_	_	SU	_	_	_
+21	a	a	DT	DT	a	a	DT	22	NMOD	_	_	_	_	_	_	_	_	_
+22	home	home	NN	NN	home	home	NN	20	OBJ	home.01	_	_	_	A1	A1	_	_	_
+23	for	for	IN	IN	for	for	IN	20	CLR	_	_	_	_	A2	A0	_	_	_
+24	her	her	PRP$	PRP$	her	her	PRP$	26	NMOD	_	_	_	_	_	_	A1	_	_
+25	pet	pet	NN	NN	pet	pet	NN	26	NMOD	pet.01	_	_	_	_	_	A0	_	_
+26	piranha	piranha	NN	NN	piranha	piranha	NN	23	PMOD	_	_	_	_	_	_	_	_	_
+27	and	and	CC	CC	and	and	CC	17	COORD	_	_	_	_	_	_	_	_	_
+28	then	then	RB	RB	then	then	RB	30	TMP	_	_	_	_	_	_	_	_	_
+29	promptly	promptly	RB	RB	promptly	promptly	RB	30	MNR	_	_	_	_	_	_	_	AM-MNR	AM-MNR
+30	steals	steal	VBZ	VBZ	steals	steal	VBZ	27	CONJ	steal.01	_	_	_	_	_	_	_	_
+31	his	his	PRP$	PRP$	his	his	PRP$	32	NMOD	_	_	_	_	_	_	_	_	_
+32	car	car	NN	NN	car	car	NN	30	OBJ	_	_	_	_	_	_	_	A1	_
+33	and	and	CC	CC	and	and	CC	30	COORD	_	_	_	_	_	_	_	_	_
+34	dumps	dump	VBZ	VBZ	dumps	dump	VBZ	33	CONJ	dump.01	_	_	_	_	_	_	_	_
+35	it	it	PRP	PRP	it	it	PRP	34	OBJ	_	_	_	_	_	_	_	_	A1
+36	in	in	IN	IN	in	in	IN	34	LOC-CLR	_	_	_	_	_	_	_	_	AM-LOC
+37	Dieppe	dieppe	NNP	NNP	Dieppe	dieppe	NNP	36	PMOD	_	_	_	_	_	_	_	_	_
+38	.	.	.	.	.	.	.	2	P	_	_	_	_	_	_	_	_	_
+
+1	In	in	IN	IN	In	in	IN	11	ADV	_	_	_	AM-MNR	_
+2	producing	produce	VBG	VBG	producing	produce	VBG	1	PMOD	produce.01	_	_	_	_
+3	and	and	CC	CC	and	and	CC	2	COORD	_	_	_	_	_
+4	promoting	promote	VBG	VBG	promoting	promote	VBG	3	CONJ	promote.02	_	_	_	_
+5	``	``	``	``	``	``	``	7	P	_	_	_	_	_
+6	Capital	capital	NNP	NNP	Capital	capital	NNP	7	NAME	_	_	_	_	_
+7	City	city	NNP	NNP	City	city	NNP	2	OBJ	_	A1	A1	_	_
+8	,	,	,	,	,	,	,	11	P	_	_	_	_	_
+9	''	''	''	''	''	''	''	11	P	_	_	_	_	_
+10	Thames	thames	NNP	NNP	Thames	thames	NNP	11	SBJ	_	A0	A0	A0	_
+11	has	have	VBZ	VBZ	has	have	VBZ	0	ROOT	_	_	_	_	_
+12	spent	spend	VBN	VBN	spent	spend	VBN	11	VC	spend.01	_	_	_	_
+13	about	about	IN	IN	about	about	IN	15	NMOD	_	_	_	_	_
+14	as	as	RB	RB	as	as	IN	15	NMOD	_	_	_	_	_
+15	much	much	JJ	JJ	much	much	JJ	12	OBJ	_	_	_	A3	_
+16	as	as	IN	IN	as	as	IN	15	NMOD	_	_	_	_	_
+17	Shane	shane	NNP	NNP	Shane	shane	NNP	18	NAME	_	_	_	_	_
+18	Longman	longman	NNP	NNP	Longman	longman	NNP	19	SBJ	_	_	_	_	A0
+19	loses	lose	VBZ	VBZ	loses	lose	VBZ	16	SUB	lose.02	_	_	_	_
+20	on	on	IN	IN	on	on	IN	19	TMP	_	_	_	_	AM-TMP
+21	a	a	DT	DT	a	a	DT	23	NMOD	_	_	_	_	_
+22	good	good	JJ	JJ	good	good	JJ	23	NMOD	_	_	_	_	_
+23	day	day	NN	NN	day	day	NN	20	PMOD	_	_	_	_	_
+24	.	.	.	.	.	.	.	11	P	_	_	_	_	_
+
+1	The	the	DT	DT	The	the	DT	3	NMOD	_	_	_	_	_	_
+2	production	production	NN	NN	production	production	NN	3	NMOD	_	A1	_	_	_	_
+3	costs	costs	NNS	NNS	costs	costs	NNS	4	SBJ	cost.01	_	_	_	_	_
+4	are	be	VBP	VBP	are	be	VBP	0	ROOT	_	_	_	_	_	_
+5	a	a	DT	DT	a	a	DT	10	NMOD	_	_	_	_	_	_
+6	not	not	RB	RB	not	not	RB	7	AMOD	_	_	_	_	_	_
+7	inconsiderable	inconsiderable	JJ	JJ	inconsiderable	inconsiderable	JJ	10	NMOD	_	_	_	_	_	_
+8	#	#	#	#	#	#	#	10	DEP	_	_	_	_	_	_
+9	8	8	CD	CD	8	8	CD	10	DEP	_	_	_	_	_	_
+10	million	million	CD	CD	million	million	CD	4	PRD	_	_	_	_	_	_
+11	(	-lrb-	(	(	(	-lrb-	(	12	P	_	_	_	_	_	_
+12	$	$	$	$	$	$	$	10	PRN	_	_	_	_	_	_
+13	12.4	12.4	CD	CD	12.4	12.4	CD	12	DEP	_	_	_	_	_	_
+14	million	million	CD	CD	million	million	CD	12	DEP	_	_	_	_	_	_
+15	)	-rrb-	)	)	)	-rrb-	)	12	P	_	_	_	_	_	_
+16	,	,	,	,	,	,	,	4	P	_	_	_	_	_	_
+17	and	and	CC	CC	and	and	CC	4	COORD	_	_	_	_	_	_
+18	would	would	MD	MD	would	would	MD	17	CONJ	_	_	_	_	_	_
+19	have	have	VB	VB	have	have	VB	18	VC	_	_	_	_	_	_
+20	been	be	VBN	VBN	been	be	VBN	19	VC	_	_	_	_	_	_
+21	much	much	RB	RB	much	much	RB	22	AMOD	_	_	_	_	_	_
+22	higher	higher	JJR	JJR	higher	higher	JJR	20	PRD	_	_	_	_	_	_
+23	had	have	VBD	VBD	had	have	VBD	20	ADV	_	_	_	_	_	_
+24	not	not	RB	RB	not	not	RB	23	ADV	_	_	_	_	AM-NEG	_
+25	the	the	DT	DT	the	the	DT	26	NMOD	_	_	_	_	_	_
+26	cost	cost	NN	NN	cost	cost	NN	23	SBJ	cost.01	_	_	_	A1	_
+27	of	of	IN	IN	of	of	IN	26	NMOD	_	_	A1	_	_	_
+28	the	the	DT	DT	the	the	DT	31	NMOD	_	_	_	_	_	_
+29	trading	trading	NN	NN	trading	trading	NN	30	NMOD	_	_	_	_	_	_
+30	floor	floor	NN	NN	floor	floor	NN	31	NMOD	_	_	_	_	_	_
+31	set	set	NN	NN	set	set	NN	27	PMOD	set.01	_	_	A1	_	_
+32	been	be	VBN	VBN	been	be	VBN	23	VC	_	_	_	_	_	_
+33	absorbed	absorb	VBN	VBN	absorbed	absorb	VBN	32	VC	absorb.01	_	_	_	_	_
+34	in	in	IN	IN	in	in	IN	33	LOC-CLR	_	_	_	_	A0	_
+35	the	the	DT	DT	the	the	DT	36	NMOD	_	_	_	_	_	_
+36	budget	budget	NN	NN	budget	budget	NN	34	PMOD	budget.01	_	_	_	_	_
+37	of	of	IN	IN	of	of	IN	36	NMOD	_	_	_	_	_	A2
+38	``	``	``	``	``	``	``	39	P	_	_	_	_	_	_
+39	Dealers	dealer	NNS	NNS	Dealers	dealer	NNS	37	PMOD	_	_	_	_	_	_
+40	,	,	,	,	,	,	,	39	P	_	_	_	_	_	_
+41	''	''	''	''	''	''	''	39	P	_	_	_	_	_	_
+42	an	an	DT	DT	an	an	DT	49	NMOD	_	_	_	_	_	_
+43	earlier	earlier	JJR	JJR	earlier	earlier	JJR	49	NMOD	_	_	_	_	_	_
+44	made-for-TV	made-for-tv	JJ	JJ	made	make	VBN	48	HMOD	_	_	_	_	_	_
+45	_	_	_	_	-	-	HYPH	44	HYPH	_	_	_	_	_	_
+46	_	_	_	_	for	for	IN	48	HMOD	_	_	_	_	_	_
+47	_	_	_	_	-	-	HYPH	46	HYPH	_	_	_	_	_	_
+48	_	_	_	_	TV	tv	NN	49	NMOD	_	_	_	_	_	_
+49	movie	movie	NN	NN	movie	movie	NN	39	APPO	_	_	_	_	_	_
+50	.	.	.	.	.	.	.	4	P	_	_	_	_	_	_
+
+1	Another	another	DT	DT	Another	another	DT	4	NMOD	_	_	_	_
+2	half	half	DT	DT	half	half	DT	4	NMOD	_	_	_	_
+3	million	million	CD	CD	million	million	CD	2	DEP	_	_	_	_
+4	quid	quid	NN	NN	quid	quid	NN	5	SBJ	_	A1	_	_
+5	went	go	VBD	VBD	went	go	VBD	0	ROOT	go.01	_	_	_
+6	for	for	IN	IN	for	for	IN	5	CLR	_	AM-PNC	_	_
+7	a	a	DT	DT	a	a	DT	8	NMOD	_	_	_	_
+8	volley	volley	NN	NN	volley	volley	NN	6	PMOD	volley.01	_	_	_
+9	of	of	IN	IN	of	of	IN	8	NMOD	_	_	A1	_
+10	full-page	full-page	JJ	JJ	full	full	JJ	12	HMOD	_	_	_	_
+11	_	_	_	_	-	-	HYPH	10	HYPH	_	_	_	_
+12	_	_	_	_	page	page	NN	13	NMOD	_	_	_	_
+13	advertisements	advertisement	NNS	NNS	advertisements	advertisement	NNS	9	PMOD	advertisement.01	_	_	_
+14	in	in	IN	IN	in	in	IN	13	LOC	_	_	_	AM-LOC
+15	six	six	CD	CD	six	six	CD	18	NMOD	_	_	_	_
+16	major	major	JJ	JJ	major	major	JJ	18	NMOD	_	_	_	_
+17	British	british	JJ	JJ	British	british	JJ	18	NMOD	_	_	_	_
+18	newspapers	newspaper	NNS	NNS	newspapers	newspaper	NNS	14	PMOD	_	_	_	_
+19	and	and	CC	CC	and	and	CC	6	COORD	_	_	_	_
+20	for	for	IN	IN	for	for	IN	19	CONJ	_	_	_	_
+21	huge	huge	JJ	JJ	huge	huge	JJ	22	NMOD	_	_	_	_
+22	posters	poster	NNS	NNS	posters	poster	NNS	20	PMOD	_	_	_	_
+23	in	in	IN	IN	in	in	IN	22	LOC	_	_	_	_
+24	the	the	DT	DT	the	the	DT	26	NMOD	_	_	_	_
+25	London	london	JJ	JJ	London	london	NNP	26	NMOD	_	_	_	_
+26	subway	subway	NN	NN	subway	subway	NN	23	PMOD	_	_	_	_
+27	.	.	.	.	.	.	.	5	P	_	_	_	_
+
+1	These	these	DT	DT	These	these	DT	2	NMOD	_	_	_	_	_	_
+2	expenses	expense	NNS	NNS	expenses	expense	NNS	3	SBJ	_	A0	A0	_	_	_
+3	create	create	VBP	VBP	create	create	VBP	0	ROOT	create.01	_	SU	_	_	_
+4	a	a	DT	DT	a	a	DT	6	NMOD	_	_	_	_	_	_
+5	special	special	JJ	JJ	special	special	JJ	6	NMOD	_	_	_	_	_	_
+6	incentive	incentive	NN	NN	incentive	incentive	NN	3	OBJ	incentive.01	A1	A3	_	_	_
+7	for	for	IN	IN	for	for	IN	6	NMOD	_	_	_	_	_	_
+8	``	``	``	``	``	``	``	10	P	_	_	_	A1	_	_
+9	Capital	capital	NNP	NNP	Capital	capital	NN	10	NMOD	_	_	_	_	_	_
+10	City	city	NNP	NNP	City	city	NN	13	NMOD	_	_	_	_	_	_
+11	's	's	POS	POS	's	's	POS	10	NMOD	_	_	_	_	_	_
+12	''	''	''	''	''	''	''	13	P	_	_	_	_	_	_
+13	producers	producer	NNS	NNS	producers	producer	NNS	14	SBJ	producer.02	_	A1	A0	A0	_
+14	to	to	TO	TO	to	to	TO	7	SUB	_	_	A2	_	_	_
+15	flog	flog	VB	VB	flog	flog	VB	14	IM	flog.01	_	_	_	_	_
+16	it	it	PRP	PRP	it	it	PRP	15	OBJ	_	_	_	_	A1	_
+17	,	,	,	,	,	,	,	16	P	_	_	_	_	_	_
+18	or	or	CC	CC	or	or	CC	16	COORD	_	_	_	_	_	_
+19	a	a	DT	DT	a	a	DT	23	NMOD	_	_	_	_	_	_
+20	Yank-oriented	yank-oriented	JJ	JJ	Yank	yank	NN	22	HMOD	_	_	_	_	_	_
+21	_	_	_	_	-	-	HYPH	20	HYPH	_	_	_	_	_	_
+22	_	_	_	_	oriented	oriented	NN	23	NMOD	_	_	_	_	_	_
+23	version	version	NN	NN	version	version	NN	18	CONJ	version.01	_	_	_	_	_
+24	of	of	IN	IN	of	of	IN	23	NMOD	_	_	_	_	_	A1
+25	it	it	PRP	PRP	it	it	PRP	24	PMOD	_	_	_	_	_	_
+26	,	,	,	,	,	,	,	16	P	_	_	_	_	_	_
+27	in	in	IN	IN	in	in	IN	15	LOC	_	_	_	_	AM-LOC	_
+28	America	america	NNP	NNP	America	america	NNP	27	PMOD	_	_	_	_	_	_
+29	.	.	.	.	.	.	.	3	P	_	_	_	_	_	_
+
+1	Thames	thames	NNP	NNP	Thames	thames	NNP	5	NMOD	_	A0	A2	_	_
+2	's	's	POS	POS	's	's	POS	1	SUFFIX	_	_	_	_	_
+3	U.S.	u.s.	NNP	NNP	U.S.	u.s.	NNP	5	NMOD	_	_	_	_	_
+4	marketing	marketing	NN	NN	marketing	marketing	NN	5	NMOD	marketing.01	_	_	_	_
+5	agent	agent	NN	NN	agent	agent	NN	10	SBJ	agent.01	_	A1	A0	A0
+6	,	,	,	,	,	,	,	5	P	_	_	_	_	_
+7	Donald	donald	NNP	NNP	Donald	donald	NNP	8	NAME	_	_	_	_	_
+8	Taffner	taffner	NNP	NNP	Taffner	taffner	NNP	5	APPO	_	_	_	_	_
+9	,	,	,	,	,	,	,	5	P	_	_	_	_	_
+10	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_
+11	preparing	prepare	VBG	VBG	preparing	prepare	VBG	10	VC	prepare.02	_	_	_	_
+12	to	to	TO	TO	to	to	TO	11	OPRD	_	_	_	A2	_
+13	do	do	VB	VB	do	do	VB	12	IM	do.02	_	_	_	_
+14	just	just	RB	RB	just	just	RB	13	OBJ	_	_	_	_	A1
+15	that	that	DT	DT	that	that	DT	14	NMOD	_	_	_	_	_
+16	.	.	.	.	.	.	.	10	P	_	_	_	_	_
+
+1	He	he	PRP	PRP	He	he	PRP	2	SBJ	_	A0	_	_	_
+2	is	be	VBZ	VBZ	is	be	VBZ	0	ROOT	_	_	_	_	_
+3	discreetly	discreetly	RB	RB	discreetly	discreetly	RB	4	AMOD	_	_	_	_	_
+4	hopeful	hopeful	JJ	JJ	hopeful	hopeful	JJ	2	PRD	_	_	_	_	_
+5	,	,	,	,	,	,	,	2	P	_	_	_	_	_
+6	citing	cite	VBG	VBG	citing	cite	VBG	2	ADV	cite.01	_	_	_	_
+7	three	three	CD	CD	three	three	CD	10	NMOD	_	_	_	_	_
+8	U.S.	u.s.	NNP	NNP	U.S.	u.s.	NNP	10	NMOD	_	_	AM-LOC	_	_
+9	comedy	comedy	NN	NN	comedy	comedy	NN	10	NMOD	comedy.01	_	_	_	_
+10	series	series	NN	NN	series	series	NN	6	OBJ	_	A1	_	A0	A1
+11	--	--	:	:	--	--	:	14	P	_	_	_	_	_
+12	``	``	``	``	``	``	``	14	P	_	_	_	_	_
+13	Three	three	NNP	NNP	Three	three	NNP	14	SBJ	_	_	_	_	_
+14	's	's	POS	POS	's	be	VBZ	10	PRN	_	_	_	_	_
+15	Company	company	NNP	NNP	Company	company	NN	14	PRD	_	_	_	_	_
+16	,	,	,	,	,	,	,	14	P	_	_	_	_	_
+17	''	''	''	''	''	''	''	14	P	_	_	_	_	_
+18	``	``	``	``	``	``	``	20	P	_	_	_	_	_
+19	Too	too	NNP	NNP	Too	too	NNP	20	NAME	_	_	_	_	_
+20	Close	close	NNP	NNP	Close	close	JJ	14	COORD	_	_	_	_	_
+21	for	for	IN	IN	for	for	IN	20	AMOD	_	_	_	_	_
+22	Comfort	comfort	NNP	NNP	Comfort	comfort	NNP	21	PMOD	_	_	_	_	_
+23	''	''	''	''	''	''	''	20	P	_	_	_	_	_
+24	and	and	CC	CC	and	and	CC	20	COORD	_	_	_	_	_
+25	``	``	``	``	``	``	``	28	NAME	_	_	_	_	_
+26	Check	check	NNP	NNP	Check	check	VBP	28	NAME	_	_	_	_	_
+27	It	it	NNP	NNP	It	it	NNP	28	NAME	_	_	_	_	_
+28	Out	out	NNP	NNP	Out	out	NNP	24	CONJ	_	_	_	_	_
+29	''	''	''	''	''	''	''	28	P	_	_	_	_	_
+30	--	--	:	:	--	--	:	14	P	_	_	_	_	_
+31	that	that	WDT	WDT	that	that	WDT	32	SBJ	_	_	_	R-A0	_
+32	had	have	VBD	VBD	had	have	VBD	10	NMOD	have.03	_	_	_	SU
+33	British	british	JJ	JJ	British	british	JJ	34	NMOD	_	_	_	_	_
+34	antecedents	antecedent	NNS	NNS	antecedents	antecedent	NNS	32	OBJ	antecedent.01	_	_	A1	A0
+35	.	.	.	.	.	.	.	2	P	_	_	_	_	_
+
+1	Perhaps	perhaps	RB	RB	Perhaps	perhaps	RB	2	PMOD	_	_	_	_	_	_
+2	without	without	IN	IN	without	without	IN	9	ADV	_	_	AM-ADV	_	_	_
+3	realizing	realize	VBG	VBG	realizing	realize	VBG	2	PMOD	realize.01	_	_	_	_	_
+4	it	it	PRP	PRP	it	it	PRP	3	OBJ	_	A1	_	_	_	_
+5	,	,	,	,	,	,	,	9	P	_	_	_	_	_	_
+6	Mr.	mr.	NNP	NNP	Mr.	mr.	NNP	7	TITLE	_	_	_	_	_	_
+7	Taffner	taffner	NNP	NNP	Taffner	taffner	NNP	9	SBJ	_	A0	A0	_	_	_
+8	simultaneously	simultaneously	RB	RB	simultaneously	simultaneously	RB	9	TMP	_	_	AM-TMP	_	_	_
+9	has	have	VBZ	VBZ	has	have	VBZ	0	ROOT	_	_	_	_	_	_
+10	put	put	VBN	VBN	put	put	VBN	9	VC	put.01	_	_	_	_	_
+11	his	his	PRP$	PRP$	his	his	PRP$	12	NMOD	_	_	_	A1	_	_
+12	finger	finger	NN	NN	finger	finger	NN	10	OBJ	finger.01	_	A1	_	_	_
+13	on	on	IN	IN	on	on	IN	10	PUT	_	_	A2	_	_	_
+14	the	the	DT	DT	the	the	DT	15	NMOD	_	_	_	_	_	_
+15	problem	problem	NN	NN	problem	problem	NN	13	PMOD	_	_	_	_	_	_
+16	and	and	CC	CC	and	and	CC	15	COORD	_	_	_	_	_	_
+17	an	an	DT	DT	an	an	DT	19	NMOD	_	_	_	_	_	_
+18	ideal	ideal	JJ	JJ	ideal	ideal	JJ	19	NMOD	_	_	_	_	_	_
+19	solution	solution	NN	NN	solution	solution	NN	16	CONJ	_	_	_	_	_	_
+20	:	:	:	:	:	:	:	15	P	_	_	_	_	_	_
+21	``	``	``	``	``	``	``	23	P	_	_	_	_	_	_
+22	Capital	capital	NNP	NNP	Capital	capital	NNP	23	NAME	_	_	_	_	_	_
+23	City	city	NNP	NNP	City	city	NNP	25	SBJ	_	_	_	_	_	_
+24	''	''	''	''	''	''	''	23	P	_	_	_	_	_	_
+25	should	should	MD	MD	should	should	MD	15	NMOD	_	_	_	_	_	_
+26	have	have	VB	VB	have	have	VB	25	VC	_	_	_	_	_	_
+27	been	be	VBN	VBN	been	be	VBN	26	VC	_	_	_	_	_	_
+28	a	a	DT	DT	a	a	DT	29	NMOD	_	_	_	_	_	_
+29	comedy	comedy	NN	NN	comedy	comedy	NN	27	PRD	_	_	_	_	_	_
+30	,	,	,	,	,	,	,	29	P	_	_	_	_	_	_
+31	a	a	DT	DT	a	a	DT	33	NMOD	_	_	_	_	_	_
+32	worthy	worthy	JJ	JJ	worthy	worthy	JJ	33	NMOD	_	_	_	_	_	_
+33	sequel	sequel	NN	NN	sequel	sequel	NN	29	APPO	sequel.01	_	_	_	A1	_
+34	to	to	TO	TO	to	to	TO	33	NMOD	_	_	_	_	A2	_
+35	the	the	DT	DT	the	the	DT	42	NMOD	_	_	_	_	_	_
+36	screwball	screwball	JJ	JJ	screwball	screwball	JJ	42	NMOD	_	_	_	_	_	_
+37	British	british	JJ	JJ	British	british	JJ	42	NMOD	_	_	_	_	_	AM-LOC
+38	``	``	``	``	``	``	``	39	P	_	_	_	_	_	_
+39	Carry	carry	NNP	NNP	Carry	carry	NNP	42	NMOD	_	_	_	_	_	_
+40	On	on	NNP	NNP	On	on	IN	39	NMOD	_	_	_	_	_	_
+41	''	''	''	''	''	''	''	39	P	_	_	_	_	_	_
+42	movies	movie	NNS	NNS	movies	movie	NNS	34	PMOD	movie.01	_	_	_	_	_
+43	of	of	IN	IN	of	of	IN	42	NMOD	_	_	_	_	_	AM-TMP
+44	the	the	DT	DT	the	the	DT	45	NMOD	_	_	_	_	_	_
+45	1960s	1960s	CD	CD	1960s	1960s	CD	43	PMOD	_	_	_	_	_	_
+46	.	.	.	.	.	.	.	9	P	_	_	_	_	_	_
+
