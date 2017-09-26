@@ -76,9 +76,9 @@ class AligmentRenderer:
         # add spans
         scene.translate(0, dim[1] + self._height_factor)
         dim = self._token_layout2.layout(instance, {}, scene)
-        height += dim[0] + self._height_factor
-        if dim[1] > width:
-            width = dim[1]
+        height += dim[1] + self._height_factor
+        if dim[0] > width:
+            width = dim[0]
 
         return width, height + 1
 
