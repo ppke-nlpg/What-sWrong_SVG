@@ -35,10 +35,11 @@ class NLPInstance:
         token_map (dict[int, Token]): A mapping from sentence indices to
             tokens.
         split_points (list): A list of token indices at which the NLP instance
-            is to be split. These indices can refer to sentence boundaries in a
-            document, but they can also indicate that what follows after a
-            split point is an utterance in a different language (for
-            alignment).
+            is to be split (tokens at these indices will be the first tokens of
+            their respective segments). These indices can refer to sentence
+            boundaries in a document, but they can also indicate that what
+            follows after a split point is an utterance in a different language
+            (for alignment).
     """
 
     def __init__(self, tokens: List[Token]=None, edges: set or frozenset=None,
