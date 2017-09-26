@@ -49,7 +49,7 @@ class TokenLayout:
         margin (int): The margin between tokens (i.e., their stacks).
         from_split_point (int): The index of the the split point at which the
             renderer starts to draw the token sequence or -1 if it should
-            start.
+            start from the first token.
         to_split_point (int): The index of the the split point at which the
             renderer stops to draw the token sequence or -1 if it should stop
             at the end.

@@ -25,7 +25,7 @@ class AligmentRenderer:
         self._token_layout2 = TokenLayout()
         self._height_factor = 100
         self._is_curved = True
-        self._token_layout2.to_split_point = 0
+        self._token_layout1.to_split_point = 0
         self._token_layout2.from_split_point = 0
         self.fp_color = (255, 0, 0)   # Red    # TODO: Constants?
         self.fn_color = (0, 0, 255)   # Blue   # TODO: Constants?
@@ -54,9 +54,9 @@ class AligmentRenderer:
             width = dim[0]
 
         for edge in instance.get_edges(EdgeRenderType.dependency):
-            if 'eval_status_FP' in edge.edge_properties:
+            if 'eval_status_FP' in edge.properties:
                 edge_color = self.fp_color
-            elif 'eval_status_FN' in edge.edge_properties:
+            elif 'eval_status_FN' in edge.properties:
                 edge_color = self.fn_color
             else:
                 edge_color = self.match_color
