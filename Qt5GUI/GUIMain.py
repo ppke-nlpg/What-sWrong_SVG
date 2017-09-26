@@ -175,7 +175,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.graphicsView.show()
 
     def file_save(self):
-        name = QtWidgets.QFileDialog.getSaveFileName(QtGui.QFileDialog(), 'Save File')[0]  # todo ok like this?
+        name = QtWidgets.QFileDialog.getSaveFileName(QtWidgets.QFileDialog(), 'Save File')[0]  # todo ok like this?
         render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name)
 
 
