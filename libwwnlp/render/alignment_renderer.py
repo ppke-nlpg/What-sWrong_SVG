@@ -6,8 +6,8 @@ from ..model.edge import EdgeRenderType
 from .svg_writer import Line, Scene, QuadraticBezierCurve
 
 
-class AligmentRenderer:
-    """An AligmentRenderer renders two aligned sentences.
+class AlignmentRenderer:
+    """An AlignmentRenderer renders two aligned sentences.
 
     Attributes:
         _token_layout1 (TokenLayout): The the token layout for the first
@@ -19,7 +19,7 @@ class AligmentRenderer:
     """
 
     def __init__(self):
-        """Initialize an AligmentRenderer.
+        """Initialize an AlignmentRenderer.
         """
         self._token_layout1 = TokenLayout()
         self._token_layout2 = TokenLayout()

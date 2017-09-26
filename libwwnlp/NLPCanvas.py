@@ -3,7 +3,7 @@
 # Todo: Export to PDF, EPS, etc.
 
 from libwwnlp.model.nlp_instance import RenderType
-from libwwnlp.render.aligment_renderer import AligmentRenderer
+from libwwnlp.render.alignment_renderer import AlignmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
 
 MATCH_COLOR = (0, 0, 0)
@@ -31,7 +31,7 @@ class NLPCanvas:
                                                             "eval_status_FN": (FN_COLOR, 1),
                                                             "eval_status_FP": (FP_COLOR, 1)}
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
-                          RenderType.alignment: AligmentRenderer()}
+                          RenderType.alignment: AlignmentRenderer()}
         self.usedTypes = set()
         self.usedProperties = set()
         self.filter = None
