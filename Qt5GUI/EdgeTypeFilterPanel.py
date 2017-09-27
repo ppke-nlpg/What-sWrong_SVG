@@ -23,7 +23,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas: Qt5NLPCanvas, edgeTypeFilter: Filter):
+    def __init__(self, gui, canvas: Qt5NLPCanvas, edge_type_filter: Filter):
         """
          * The canvas to request the update after the filter has been changed.
         """
@@ -65,13 +65,13 @@ class EdgeTypeFilterPanel:
         """
          * The filter that this panel changes.
         """
-        self._edgeTypeFilter = edgeTypeFilter
-        self._nlpCanvas.addListener(listener=self)
+        self._edgeTypeFilter = edge_type_filter
+        self._nlpCanvas.add_listener(listener=self)
 
-        self.updateTypesList()
-        self.updateSelection()
+        self.update_types_list()
+        self.update_selection()
 
-        def valueChanged():
+        def value_changed():
             self._justChanged.clear()
             if len(self._types) == 0 or len(self._listModel) == 0:
                 return
@@ -85,24 +85,24 @@ class EdgeTypeFilterPanel:
                         self._edgeTypeFilter.allowed_edge_types.remove(edge_type)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
-        self._types.itemSelectionChanged.connect(valueChanged)
+        self._types.itemSelectionChanged.connect(value_changed)
 
         # add false positive/negative and match check buttons
-        def matchActionPerformed(value):
+        def match_action_performed(value):
             self._justChanged.clear()  # TODO: Why we need this here?
             self._perform_match_action(value, "eval_status_Match")
 
-        self._matches.stateChanged.connect(matchActionPerformed)
+        self._matches.stateChanged.connect(match_action_performed)
 
-        def negativeActionPerformed(value):
+        def negative_action_performed(value):
             self._perform_match_action(value, "eval_status_FN")
 
-        self._falseNegatives.stateChanged.connect(negativeActionPerformed)
+        self._falseNegatives.stateChanged.connect(negative_action_performed)
 
-        def positiveActionPerformed(value):
+        def positive_action_performed(value):
             self._perform_match_action(value, "eval_status_FP")
 
-        self._falsePositives.stateChanged.connect(positiveActionPerformed)
+        self._falsePositives.stateChanged.connect(positive_action_performed)
 
     def _perform_match_action(self, value, eval_status):
         if value == 2:  # Checked
@@ -116,7 +116,7 @@ class EdgeTypeFilterPanel:
     """
      * Updates the set of selected (set to be visible) edge types.
     """
-    def updateSelection(self):
+    def update_selection(self):
         # TODO: deselecting items?
         for index in range(0, len(self._types)):
             edge_type = str(self._types.item(index))
@@ -132,7 +132,7 @@ class EdgeTypeFilterPanel:
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.
     """
-    def updateTypesList(self):
+    def update_types_list(self):
         # TODO: Sholuld be enabled automatically
         self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
                                  self._falsePositives, "eval_status_FP")
@@ -153,9 +153,9 @@ class EdgeTypeFilterPanel:
     """
      * Updates the type list and the selection. Afterwards request for repaint is issued.
     """
-    def instanceChanged(self):
-        self.updateTypesList()
-        self.updateSelection()
+    def instance_changed(self):
+        self.update_types_list()
+        self.update_selection()
 
     """
      * Updates the selection.
@@ -165,4 +165,4 @@ class EdgeTypeFilterPanel:
     """
     def changed(self, edge_type):
         if edge_type not in self._justChanged:
-            self.updateSelection()
+            self.update_selection()

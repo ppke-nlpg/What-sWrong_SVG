@@ -15,7 +15,7 @@ class Qt5NLPCanvas(NLPCanvas):
         self.change_listeners = []
         super().__init__()
 
-    def addListener(self, listener):
+    def add_listener(self, listener):
         """
          * Adds a new listener.
          *
@@ -23,7 +23,7 @@ class Qt5NLPCanvas(NLPCanvas):
         """
         self.listeners.append(listener)
 
-    def addChangeListener(self, change_listener):
+    def add_change_listener(self, change_listener):
         """
          * Adds a change listener to this canvas.
          *
@@ -31,19 +31,19 @@ class Qt5NLPCanvas(NLPCanvas):
         """
         self.change_listeners.append(change_listener)
 
-    def fireChanged(self):
+    def fire_changed(self):
         """
          * Fired whenever this canvas is changed.
         """
         for changeListener in self.change_listeners:
-            changeListener.stateChanged()
+            changeListener.state_changed()
 
-    def fireInstanceChanged(self):
+    def fire_instance_changed(self):
         """
          * Notifies all listeners about an instance change event.
         """
         for l in self.listeners:
-            l.instanceChanged()
+            l.instance_changed()
 
     def update_nlp_graphics(self):
         """Updates the current graph.
@@ -59,4 +59,4 @@ class Qt5NLPCanvas(NLPCanvas):
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self.ui.graphicsView.show()
-        self.fireChanged()
+        self.fire_changed()

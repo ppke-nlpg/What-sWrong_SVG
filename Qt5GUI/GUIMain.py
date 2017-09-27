@@ -3,7 +3,7 @@
 import sys
 from os.path import basename
 
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets
 
 # from CorpusLoader import CorpusLoader
 
@@ -52,7 +52,7 @@ class MyWindow(QtWidgets.QMainWindow):
             instancefactory = MaltTab()
 
         self.close()
-        self._parent.choosenFile(instancefactory, self.type)
+        self._parent.choosen_file(instancefactory, self.type)
 
     def reject(self):
         self.close()
@@ -86,32 +86,29 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.actionExport.setEnabled(True)
 
     def browse_gold_folder(self):
-        # app =
         QtWidgets.QMainWindow()
         myapp2 = MyWindow(self, corp_type="gold")
         myapp2.show()
 
     def browse_guess_folder(self):
-        # app =
         QtWidgets.QMainWindow()
         myapp2 = MyWindow(self, corp_type="guess")
         myapp2.show()
 
     def remove_gold(self):
-        if len(self.ui.selectGoldListWidget) != 1:
-            selectedGold = self.ui.selectGoldListWidget.selectedItems()
-            del self.goldMap[str(selectedGold[0].text())]
-            self.ui.selectGoldListWidget.takeItem(self.ui.selectGoldListWidget.row(selectedGold[0]))
-            self.refresh()
-
-    def remove_guess(self):
-        selectedGuess = self.ui.selectGuessListWidget.selectedItems()
-        del self.guessMap[str(selectedGuess[0].text())]
-        self.ui.selectGuessListWidget.takeItem(self.ui.selectGuessListWidget.row(selectedGuess[0]))
+        selected_gold = self.ui.selectGoldListWidget.selectedItems()
+        del self.goldMap[str(selected_gold[0].text())]
+        self.ui.selectGoldListWidget.takeItem(self.ui.selectGoldListWidget.row(selected_gold[0]))
         self.refresh()
 
-    def choosenFile(self, factory, corp_type):
-        directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]  # todo ok like this?
+    def remove_guess(self):
+        selected_guess = self.ui.selectGuessListWidget.selectedItems()
+        del self.guessMap[str(selected_guess[0].text())]
+        self.ui.selectGuessListWidget.takeItem(self.ui.selectGuessListWidget.row(selected_guess[0]))
+        self.refresh()
+
+    def choosen_file(self, factory, corp_type):
+        directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]
         corpus = []
         if corp_type == "gold":
             self.goldMap[basename(directory)] = corpus  # CorpusLoader(directory)
@@ -119,18 +116,18 @@ class MyForm(QtWidgets.QMainWindow):
             self.guessMap[basename(directory)] = corpus  # CorpusLoader(directory)
 
         f = open(directory)
-        l = list(f.readlines())
+        lines = list(f.readlines())
 
         item = QtWidgets.QListWidgetItem(basename(directory))
 
         rows = []
-        instanceNr = 0
-        for line in l:
-            if instanceNr == 200:
+        instance_nr = 0
+        for line in lines:
+            if instance_nr == 200:
                 break
             line = line.strip()
             if line == "":
-                instanceNr += 1
+                instance_nr += 1
                 instance = factory.create(rows)
                 instance.render_type = RenderType.single
                 corpus.append(instance)
@@ -138,7 +135,7 @@ class MyForm(QtWidgets.QMainWindow):
             else:
                 rows.append(line)
         if len(rows) > 0:
-            instanceNr += 1
+            instance_nr += 1
             instance = factory.create(rows)
             instance.render_type = RenderType.single
             corpus.append(instance)
@@ -152,21 +149,21 @@ class MyForm(QtWidgets.QMainWindow):
             self.ui.selectGuessListWidget.item(0).setSelected(True)
 
     def refresh(self):
-        selectedGold = self.ui.selectGoldListWidget.selectedItems()
+        selected_gold = self.ui.selectGoldListWidget.selectedItems()
         gold = None
         guess = None
-        if selectedGold:
-            gold = self.goldMap[str(selectedGold[0].text())]
+        if selected_gold:
+            gold = self.goldMap[str(selected_gold[0].text())]
 
-        selectedGuess = self.ui.selectGuessListWidget.selectedItems()
-        if selectedGuess:
-            guess = self.guessMap[str(selectedGuess[0].text())]
+        selected_guess = self.ui.selectGuessListWidget.selectedItems()
+        if selected_guess:
+            guess = self.guessMap[str(selected_guess[0].text())]
 
         if gold:
             CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess,
                             edgeTypeFilter=self.canvas.filter)
 
-    def onItemChanged(self):
+    def on_item_changed(self):
         self.refresh()
 
     def svgdraw(self):  # instance
@@ -175,7 +172,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.graphicsView.show()
 
     def file_save(self):
-        name = QtWidgets.QFileDialog.getSaveFileName(QtWidgets.QFileDialog(), 'Save File')[0]  # todo ok like this?
+        name = QtWidgets.QFileDialog.getSaveFileName(QtWidgets.QFileDialog(), 'Save File')[0]
         render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name)
 
 

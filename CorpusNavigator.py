@@ -677,7 +677,7 @@ class CorpusNavigator:
                 self._canvas.renderer.set_edge_type_color("FN", (000, 000, 255))  # Blue
                 self._canvas.renderer.set_edge_type_color("FP", (255, 000, 000))  # Red
                 self._canvas.set_nlp_instance(self._instance)
-                self._canvas.fireInstanceChanged()
+                self._canvas.fire_instance_changed()
                 self._canvas.update_nlp_graphics()
         else:
             """
@@ -705,7 +705,7 @@ class CorpusNavigator:
             example.add_edge(1, 4, "A1", "role", render_type=EdgeRenderType.dependency)
             example.add_edge(1, 1, "add.1", "sense", render_type=EdgeRenderType.span)
             self._canvas.set_nlp_instance(example)
-            self._canvas.fireInstanceChanged()
+            self._canvas.fire_instance_changed()
             self._edgeTypeFilter.allowed_edge_types.add("dep")
             self._edgeTypeFilter.allowed_edge_types.add("role")
             self._edgeTypeFilter.allowed_edge_types.add("sense")

@@ -24,48 +24,48 @@ class DependencyFilterPanel:
          * @param edgeLabelFilter The EdgeTypeAndLabelFilter to control through this panel.
          * @param edgeTokenFilter The EdgeTokenFilter to control through this panel.
     """
-    def __init__(self, gui, nlpCanvas: Qt5NLPCanvas, edgeLabelFilter: Filter, edgeTokenFilter: Filter):
-        labelField = gui.labelLineEdit
+    def __init__(self, gui, nlp_canvas: Qt5NLPCanvas, edge_label_filter: Filter, edge_token_filter: Filter):
+        label_field = gui.labelLineEdit
 
-        def labelFieldChanged(text):
-            edgeLabelFilter.allowed_labels.clear()
+        def label_field_changed(text):
+            edge_label_filter.allowed_labels.clear()
             split = text.split(',')
             for label in split:
-                edgeLabelFilter.allowed_labels.add(label)
-            nlpCanvas.update_nlp_graphics()
-        labelField.textEdited.connect(labelFieldChanged)
+                edge_label_filter.allowed_labels.add(label)
+            nlp_canvas.update_nlp_graphics()
+        label_field.textEdited.connect(label_field_changed)
 
-        tokenTextField = gui.edgeFilterTokenLineEdit
+        token_text_field = gui.edgeFilterTokenLineEdit
 
-        def tokenTextFieldChanged(text):
-            edgeTokenFilter.allowed_token_propvals.clear()
+        def token_text_field_changed(text):
+            edge_token_filter.allowed_token_propvals.clear()
             split = text.split(',')
             for tok_property in split:
                 if len(tok_property) > 0:
                     m = interval.match(tok_property)
                     if m:
                         tok_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                edgeTokenFilter.allowed_token_propvals.add(tok_property)
-            nlpCanvas.update_nlp_graphics()
-        tokenTextField.textEdited.connect(tokenTextFieldChanged)
+                edge_token_filter.allowed_token_propvals.add(tok_property)
+            nlp_canvas.update_nlp_graphics()
+        token_text_field.textEdited.connect(token_text_field_changed)
 
-        usePath = gui.onlyPathCheckBox
+        use_path = gui.onlyPathCheckBox
 
-        def usePathAction(value):
-            edgeTokenFilter.use_path = value == 2  # checked
-            nlpCanvas.update_nlp_graphics()
-        usePath.stateChanged.connect(usePathAction)
+        def use_path_action(value):
+            edge_token_filter.use_path = value == 2  # checked
+            nlp_canvas.update_nlp_graphics()
+        use_path.stateChanged.connect(use_path_action)
 
         collapse = gui.collapsCheckBox
 
-        def collapseAction(value):
-            edgeTokenFilter.collapse = value == 2  # checked
-            nlpCanvas.update_nlp_graphics()
-        collapse.stateChanged.connect(collapseAction)
+        def collapse_action(value):
+            edge_token_filter.collapse = value == 2  # checked
+            nlp_canvas.update_nlp_graphics()
+        collapse.stateChanged.connect(collapse_action)
 
-        wholeWords = gui.edgeFilterWholeWordsCheckBox
+        whole_words = gui.edgeFilterWholeWordsCheckBox
 
-        def wholeWordsAction(value):
-            edgeTokenFilter.propvals_whole_word = value == 2  # checked
-            nlpCanvas.update_nlp_graphics()
-        wholeWords.stateChanged.connect(wholeWordsAction)
+        def whole_words_action(value):
+            edge_token_filter.propvals_whole_word = value == 2  # checked
+            nlp_canvas.update_nlp_graphics()
+        whole_words.stateChanged.connect(whole_words_action)
