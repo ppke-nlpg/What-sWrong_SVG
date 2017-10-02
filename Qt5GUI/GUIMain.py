@@ -115,8 +115,8 @@ class MyForm(QtWidgets.QMainWindow):
         if corp_type == "guess":
             self.guessMap[basename(directory)] = corpus  # CorpusLoader(directory)
 
-        f = open(directory)
-        lines = list(f.readlines())
+        with open(directory, encoding='UTF-8') as f:
+            lines = list(f.readlines())
 
         item = QtWidgets.QListWidgetItem(basename(directory))
 
