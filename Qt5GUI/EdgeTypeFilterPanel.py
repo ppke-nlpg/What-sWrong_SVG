@@ -37,7 +37,7 @@ class EdgeTypeFilterPanel:
         """
          * The backing model for the swing list of edge types.
         """
-        self._list_init = False
+        self._updating = False
         self._types = gui.edgeTypeListWidget
         self._types.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
@@ -68,10 +68,10 @@ class EdgeTypeFilterPanel:
         self._nlpCanvas.add_listener(listener=self)
 
         def value_changed():
-            if self._list_init:
-                return
             self._edgeTypeFilter.allowed_edge_types = {edge_type.text() for edge_type in self._types.selectedItems()}
-            self._nlpCanvas.update_nlp_graphics()
+            if not self._updating:
+                self._nlpCanvas.update_nlp_graphics()
+
         self._types.itemSelectionChanged.connect(value_changed)
 
         # add false positive/negative and match check buttons
@@ -119,10 +119,10 @@ class EdgeTypeFilterPanel:
                                  self._matches, "eval_status_Match")
 
         # TODO: This makes too much refreshing
-        self._list_init = True
+        self._updating = True
         self._types.clear()
         self._types.addItems(item for item in sorted(self._nlpCanvas.usedTypes))
         # Select all items
         for i in range(self._types.count()):
             self._types.item(i).setSelected(True)
-        self._list_init = False
+        self._updating = False

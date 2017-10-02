@@ -25,10 +25,9 @@ class TokenFilterPanel:
         self._canvas = canvas
         self._canvas.add_change_listener(self)
 
-        self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self._list.itemActivated.connect(self.value_changed)  # XXX itemSelectionChanged
+        self._list.itemSelectionChanged.connect(self.value_changed)  # TODO: itemSelectionChanged
 
         self._allowed = gui.tokenFilterTokenLineEdit
         self._allowed.textEdited.connect(self.allowed_changed)
@@ -36,19 +35,11 @@ class TokenFilterPanel:
         self._wholeWords = gui.tokenFilterWholeWordsCheckBox
         self._wholeWords.stateChanged.connect(self.whole_word_action_performed)
 
-        self.update_properties()
         self._updating = False
 
-    def value_changed(self, _=None):
-        if len(self._list) == 0 or len(self._listModel) == 0:
-            return
-        for index in range(0, len(self._list)):
-            t = self._listModel[index]
-            if self._list.item(index) in self._list.selectedItems():
-                if t in self._token_filter.forbidden_token_properties:
-                    self._token_filter.forbidden_token_properties.remove(t)
-            else:
-                self._token_filter.forbidden_token_properties.add(t)
+    def value_changed(self):
+        self._token_filter.forbidden_token_properties = self._canvas.usedProperties -\
+                                                        {item.text() for item in self._list.selectedItems()}
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
@@ -68,25 +59,17 @@ class TokenFilterPanel:
 
     """
      * Updates the list of available token properties.
-    """
-    def update_properties(self):
-        self._updating = True
-        self._listModel.clear()
-        self._list.clear()
-        for index, p_name in enumerate(sorted(self._canvas.usedProperties)):
-            self._listModel.append(p_name)
-            self._list.addItem(p_name)
-            if p_name not in self._token_filter.forbidden_token_properties and \
-                    not self._list.item(index) in self._list.selectedItems():
-                self._list.item(index).setSelected(True)
-            else:
-                self._list.item(index).setSelected(False)  # Explicitly unselect
-        self._updating = False
-
-    """
      * Updates available properties and requests a redraw of the panel.
      *
      * @param e the ChangeEvent corresponding to the change of the canvas.
     """
     def state_changed(self):
-        self.update_properties()
+        if self._list.count() != len(self._canvas.usedProperties):
+            self._updating = True
+            self._list.clear()
+            self._list.addItems(item for item in sorted(self._canvas.usedProperties))
+            # Select all items
+            for i in range(self._list.count()):
+                self._list.item(i).setSelected(True)
+            self._updating = False
+            self._canvas.update_nlp_graphics()
