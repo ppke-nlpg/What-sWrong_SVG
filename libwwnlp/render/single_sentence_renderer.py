@@ -136,8 +136,8 @@ class SingleSentenceRenderer:
             edge_type (str): The type of the edges we want to change the color for.
             color: The color of the edges of the given type.
         """
-        self._dependency_layout.set_color(edge_type, color)
-        self._span_layout.set_color(edge_type, color)
+        self._dependency_layout.type_colors[edge_type] = color
+        self._span_layout.type_colors[edge_type] = color
 
     def set_edge_type_order(self, edge_type, order):
         """Sets the order/vertical layer in which the area of a certain type should be drawn.

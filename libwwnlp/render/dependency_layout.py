@@ -59,7 +59,7 @@ class DependencyLayout(AbstractEdgeLayout):
         """
         edges_ = set(edges)
         if len(self.visible) > 0:
-            edges_ &= self.visible
+            edges_ = edges & self.visible
 
         # find out height of each edge
         self.shapes.clear()
@@ -86,8 +86,7 @@ class DependencyLayout(AbstractEdgeLayout):
                                       over.covers_exactly(under) and over.lexicographic_order(under) > 0):
                     dominates[over].append(under)
 
-        for edge in edges_:
-            self.calculate_depth(dominates, depth, edge)
+        depth = self.calculate_depth(dominates, depth, edges_)
 
         for left in edges_:
             for right in edges_:
@@ -104,6 +103,7 @@ class DependencyLayout(AbstractEdgeLayout):
             max_depth = 0
         else:
             max_depth = most_common[0][1]
+
         max_height = (max_depth + 1) * self.height_per_level + 3
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
@@ -114,22 +114,24 @@ class DependencyLayout(AbstractEdgeLayout):
         # build map from vertex to incoming/outgoing edges
         vertex2edges = defaultdict(list)
         for edge in edges_:
+            # assign starting and end points of edges by sorting the edges per vertex
             vertex2edges[edge.start].append(edge)
             vertex2edges[edge.end].append(edge)
+
         # assign starting and end points of edges by sorting the edges per vertex
         start, end = {}, {}
         for token in tokens:
 
             # now put points along the token vertex wrt to ordering
             loops_on_vertex = loops[token]
-            bounds_width = bounds[token].end - bounds[token].start
-            width = (bounds_width + self.vertex_extra_space) // \
+            width = (bounds[token].end - bounds[token].start + self.vertex_extra_space) // \
                     (len(vertex2edges[token]) + 1 + len(loops_on_vertex) * 2)
             x_coord = (bounds[token].start - (self.vertex_extra_space // 2)) + width
+
             for loop in loops_on_vertex:
-                point = (x_coord, self.baseline + max_height)
-                start[loop] = point
+                start[loop] = (x_coord, self.baseline + max_height)
                 x_coord += width
+
             for edge in sorted(vertex2edges[token], key=functools.cmp_to_key(
                     lambda e1, e2, tok=token: self.compare_edges(e1, e2, tok))):
                 point = (x_coord, self.baseline + max_height)
@@ -140,38 +142,40 @@ class DependencyLayout(AbstractEdgeLayout):
                 x_coord += width
 
             for loop in loops_on_vertex:
-                point = (x_coord, self.baseline + max_height)
-                end[loop] = point
+                end[loop] = (x_coord, self.baseline + max_height)
                 x_coord += width
+
+        # Store the appropriate function ouside of the loop
+        if self.curve:
+            draw_arrow = self.create_curve_arrow
+        else:
+            draw_arrow = self.create_rect_arrow
 
         # draw each edge
         edges_ |= all_loops
         for edge in edges_:
-            edge_color = self.get_color(edge)
             # TODO: Do that more properly!
             height = self.baseline + max_height - (depth[edge] + 1) * self.height_per_level + offset[edge]
             if edge.start == edge.end:
                 height -= self.height_per_level // 2
+
             point1 = start[edge]
             point2 = (point1[0], height)
             point4 = end[edge]
             point3 = (point4[0], height)
+            edge_color = self.get_color(edge)
 
-            if self.curve:
-                shape = self.create_curve_arrow(scene, point1, point2, point3, point4, edge_color)
-            else:
-                shape = self.create_rect_arrow(scene, point1, point2, point3, point4, edge_color)
+            shape = draw_arrow(scene, point1, point2, point3, point4, edge_color)
 
             x_coord = (point4[0] - self.arrowsize, point4[1] - self.arrowsize)
             z_coord = (point4[0] + self.arrowsize, point4[1] - self.arrowsize)
             y_coord = (point4[0], point4[1])
 
-            scene.add(Line(scene, x_coord, y_coord, edge_color))  # TODO: What is this?
+            # Draw the arrow head
+            scene.add(Line(scene, x_coord, y_coord, edge_color))
             scene.add(Line(scene, z_coord, y_coord, edge_color))
 
             # write label in the middle under
-            # TODO: What is this?
-            Text(scene, (0, 0), edge.get_label_with_note(), self.font_size, self.font_family, edge_color)
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
             labely = height + 11  # TODO: Constants?
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,

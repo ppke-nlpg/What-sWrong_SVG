@@ -74,15 +74,14 @@ class SpanLayout(AbstractEdgeLayout):
         Note on types:
         depth (Counter(Edge))
         dominates (defaultdict({Edge: [Edge]})
-        vertex2edges (defaultdict({Token: [Edge]}))
         min_depths (Counter(str))
 
         Returns:
             The dimensions of the drawn graph.
         """
+        edges_ = set(edges)
         if len(self.visible) > 0:
-            edges = set(edges)
-            edges &= self.visible  # Intersection
+            edges_ = edges_ & self.visible  # Intersection
 
         # find out height of each edge
         self.shapes.clear()
@@ -90,8 +89,8 @@ class SpanLayout(AbstractEdgeLayout):
         depth = Counter()
         dominates = defaultdict(list)
 
-        for over in edges:
-            for under in edges:
+        for over in edges_:
+            for under in edges_:
                 order_over = self.orders.get(over.edge_type)
                 order_under = self.orders.get(under.edge_type)
                 if over != under and (order_over is None and order_under is not None) or \
@@ -102,40 +101,28 @@ class SpanLayout(AbstractEdgeLayout):
                      over.covers_exactly(under) and
                      over.lexicographic_order(under) > 0 or
                      over.overlaps(under) and over.covers_left_end(under))):
+
                     dominates[over].append(under)
-        for edge in edges:
-            self.calculate_depth(dominates, depth, edge)
+
+        depth = self.calculate_depth(dominates, depth, edges_)
 
         # calculate max_height and max_width
         if len(depth) == 0:
             max_depth = 0
         else:
             max_depth = depth.most_common(1)[0][1]
-        if len(edges) > 0:
+        if len(edges_) > 0:
             max_height = (max_depth + 1) * self.height_per_level + 3  # TODO: Constants?
         else:
             max_height = 1
 
-        # in case there are no edges that cover other edges (depth == 0) we need
+        # in case there are no edges_ that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
 
-        # build map from vertex to incoming/outgoing edges
-        vertex2edges = defaultdict(list)
-        for edge in edges:
-            # assign starting and end points of edges by sorting the edges per vertex
-            vertex2edges[edge.start].append(edge)
-            vertex2edges[edge.end].append(edge)
-
-        max_width = 0
-
         # draw each edge
-        for edge in edges:
-            # set Color and remember old color
-            edge_color = self.get_color(edge)
-
-            # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width()
+        max_width = 0
+        for edge in edges_:
             # draw lines
             if self.revert:
                 span_level = max_depth - depth[edge]
@@ -154,11 +141,17 @@ class SpanLayout(AbstractEdgeLayout):
             if max_x > max_width:
                 max_width = max_x + 1
 
+            # prepare label (will be needed for spacing)
+            labelwidth = Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width()
+
             if max_x - min_x < labelwidth + self.total_text_margin:
                 middle = min_x + (max_x - min_x) // 2
                 text_width = labelwidth + self.total_text_margin
                 min_x = middle - text_width // 2
                 max_x = middle + text_width // 2
+
+            # set Color and remember old color
+            edge_color = self.get_color(edge)
 
             # If curved int(self.curve) = 1 else 0
             scene.add(Rectangle(scene, (min_x, height_minus_buffer), max_x - min_x, rect_height,
@@ -167,10 +160,11 @@ class SpanLayout(AbstractEdgeLayout):
 
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2
-            labely = height_minus_buffer + rect_height // 2
+            labely = height_minus_buffer + rect_height // 2 + 4  # TODO: Should be drawn in the center, + 4 not needed!
 
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
                            edge_color))
+            # TODO: Do we use this somewhere? What is this?
             self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
@@ -178,7 +172,7 @@ class SpanLayout(AbstractEdgeLayout):
         if self.separation_lines:
             # find largest depth for each prefix type
             min_depths = Counter()
-            for edge in edges:
+            for edge in edges_:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
             for depth in min_depths.values():

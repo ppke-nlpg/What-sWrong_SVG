@@ -3,8 +3,6 @@
 
 from collections import namedtuple
 
-DEFAULT_EDGE_COLOR = (0, 0, 0)  # Black
-
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
 Point = namedtuple('Point', ['x', 'y'])
@@ -54,6 +52,7 @@ class AbstractEdgeLayout:
         self.baseline = -1
         self.height_per_level = 15  # TODO: Constants?
         self.vertex_extra_space = 12  # TODO: Constants?
+        self.default_edge_color = (0, 0, 0)  # Black  # TODO: Constants?
         self.curve = True
         self.type_colors = {}
         self.property_colors = {}
@@ -66,15 +65,6 @@ class AbstractEdgeLayout:
         self.visible = set()
         self.max_width = 0
         self.max_height = 0
-
-    def set_color(self, edge_type, color):
-        """Set the color for edges of a certain type.
-
-        Args:
-            edge_type: The type of the edges we want to change the color for.
-            color: The color of the edges of the given type.
-        """
-        self.type_colors[edge_type] = color
 
     def set_stroke(self, edge_type, stroke):
         """Set the stroke for edges of a certain type.
@@ -114,20 +104,6 @@ class AbstractEdgeLayout:
             if substring in edge_type:
                 return self.strokes[substring]
         return self.default_stroke
-
-    def get_color(self, edge):
-        """Return the color for the given edge.
-
-        Args:
-            edge (Edge): The edge we need the color for.
-
-        Returns:
-            The color for the given edge.
-        """
-        props_with_color = edge.properties & self.property_colors.keys()
-        # sort first acc. to levels, second according to prop. names, if no common color use the default...
-        return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
-                   default=(None, None, self.type_colors.get(edge.edge_type, DEFAULT_EDGE_COLOR)))[2]
 
     def add_to_selection(self, edge):
         """Add an edge to the selection.
@@ -194,7 +170,12 @@ class AbstractEdgeLayout:
         #            maxY = s.getBounds().getY();
         #    return result
 
-    def calculate_depth(self, dominates, depth, root):
+    def calculate_depth(self, dominates, depth, edges):
+        for root in edges:
+            self.calculate_depth_r(dominates, depth, root)
+        return depth
+
+    def calculate_depth_r(self, dominates, depth, root):
         """Count the number of edges under each edge and return the maximum.
 
         Args:
@@ -209,29 +190,21 @@ class AbstractEdgeLayout:
             return depth[root]
         if len(dominates[root]) == 0:
             return 0
-        maximum = max((self.calculate_depth(dominates, depth, children) for
-                       children in dominates[root]), default=0) + 1
+        maximum = max((self.calculate_depth_r(dominates, depth, children) for children in dominates[root]),
+                      default=0) + 1
         depth[root] = maximum
         return maximum
 
-    def get_start(self, edge):
-        """Return the point at the start of the given edge.
+    def get_color(self, edge):
+        """Return the color for the given edge.
 
         Args:
-            edge (Edge): The edge whose start is to be returned.
+            edge (Edge): The edge we need the color for.
 
         Returns:
-            The edge to get the starting point for.
+            The color for the given edge.
         """
-        return self.start[edge]
-
-    def get_end(self, edge):
-        """Return the point at the end of the given edge.
-
-        Args:
-            edge (Edge): The edge whose end is to be returned.
-
-        Returns:
-            The edge to get the ending point for.
-        """
-        return self.end[edge]
+        props_with_color = edge.properties & self.property_colors.keys()
+        # sort first acc. to levels, second according to prop. names, if no common color use the default...
+        return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
+                   default=(None, None, self.type_colors.get(edge.edge_type, self.default_edge_color)))[2]

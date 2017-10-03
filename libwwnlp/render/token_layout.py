@@ -69,7 +69,7 @@ class TokenLayout:
         self.token_color = (0, 0, 0)  # Black  # TODO: Constants?
         self.token_prop_color = (120, 120, 120)  # Grey  # TODO: Constants?
         self.font_desc_size = 3  # TODO: Constants?
-        self.line_width = 1
+        self.line_width = 1  # TODO: Constants?
         self.base_line = 0
         self.margin = 20
         self.from_split_point = -1
