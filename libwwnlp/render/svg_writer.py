@@ -16,7 +16,7 @@ class Scene(sw.drawing.Drawing):
         offsety (int): Vertical offset.
     """
 
-    def __init__(self, width: int=400, height: int=400):
+    def __init__(self, width: str='100%', height: str='100%'):
         """Initialize a Scene instance.
 
         Args:
@@ -212,13 +212,12 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
 
     Returns: The bytesting of the rendered object if needed.
     """
-    svg_scene = Scene(0, 0)  # TODO: Do this in a more clever way...
+    svg_scene = Scene()
 
     dim = renderer.render(filtered, svg_scene)
 
-    svg_scene = Scene(width=dim[0], height=dim[1])
-
-    renderer.render(filtered, svg_scene)
+    svg_scene.attribs['width'] = dim[0]  # TODO: Is there a better way?
+    svg_scene.attribs['height'] = dim[1]
 
     svg_bytes = svg_scene.tostring().encode('UTF-8')
 
