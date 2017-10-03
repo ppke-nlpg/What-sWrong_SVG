@@ -38,6 +38,7 @@ class SpanLayout(AbstractEdgeLayout):
         self.separator_line_color = (211, 211, 211)  # Color.LIGHT_GRAY  # TODO: Constants?
         self.span_line_width = 1  # TODO: Constants?
         self.span_fill_color = (255, 255, 255)  # TODO: Constants?
+        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
 
     def estimate_required_token_widths(self, edges, scene):
         """Return the required token widths for self-loops.
@@ -57,9 +58,9 @@ class SpanLayout(AbstractEdgeLayout):
         result = {}
         for edge in edges:
             if edge.start == edge.end:
-                result[edge.start] = self.total_text_margin + max(Text(scene, (0, 0), edge.label,
-                                                                       self.font_size).get_width(),
-                                                                  result.get(edge.start, 0))
+                result[edge.start] = self.total_text_margin + max(
+                    Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width(),
+                    result.get(edge.start, 0))
         return result
 
     def layout_edges(self, edges, bounds, scene: Scene):
@@ -134,7 +135,7 @@ class SpanLayout(AbstractEdgeLayout):
             edge_color = self.get_color(edge)
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, self.font_size).get_width()
+            labelwidth = Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width()
             # draw lines
             if self.revert:
                 span_level = max_depth - depth[edge]
@@ -168,7 +169,8 @@ class SpanLayout(AbstractEdgeLayout):
             labelx = min_x + (max_x - min_x) // 2
             labely = height_minus_buffer + rect_height // 2
 
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, edge_color))
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
+                           edge_color))
             self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
         max_width = max((bound.end for bound in bounds.values()), default=0)

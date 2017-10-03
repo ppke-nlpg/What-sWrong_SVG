@@ -33,6 +33,7 @@ class DependencyLayout(AbstractEdgeLayout):
         super().__init__()
         self.arrowsize = 2  # TODO: Constants?
         self.font_size = 12  # TODO: Constants?
+        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
 
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
@@ -169,10 +170,12 @@ class DependencyLayout(AbstractEdgeLayout):
             scene.add(Line(scene, z_coord, y_coord, edge_color))
 
             # write label in the middle under
-            Text(scene, (0, 0), edge.get_label_with_note(), self.font_size, edge_color)  # TODO: What is this?
+            # TODO: What is this?
+            Text(scene, (0, 0), edge.get_label_with_note(), self.font_size, self.font_family, edge_color)
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
             labely = height + 11  # TODO: Constants?
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, edge_color))
+            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
+                           edge_color))
 
             self.shapes[shape] = edge
 

@@ -6,6 +6,7 @@ Specialised svgwrite subclasses for visualising linguistic parses in SVG.
 
 import cairosvg
 import svgwrite as sw
+from svgwrite.utils import rgb
 
 
 class Scene(sw.drawing.Drawing):
@@ -66,7 +67,7 @@ class Line(sw.shapes.Line):
         super().__init__(scene.translate_to(start),
                          scene.translate_to(end),
                          shape_rendering='inherit',
-                         stroke=colorstr(color),
+                         stroke=rgb(*color),
                          stroke_width=width)
 
 
@@ -91,7 +92,7 @@ class QuadraticBezierCurve(sw.path.Path):
                             'C', scene.translate_to(control1),
                             scene.translate_to(control2),
                             scene.translate_to(end)],
-                         stroke=colorstr(color),
+                         stroke=rgb(*color),
                          stroke_width=width,
                          fill='none')
 
@@ -118,8 +119,8 @@ class Rectangle(sw.shapes.Rect):
         super().__init__(insert=scene.translate_to(origin),
                          size=(width, height),
                          shape_rendering='inherit',
-                         fill=colorstr(fill_color),
-                         stroke=colorstr(line_color),
+                         fill=rgb(*fill_color),
+                         stroke=rgb(*line_color),
                          stroke_width=line_width,
                          rx=rx, ry=ry)
 
@@ -128,8 +129,7 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple=(0, 0, 0)):
-        origin = scene.translate_to(origin)
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple = (0, 0, 0)):
         """Initialize a text object.
 
         Args:
@@ -137,12 +137,14 @@ class Text(sw.text.Text):
             origin (tuple): The top left corner of the text area.
             text (str): The text to write on the scene.
             size (int): The size of the text.
+            font (str): The font specification.
             color (tuple): Color to use for the text.
         """
+        origin = scene.translate_to(origin)
         super().__init__(text,
                          insert=origin,
-                         fill=colorstr(color),
-                         font_family='Courier New, Courier, monospace',
+                         fill=rgb(*color),
+                         font_family=font,
                          font_size=size,
                          text_rendering='inherit',
                          alignment_baseline='central',
@@ -154,14 +156,14 @@ class Text(sw.text.Text):
         Returns:
             int: The width of the text.
         """
-        return len(self.text) * 7
+        return len(self.text) * 7  # TODO: Why 7 Documentation!
 
 
 class TextToken(sw.text.Text):
     """A text token.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, color: tuple):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple = (0, 0, 0)):
         """Initialize a text token.
 
         Args:
@@ -169,36 +171,17 @@ class TextToken(sw.text.Text):
             origin (tuple): The top left corner of the text area.
             text (str): The text to write on the scene.
             size (int): The size of the text.
+            font (str): The font specification.
             color (tuple): Color to use for the text.
         """
         origin = scene.translate_to(origin)
         super().__init__(text,
                          x=[origin[0]],
                          y=[origin[1]],
-                         fill=colorstr(color),
-                         font_family='Courier New, Courier, monospace',    # TODO: Constants?
+                         fill=rgb(*color),
+                         font_family=font,
                          font_size=size,
                          text_rendering='inherit')
-
-    def get_width(self) -> int:
-        """Return the width of the text.
-
-        Returns:
-            int: The width of the text.
-        """
-        return len(self.text) * 6  # TODO: Why 6 Documentation!
-
-
-def colorstr(rgb: tuple) -> str:
-    """Convert an RGB triple to an SVG color string.
-
-    Args:
-        rgb (tuple): The RGB triple to convert.
-
-    Returns:
-        str: The SVG color string corresponding to the triple.
-    """
-    return "rgb({0:d},{1:d},{2:d})".format(rgb[0], rgb[1], rgb[2])
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
@@ -212,11 +195,12 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
 
     Returns: The bytesting of the rendered object if needed.
     """
-    svg_scene = Scene()
+    svg_scene = Scene()  # default: '100%', '100%'
 
     dim = renderer.render(filtered, svg_scene)
 
-    svg_scene.attribs['width'] = dim[0]  # TODO: Is there a better way?
+    # Set the actual computed dimension without rerendering
+    svg_scene.attribs['width'] = dim[0]
     svg_scene.attribs['height'] = dim[1]
 
     svg_bytes = svg_scene.tostring().encode('UTF-8')
