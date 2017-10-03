@@ -6,6 +6,10 @@ from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.alignment_renderer import AlignmentRenderer
 from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
 
+MATCH_COLOR = (0, 0, 0)
+FN_COLOR = (255, 0, 0)
+FP_COLOR = (0, 0, 255)
+
 
 class NLPCanvas:
     """An NLPCanvas draws the tokens and edges of an NLPInstance.
@@ -21,15 +25,11 @@ class NLPCanvas:
     def __init__(self):
         """Creates a new canvas with default size.
         """
-        self.match_color = (0, 0, 0)  # TODO: Constants?
-        self.fn_color = (255, 0, 0)   # TODO: Constants?
-        self.fp_color = (0, 0, 255)   # TODO: Constants?
-
         self.renderer = SingleSentenceRenderer()
         # TODO: Here should not acces protected member, public function instead
-        self.renderer._dependency_layout.property_colors = {"eval_status_Match": (self.match_color, 2),
-                                                            "eval_status_FN": (self.fn_color, 1),
-                                                            "eval_status_FP": (self.fp_color, 1)}
+        self.renderer._dependency_layout.property_colors = {"eval_status_Match": (MATCH_COLOR, 2),
+                                                            "eval_status_FN": (FN_COLOR, 1),
+                                                            "eval_status_FP": (FP_COLOR, 1)}
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
                           RenderType.alignment: AlignmentRenderer()}
         self.usedTypes = set()

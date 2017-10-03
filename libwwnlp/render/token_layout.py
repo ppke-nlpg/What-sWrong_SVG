@@ -114,7 +114,7 @@ class TokenLayout:
             props = token.get_property_names()
             lasty = self.base_line + self.row_height*(len(props)+1)  # TODO: Constants?
             maxx = max(itertools.chain((Text(scene, (0, 0), token.get_property_value(prop_name), self.text_fontsize).
-                                       get_width() for prop_name in props), token_widths.values()), default=0)
+                                       get_width() for prop_name in props), [token_widths.get(token, 0)]), default=0)
             result[token] = Bounds1D(lastx, lastx+maxx)
             lastx += maxx + self.margin
             if lasty - self.row_height > self.height:

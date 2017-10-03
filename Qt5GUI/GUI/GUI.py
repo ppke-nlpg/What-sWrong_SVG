@@ -247,7 +247,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "What's Wrong With My NLP?"))
         self.label_2.setText(_translate("MainWindow", "Select Guess"))
         self.addGuessPushButton.setText(_translate("MainWindow", "Add"))
         self.removeGuessPushButton.setText(_translate("MainWindow", "Remove"))
