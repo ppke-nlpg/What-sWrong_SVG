@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import itertools
+from itertools import chain, repeat
 from collections import namedtuple
 from ..model.nlp_instance import NLPInstance
 from .svg_writer import Rectangle, Scene, Text, TextToken
@@ -9,8 +9,6 @@ from .svg_writer import Rectangle, Scene, Text, TextToken
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
 """
-
-FONT_DESC_SIZE = 3
 
 
 def middle(bounds):
@@ -66,6 +64,12 @@ class TokenLayout:
         self.text_fontsize = 12  # TODO: Constants?
         self.row_height = 14  # TODO: Constants?
         self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
+        self.fill_color = (255, 255, 255)  # TODO: Constants?
+        self.line_color = (0, 0, 0)  # TODO: Constants?
+        self.token_color = (0, 0, 0)  # Black  # TODO: Constants?
+        self.token_prop_color = (120, 120, 120)  # Grey  # TODO: Constants?
+        self.font_desc_size = 3  # TODO: Constants?
+        self.line_width = 1
         self.base_line = 0
         self.margin = 20
         self.from_split_point = -1
@@ -96,34 +100,32 @@ class TokenLayout:
 
         tokens = instance.tokens
 
-        if len(tokens) == 0:
-            return result
-
-        lastx = 0
-
-        if self.from_split_point == -1:
+        if len(tokens) > 0:
+            lastx = 0
             from_token = 0
-        else:
-            from_token = instance.split_points[self.from_split_point]
-        if self.to_split_point == -1:
             to_token = len(tokens)
-        else:
-            to_token = instance.split_points[self.to_split_point]
 
-        for token_index in range(from_token, to_token):
-            token = tokens[token_index]
-            props = token.get_property_names()
-            lasty = self.base_line + self.row_height*(len(props)+1)  # TODO: Constants?
-            maxx = max(itertools.chain((Text(scene, (0, 0), token.get_property_value(prop_name), self.text_fontsize,
-                                             self.font_family).
-                                       get_width() for prop_name in props), [token_widths.get(token, 0)]), default=0)
-            result[token] = Bounds1D(lastx, lastx+maxx)
-            lastx += maxx + self.margin
-            if lasty - self.row_height > self.height:
-                self.height = lasty - self.row_height
+            if self.from_split_point != -1:
+                from_token = instance.split_points[self.from_split_point]
+            if self.to_split_point != -1:
+                to_token = instance.split_points[self.to_split_point]
+
+            for token_index in range(from_token, to_token):
+                token = tokens[token_index]
+
+                props = token.get_property_names()
+                lasty = self.base_line + self.row_height*(len(props))
+                maxx = max(chain((Text(scene, (0, 0), token.get_property_value(prop_name), self.text_fontsize,
+                                       self.font_family).get_width() for prop_name in props),
+                                 [token_widths.get(token, 0)]), default=0)
+                result[token] = Bounds1D(lastx, lastx+maxx)
+
+                lastx += maxx + self.margin
+                self.height = max(self.height, lasty)
 
         return result
 
+    # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
     def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene):
         """Lay out all tokens in the given collection.
 
@@ -145,47 +147,43 @@ class TokenLayout:
         if len(tokens) == 0:
             self.height = 1
             self.width = 1
-            return self.height, self.width
-        self.text_layouts.clear()
-        lastx = 0
-        self.height = 0
-        if self.from_split_point == -1:
+        else:
+            self.text_layouts.clear()
+            self.height = 0
+            lastx = 0
             from_token = 0
-        else:
-            from_token = instance.split_points[self.from_split_point]
-        if self.to_split_point == -1:
             to_token = len(tokens)
-        else:
-            to_token = instance.split_points[self.to_split_point]
-        for token_index in range(from_token, to_token):
-            token = tokens[token_index]
-            index = 0
-            lasty = self.base_line
-            maxx = 0
-            for prop_name in token.get_property_names():
-                lasty += self.row_height
-                curr_property_value = token.get_property_value(prop_name)
-                if index == 0:
-                    token_color = (0, 0, 0)  # Black  # TODO: Constants?
-                else:
-                    token_color = (120, 120, 120)  # Grey  # TODO: Constants?
-                text_token = TextToken(scene, (lastx, lasty), curr_property_value, self.token_fontsize,
-                                       self.font_family, token_color)
-                scene.add(text_token)
-                maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family,
-                                      token_color).get_width())
-                self.text_layouts[(token, index+1)] = curr_property_value
-                index += 1
-            required_width = token_widths.get(token)
-            if required_width is not None and maxx < required_width:
-                maxx = required_width
-            lasty += FONT_DESC_SIZE
-            self.bounds[token] = Rectangle(scene, (lastx, self.base_line), maxx, lasty - self.base_line,
-                                           (255, 255, 255), (0, 0, 0), 1)   # TODO: Constants?
-            # scene.add(self.bounds[token])
-            lastx += maxx + self.margin
-            if lasty > self.height:
-                self.height = lasty
 
-        self.width = lastx - self.margin
+            if self.from_split_point != -1:
+                from_token = instance.split_points[self.from_split_point]
+            if self.to_split_point != -1:
+                to_token = instance.split_points[self.to_split_point]
+
+            for token_index in range(from_token, to_token):
+                token = tokens[token_index]
+
+                lasty = self.base_line
+                maxx = token_widths.get(token, 0)
+                # First comes the token, then the properties
+                colors = chain((self.token_color,), repeat(self.token_prop_color))
+                for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
+                    lasty += self.row_height
+                    curr_property_value = token.get_property_value(prop_name)
+                    self.text_layouts[(token, index)] = curr_property_value
+                    text_token = TextToken(scene, (lastx, lasty), curr_property_value, self.token_fontsize,
+                                           self.font_family, color)
+                    maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family,
+                                          color).get_width())  # TODO: We do not need Text here just the width!
+                    scene.add(text_token)
+
+                lasty += self.font_desc_size
+                # TODO: Do we use this anywhere? What is this?
+                self.bounds[token] = Rectangle(scene, (lastx, self.base_line), maxx, lasty - self.base_line,
+                                               self.fill_color, self.line_color, self.line_width)
+                # scene.add(self.bounds[token])
+
+                lastx += maxx + self.margin
+                self.height = max(self.height, lasty)
+
+            self.width = lastx - self.margin
         return self.width, self.height
