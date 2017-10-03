@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# TODO: Merge add_dependency and add_span to add_edge?
-
 from typing import List
 from enum import Enum
 

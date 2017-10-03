@@ -165,7 +165,10 @@ class DependencyLayout(AbstractEdgeLayout):
             point3 = (point4[0], height)
             edge_color = self.get_color(edge)
 
-            shape = draw_arrow(scene, point1, point2, point3, point4, edge_color)
+            # Store shape coordinates for selection with mouse click
+            self.shapes[(point1, point2, point3, point4)] = edge
+
+            scene = draw_arrow(scene, point1, point2, point3, point4, edge_color)
 
             x_coord = (point4[0] - self.arrowsize, point4[1] - self.arrowsize)
             z_coord = (point4[0] + self.arrowsize, point4[1] - self.arrowsize)
@@ -180,8 +183,6 @@ class DependencyLayout(AbstractEdgeLayout):
             labely = height + 11  # TODO: Constants?
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
                            edge_color))
-
-            self.shapes[shape] = edge
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
@@ -201,12 +202,12 @@ class DependencyLayout(AbstractEdgeLayout):
             color: The arrow's color.
 
         Returns:
-            The given points as a tuple.
+            The modified scene
         """
         scene.add(Line(scene, point1, point2, color))
         scene.add(Line(scene, point2, point3, color))
         scene.add(Line(scene, point3, point4, color))
-        return point1, point2, point3, point4
+        return scene
 
     @staticmethod
     def create_curve_arrow(scene: Scene, start: tuple, control_point1: tuple, control_point2: tuple, end: tuple, color):
@@ -224,12 +225,12 @@ class DependencyLayout(AbstractEdgeLayout):
             color: The arrow's color.
 
         Return:
-            The given points as a tuple.
+            The modified scene
         """
         middle = (control_point1[0] + (control_point2[0] - control_point1[0]) // 2, control_point1[1])
         scene.add(QuadraticBezierCurve(scene, start, control_point1, control_point1, middle, color))
         scene.add(QuadraticBezierCurve(scene, middle, control_point2, control_point2, end, color))
-        return start, control_point1, control_point2, end
+        return scene
 
     @staticmethod
     def compare_edges(edge1, edge2, token):

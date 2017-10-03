@@ -153,6 +153,9 @@ class SpanLayout(AbstractEdgeLayout):
             # set Color and remember old color
             edge_color = self.get_color(edge)
 
+            # Store shape coordinates for selection with mouse click
+            self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
+
             # If curved int(self.curve) = 1 else 0
             scene.add(Rectangle(scene, (min_x, height_minus_buffer), max_x - min_x, rect_height,
                                 self.span_fill_color, edge_color, self.span_line_width,
@@ -164,8 +167,6 @@ class SpanLayout(AbstractEdgeLayout):
 
             scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
                            edge_color))
-            # TODO: Do we use this somewhere? What is this?
-            self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
 
