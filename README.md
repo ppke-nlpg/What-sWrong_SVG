@@ -40,6 +40,7 @@ To install the program install all the depencies separately clone the repository
    - PyQt5 (for GUI)
    - [svgwrite](https://pypi.python.org/pypi/svgwrite/)
    - [cairosvg](http://cairosvg.org/) (for (E)PS and PDF export)
+   - Cairo (for font width computation)
  
 # Development and contributing
 

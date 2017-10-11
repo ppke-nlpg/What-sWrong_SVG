@@ -4,6 +4,8 @@
 Specialised svgwrite subclasses for visualising linguistic parses in SVG.
 """
 
+import sys
+import cairo
 import cairosvg
 import svgwrite as sw
 from svgwrite.utils import rgb
@@ -156,7 +158,17 @@ class Text(sw.text.Text):
         Returns:
             int: The width of the text.
         """
-        return len(self.text) * 7  # TODO: Why 7 Documentation!
+        # Thx to: http://blog.mathieu-leplatre.info/text-extents-with-python-cairo.html
+        if 'cairo' not in sys.modules:
+            return len(self.text) * self.font_size
+
+        surface = cairo.SVGSurface(None, 0, 0)
+        cr = cairo.Context(surface)
+        cr.select_font_face(self.attribs['font-family'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(self.attribs['font-size'])
+        xbearing, ybearing, width, height, xadvance, yadvance = cr.text_extents(self.text)
+
+        return width
 
 
 class TextToken(sw.text.Text):
