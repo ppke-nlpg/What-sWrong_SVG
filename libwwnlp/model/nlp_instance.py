@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List
 from enum import Enum
 
 from .token import Token
@@ -40,7 +39,7 @@ class NLPInstance:
             (for alignment).
     """
 
-    def __init__(self, tokens: List[Token]=None, edges: set or frozenset=None,
+    def __init__(self, tokens: [Token]=None, edges: set or frozenset=None,
                  render_type: RenderType=RenderType.single, split_points: tuple or list=None):
         """Create an NLPInstance with the given tokens and edges.
 

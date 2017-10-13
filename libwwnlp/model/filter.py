@@ -153,8 +153,8 @@ class Filter:
                 # 2a)If not whole word: containment
                 # 2b) Otherwise: full match
                 if ((prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or
-                   (not isinstance(allowed, range) and (not propvals_whole_word and allowed in prop_val or
-                                                        prop_val == allowed))):
+                        (not isinstance(allowed, range) and (not propvals_whole_word and allowed in prop_val or
+                                                             prop_val == allowed))):
                     return True
 
         return False

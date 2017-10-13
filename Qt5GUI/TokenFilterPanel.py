@@ -73,7 +73,7 @@ class TokenFilterPanel:
         self._updating = True
         self._listModel.clear()
         self._list.clear()
-        for index, p_name in enumerate(sorted(self._canvas.usedProperties)):
+        for index, p_name in enumerate(sorted(self._canvas.used_properties)):
             self._listModel.append(p_name)
             self._list.addItem(p_name)
             if p_name not in self._token_filter.forbidden_token_properties and \

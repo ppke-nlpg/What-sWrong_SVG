@@ -68,7 +68,7 @@ class Edge:
         self.description = description
         self.properties = set() if properties is None else properties
 
-    def _min_index(self) -> int:
+    def min_index(self) -> int:
         """Return the mimimal index of the tokens in this edge.
 
         Returns:
@@ -76,7 +76,7 @@ class Edge:
         """
         return min(self.start.index, self.end.index)
 
-    def _max_index(self) -> int:
+    def max_index(self) -> int:
         """Return the maximal index of both tokens in this edge.
 
         Returns:
@@ -156,7 +156,7 @@ class Edge:
         Returns:
            bool: True iff the given edge is completely covered by this edge.
         """
-        return self._min_index() < edge._min_index()
+        return self.min_index() < edge.min_index()
 
     def covers(self, edge) -> bool:
         """Check whether this edge completely covers the specified edge.
@@ -167,8 +167,8 @@ class Edge:
         Returns:
            bool: True iff the given edge is completely covered by this edge.
         """
-        return (self._min_index() < edge._min_index() <=
-                edge._max_index() < self._max_index())
+        return (self.min_index() < edge.min_index() <=
+                edge.max_index() < self.max_index())
 
     def covers_exactly(self, edge) -> bool:
         """Check whether this edge spans the same sequence of tokens as the given edge.
@@ -180,8 +180,8 @@ class Edge:
             bool: True iff this edge covers the same sequence of tokens as the
             given edge.
         """
-        return (edge._min_index() == self._min_index() <=
-                self._max_index() == edge._max_index())
+        return (edge.min_index() == self.min_index() <=
+                self.max_index() == edge.max_index())
 
     def covers_semi(self, edge) -> bool:
         """Whether the edge covers the given edge and is aligned with it on one side.
@@ -193,10 +193,10 @@ class Edge:
             bool: True iff this edge covers the given edge and exactly one of
             their tokens are equal.
         """
-        return (self._min_index() < edge._min_index() <=
-                edge._max_index() == self._max_index() or
-                self._min_index() == edge._min_index() <=
-                edge._max_index() < self._max_index())
+        return (self.min_index() < edge.min_index() <=
+                edge.max_index() == self.max_index() or
+                self.min_index() == edge.min_index() <=
+                edge.max_index() < self.max_index())
 
     def overlaps(self, edge) -> bool:
         """Checks whether this edge overlaps the given edge.
@@ -207,11 +207,11 @@ class Edge:
         Returns:
             bool: True iff the edges overlap.
         """
-        return (self._min_index() <= edge._min_index() <=
-                self._max_index() <= edge._max_index() or
-                edge._min_index() <= self._min_index() <=
-                self._max_index() <= edge._min_index() <=
-                edge._max_index())
+        return (self.min_index() <= edge.min_index() <=
+                self.max_index() <= edge.max_index() or
+                edge.min_index() <= self.min_index() <=
+                self.max_index() <= edge.min_index() <=
+                edge.max_index())
 
     def strictly_covers(self, edge)-> bool:
         """Whether a given edge is strictly covered by this edge.
@@ -223,10 +223,10 @@ class Edge:
             bool: True if this edge covers the given edge and at least one
             token is not aligned.
         """
-        return (self._min_index() < edge._min_index() <=
-                edge._max_index() <= self._max_index() or
-                self._min_index() <= edge._min_index() <=
-                edge._max_index() < self._max_index())
+        return (self.min_index() < edge.min_index() <=
+                edge.max_index() <= self.max_index() or
+                self.min_index() <= edge.min_index() <=
+                edge.max_index() < self.max_index())
 
     def crosses(self, edge) -> bool:
         """Checks whether the given edge crosses this edge.
@@ -237,10 +237,10 @@ class Edge:
         Returns:
             bool: True iff this edge crosses the given edge.
         """
-        return (self._min_index() < edge._min_index() <
-                self._max_index() < edge._max_index() or
-                edge._min_index() < self._min_index() <
-                edge._max_index() < self._max_index())
+        return (self.min_index() < edge.min_index() <
+                self.max_index() < edge.max_index() or
+                edge.min_index() < self.min_index() <
+                edge.max_index() < self.max_index())
 
     def __len__(self) -> int:
         """Returns the distance between the from and to token.

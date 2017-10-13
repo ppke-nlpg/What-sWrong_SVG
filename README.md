@@ -72,20 +72,15 @@ __Note: We are currently transforming the code (and the docstrings) from the JAV
 
 1. We prefer the [Google Style docstring format](http://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
 2. Concerning the code style: what is good for PyCharm or similar linter by default (i.e. no warnings), it's good for us. (It is more relaxed, than the Google Style guide.)    
+    - For example Pylint: `pylint3 --disable="missing-docstring,too-many-instance-attributes,too-many-arguments,too-many-nested-blocks,too-many-boolean-expressions,too-many-locals,too-few-public-methods,too-many-statements,too-many-ancestors,no-member" --notes="" --max-line-length=120`
+    - For example Pycodestyle: `pycodestyle --max-line-length=120 --exclude="./Qt5GUI/GUI"`
 
 ### We happily accept contributions on the following topics:
 
 - Add test data (we need the format, not the proprietary data) to the following implemened formats (as some of the datasets are not online by now.) 
     - CCG
-    - MaltTab (more extensive test data needed)
-    - CoNLL 2000
-    - CoNLL 2002
-    - CoNLL 2003
     - CoNLL 2004
-    - CoNLL 2005
     - CoNLL 2006
-    - CoNLL 2008
-    - CoNLL 2009
 - Add the following formats that was implemented in _what's wrong JAVA_ (hopefully with extensive test data):
 	- BioNLP2009 (see ioFormats/BioNLP2009SharedTaskFormat.java)
 	- GaleAlignment (see ioFormats/GaleAlignmentFormat.java)

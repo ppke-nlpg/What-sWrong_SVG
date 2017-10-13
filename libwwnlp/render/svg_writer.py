@@ -131,7 +131,7 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple = (0, 0, 0)):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
         """Initialize a text object.
 
         Args:
@@ -163,10 +163,11 @@ class Text(sw.text.Text):
             return len(self.text) * self.font_size
 
         surface = cairo.SVGSurface(None, 0, 0)
-        cr = cairo.Context(surface)
-        cr.select_font_face(self.attribs['font-family'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        cr.set_font_size(self.attribs['font-size'])
-        xbearing, ybearing, width, height, xadvance, yadvance = cr.text_extents(self.text)
+        ccontext = cairo.Context(surface)
+        ccontext.select_font_face(self.attribs['font-family'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        ccontext.set_font_size(self.attribs['font-size'])
+        # xbearing, ybearing, width, height, xadvance, yadvance
+        width = ccontext.text_extents(self.text)[2]
 
         return width
 
@@ -175,7 +176,7 @@ class TextToken(sw.text.Text):
     """A text token.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple = (0, 0, 0)):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
         """Initialize a text token.
 
         Args:
