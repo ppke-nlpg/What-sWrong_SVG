@@ -219,7 +219,7 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
     svg_bytes = svg_scene.tostring().encode('UTF-8')
 
     if filepath is not None and output_type == 'SVG':
-        svg_scene.save(filepath)
+        svg_scene.saveas(filepath)
     elif filepath is None and output_type == 'SVG':
         return svg_bytes
     elif output_type == 'PS':

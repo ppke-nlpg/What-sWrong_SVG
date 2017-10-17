@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import sys
 from os.path import basename
 
@@ -134,6 +135,7 @@ class MyForm(QtWidgets.QMainWindow):
                 del rows[:]
             else:
                 rows.append(line)
+
         if len(rows) > 0:
             instance_nr += 1
             instance = factory.create(rows)

@@ -77,6 +77,8 @@ class Filter:
         self.tok_propvals_whole_word = False
         self.tok_allowed_token_propvals = set() if tok_allowed_token_propvals is None else tok_allowed_token_propvals
 
+        self._special_properties = {"eval_status_Match", "eval_status_FN", "eval_status_FP"}  # TODO: Constants?
+
     @staticmethod
     def _calculate_paths(edges: set) -> set:
         """Calculates all paths between all tokens of the provided edges.
@@ -197,7 +199,8 @@ class Filter:
                  (len(self.allowed_edge_types) == 0 or edge.edge_type == "" or
                   edge.edge_type in self.allowed_edge_types) and
                  # Edge has explicitly allowed properties (False positive, False negative, Match)
-                 (len(self.allowed_edge_properties) == 0 or self.allowed_edge_properties & edge.properties)
+                 (len(self.allowed_edge_properties - self._special_properties) == 0 or
+                  self.allowed_edge_properties & edge.properties)
                  }
 
         # Only allow edges on the path of tokens having allowed props

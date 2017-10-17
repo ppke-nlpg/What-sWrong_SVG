@@ -21,9 +21,9 @@ class NLPCanvas:
     def __init__(self):
         """Creates a new canvas with default size.
         """
-        self.match_color = (0, 0, 0)
-        self.fn_color = (255, 0, 0)
-        self.fp_color = (0, 0, 255)
+        self.match_color = (0, 0, 0)  # TODO: Constants?
+        self.fn_color = (255, 0, 0)   # TODO: Constants?
+        self.fp_color = (0, 0, 255)   # TODO: Constants?
 
         self.renderer = SingleSentenceRenderer()
         # TODO: Here should not acces protected member, public function instead
