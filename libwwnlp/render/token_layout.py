@@ -79,7 +79,7 @@ class TokenLayout:
         self.width = 0
         self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, scene):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, scene: Scene):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -172,8 +172,8 @@ class TokenLayout:
                     self.text_layouts[(token, index)] = curr_property_value
                     text_token = TextToken(scene, (lastx, lasty), curr_property_value, self.token_fontsize,
                                            self.font_family, color)
-                    maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family,
-                                          color).get_width())  # TODO: We do not need Text here just the width!
+                    maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family).
+                               get_width())  # TODO: We do not need Text here just the width!
                     scene.add(text_token)
 
                 lasty += self.font_desc_size

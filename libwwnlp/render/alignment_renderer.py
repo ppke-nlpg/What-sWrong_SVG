@@ -3,7 +3,7 @@
 
 from .token_layout import TokenLayout, middle
 from ..model.edge import EdgeRenderType
-from .svg_writer import Line, Scene, QuadraticBezierCurve
+from .svg_writer import Line, QuadraticBezierCurve
 
 
 class AlignmentRenderer:
@@ -31,7 +31,7 @@ class AlignmentRenderer:
         self.fn_color = (0, 0, 255)   # Blue   # TODO: Constants?
         self.match_color = (0, 0, 0)  # Black  # TODO: Constants?
 
-    def render(self, instance, scene: Scene):
+    def render(self, instance, scene):
         """Renders the given instance as a pair of aligned sentences.
 
         Args:
@@ -53,6 +53,7 @@ class AlignmentRenderer:
         if dim[0] > width:
             width = dim[0]
 
+        # TODO: This should be in some layout class?
         for edge in instance.get_edges(EdgeRenderType.dependency):
             if 'eval_status_FP' in edge.properties:
                 edge_color = self.fp_color
