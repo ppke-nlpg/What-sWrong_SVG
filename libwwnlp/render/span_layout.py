@@ -33,12 +33,10 @@ class SpanLayout(AbstractEdgeLayout):
         self.orders = {}
         self.total_text_margin = 6  # TODO: Constants?
         self.span_radius = 4  # TODO: Constants?
-        self.font_size = 12  # TODO: Constants?
         self.buffer_height = 2  # TODO: Constants?
         self.separator_line_color = (211, 211, 211)  # Color.LIGHT_GRAY  # TODO: Constants?
         self.span_line_width = 1  # TODO: Constants?
         self.span_fill_color = (255, 255, 255)  # TODO: Constants?
-        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
 
     def estimate_required_token_widths(self, edges, scene):
         """Return the required token widths for self-loops.

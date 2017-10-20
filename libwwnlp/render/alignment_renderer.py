@@ -23,7 +23,7 @@ class AlignmentRenderer:
         """
         self._token_layout1 = TokenLayout()
         self._token_layout2 = TokenLayout()
-        self._height_factor = 100
+        self._height_factor = 100              # TODO: Constants?
         self._is_curved = True
         self._token_layout1.to_split_point = 0
         self._token_layout2.from_split_point = 0

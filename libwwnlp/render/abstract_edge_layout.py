@@ -53,9 +53,16 @@ class AbstractEdgeLayout:
         self.height_per_level = 15  # TODO: Constants?
         self.vertex_extra_space = 12  # TODO: Constants?
         self.default_edge_color = (0, 0, 0)  # Black  # TODO: Constants?
+        self.font_size = 12  # TODO: Constants?
+        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
         self.curve = True
         self.type_colors = {}
-        self.property_colors = {}
+        self.match_color = (0, 0, 0)  # TODO: Constants?
+        self.fn_color = (255, 0, 0)   # TODO: Constants?
+        self.fp_color = (0, 0, 255)   # TODO: Constants?
+        self.property_colors = {"eval_status_Match": (self.match_color, 2),
+                                "eval_status_FN": (self.fn_color, 1),
+                                "eval_status_FP": (self.fp_color, 1)}
         self.strokes = {}
         self.default_stroke = None
         self.start = {}

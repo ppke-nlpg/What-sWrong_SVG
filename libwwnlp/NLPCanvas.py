@@ -21,15 +21,7 @@ class NLPCanvas:
     def __init__(self):
         """Creates a new canvas with default size.
         """
-        self.match_color = (0, 0, 0)  # TODO: Constants?
-        self.fn_color = (255, 0, 0)   # TODO: Constants?
-        self.fp_color = (0, 0, 255)   # TODO: Constants?
-
         self.renderer = SingleSentenceRenderer()
-        # TODO: Here should not acces protected member, public function instead
-        self.renderer._dependency_layout.property_colors = {"eval_status_Match": (self.match_color, 2),
-                                                            "eval_status_FN": (self.fn_color, 1),
-                                                            "eval_status_FP": (self.fp_color, 1)}
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
                           RenderType.alignment: AlignmentRenderer()}
         self.used_types = set()
