@@ -51,13 +51,11 @@ class NLPInstance:
             render_type (RenderType): The render type of the NLPInstance.
             split_points (tuple or list): Where to have split points?
         """
-        self.tokens = []
         self.token_map = {}
         self.edges = []
         self.render_type = render_type
         self.split_points = []
         if tokens is not None:
-            self.tokens = tokens[:]  # copy list Must copy? # TODO: This could be deleted in favour fo token_map?
             for token in tokens:
                 self.token_map[token.index] = token
         if edges is not None:
@@ -85,8 +83,7 @@ class NLPInstance:
 
         """
         if index is None:
-            vertex = Token(len(self.tokens))
-            self.tokens.append(vertex)
+            vertex = Token(len(self.token_map))
             self.token_map[vertex.index] = vertex
         else:
             vertex = self.token_map[index]
@@ -102,10 +99,9 @@ class NLPInstance:
         Args:
             props_and_vals: (<token_property>, (<level>, <value>)) pairs.
         """
-        token = Token(len(self.tokens))
+        token = Token(len(self.token_map))
         for name, (level, val) in props_and_vals:
             token.add_property(name, val, level)
-        self.tokens.append(token)
         self.token_map[token.index] = token
 
     def add_edge(self, start: int, end: int, label: str=None, edge_type: str=None, render_type: EdgeRenderType=None,
@@ -150,7 +146,6 @@ class NLPInstance:
         Args:
             tokens (list): The tokens to add.
         """
-        self.tokens.extend(tokens)
         for token in tokens:
             self.token_map[token.index] = token
 
@@ -215,20 +210,20 @@ class NLPInstance:
         Args:
             nlp (NLPInstance): The instance to merge into this instance.
         """
-        for i in range(min(len(self.tokens), len(nlp.tokens))):
-            self.tokens[i].merge(nlp.tokens[i])
+        for i in range(min(len(self.token_map), len(nlp.token_map))):
+            self.token_map[i].merge(nlp.token_map[i])
         for edge in nlp.edges:
             self.add_edge(start=edge.start.index, end=edge.end.index, label=edge.label, edge_type=edge.edge_type,
                           render_type=edge.render_type, note=edge.note, properties=edge.properties)
 
-    def consistify(self):
-        """Make the internal representations of the token sequence consistent.
+    @property
+    def tokens(self):
+        """Make the internal representations of the token sequence consistent. (ex-consistify)
 
         If tokens were added with NLPInstance#add_token() this method ensures
         that all internal representations of the token sequence are consistent.
         """
-        self.tokens.extend(self.token_map.values())  # TODO: Do we still need this?
-        self.tokens.sort()
+        return sorted(self.token_map.values(), key=lambda x: x.index)
 
     def __str__(self):
         """Return a string representation of this instance.
@@ -239,9 +234,8 @@ class NLPInstance:
         Returns:
             str: A string representation of this instance.
         """
-        return "{0}\n{1}\n{2}".format(", ".join(str(token) for token in self.tokens),
-                                      ", ".join(str(value) for value in self.token_map.values()),
-                                      ", ".join(str(edge) for edge in self.edges))
+        return "{0}\n{1}".format(", ".join(str(token) for token in self.token_map.values()),
+                                 ", ".join(str(edge) for edge in self.edges))
 
 
 def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:
@@ -261,7 +255,7 @@ def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop
     diff = NLPInstance()
     diff.render_type = gold_instance.render_type
     diff.split_points = gold_instance.split_points[:]  # A token index at which the instance should be split.
-    diff.add_tokens(gold_instance.tokens)
+    diff.add_tokens(list(gold_instance.token_map.values()))
     gold_identities = gold_instance.get_edges()
     guess_identities = guess_instance.get_edges()
     false_negatives = gold_identities - guess_identities
