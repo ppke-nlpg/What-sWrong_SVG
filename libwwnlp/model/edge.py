@@ -281,19 +281,5 @@ class Edge:
         Returns:
             int: A hashcode based on type, label, note, from and to token.
         """
-        result = 0
-        if self.start is not None:
-            result = hash(self.start)
-        result *= 31
-        if self.end is not None:
-            result += hash(self.end)
-        result *= 31
-        if self.label is not None:
-            result += hash(self.label)
-        result *= 31
-        if self.edge_type is not None:
-            result += hash(self.edge_type)
-        result *= 31
-        if self.note is not None:
-            result += hash(self.note)
-        return result
+        return hash(self.start) ^ hash(self.end) ^ hash(self.label) ^ hash(self.note) ^ hash(self.edge_type) ^\
+            hash(self.render_type) ^ hash(self.description)

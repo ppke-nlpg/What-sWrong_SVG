@@ -5,7 +5,6 @@ import sys
 from Qt5GUI.GUIMain import main
 
 
-
 def test():
     from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
         CoNLL2009, MaltTab
