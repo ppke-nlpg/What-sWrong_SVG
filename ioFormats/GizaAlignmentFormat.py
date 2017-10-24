@@ -5,8 +5,13 @@ from libwwnlp.model.nlp_instance import NLPInstance, RenderType
 from ioFormats.CorpusFormat import CorpusFormat
 
 
-class GizaAlignmentFormat(CorpusFormat):
+def check_eof(line):
+    if len(line) == 0:
+        raise EOFError
+    return line
 
+
+class GizaAlignmentFormat(CorpusFormat):
     def __init__(self):
         self.ROPERTYSUFFIX_REVERSE = ".giza.reverse"
 
@@ -27,9 +32,12 @@ class GizaAlignmentFormat(CorpusFormat):
             ret += " (reverse)"
         return ret
 
+    @property
+    def name(self):
+        return self._name
+
     def load(self, file_name, from_sentence_nr: int, to_sentence_nr: int):
         with open(file_name, encoding='UTF-8') as reader:
-
             """
              * Skip past the next aligned segment pair in the given reader.
              *
@@ -39,8 +47,8 @@ class GizaAlignmentFormat(CorpusFormat):
             # There are three lines per segment pair.
             for _ in range(3*from_sentence_nr):
                 try:
-                    reader.readline()
-                except EOFError:  # TODO: Readline will not throw exception instead returns empty string...
+                    check_eof(reader.readline())
+                except EOFError:
                     break
 
             result = []  # ArrayList<NLPInstance>
@@ -59,18 +67,18 @@ class GizaAlignmentFormat(CorpusFormat):
                      ourselves), and an alignment score. Skip this line (or throw an exception if there are no
                      more lines).
                     """
-                    reader.readline()
+                    check_eof(reader.readline())
 
                     tokens = []
                     """
                      * a list of one-based {source-token-index, target-token-index} pairs
                     """
-                    alignment_edges = []  # List<Pair<Integer, Integer>>
+                    alignment_edges = []  # [(int, int)]
 
                     # String line;
 
                     # The second line contains the source segment, tokenized, with no adornment.
-                    tokens.append(reader.readline().split())
+                    tokens.append(check_eof(reader.readline()).strip().split())
                     tokens.append([])
 
                     """
@@ -80,13 +88,12 @@ class GizaAlignmentFormat(CorpusFormat):
 
                      NULL ({ 2 }) customization ({ 1 }) of ({ }) tasks ({ 3 4 })
                     """
-                    line = reader.readline()
+                    # Strip newline and space and reappend space for later regex
+                    line = check_eof(reader.readline()).rstrip() + " "
 
-                    # start from index 1 to skip the NULL token
-                    for token_with_aligned_indices in line.split(" }) ")[1:]:
-                        # tokenWithAlignedIndices looks something like "tasks ({ 3 4" or "of ({"
-                        # don't discard empty trailing strings  # TODO: Why? If from the second element it's not needed?
-                        splitted1, splitted2, _ = token_with_aligned_indices.split(" ({")
+                    # start from index 1 to skip the NULL token and empty string at the EOL
+                    for ind, token_with_aligned_indices in enumerate(line.split(" }) ")[1:-1], start=1):
+                        splitted1, splitted2 = token_with_aligned_indices.split(" ({")
                         tokens[1].append(splitted1)
                         aligned_index_list_as_string = splitted2.strip()
 
@@ -95,34 +102,46 @@ class GizaAlignmentFormat(CorpusFormat):
                          string returns a singleton array containing the empty string, but here an empty
                          array is what we want
                         """
-                        for aligned_index_as_string in aligned_index_list_as_string.split(" "):
-                            alignment_edges.append((int(aligned_index_as_string), i))
+                        aligned_indices_as_strings = []
+                        if len(aligned_index_list_as_string) > 0:
+                            aligned_indices_as_strings = aligned_index_list_as_string.split(" ")
+
+                        for aligned_index_as_string in aligned_indices_as_strings:
+                            alignment_edges.append((int(aligned_index_as_string), ind))
 
                     # now we're ready to make the NLPInstance
                     instance = NLPInstance(render_type=RenderType.alignment)
                     if self._reverseCheckBox:
-                        for token in tokens[1]:
-                            instance.add_token().add_property("word", token)
-                        # instance.add_split_point(len(instance.tokens))  # TODO: Instance add_splitpoints
-                        for token in tokens[0]:
-                            instance.add_token().add_property("word", token)
-                        for alignmentEdge1, alignmentEdge2 in alignment_edges:
-                            from_edge = alignmentEdge2 - 1
-                            to_edge = tokens[1].length + alignmentEdge1 - 1
-                            instance.add_edge(from_edge, to_edge, "align", "align")
+                        self.make_instance(instance, tokens[1], tokens[0], ((e2, e1) for e1, e2 in alignment_edges))
                     else:
-                        for token in tokens[0]:
-                            instance.add_token().add_property("word", token)
-                        # instance.add_split_point(len(instance.tokens))
-                        for token in tokens[1]:
-                            instance.add_token().add_property("word", token)
-                        for alignmentEdge1, alignmentEdge2 in alignment_edges:
-                            from_edge = alignmentEdge1 - 1
-                            to_edge = tokens[0].length + alignmentEdge2 - 1
-                            instance.add_edge(from_edge, to_edge, "align", "align")
+                        self.make_instance(instance, tokens[0], tokens[1], alignment_edges)
 
-                except EOFError:  # TODO: Readline will not throw exception instead returns empty string...
+                    result.append(instance)
+                except EOFError:
                     break
-                result.append(instance)
 
         return result
+
+    @staticmethod
+    def make_instance(instance, tokens1, tokens2, alignment_edges):
+        for token in tokens1:
+            instance.add_token().add_property("word", token)
+        instance.split_points.append(len(instance.tokens))
+        for token in tokens2:
+            instance.add_token().add_property("word", token)
+        for alignmentEdge1, alignmentEdge2 in alignment_edges:
+            from_edge = alignmentEdge1 - 1
+            to_edge = len(tokens1) + alignmentEdge2 - 1
+            instance.add_edge(from_edge, to_edge, "align", "align")
+
+    def loadProperties(self, properties, prefix):
+        pass
+
+    def saveProperties(self, properties, prefix):
+        pass
+
+    def setMonitor(self, monitor):
+        pass
+
+    def accessory(self):
+        pass
