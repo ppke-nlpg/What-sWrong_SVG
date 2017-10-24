@@ -5,13 +5,14 @@ import sys
 from Qt5GUI.GUIMain import main
 
 malt = False
-giza = True
-
+giza = False
+gale = True
 
 def test():
     from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
         CoNLL2009, MaltTab
     from ioFormats.GizaAlignmentFormat import GizaAlignmentFormat
+    from ioFormats.GaleAlignmentFormat import GaleAlignmentFormat
     from libwwnlp.model.nlp_instance import RenderType
     from libwwnlp.render.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
@@ -51,11 +52,22 @@ def test():
 
     if giza:
         factory = GizaAlignmentFormat()
-        fn = 'test_data/giza.alignment'
+        fn = 'test_data/giza.gold'
         canvas = NLPCanvas()
         canvas.renderer = canvas.renderers[RenderType.alignment]
         canvas.filter = Filter()
         corpus = factory.load(fn, 0, 2)
+        for i, instance in enumerate(corpus):
+            canvas.set_nlp_instance(instance)
+            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'output{0}.svg'.format(i))
+
+    if gale:
+        factory = GaleAlignmentFormat()
+        fn = 'test_data/gale.gold'
+        canvas = NLPCanvas()
+        canvas.renderer = canvas.renderers[RenderType.alignment]
+        canvas.filter = Filter()
+        corpus = factory.load(fn, 0, 1)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
             render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'output{0}.svg'.format(i))

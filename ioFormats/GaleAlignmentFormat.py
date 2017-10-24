@@ -5,6 +5,12 @@ from libwwnlp.model.nlp_instance import NLPInstance, RenderType
 from ioFormats.CorpusFormat import CorpusFormat
 
 
+def check_eof(line):
+    if len(line) == 0:
+        raise EOFError
+    return line
+
+
 class GaleAlignmentFormat(CorpusFormat):
     """
 
@@ -54,6 +60,10 @@ class GaleAlignmentFormat(CorpusFormat):
     def __str__(self):
         return self._name
 
+    @property
+    def name(self):
+        return self._name
+
     def load(self, file_name: str, from_sent_nr, to_sent_nr):
         """
          * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
@@ -73,13 +83,14 @@ class GaleAlignmentFormat(CorpusFormat):
             source_length = -1
             target_length = -1
             for line in reader:
+                line = line.strip()
                 if line.startswith("<source>"):
                     content = line.strip()[8: len(line) - 9]
                     for token in content.split():
                         instance.add_token().add_property("word", token)
 
                     source_length = len(instance.tokens)
-                    # instance.addSplitPoint(sourceLength)
+                    instance.split_points.append(source_length)
                 elif line.startswith("<seg"):
                     instance = NLPInstance(render_type=RenderType.alignment)
                 elif line.startswith("<translation>"):
@@ -89,9 +100,9 @@ class GaleAlignmentFormat(CorpusFormat):
 
                     target_length = len(instance.tokens) - source_length
                 elif line.startswith("<matrix>"):
-                    reader.readline()  # TODO
+                    check_eof(reader.readline())
                     for tgt in range(target_length):
-                        line = reader.readline()  # TODO
+                        line = check_eof(reader.readline()).strip()
                         col = line.split()
                         for src in range(1, len(col)):
                             if col[src] == "1":
@@ -100,3 +111,15 @@ class GaleAlignmentFormat(CorpusFormat):
                     result.append(instance)
 
         return result
+
+    def loadProperties(self, properties, prefix):
+        pass
+
+    def saveProperties(self, properties, prefix):
+        pass
+
+    def setMonitor(self, monitor):
+        pass
+
+    def accessory(self):
+        pass

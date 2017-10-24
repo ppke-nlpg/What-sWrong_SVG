@@ -50,8 +50,7 @@ class AlignmentRenderer:
         # place dependencies on top
         dim = self._token_layout1.layout(instance, {}, scene)
         height += dim[1]
-        if dim[0] > width:
-            width = dim[0]
+        width = max(dim[0], width)
 
         # TODO: This should be in some layout class?
         for edge in instance.get_edges(EdgeRenderType.dependency):
@@ -78,8 +77,7 @@ class AlignmentRenderer:
         scene.translate(0, dim[1] + self._height_factor)
         dim = self._token_layout2.layout(instance, {}, scene)
         height += dim[1] + self._height_factor
-        if dim[0] > width:
-            width = dim[0]
+        width = max(dim[0], width)
 
         return width, height + 1
 
