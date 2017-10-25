@@ -14,49 +14,17 @@ def check_eof(line):
 
 
 class TheBeastFormat(CorpusFormat):
-    # TODO: GUI STUFF
     """
-    private JPanel accessory;
-    private JTextField deps;
-    private JTextField tokens;
-    private JTextField spans;
-    private Monitor monitor;
-
-    public TheBeastFormat() {
-        accessory = new JPanel(new GridBagLayout());
-        deps = new JTextField();
-        tokens = new JTextField();
-        spans = new JTextField();
-
-        accessory.add(new JLabel("Tokens:"), new SimpleGridBagConstraints(0, true));
-        accessory.add(tokens, new SimpleGridBagConstraints(0, false));
-        accessory.add(new JLabel("Deps:"), new SimpleGridBagConstraints(1, true));
-        accessory.add(deps, new SimpleGridBagConstraints(1, false));
-        accessory.add(new JLabel("Spans:"), new SimpleGridBagConstraints(2, true));
-        accessory.add(spans, new SimpleGridBagConstraints(2, false));
-
-    }
-
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
-    }
-
-    public void loadProperties(Properties properties, String prefix) {
-        deps.setText(properties.getProperty(prefix + ".thebeast.deps", ""));
-        spans.setText(properties.getProperty(prefix + ".thebeast.spans", ""));
-        tokens.setText(properties.getProperty(prefix + ".thebeast.tokens", ""));
-    }
-
-    public void saveProperties(Properties properties, String prefix) {
-        properties.setProperty(prefix + ".thebeast.deps", deps.getText());
-        properties.setProperty(prefix + ".thebeast.spans", spans.getText());
-        properties.setProperty(prefix + ".thebeast.tokens", tokens.getText());
-    }
-
+    Loads markov thebeast data
+    This format is invented by Sebastian Reidel, the original author of What's Wrong with My NLP?
+    The project homepage: https://code.google.com/archive/p/thebeast/
+    There is an example input for the format in:
+     https://atrium.lib.uoguelph.ca/xmlui/bitstream/handle/10214/8641/Fairholm_William_201412_Msc.pdf
+    As less mentions or examples found, this code is not thoroughly tested.
     """
     def __init__(self):
         self._name = "thebeast"
-        self.tokens = ""  # TODO GUI STUFF
+        self.tokens = ""  # GUI STUFF
         self.deps = ""
         self.spans = ""
 
@@ -80,12 +48,13 @@ class TheBeastFormat(CorpusFormat):
         preds = {}
         for s in text.split(','):
             s = s.strip()
-            ind = s.find(':')
-            if ind == -1:
-                pred, as_rest = s, s
-            else:
-                pred, as_rest = s.split(':', maxsplit=1)
-            preds[pred] = as_rest
+            if len(s) > 0:
+                ind = s.find(':')
+                if ind == -1:
+                    pred, as_rest = s, s
+                else:
+                    pred, as_rest = s.split(':', maxsplit=1)
+                preds[pred] = as_rest
 
         return preds
 

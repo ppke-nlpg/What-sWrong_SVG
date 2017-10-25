@@ -1,0 +1,89 @@
+>>
+
+> doc
+"ABC_123"
+
+>event
+E1 1 2
+E2 2 2
+E3 3 6
+
+>time
+T0 -1 0
+T1 1 5
+T2 2 5
+
+>dct
+T0 "2013-03-22"
+
+>e2t
+E1 T1 "ISINCLUDED"
+E2 T2 "ISINCLUDED"
+
+>e2d
+E1 "BEFORE"
+
+>e2e
+E1 E3 "BEFORE"
+
+>t2t
+T1 T2 "BEFORE"
+
+>eventWord
+E1 "went"
+E2 "came"
+E3 "see"
+
+>eventStem
+E1 "went"
+E2 "came"
+E3 "see"
+
+>eventPos
+E1 "VB"
+E2 "VB"
+E3 "VB"
+
+>timeWord
+T1 "monday"
+T2 "following"
+T2 "day"
+
+>timeStem
+T1 "monday"
+T2 "follow"
+T2 "day"
+
+>timePos
+T1 "NN"
+T2 "NN"
+T2 "NN"
+
+>tense
+E1 PAST
+E2 PRESENT
+E3 PAST
+
+>aspect
+E1 NONE
+E2 NONE
+E3 NONE
+
+>polarity
+E1 POS
+E2 POS
+E3 POS
+
+>class
+E1 OCCURENCE
+E2 OCCURENCE
+E3 PERCEPTION
+
+>timeType
+T1 DATE
+T2 DATE
+
+>timeValue
+T0 "2013-03-22"
+T1 "2013-03-23"
+T2 "2013-03-24"
