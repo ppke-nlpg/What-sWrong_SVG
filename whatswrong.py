@@ -7,7 +7,8 @@ from Qt5GUI.GUIMain import main
 malt = False
 giza = False
 gale = False
-thebeast = True
+thebeast = False
+bionlp09 = True
 
 
 def test():
@@ -16,6 +17,7 @@ def test():
     from ioFormats.GizaAlignmentFormat import GizaAlignmentFormat
     from ioFormats.GaleAlignmentFormat import GaleAlignmentFormat
     from ioFormats.TheBeastFormat import TheBeastFormat
+    from ioFormats.BioNLP2009SharedTaskFormat import BioNLP2009SharedTaskFormat
     from libwwnlp.model.nlp_instance import RenderType
     from libwwnlp.render.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
@@ -78,6 +80,16 @@ def test():
     if thebeast:
         factory = TheBeastFormat()
         fn = 'test_data/thebeast.gold'
+        canvas = NLPCanvas()
+        canvas.filter = Filter()
+        corpus = factory.load(fn, 0, 1)
+        for i, instance in enumerate(corpus):
+            canvas.set_nlp_instance(instance)
+            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'output{0}.svg'.format(i))
+
+    if bionlp09:
+        factory = BioNLP2009SharedTaskFormat()
+        fn = 'test_data/bionlp09'
         canvas = NLPCanvas()
         canvas.filter = Filter()
         corpus = factory.load(fn, 0, 1)

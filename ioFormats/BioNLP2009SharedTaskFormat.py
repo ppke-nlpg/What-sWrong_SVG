@@ -52,12 +52,11 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
          * @throws java.io.IOException if I/O goes wrong.
         """
         result = []
-
-        for txt_file_name in glob.glob(os.path.join(os.path.dirname(file_name), "*." + self.txtExtensionField.strip())):
-            filename = os.path.abspath(txt_file_name).decode('UTF-8')
+        for txt_file_name in glob.glob(os.path.join(file_name, "*." + self.txtExtensionField.strip())):
+            filename = os.path.abspath(txt_file_name)
             prefix = filename.rsplit(".", maxsplit=1)[0]
-            protein_file_name = prefix + "." + self.proteinExtensionField.strip()
-            event_file_name = prefix + "." + self.eventExtensionField.strip()
+            protein_file_name = "{0}.{1}".format(prefix, self.proteinExtensionField.strip())
+            event_file_name = "{0}.{1}".format(prefix, self.eventExtensionField.strip())
             if os.path.exists(protein_file_name) and os.path.exists(event_file_name):
                 """
                  * Loads all NLPInstances in the specified files. Creates one instance.
@@ -119,7 +118,7 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
                                               EdgeRenderType.span)
                             id2token[elem_id] = to_token
                         elif elem_id.startswith("E"):
-                            type_and_mention_id = split[1].split("[:]")
+                            type_and_mention_id = split[1].split(":")
                             even_token = id2token[type_and_mention_id[1]]
                             id2token[elem_id] = even_token
 
@@ -129,7 +128,7 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
                         split = line.split()
                         elem_id = split[0]
                         if elem_id.startswith("E"):
-                            even_token = id2token[id]
+                            even_token = id2token[elem_id]
                             for elem in split[2:]:
                                 role_and_id = elem.split(":")
                                 arg_token = id2token.get(role_and_id[1])
