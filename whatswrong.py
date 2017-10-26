@@ -15,11 +15,8 @@ lisp_sexpr = True
 def test():
     from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
         CoNLL2009, MaltTab
-    from ioFormats.GizaAlignmentFormat import GizaAlignmentFormat
-    from ioFormats.GaleAlignmentFormat import GaleAlignmentFormat
-    from ioFormats.TheBeastFormat import TheBeastFormat
-    from ioFormats.BioNLP2009SharedTaskFormat import BioNLP2009SharedTaskFormat
-    from ioFormats.LispSExprFormat import LispSExprFormat
+    from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
+        BioNLP2009SharedTaskFormat, TheBeastFormat
     from libwwnlp.model.nlp_instance import RenderType
     from libwwnlp.render.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
