@@ -8,7 +8,8 @@ malt = False
 giza = False
 gale = False
 thebeast = False
-bionlp09 = True
+bionlp09 = False
+lisp_sexpr = True
 
 
 def test():
@@ -18,6 +19,7 @@ def test():
     from ioFormats.GaleAlignmentFormat import GaleAlignmentFormat
     from ioFormats.TheBeastFormat import TheBeastFormat
     from ioFormats.BioNLP2009SharedTaskFormat import BioNLP2009SharedTaskFormat
+    from ioFormats.LispSExprFormat import LispSExprFormat
     from libwwnlp.model.nlp_instance import RenderType
     from libwwnlp.render.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
@@ -90,6 +92,16 @@ def test():
     if bionlp09:
         factory = BioNLP2009SharedTaskFormat()
         fn = 'test_data/bionlp09'
+        canvas = NLPCanvas()
+        canvas.filter = Filter()
+        corpus = factory.load(fn, 0, 1)
+        for i, instance in enumerate(corpus):
+            canvas.set_nlp_instance(instance)
+            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'output{0}.svg'.format(i))
+
+    if lisp_sexpr:
+        factory = LispSExprFormat()
+        fn = 'test_data/lispsexpr.gold'
         canvas = NLPCanvas()
         canvas.filter = Filter()
         corpus = factory.load(fn, 0, 1)
