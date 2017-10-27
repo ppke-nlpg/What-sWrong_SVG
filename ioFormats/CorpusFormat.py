@@ -11,81 +11,12 @@ from abc import ABCMeta, abstractmethod
 """
 
 
-class CorpusFormat(metaclass=ABCMeta):
+class CorpusFormat:
+    def __init__(self):
+        self._name = ""
 
-    """
-     * Returns the name of this format.
-     *
-     * @return the name of this format.
-    """
-    @property
-    @abstractmethod
-    def name(self):
-        pass
-
-    @name.setter
-    @abstractmethod
-    def name(self, value):
-        pass
-
-    """
-     * Returns a longer name that may contain information about the configuration of this format.
-     *
-     * @return the long name of this format.
-    """
-    @property
-    @abstractmethod
-    def longName(self):
-        pass
-
-    @longName.setter
-    @abstractmethod
-    def longName(self, value):
-        pass
-
-    """
-     * Returns the GUI element that controls how this format is to be loaded.
-     *
-     * @return the GUI element that controls how this format is to be loaded.
-    """
-    @property
-    @abstractmethod
-    def accessory(self):
-        pass
-
-    @accessory.setter
-    @abstractmethod
-    def accessory(self, value):
-        pass
-
-    """
-     * Sets the objects that monitors the progress of this format when loading a file.
-     *
-     * @param monitor the monitor for this format.
-    """
-    @abstractmethod
-    def setMonitor(self, monitor):
-        pass
-
-    """
-     * Loads a configuration for this format from the given Properties object.
-     *
-     * @param properties the Properties object to load from.
-     * @param prefix     the prefix that properties for this format have in the Properties object.
-    """
-    @abstractmethod
-    def loadProperties(self, properties, prefix):
-        pass
-
-    """
-     * Saves the configuration of this format to a Properties object.
-     *
-     * @param properties the Properties object to store this configuration of this format to.
-     * @param prefix     the prefix that the properties should have.
-    """
-    @abstractmethod
-    def saveProperties(self, properties, prefix):
-        pass
+    def __str__(self):
+        return self._name
 
     """
      * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
@@ -100,19 +31,5 @@ class CorpusFormat(metaclass=ABCMeta):
      * @throws IOException if I/O goes wrong.
     """
     @abstractmethod
-    def load(self, file, start, to):
+    def load(self, file_name: str, from_sentence_nr: int, to_sentence_nr: int):
         pass
-
-    """
-     * A Monitor monitors the progress of the {@link com.googlecode.whatswrong.ioFormats.CorpusFormat#load
-     (java.ioFormats.File, int, * int)} method.
-    """
-    class Monitor(metaclass=ABCMeta):
-        """
-         * Called whenever one instance was processed in loading of the file.
-         *
-         * @param index the index of the processed instance.
-        """
-        @abstractmethod
-        def progressed(self, index):
-            pass

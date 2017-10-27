@@ -18,6 +18,7 @@ def check_eof(line):
 
 class GizaAlignmentFormat(CorpusFormat):
     def __init__(self):
+        super().__init__()
         self.ROPERTYSUFFIX_REVERSE = ".giza.reverse"
 
         """"
@@ -26,20 +27,6 @@ class GizaAlignmentFormat(CorpusFormat):
         or the other (but not both) should be read in in reverse."""
         self._reverseCheckBox = False  # JCheckBox
         self._name = "Giza Alignment"
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def longName(self):
-        ret = self._name
-        if self._reverseCheckBox:
-            ret += " (reverse)"
-        return ret
-
-    @property
-    def name(self):
-        return self._name
 
     def load(self, file_name, from_sentence_nr: int, to_sentence_nr: int):
         with open(file_name, encoding='UTF-8') as reader:
@@ -139,18 +126,6 @@ class GizaAlignmentFormat(CorpusFormat):
             to_edge = len(tokens1) + alignmentEdge2 - 1
             instance.add_edge(from_edge, to_edge, "align", "align")
 
-    def loadProperties(self, properties, prefix):
-        pass
-
-    def saveProperties(self, properties, prefix):
-        pass
-
-    def setMonitor(self, monitor):
-        pass
-
-    def accessory(self):
-        pass
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -194,18 +169,8 @@ class GaleAlignmentFormat(CorpusFormat):
     """
 
     def __init__(self):
+        super().__init__()
         self._name = "Gale Alignment"
-
-    @property
-    def longName(self):
-        return self._name
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def name(self):
-        return self._name
 
     def load(self, file_name: str, from_sent_nr, to_sent_nr):
         """
@@ -254,18 +219,6 @@ class GaleAlignmentFormat(CorpusFormat):
                     result.append(instance)
 
         return result
-
-    def loadProperties(self, properties, prefix):
-        pass
-
-    def saveProperties(self, properties, prefix):
-        pass
-
-    def setMonitor(self, monitor):
-        pass
-
-    def accessory(self):
-        pass
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -371,21 +324,11 @@ class Terminal(Tree):
 
 class LispSExprFormat(CorpusFormat):
     def __init__(self):
+        super().__init__()
         self._name = "Lisp S-Expression"
         self.word = "Word"    # Word .sexpr.word
         self.tag = "pos"     # Tag .sexpr.tag
         self.phrase = "phrase"  # Phrase .sexpr.phrase
-
-    @property
-    def longName(self):
-        return self._name
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def name(self):
-        return self._name
 
     def load(self, file_name: str, from_sent_nr, to_sent_nr):
 
@@ -411,18 +354,6 @@ class LispSExprFormat(CorpusFormat):
 
         return result
 
-    def loadProperties(self, properties, prefix):
-        pass
-
-    def saveProperties(self, properties, prefix):
-        pass
-
-    def setMonitor(self, monitor):
-        pass
-
-    def accessory(self):
-        pass
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -435,21 +366,11 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
      * See examples: http://www.nactem.ac.uk/tsujii/GENIA/SharedTask/detail.shtml#examples
     """
     def __init__(self):
+        super().__init__()
         self.txtExtensionField = "txt"     # Text files .bionlp09.txt
         self.proteinExtensionField = "a1"  # Protein files .bionlp09.protein
         self.eventExtensionField = "a2"    # Event files .bionlp09.event
         self._name = "BioNLP 2009 ST"
-
-    @property
-    def longName(self):
-        return self._name
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def name(self):
-        return self._name
 
     def load(self, file_name: str, from_sent_nr, to_sent_nr):
         """
@@ -551,18 +472,6 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
                 result.append(instance)
         return result
 
-    def loadProperties(self, properties, prefix):
-        pass
-
-    def saveProperties(self, properties, prefix):
-        pass
-
-    def setMonitor(self, monitor):
-        pass
-
-    def accessory(self):
-        pass
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -576,6 +485,7 @@ class TheBeastFormat(CorpusFormat):
     As less mentions or examples found, this code is not thoroughly tested.
     """
     def __init__(self):
+        super().__init__()
         self._name = "thebeast"
         self.tokens = ""  # GUI STUFF
         self.deps = ""
@@ -584,17 +494,6 @@ class TheBeastFormat(CorpusFormat):
     @staticmethod
     def unquote(string):
         return string[1: len(string) - 1]
-
-    @property
-    def longName(self):
-        return self._name
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def name(self):
-        return self._name
 
     @staticmethod
     def extract_predicates_from_string(text):
@@ -707,15 +606,3 @@ class TheBeastFormat(CorpusFormat):
             rows[pred] = []
         for pred in dep_preds.values():
             rows[pred] = []
-
-    def loadProperties(self, properties, prefix):
-        pass
-
-    def saveProperties(self, properties, prefix):
-        pass
-
-    def setMonitor(self, monitor):
-        pass
-
-    def accessory(self):
-        pass

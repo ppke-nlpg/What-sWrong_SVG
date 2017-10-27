@@ -3,7 +3,6 @@
 
 # This file implements TabFormat and all classes inherited from it: TabFormat, CoNLL2000, CoNLL2002, CoNLL2003,
 #  CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, CoNLL2009 CoNLL2009, Malt-TAB and CCG classes...
-# TabProcessor interface class is omited...
 
 import sys
 
@@ -27,93 +26,27 @@ from ioFormats.CorpusFormat import CorpusFormat
 
 
 class TabFormat(CorpusFormat):
-
-    def __init__(self, MainWindow):
-
+    def __init__(self):
+        super().__init__()
+        self.processors = {"CCG": CCG(),
+                           "CoNLL 2009": CoNLL2009(),
+                           "CoNLL 2008": CoNLL2008(),
+                           "CoNLL 2006": CoNLL2006(),
+                           "CoNLL 2005": CoNLL2005(),
+                           "CoNLL 2004": CoNLL2004(),
+                           "CoNLL 2002": CoNLL2002(),
+                           "CoNLL 2003": CoNLL2003(),
+                           "CoNLL 2000": CoNLL2000(),
+                           "MaltTab": MaltTab()
+                           }
         self._name = "TAB-separated"
-        self._monitor = None
-        self._processors = {}  # TreeMap<String, TabProcessor>()
+        self._open = False
 
-        self.add_processor(name="CCG", processor=CCG())
-        self.add_processor(name="CoNLL 2009", processor=CoNLL2009())
-        self.add_processor(name="CoNLL 2008", processor=CoNLL2008())
-        self.add_processor(name="CoNLL 2006", processor=CoNLL2006())
-        self.add_processor(name="CoNLL 2005", processor=CoNLL2005())
-        self.add_processor(name="CoNLL 2004", processor=CoNLL2004())
-        self.add_processor(name="CoNLL 2002", processor=CoNLL2002())
-        self.add_processor(name="CoNLL 2003", processor=CoNLL2003())
-        self.add_processor(name="CoNLL 2000", processor=CoNLL2000())
-        self.add_processor(name="MaltTab", processor=MaltTab())
-
-        # TODO: grafikus rész
-
-        self._accessory = MainWindow
-        self._type = MainWindow
-        self._open = MainWindow
-
-    @property
-    def accessory(self):
-        pass
-
-    @accessory.setter
-    def accessory(self, value):
-        pass
-
-    @property
-    def processors(self):
-        return self._processors
-
-    @processors.setter
-    def processors(self, value):
-        self._processors = value
-
-    @property
-    def type(self):
-        return self._type
-
-    @type.setter
-    def type(self, value):
-        self._type = value  # TODO: JComboBox
-
-    @property
-    def open(self):
-        return self._open
-
-    @open.setter
-    def open(self, value):
-        self._open = value  # TODO: JCheckBox
-
-    def add_processor(self, processor, name: str=None):
-        if name is not None:
-            self._processors[name] = processor
-        else:
-            self._processors[str(processor)] = processor
-
-    @property
-    def name(self):
-        return self._name
-
-    def __str__(self):
-        return self._name
-
-    @property
-    def longName(self):
-        #  TODO: type
-        return self._name + "(" + str(self._type.getSelectedItem()) + ")"
-
-    def setMonitor(self, monitor):
-        pass
-
-    def loadProperties(self, properties, prefix: str):
-        pass
-
-    def saveProperties(self, properties, prefix: str):
-        pass
-
-    def load(self, file, start: int, to: int):
-        processor = self._type.getSelectedItem()  # TODO grafika
+    def load(self, file, start: int, to: int, processor=None):
+        processor = self.processors[processor]
+        self._name = processor
         result = self.load_tabs(file, start, to, processor, False)
-        if self._open.isSelected():
+        if self._open:
             filename = file.name[0:file.name.rfind('.')] + ".open"
             open_file = open(filename)
             open_corpus = self.load_tabs(open_file, start, to, processor, True)
@@ -121,7 +54,8 @@ class TabFormat(CorpusFormat):
                 result[i].merge(open_corpus[i])
         return result
 
-    def load_tabs(self, file, start: int, to: int, processor, can_open: bool):
+    @staticmethod
+    def load_tabs(file, start: int, to: int, processor, can_open: bool):
         corpus = []
         rows = []
         instnce_nr = 0
@@ -130,7 +64,6 @@ class TabFormat(CorpusFormat):
                 break
             line = line.strip()
             if line == "" or line.split()[0] == '<\s>':
-                self._monitor.progressed(instnce_nr)
                 instnce_nr += 1
                 if instnce_nr <= start:
                     continue
@@ -155,17 +88,6 @@ class TabFormat(CorpusFormat):
 
 
 class AbstractCoNLLFormat:
-    def __init__(self):
-        self._name = ""
-
-    def __str__(self):
-        """
-         * Returns the name of this processor.
-         *
-         * @return the name of this processor.
-        """
-        return self._name
-
     @staticmethod
     def create_open(_):
         """
@@ -203,10 +125,7 @@ class CoNLL2000(AbstractCoNLLFormat):
     """
      * Loads CoNLL 2000 chunk data.
     """
-
-    def __init__(self):
-        super().__init__()
-        self._name = "CoNLL 2000"
+    name = "CoNLL 2000"
 
     def create(self, rows):
         rows = [row.strip().split() for row in rows]
