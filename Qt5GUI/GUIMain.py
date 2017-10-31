@@ -19,7 +19,6 @@ from .Qt5NLPCanvas import Qt5NLPCanvas
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
 from libwwnlp.model.filter import Filter
-from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.svg_writer import render_nlpgraphics
 
 
@@ -110,37 +109,16 @@ class MyForm(QtWidgets.QMainWindow):
 
     def choosen_file(self, factory, corp_type):
         directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]
-        corpus = []
+
+        # Load first 200 sentence
+        corpus = factory.load(directory, 0, 200)
+
         if corp_type == "gold":
             self.goldMap[basename(directory)] = corpus  # CorpusLoader(directory)
         if corp_type == "guess":
             self.guessMap[basename(directory)] = corpus  # CorpusLoader(directory)
 
-        f = open(directory)
-        lines = list(f.readlines())
-
         item = QtWidgets.QListWidgetItem(basename(directory))
-
-        rows = []
-        instance_nr = 0
-        for line in lines:
-            if instance_nr == 200:
-                break
-            line = line.strip()
-            if line == "":
-                instance_nr += 1
-                instance = factory.create(rows)
-                instance.render_type = RenderType.single
-                corpus.append(instance)
-                del rows[:]
-            else:
-                rows.append(line)
-
-        if len(rows) > 0:
-            instance_nr += 1
-            instance = factory.create(rows)
-            instance.render_type = RenderType.single
-            corpus.append(instance)
 
         if corp_type == "gold":
             self.ui.selectGoldListWidget.addItem(item)

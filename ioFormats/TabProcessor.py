@@ -22,72 +22,57 @@ from ioFormats.CorpusFormat import CorpusFormat
  * @author Sebastian Riedel
 """
 
-# TODO: This class is not used currently
-
 
 class TabFormat(CorpusFormat):
+    """
+     This is a helper class that contain all common features of TabFormats corresponding to the CorpusFormat interface
+    """
     def __init__(self):
+        """
+         * @see TabProcessor#_supports_open()
+         * Does this processor support loading of open datasets (as in "CoNLL Open Track").
+         *
+         * @return true iff the processor supports loading of open datasets.
+        """
         super().__init__()
-        self.processors = {"CCG": CCG(),
-                           "CoNLL 2009": CoNLL2009(),
-                           "CoNLL 2008": CoNLL2008(),
-                           "CoNLL 2006": CoNLL2006(),
-                           "CoNLL 2005": CoNLL2005(),
-                           "CoNLL 2004": CoNLL2004(),
-                           "CoNLL 2002": CoNLL2002(),
-                           "CoNLL 2003": CoNLL2003(),
-                           "CoNLL 2000": CoNLL2000(),
-                           "MaltTab": MaltTab()
-                           }
-        self._name = "TAB-separated"
-        self._open = False
+        self._support_open = False
 
-    def load(self, file, start: int, to: int, processor=None):
-        processor = self.processors[processor]
-        self._name = processor
-        result = self.load_tabs(file, start, to, processor, False)
-        if self._open:
-            filename = file.name[0:file.name.rfind('.')] + ".open"
-            open_file = open(filename)
-            open_corpus = self.load_tabs(open_file, start, to, processor, True)
-            for i in range(0, len(open_corpus)):
-                result[i].merge(open_corpus[i])
+    def load(self, file_name: str, from_sent_nr: int, to_sent_nr: int):
+        result = self._load_tabs(file_name, from_sent_nr, to_sent_nr, self.create)
+
+        if self._support_open:
+            file_name_open = file_name[0:file_name.rfind('.')] + ".open"
+            open_corpus = self._load_tabs(file_name_open, from_sent_nr, to_sent_nr, self.create_open)
+            for i, oc_elem in enumerate(open_corpus):
+                result[i].merge(oc_elem)
+
         return result
 
     @staticmethod
-    def load_tabs(file, start: int, to: int, processor, can_open: bool):
+    def _load_tabs(file_name, from_sent_nr: int, to_sent_nr: int, open_fun):
         corpus = []
         rows = []
-        instnce_nr = 0
-        for line in file:
-            if instnce_nr >= to:
-                break
-            line = line.strip()
-            if line == "" or line.split()[0] == '<\s>':
-                instnce_nr += 1
-                if instnce_nr <= start:
-                    continue
-                if can_open:
-                    instance = processor.create_open(rows)
+        instance_nr = 0
+        with open(file_name, encoding='UTF-8') as reader:
+            for line in reader:
+                if instance_nr >= to_sent_nr:
+                    break
+                line = line.strip()
+                if line == "" or line.split()[0] == '<\s>':
+                    instance_nr += 1
+                    if instance_nr > from_sent_nr:
+                        instance = open_fun(rows)
+                        corpus.append(instance)
+                        rows.clear()
                 else:
-                    instance = processor.create(rows)
-                corpus.append(instance)
-                rows.clear()
-            else:
-                if instnce_nr < start:
-                    continue
-                rows.append(line.split())
-        if len(rows) > 0:
-            if can_open:
-                corpus.append(processor.create_open(rows))
-            else:
-                corpus.append(processor.create(rows))
+                    if instance_nr >= from_sent_nr:
+                        rows.append(line.split())
+
+            if len(rows) > 0:
+                corpus.append(open_fun(rows))
+
         return corpus
 
-# ----------------------------------------------------------------------------------------------------------------------
-
-
-class AbstractCoNLLFormat:
     @staticmethod
     def create_open(_):
         """
@@ -100,16 +85,6 @@ class AbstractCoNLLFormat:
         """
         return None
 
-    @staticmethod
-    def support_open():
-        """
-         * @see TabProcessor#supports_open()
-         * Does this processor support loading of open datasets (as in "CoNLL Open Track").
-         *
-         * @return true iff the processor supports loading of open datasets.
-        """
-        return False
-
     def create(self, rows):
         """
          * @see TabProcessor#create(List<? extends List<String>>)
@@ -118,17 +93,21 @@ class AbstractCoNLLFormat:
          * @param rows the rows that represent the column separated values in Tab format files.
          * @return an NLPInstance that represents the given rows.
         """
-        pass
+        raise NotImplementedError
 
 
-class CoNLL2000(AbstractCoNLLFormat):
+# ----------------------------------------------------------------------------------------------------------------------
+
+class CoNLL2000(TabFormat):
     """
      * Loads CoNLL 2000 chunk data.
     """
-    name = "CoNLL 2000"
+
+    def __init__(self):
+        super().__init__()
+        self.name = "CoNLL 2000"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         for index, row in enumerate(rows):
             instance.add_token().\
@@ -138,12 +117,12 @@ class CoNLL2000(AbstractCoNLLFormat):
             instance.add_span(index, index, row[1], "pos")
             instance.add_span(index, index, row[2], "chunk (BIO)")
 
-        self.extract_span00_02(rows=rows, column=2, field_type="chunk", instance=instance)
+        self._extract_span00_02(rows=rows, column=2, field_type="chunk", instance=instance)
 
         return instance
 
     @staticmethod
-    def extract_span00_02(rows: list, column: int, field_type: str, instance: NLPInstance):
+    def _extract_span00_02(rows: list, column: int, field_type: str, instance: NLPInstance):
         in_chunk = False
         begin = 0
         current_chunk = ""
@@ -173,10 +152,9 @@ class CoNLL2002(CoNLL2000):
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2002"
+        self.name = "CoNLL 2002"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         for index, row in enumerate(rows):
             instance.add_token().\
@@ -185,24 +163,23 @@ class CoNLL2002(CoNLL2000):
 
             instance.add_span(index, index, row[1], "ner (BIO)")
 
-        self.extract_span00_02(rows=rows, column=1, field_type="ner", instance=instance)
+        self._extract_span00_02(rows=rows, column=1, field_type="ner", instance=instance)
 
         return instance
 
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CoNLL2003(AbstractCoNLLFormat):
+class CoNLL2003(TabFormat):
     """
      * Loads CoNLL 2003 chunk and NER data.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2003"
+        self.name = "CoNLL 2003"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         for index, row in enumerate(rows):
             instance.add_token().\
@@ -213,13 +190,13 @@ class CoNLL2003(AbstractCoNLLFormat):
             instance.add_span(index, index, row[2], "chunk (BIO")
             instance.add_span(index, index, row[3], "ner (BIO)")
 
-        self.extract_span03(rows=rows, column=2, field_type="chunk", instance=instance)
-        self.extract_span03(rows=rows, column=3, field_type="ner", instance=instance)
+        self._extract_span03(rows=rows, column=2, field_type="chunk", instance=instance)
+        self._extract_span03(rows=rows, column=3, field_type="ner", instance=instance)
 
         return instance
 
     @staticmethod
-    def extract_span03(rows: list, column: int, field_type: str, instance: NLPInstance):
+    def _extract_span03(rows: list, column: int, field_type: str, instance: NLPInstance):
         in_chunk = False
         begin = 0
         current_chunk = ""
@@ -249,17 +226,16 @@ class CoNLL2003(AbstractCoNLLFormat):
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CoNLL2004(AbstractCoNLLFormat):
+class CoNLL2004(TabFormat):
     """
      * Loads CoNLL 2004 SRL data.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2004"
+        self.name = "CoNLL 2004"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         for index, row in enumerate(rows):
             instance.add_token().\
@@ -272,13 +248,13 @@ class CoNLL2004(AbstractCoNLLFormat):
                 sense = row[1]
                 instance.add_span(index, index, sense, "sense")
 
-                self.extract_span04_05(rows, 2 + predicate_count, "role", sense + ":", instance)
+                self._extract_span04_05(rows, 2 + predicate_count, "role", sense + ":", instance)
 
                 predicate_count += 1
         return instance
 
     @staticmethod
-    def extract_span04_05(rows: list, column: int, field_type: str, prefix: str, instance: NLPInstance):
+    def _extract_span04_05(rows: list, column: int, field_type: str, prefix: str, instance: NLPInstance):
         begin = 0
         current_chunk = ""
         for index, row in enumerate(rows):
@@ -300,10 +276,9 @@ class CoNLL2005(CoNLL2004):
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2005"
+        self.name = "CoNLL 2005"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         for index, row in enumerate(rows):
             instance.add_token().\
@@ -317,7 +292,7 @@ class CoNLL2005(CoNLL2004):
                     sense = row[10] + "." + row[9]
                     instance.add_span(index, index, sense, "sense")
 
-                    self.extract_span04_05(rows, 11 + predicate_count, "role", sense + ":", instance)
+                    self._extract_span04_05(rows, 11 + predicate_count, "role", sense + ":", instance)
 
                     predicate_count += 1
             except IndexError:
@@ -329,17 +304,16 @@ class CoNLL2005(CoNLL2004):
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CoNLL2006(AbstractCoNLLFormat):
+class CoNLL2006(TabFormat):
     """
      * Loads CoNLL 2006 Dependency data.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2006"
+        self.name = "CoNLL 2006"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         instance.add_token().add_property("Word", "-Root-")
         for row in rows:
@@ -365,17 +339,17 @@ class CoNLL2006(AbstractCoNLLFormat):
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CoNLL2008(AbstractCoNLLFormat):
+class CoNLL2008(TabFormat):
     """
      * Loads CoNLL 2008 Joint SRL and Dependency data.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2008"
+        self.name = "CoNLL 2008"
+        self._supports_open = True
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         instance.add_token().add_property("Word", "-Root-")
         predicates = []  # ArrayList<Integer>()
@@ -409,7 +383,6 @@ class CoNLL2008(AbstractCoNLLFormat):
 
     @staticmethod
     def create_open(rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         instance.add_token()
         for row in rows:
@@ -424,24 +397,19 @@ class CoNLL2008(AbstractCoNLLFormat):
             instance.add_edge(start=int(row[3]), end=index, label=row[4], edge_type="malt")
         return index
 
-    @staticmethod
-    def supports_open():
-        return True
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CoNLL2009(AbstractCoNLLFormat):
+class CoNLL2009(TabFormat):
     """
      * Loads CoNLL 2009 Joint SRL and Dependency data.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CoNLL 2009"
+        self.name = "CoNLL 2009"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         instance.add_token().add_property(name="Word", value="-Root-")
         predicates = []
@@ -479,17 +447,16 @@ class CoNLL2009(AbstractCoNLLFormat):
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class MaltTab(AbstractCoNLLFormat):
+class MaltTab(TabFormat):
     """
      * Loads Malt-TAB dependencies.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Malt-TAB"
+        self.name = "Malt-TAB"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         instance.add_token().add_property(name="Word", value="-Root-")
         for index, row in enumerate(rows, start=1):
@@ -510,17 +477,16 @@ class MaltTab(AbstractCoNLLFormat):
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-class CCG(AbstractCoNLLFormat):
+class CCG(TabFormat):
     """
      * Loads CCG dependencies.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "CCG"
+        self.name = "CCG"
 
     def create(self, rows):
-        rows = [row.strip().split() for row in rows]
         instance = NLPInstance()
         sentence = rows[0]
         # Skip <s> and dep count

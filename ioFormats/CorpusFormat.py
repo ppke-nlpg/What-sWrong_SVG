@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from abc import ABCMeta, abstractmethod
-
 """
  * The CorpusFormat interface describes objects that can load a list of NLPInstances from a file. The Corpus can also
  * provide a GUI element that allows the user to configure how the file is to be loaded.
@@ -13,10 +11,10 @@ from abc import ABCMeta, abstractmethod
 
 class CorpusFormat:
     def __init__(self):
-        self._name = ""
+        self.name = 'Not Set'
 
     def __str__(self):
-        return self._name
+        return self.name
 
     """
      * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
@@ -30,6 +28,5 @@ class CorpusFormat:
      * @return a list of NLP instances loaded from the given file in the given interval.
      * @throws IOException if I/O goes wrong.
     """
-    @abstractmethod
     def load(self, file_name: str, from_sentence_nr: int, to_sentence_nr: int):
-        pass
+        raise NotImplementedError

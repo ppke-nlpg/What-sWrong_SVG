@@ -19,14 +19,15 @@ def check_eof(line):
 class GizaAlignmentFormat(CorpusFormat):
     def __init__(self):
         super().__init__()
+        self.name = "Giza Alignment"
         self.ROPERTYSUFFIX_REVERSE = ".giza.reverse"
 
         """"
-        If selected, the source segments are treated as the target segments and vice versa.
-        To compare a src-to-tgt alignment to a tgt-to-src alignment of the same corpus, one
-        or the other (but not both) should be read in in reverse."""
+         If selected, the source segments are treated as the target segments and vice versa.
+         To compare a src-to-tgt alignment to a tgt-to-src alignment of the same corpus, one
+         or the other (but not both) should be read in in reverse.
+        """
         self._reverseCheckBox = False  # JCheckBox
-        self._name = "Giza Alignment"
 
     def load(self, file_name, from_sentence_nr: int, to_sentence_nr: int):
         with open(file_name, encoding='UTF-8') as reader:
@@ -170,9 +171,9 @@ class GaleAlignmentFormat(CorpusFormat):
 
     def __init__(self):
         super().__init__()
-        self._name = "Gale Alignment"
+        self.name = "Gale Alignment"
 
-    def load(self, file_name: str, from_sent_nr, to_sent_nr):
+    def load(self, file_name: str, _, __):
         """
          * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
          * (exclusive). This method is required to call
@@ -325,7 +326,7 @@ class Terminal(Tree):
 class LispSExprFormat(CorpusFormat):
     def __init__(self):
         super().__init__()
-        self._name = "Lisp S-Expression"
+        self.name = "Lisp S-Expression"
         self.word = "Word"    # Word .sexpr.word
         self.tag = "pos"     # Tag .sexpr.tag
         self.phrase = "phrase"  # Phrase .sexpr.phrase
@@ -367,12 +368,12 @@ class BioNLP2009SharedTaskFormat(CorpusFormat):
     """
     def __init__(self):
         super().__init__()
+        self.name = "BioNLP 2009 ST"
         self.txtExtensionField = "txt"     # Text files .bionlp09.txt
         self.proteinExtensionField = "a1"  # Protein files .bionlp09.protein
         self.eventExtensionField = "a2"    # Event files .bionlp09.event
-        self._name = "BioNLP 2009 ST"
 
-    def load(self, file_name: str, from_sent_nr, to_sent_nr):
+    def load(self, file_name: str, _, __):
         """
          * Loads files from the given directory with the extensions specified by the text fields of the accessory.
          *
@@ -486,69 +487,16 @@ class TheBeastFormat(CorpusFormat):
     """
     def __init__(self):
         super().__init__()
-        self._name = "thebeast"
+        self.name = "thebeast"
         self.tokens = ""  # GUI STUFF
         self.deps = ""
         self.spans = ""
 
-    @staticmethod
-    def unquote(string):
-        return string[1: len(string) - 1]
-
-    @staticmethod
-    def extract_predicates_from_string(text):
-        preds = {}
-        for s in text.split(','):
-            s = s.strip()
-            if len(s) > 0:
-                ind = s.find(':')
-                if ind == -1:
-                    pred, as_rest = s, s
-                else:
-                    pred, as_rest = s.split(':', maxsplit=1)
-                preds[pred] = as_rest
-
-        return preds
-
-    def add_edges(self, instance, rows, token_preds, dep_preds, span_preds):
-        for pred in token_preds.values():
-            # add_tokens
-            for row in rows:
-                try:
-                    instance.add_token(int(row[0])).add_property(pred, self.unquote(row[1]))
-                except ValueError:
-                    print("Could not load tokens from row {0} of rows {1}, skipping this row.".format(row, rows),
-                          file=sys.stderr)
-                    # raise RuntimeError("Could not load tokens from row {0} of rows {1}, skipping this row.".
-                    #                    format(row, rows))
-        # instance.consistify()
-        for pred in dep_preds.values():
-            # add_deps
-            for row in rows:
-                if len(row) == 4:
-                    desc = self.unquote(row[3].replace("-BR-", "\n\t"))
-                else:
-                    desc = None
-                instance.add_dependency(int(row[0]), int(row[1]), self.unquote(row[2]), pred, desc)
-        for pred in span_preds.values():
-            # add_spans
-            for row in rows:
-                # default len(row) == 3
-                token = int(row[1])
-                desc = None
-
-                if len(row) == 2:
-                    token = int(row[0])
-                elif len(row) == 4:
-                    desc = self.unquote(row[3].replace("-BR-", "\n\t"))
-
-                instance.add_span(int(row[0]), token, self.unquote(row[2]), pred, desc)
-
     def load(self, file_name, from_sent_nr, to_sent_nr):
         with open(file_name, encoding='UTF-8') as reader:
-            token_preds = self.extract_predicates_from_string(self.tokens)
-            dep_preds = self.extract_predicates_from_string(self.deps)
-            span_preds = self.extract_predicates_from_string(self.spans)
+            token_preds = self._extract_predicates_from_string(self.tokens)
+            dep_preds = self._extract_predicates_from_string(self.deps)
+            span_preds = self._extract_predicates_from_string(self.spans)
 
             instance_nr = 0
             instance = NLPInstance()
@@ -558,7 +506,7 @@ class TheBeastFormat(CorpusFormat):
             result = []  # [NLPInstance]
             rows = {}  # {str: [[str]]}
 
-            self.init_rows(rows, token_preds, span_preds, dep_preds)
+            self._init_rows(rows, token_preds, span_preds, dep_preds)
 
             while instance_nr < to_sent_nr:
                 try:
@@ -567,12 +515,12 @@ class TheBeastFormat(CorpusFormat):
                         # monitor.progressed(instanceNr)
                         instance_nr += 1
                         if instance_nr > from_sent_nr and instance_nr > 1:
-                            self.add_edges(instance, rows, token_preds, dep_preds, span_preds)
+                            self._add_edges(instance, rows, token_preds, dep_preds, span_preds)
 
                             result.append(instance)
                             instance = NLPInstance()
                             rows.clear()
-                            self.init_rows(rows, token_preds, span_preds, dep_preds)
+                            self._init_rows(rows, token_preds, span_preds, dep_preds)
 
                     elif line.startswith(">") and instance_nr > from_sent_nr:
                         pred = line[1:]
@@ -593,13 +541,66 @@ class TheBeastFormat(CorpusFormat):
                 except EOFError:
                     break
 
-            self.add_edges(instance, rows, token_preds, dep_preds, span_preds)
+            self._add_edges(instance, rows, token_preds, dep_preds, span_preds)
 
             result.append(instance)
             return result
 
     @staticmethod
-    def init_rows(rows, token_preds, span_preds, dep_preds):
+    def _unquote(string):
+        return string[1: len(string) - 1]
+
+    @staticmethod
+    def _extract_predicates_from_string(text):
+        preds = {}
+        for s in text.split(','):
+            s = s.strip()
+            if len(s) > 0:
+                ind = s.find(':')
+                if ind == -1:
+                    pred, as_rest = s, s
+                else:
+                    pred, as_rest = s.split(':', maxsplit=1)
+                preds[pred] = as_rest
+
+        return preds
+
+    def _add_edges(self, instance, rows, token_preds, dep_preds, span_preds):
+        for pred in token_preds.values():
+            # add_tokens
+            for row in rows:
+                try:
+                    instance.add_token(int(row[0])).add_property(pred, self._unquote(row[1]))
+                except ValueError:
+                    print("Could not load tokens from row {0} of rows {1}, skipping this row.".format(row, rows),
+                          file=sys.stderr)
+                    # raise RuntimeError("Could not load tokens from row {0} of rows {1}, skipping this row.".
+                    #                    format(row, rows))
+        # instance.consistify()
+        for pred in dep_preds.values():
+            # add_deps
+            for row in rows:
+                if len(row) == 4:
+                    desc = self._unquote(row[3].replace("-BR-", "\n\t"))
+                else:
+                    desc = None
+                instance.add_dependency(int(row[0]), int(row[1]), self._unquote(row[2]), pred, desc)
+        for pred in span_preds.values():
+            # add_spans
+            for row in rows:
+                # default len(row) == 3
+                token = int(row[1])
+                desc = None
+
+                if len(row) == 2:
+                    token = int(row[0])
+                elif len(row) == 4:
+                    desc = self._unquote(row[3].replace("-BR-", "\n\t"))
+
+                instance.add_span(int(row[0]), token, self._unquote(row[2]), pred, desc)
+
+    @staticmethod
+    def _init_rows(rows, token_preds, span_preds, dep_preds):
         for pred in token_preds.values():
             rows[pred] = []
         for pred in span_preds.values():
