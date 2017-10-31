@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# HIÁNYOS!
 
-from CorpusLoader import CorpusLoader
-from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
 from libwwnlp.NLPCanvas import NLPCanvas
-from libwwnlp.model.edge import EdgeRenderType
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
 """
@@ -18,439 +14,219 @@ from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
  * @author Sebastian Riedel
 """
 
-"""
- * A Search result consisting of the instance index and a text snippet that indicates the position in the instance
- * where they key terms were found.
-"""
 
-
-class Result:
-    """
-     * A text representation of the location in which the key terms were found.
-    """
-
-    @property
-    def text(self) -> str:
-        return self._text
-
-    @text.setter
-    def text(self, value: str):
-        self._text = value
+class CorpusLoader:
+    # TODO: This class in the past had many GUI stuff to do dinamically. Those features were eliminated in favour
+    # TODO: of static GUI. The remainin functionality seems to be handling corpora with multiple files
+    # TODO: (e.g. fast forward to a specific file's first sentence) Maybe it can be merged with corpus Navigator.
 
     """
-     * The index of the instance in which the key terms were found.
-    """
-
-    @property
-    def nr(self) -> int:
-        return self._nr
-
-    @nr.setter
-    def nr(self, value: int):
-        self._nr = value
-
-    """
-     * Creates a new Result.
+     * A CorpusLoader is responsible for loading and managing corpora. A corpus is implemented as a list of NLPInstance
+     * objects. Each CorpusLoader maintains a list of such corpora, which can be extended by loading corpora from files. The
+     * loader displays the corpora and allows the user to select one such corpus. The selected corpus will then be used by
+     * other components (such as the {@link com.googlecode.whatswrong.CorpusNavigator} to pick and render NLPInstance
+     * objects from.
+     * <p/>
+     * <p>A CorpusLoader sends out messages to {@link com.googlecode.whatswrong.CorpusLoader.Listener} objects whenever a
+     * new corpus is added, removed or selected.
+     * <p/>
+     * <p>The CorpusLoader loads files using {@link com.googlecode.whatswrong.io.CorpusFormat} objects. Each such object
+     * provides an swing panel that will be used in the file dialog to configure how the particular format needs to be
+     * loaded.
      *
-     * @param nr   the index nr.
-     * @param text the text snippet.
+     * @author Sebastian Riedel
     """
 
-    def __init__(self, text: str, nr: int):  # XXX Swapped!
-        self._text = text
-        self._nr = nr
+    def __init__(self, title: str):
+        """
+         * Creates a new CorpusLoader with the given title. The title is used to derive an id from.
+         *
+         * @param title the title of this CorpusLoader.
+        """
+
+        """
+         * The current selected corpus.
+        """
+        self._selected = []
+
+        """
+         * The set of all loaded corpora.
+        """
+        self._corpora = []
+
+        """
+         * The file names the corpora came from, stored in a list model.
+        """
+
+        self._fileNames = []
+
+        """
+         * A mapping from names to CorpusFormat objects that will load corpora when the user chooses the corresponding
+          name.
+        """
+        self._formats = {}
+        """
+         * The list of listeners of this loader.
+        """
+
+        self._changeListeners = []
+        """
+         * The file chooser dialog.
+        """
+        self._fileChooser = None
+
+        """
+         * The file dialog accessory to define the range of instances.
+        """
+        self._accessory = None
+
+        """
+         * The id of this loader (used when loading properties from the user configuration file).
+        """
+        self.id = title.replace(" ", "_").lower()
+
+        self._corpora = []  # ArrayList<List<NLPInstance>>()
 
     """
-     * Returns the text snippet.
+     * Adds a listener to this loader.
      *
-     * @return the text snippet.
+     * @param changeListener the listener to add.
     """
 
-    def __str__(self) -> str:
-        return self._text
+    def addChangeListener(self, changelistener):
+        self._changeListeners.append(changelistener)
+
+    """
+     * Notifies all listeners that a corpus was added.
+     *
+     * @param corpus the added corpus.
+    """
+
+    def fireAdded(self, corpus: list):  # List<NLPInstance>
+        for listener in self._changeListeners:
+            listener.corpus_added(corpus, self)
+
+    """
+     * Notifies all listeners that a corpus was removed.
+     *
+     * @param corpus the removed corpus.
+    """
+
+    def fireRemoved(self, corpus):  # List<NLPInstance>
+        for listener in self._changeListeners:
+            listener.corpus_removed(corpus, self)
+
+    """
+     * Notifies all listeners that a corpus was selected.
+     *
+     * @param corpus the selected corpus.
+    """
+
+    def fireSelected(self, corpus):  # List<NLPInstance>
+        for listener in self._changeListeners:
+            listener.corpusSelected(corpus, self)
+
+    """
+     * Adds a CorpusFormat.
+     *
+     * @param format the format to add.
+    """
+
+    def addFormat(self, corpus_format):  # CorpusFormat
+        self._formats[corpus_format.getName()] = corpus_format
+
+    """
+     * Sets the directory to use in the file dialog.
+     *
+     * @param dir the directory of the file dialog.
+    """
+
+    def setDirectory(self, directory: str):  # XXX
+        pass  # fileChooser.setCurrentDirectory(new File(dir))
+
+    """
+     * gets the directory to use in the file dialog.
+     *
+     * @return the directory of the file dialog.
+    """
+
+    def getDirectory(self):  # XXX
+        pass  # fileChooser.getCurrentDirectory().getPath()
+
+    def __len__(self):
+        return len(self._corpora)
+
+    def append(self, corpus):
+        self._corpora.append(corpus)
+
+    def remove(self, corpus):
+        if corpus in self._corpora:
+            self._corpora.remove(corpus)
+
+    def __iter__(self):
+        return iter(self._corpora)
+
+    def __getitem__(self, sentence_nr):
+        # TODO: get the sentence_nr-th NLPInstance from corpora
+        pass
 
 
 class CorpusNavigator:
     """
      * The loader for guess instances.
     """
-    @property
-    def guess(self) -> CorpusLoader:
-        return self._guess
-
-    @guess.setter
-    def guess(self, value: CorpusLoader):
-        self._guess = value
-
-    """
-     * The loader for gold instances.
-    """
-    @property
-    def gold(self) -> CorpusLoader:
-        return self._gold
-
-    @gold.setter
-    def gold(self, value: CorpusLoader):
-        self._gold = value
-
-    # XXX WHAT IS THIS?
-    @property
-    def scene(self):
-        return self._scene
-
-    @scene.setter
-    def scene(self, value):
-        self._scene = value
-
-    """
-     * The canvas that renders the instances.
-    """
-    @property
-    def canvas(self) -> NLPCanvas:
-        return self._canvas
-
-    @canvas.setter
-    def canvas(self, value: NLPCanvas):
-        self._canvas = value
-
-    """
-     * The spinner that controls the current instance to be rendered by the canvas.
-    """
-    @property
-    def spinner(self):  # JSpinner
-        return self._spinner
-
-    @spinner.setter
-    def spinner(self, value):
-        self._spinner = value
-
-    """
-     * The number model that backs the spinner that controls the current instance to render.
-    """
-    @property
-    def numberModel(self):   # SpinnerNumberModel
-        return self._numberModel
-
-    @numberModel.setter
-    def numberModel(self, value):
-        self._numberModel = value
-
-    """
-     * A mapping from corpora to index searchers that can be used to search the corpus.
-    """
-    @property
-    def indicies(self) -> dict:  # HashMap<List<NLPInstance>, IndexSearcher>
-        return self._indices
-
-    @indicies.setter
-    def indicies(self, value: dict):
-        self._indices = value
-
-    """
-     * A mapping from pairs of corpora to index searchers that can be used to search the differences between the two
-     * corpora.
-    """
-    @property
-    def diffCorpora(self) -> dict:  # HashMap<Pair<List<NLPInstance>, List<NLPInstance>>, List<NLPInstance>>
-        return self._diffCorpora
-
-    @diffCorpora.setter
-    def diffCorpora(self, value: dict):
-        self._diffCorpora = value
-
-    """
-     * The set of gold corpora.
-    """
-    @property
-    def goldCorpora(self) -> list:  # XXX Should be set HashSet<List<NLPInstance>>
-        return self._goldCorpora
-
-    @goldCorpora.setter
-    def goldCorpora(self, value: list):  # XXX Should be set
-        self._goldCorpora = value
-
-    """
-     * The set of guess corpora.
-    """
-    @property
-    def guessCorpora(self) -> list:  # XXX Should be set HashSet<List<NLPInstance>>
-        return self._guessCorpora
-
-    @guessCorpora.setter
-    def guessCorpora(self, value: list):  # XXX Should be set
-        self._guessCorpora = value
-
-    """
-     * The current IndexSearcher (for the selected corpus/corpus pair).
-    """
-    @property
-    def indexSearcher(self):  # IndexSearcher
-        return self._indexSearcher
-
-    @indexSearcher.setter
-    def indexSearcher(self, value):
-        self._indexSearcher = value
-
-    """
-     * The Analyzer for the search index.
-    """
-    @property
-    def analyzer(self):  # Analyzer
-        return self._analyzer
-
-    @analyzer.setter
-    def analyzer(self, value):
-        self._analyzer = value
-    """
-     * The search button that triggers the search process.
-    """
-    # private JButton searchButton;
-    """
-     * The list of search results.
-    """
-    # private JList results;
-    """
-     * The field for the search terms.
-    """
-    # private JTextField search;
-    """
-     * The panel that controls the instance index spinner.
-    """
-    # private JPanel spinnerPanel;
-    """
-     * The label that shows how many results where found.
-    """
-    # private JLabel ofHowMany;
-
-    """
-     * The EdgeTypeAndLabelFilter that needs to be initialized when the navigator does not have a selected corpus
-      and shows an example sentence.
-    """
-    # private EdgeTypeAndLabelFilter edgeTypeFilter;
-
-    """
-     * Adds the corpus to the corresponding internal set of corpora.
-     *
-     * @param corpus the corpus to add.
-     * @param src    the source loader.
-    """
-    def corpusAdded(self, corpus: [NLPInstance], src: CorpusLoader):
-        if src == self._gold:
-            self._goldCorpora.append(corpus)
-            # indices[corpus] = self.createIndex(corpus)
-        else:
-            self._guessCorpora.append(corpus)
-            # indices[corpus] = self.createIndex(corpus)
-
-    """
-     * Returns a difference corpus between two corpora. This difference corpus is calculated if it hasn't been
-     * calculated before.
-     *
-     * @param gold  the gold corpus.
-     * @param guess the guess corpus.
-     * @return the difference corpus.
-    """
-    def getDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]) -> [NLPInstance]:  # XXX
-        # diffCorpus = self._diffCorpora.get((gold, guess))
-        diffCorpus = None
-        if diffCorpus is None:
-            diffCorpus = []  # ArrayList<NLPInstance>(Math.min(gold.size(), guess.size()))
-            # self._diffCorpora[(gold, guess)] = diffCorpus
-        for i in range(0, min(len(gold), len(guess))):
-            diffCorpus.append(nlp_diff(gold[i], guess[i], "eval_status_Match",
-                                       "eval_status_FN", "eval_status_FP"))
-        # indices.put(diffCorpus, createIndex(diffCorpus))
-        return diffCorpus
-        # return nlp_diff(gold, guess)  # XX Current Working
-
-    """
-     * Removes the difference corpus for the given corpus pair.
-     *
-     * @param gold  the gold corpus.
-     * @param guess the guess corpus.
-    """
-    def removeDiffCorpus(self, gold: [NLPInstance], guess: [NLPInstance]):
-        pair = (gold, guess)
-        diffCorpus = self._diffCorpora.get(pair)
-        if diffCorpus is not None:
-            del self._diffCorpora[pair]
-            del self._indices[diffCorpus]
-
-    """
-     * Removes the corpus and all diff corpora that compare the given corpus
-     *
-     * @param corpus the corpus to remove.
-     * @param src    the loader that removed the corpus.
-    """
-    def corpusRemoved(self, corpus: [NLPInstance], src: [NLPInstance]):
-        if src == self._gold:
-            self._goldCorpora.remove(corpus)
-            del self._indices[corpus]
-            for c in self._guessCorpora:
-                self.removeDiffCorpus(corpus, c)
-        else:
-            self._guessCorpora.remove(corpus)
-            del self._indices[corpus]
-            for c in self._goldCorpora:
-                self.removeDiffCorpus(corpus, c)
-
-    """
-     * Changes the current selected instance to be the one in the new corpus with the same index as the last chosen
-     * instance of the old corpus or the last instance if no such instance exist.
-     *
-     * @param corpus the newly selected corpus.
-     * @param src    the loader in which the corpus was selected.
-    """
-    """
-    public synchronized void corpusSelected(final List<NLPInstance> corpus,
-                                            final CorpusLoader src) {
-        updateCanvas();
-        results.setModel(new DefaultListModel());
-
-    }
-    """
-
-    """
-     * Creates a new CorpusNavigator.
-     *
-     * @param canvas         the canvas to control.
-     * @param goldLoader     the loader of gold corpora.
-     * @param guessLoader    the loader of guess corpora.
-     * @param edgeTypeFilter the EdgeTypeAndLabelFilter we need when no corpus is selected and a example sentence
-                             is chosen and passed to the NLPCanvas.
-    """
-    def __init__(self,  ui, canvas: Qt5NLPCanvas, scene=None, goldLoader: CorpusLoader=None,
-                 guessLoader: CorpusLoader=None, edgeTypeFilter=None):
+    def __init__(self, ui, canvas: NLPCanvas, gold_loader: CorpusLoader=None,
+                 guess_loader: CorpusLoader=None, edge_type_filter=None):
         """
-        super(new GridBagLayout());
-        this.edgeTypeFilter = edgeTypeFilter;
-        this.guess = guessLoader;
-        this.gold = goldLoader;
-        this.canvas = canvas;
-        guessLoader.addChangeListener(this);
-        goldLoader.addChangeListener(this);
-        setBorder(new EmptyBorder(5, 5, 5, 5));
-        //setBorder(new TitledBorder(new EtchedBorder(), "Navigate"));
+         * Creates a new CorpusNavigator.
+         *
+         * @param canvas         the canvas to control.
+         * @param gold_loader     the loader of gold corpora.
+         * @param guess_loader    the loader of guess corpora.
+         * @param edge_type_filter the EdgeTypeAndLabelFilter we need when no corpus is selected and a example sentence
+                                 is chosen and passed to the NLPCanvas.
         """
-        self._numberModel = None  # SpinnerNumberModel()
+
         """
-        numberModel.setMinimum(0);
-        numberModel.setMaximum(100);
-        spinner = new JSpinner(numberModel);
-        //spinner.getEditor().set
-        spinner.setEnabled(false);
-        JSpinner.NumberEditor numberEditor = new JSpinner.NumberEditor(spinner);
-        spinner.setEditor(numberEditor);
-        spinner.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                updateCanvas();
-            }
-        });
-
-        final JFormattedTextField editorTextField = numberEditor.getTextField();
-        editorTextField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    spinner.setValue(Integer.valueOf(editorTextField.getText()));
-                } catch (NumberFormatException ex) {
-                    spinner.setValue(editorTextField.getValue());
-                }
-            }
-        });
-
-
-        spinnerPanel = new JPanel();
-        spinnerPanel.setLayout(new BoxLayout(spinnerPanel, BoxLayout.X_AXIS));
-        spinnerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        spinnerPanel.add(spinner);
-        ofHowMany = new JLabel(" of 1");
-        spinnerPanel.add(ofHowMany);
-
-        search = new JTextField(10);
-        search.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                searchCorpus();
-            }
-        });
-        //add(search, new SimpleGridBagConstraints(1, false));
-
-        //search button
-        searchButton = new JButton("Search");
-        JPanel searchPanel = new JPanel(new BorderLayout());
-        searchPanel.add(search, BorderLayout.CENTER);
-        searchPanel.add(searchButton, BorderLayout.EAST);
-        //add(searchButton, new SimpleGridBagConstraints(2, false, false));
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                searchCorpus();
-            }
-        });
-
-        results = new JList();
-        results.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                int selectedIndex = results.getSelectedIndex();
-                if (selectedIndex != -1) {
-                    int nr = ((Result) results.getSelectedValue()).nr;
-                    spinner.setValue(nr);
-                    repaint();
-                }
-            }
-        });
-
-
-        add(searchPanel, new SimpleGridBagConstraints(0, 0, 2, 1));
-        JScrollPane resultsPane = new JScrollPane(results);
-        resultsPane.setMinimumSize(new Dimension(100, 10));
-        add(resultsPane, new SimpleGridBagConstraints(0, 1, 2, 2));
-
-        //setPreferredSize((new Dimension(100, (int) getPreferredSize().getHeight())));
-        analyzer = new WhitespaceAnalyzer();
-        updateCanvas();
-        //analyzer.
-    }
+         * Creates an IndexSearcher for the given corpus that allows us to search the corpus efficiently for
+         * keywords in the token properties and edges.
+         * A Search result consisting of the instance index and a text snippet that indicates the position in the
+         * instance where they key terms were found.
         """
         self._indices = {}
-        self._analyzer = None
-        self._diffCorpora = dict()
-        self._goldCorpora = goldLoader  # XXX Should be set
-        self._guessCorpora = guessLoader  # XXX Should be set
-        self._indexSearcher = None
+        self._diffCorpora = {}
+        self._gold_corpora = gold_loader  # XXX Should be set
+        self._guess_corpora = guess_loader  # XXX Should be set
 
-        self._guess = guessLoader
-        self._gold = goldLoader
-        self._scene = scene
+        self._guess = guess_loader
+        self._gold = gold_loader
         self._canvas = canvas
         # self._canvas = Qt5NLPCanvas(ui)
-        self._edgeTypeFilter = edgeTypeFilter
+        self._edgeTypeFilter = edge_type_filter
 
         self._instance = None
         self._ui = ui
 
-        # guessLoader.addChangeListener(this);
-        # goldLoader.addChangeListener(this);
+        self._canvas.renderer.set_edge_type_order("pos", 0)
+        self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
+        self._canvas.renderer.set_edge_type_order("chunk", 2)
+        self._canvas.renderer.set_edge_type_order("ner (BIO)", 2)
+        self._canvas.renderer.set_edge_type_order("ner", 3)
+        self._canvas.renderer.set_edge_type_order("sense", 4)
+        self._canvas.renderer.set_edge_type_order("role", 5)
+        self._canvas.renderer.set_edge_type_order("phase", 5)
 
-        self.canvas.renderer.set_edge_type_order("pos", 0)
-        self.canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
-        self.canvas.renderer.set_edge_type_order("chunk", 2)
-        self.canvas.renderer.set_edge_type_order("ner (BIO)", 2)
-        self.canvas.renderer.set_edge_type_order("ner", 3)
-        self.canvas.renderer.set_edge_type_order("sense", 4)
-        self.canvas.renderer.set_edge_type_order("role", 5)
-        self.canvas.renderer.set_edge_type_order("phase", 5)
-
-        # results = []
         self._spinner = ui.spinBox
 
-        def indexChanged():
-            self.updateCanvas()
-        self._spinner.valueChanged.connect(indexChanged)
+        def index_changed():
+            self.update_canvas()
+        self._spinner.valueChanged.connect(index_changed)
 
-        if self._goldCorpora is not None:
-            if self._guessCorpora is None:
-                index = len(self._goldCorpora)
+        if self._gold_corpora is not None:
+            if self._guess_corpora is None:
+                index = len(self._gold_corpora)
             else:
-                index = min(len(self._goldCorpora), len(self._guessCorpora))
+                index = min(len(self._gold_corpora), len(self._guess_corpora))
             self._spinner.setMaximum(index)
             self._ui.SpinBoxLabel.setText("of " + str(index))
             self._spinner.setValue(1)
@@ -464,206 +240,124 @@ class CorpusNavigator:
         self._searchResultDictModel = {}
         self._searchResultListWidget = ui.searchResultLisWidget
 
-        def itemClicked(item):
+        def item_clicked(item):
             i = self._searchResultListWidget.row(item)
             self._spinner.setValue(self._searchResultDictModel[i+1])
-        self._searchResultListWidget.itemClicked.connect(itemClicked)
+        self._searchResultListWidget.itemClicked.connect(item_clicked)
 
         self._searchButton = ui.searchButton
-        self._searchButton.clicked.connect(self.searchCorpus)
+        self._searchButton.clicked.connect(self.search_corpus)
 
-        self.updateCanvas()
+        self.update_canvas()
 
-    """
-     * Returns the panel that contains the spinner to set the instance nr.
-     *
-     * @return the panel that contains the spinner to set the instance nr.
-    """
-    # public JPanel getSpinnerPanel() {
-    #     return spinnerPanel;
-    # }
+    def corpus_added(self, corpus: [NLPInstance], src: CorpusLoader):
+        """
+         * Adds the corpus to the corresponding internal set of corpora.
+         *
+         * @param corpus the corpus to add.
+         * @param src    the source loader.
+        """
+        if src == self._gold:
+            self._gold_corpora.append(corpus)
+            # indices[corpus] = self.createIndex(corpus)
+        else:
+            self._guess_corpora.append(corpus)
+            # indices[corpus] = self.createIndex(corpus)
 
-    """
-     * Searches the current corpus using the search terms in the search field.
-    """
-    """ Original version...  check the Python implementation...
-    private void searchCorpus() {
-        if (search.getText().trim().equals("")) return;
-        try {
-            indexSearcher = guess.getSelected() != null ?
-                getIndex(getDiffCorpus(gold.getSelected(), guess.getSelected())) :
-                getIndex(gold.getSelected());
-            //System.out.println("Searching...");
-            QueryParser parser = new QueryParser("Word", analyzer);
-            Query query = parser.parse(search.getText());
-            Hits hits = indexSearcher.search(query);
-            Highlighter highlighter = new Highlighter(new QueryScorer(query));
-            DefaultListModel model = new DefaultListModel();
-            for (int i = 0; i < hits.length(); i++) {
-                Document hitDoc = hits.doc(i);
-                int nr = Integer.parseInt(hitDoc.get("<nr>"));
-                //System.out.println(hitDoc.get("<nr>"));
-                String best = null;
-                for (Object field : hitDoc.getFields()) {
-                    Field f = (Field) field;
-                    best = highlighter.getBestFragment(analyzer, f.name(), hitDoc.get(f.name()));
-                    if (best != null) break;
-                }
-                if (best != null)
-                    model.addElement(new Result(nr, "<html>" + nr + ":" + best + "</html>"));
-                //System.out.println(highlighter.getBestFragment(analyzer, "Word", hitDoc.get("Word")));
-                //assertEquals("This is the text to be indexed.", hitDoc.get("fieldname"));
-            }
-            results.setModel(model);
-            repaint();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+    @staticmethod
+    def get_diff_corpus(gold: [NLPInstance], guess: [NLPInstance]) -> [NLPInstance]:  # XXX
+        """
+         * Returns a difference corpus between two corpora. This difference corpus is calculated if it hasn't been
+         * calculated before.
+         *
+         * @param gold  the gold corpus.
+         * @param guess the guess corpus.
+         * @return the difference corpus.
+        """
+        # diff_corpus = self._diffCorpora.get((gold, guess))
+        diff_corpus = None
+        if diff_corpus is None:
+            diff_corpus = []
+            # self._diffCorpora[(gold, guess)] = diff_corpus
+        for i in range(min(len(gold), len(guess))):
+            diff_corpus.append(nlp_diff(gold[i], guess[i], "eval_status_Match",  "eval_status_FN", "eval_status_FP"))
+        # indices.put(diff_corpus, createIndex(diff_corpus))
+        return diff_corpus
+        # return nlp_diff(gold, guess)  # XX Current Working
 
-    """
-    def searchCorpus(self):  # XXX I'M NOT SURE IF THIS IS GOOD!
+    def remove_diff_corpus(self, gold: [NLPInstance], guess: [NLPInstance]):
+        """
+         * Removes the difference corpus for the given corpus pair.
+         *
+         * @param gold  the gold corpus.
+         * @param guess the guess corpus.
+        """
+        pair = (gold, guess)
+        diff_corpus = self._diffCorpora.get(pair)
+        if diff_corpus is not None:
+            del self._diffCorpora[pair]
+            del self._indices[diff_corpus]
+
+    def corpus_removed(self, corpus: [NLPInstance], src: [NLPInstance]):
+        """
+         * Removes the corpus and all diff corpora that compare the given corpus
+         *
+         * @param corpus the corpus to remove.
+         * @param src    the loader that removed the corpus.
+        """
+        if src == self._gold:
+            self._gold_corpora.remove(corpus)
+            del self._indices[corpus]
+            for c in self._guess_corpora:
+                self.remove_diff_corpus(corpus, c)
+        else:
+            self._guess_corpora.remove(corpus)
+            del self._indices[corpus]
+            for c in self._gold_corpora:
+                self.remove_diff_corpus(corpus, c)
+
+    def search_corpus(self):
+
+        """
+         * Searches the current corpus using the search terms in the search field. (Currently words)
+        """
         text = self._search.text()
         self._searchResultListWidget.clear()
         self._searchResultDictModel.clear()
-        counter = 1
         if text == "":
-            self._searchResultListWidget.clear()
             return
+        counter = 1
         for index in range(self._spinner.minimum()-1, self._spinner.maximum()):
             if index not in self._indices:
                 if self._gold is not None:
                     if self._guess is None:
-                        self._indices[index] = self._goldCorpora[index]
+                        self._indices[index] = self._gold_corpora[index]
                     else:
-                        self._indices[index] = self.getDiffCorpus(self._goldCorpora[index], self._guessCorpora[index])
-            instance = self._indices[index]
-            sentence = ""
-            for token in instance.tokens:
-                word = token.get_property_value("Word")
-                if sentence == "":
-                    sentence += " " + word
+                        self._indices[index] = self.get_diff_corpus(self._gold_corpora[index],
+                                                                    self._guess_corpora[index])
+                elif self._guess is not None:
+                    self._indices[index] = self._guess_corpora[index]
                 else:
-                    sentence += " " + word
+                    raise ValueError  # No corpora given
+            instance = self._indices[index]
+            sentence = ' '.join(token.get_property_value("Word") for token in instance.tokens)
+
             if text in sentence:
-                self._searchResultDictModel[counter] = index+1
-                self._searchResultListWidget.addItem(str(index+1) + ":" + sentence)
+                self._searchResultDictModel[counter] = index + 1
+                self._searchResultListWidget.addItem(str(index + 1) + ":" + sentence)
                 counter += 1
 
-    """
-     * Returns an IndexSearcher for the given corpus. A new one is created if not yet existent.
-     *
-     * @param corpus the corpus to get an IndexSearcher for.
-     * @return the IndexSearcher for the given corpus.
-    """
-    def getIndex(self, corpus: [NLPInstance]):
-        index = self._indices.get(corpus)
-        if index is None:
-            index = self.createIndex(corpus)
-            self._indices[corpus] = index
-        return index
-
-    """
-     * Creates an IndexSearcher for the given corpus that allows us to search the corpus efficiently for keywords in the
-     * token properties and edges.
-     *
-     * @param corpus the corpus to create the IndexSearcher for.
-     * @return An IndexSearcher for the given corpus.
-    """
-    def createIndex(self, corpus: [NLPInstance]):
+    def update_canvas(self):  # XXX MISSING STUFF HERE!
         """
-        try {
-            System.err.println("Creating Index");
-            RAMDirectory directory = new RAMDirectory();
-            IndexWriter iwriter;
-            iwriter = new IndexWriter(directory, analyzer, true);
-            iwriter.setMaxFieldLength(25000);
-
-            int nr = 0;
-            for (NLPInstance instance : corpus) {
-                Document doc = new Document();
-                HashMap<TokenProperty, StringBuffer>
-                    sentences = new LinkedHashMap<TokenProperty, StringBuffer>();
-                for (Token token : instance.getTokens()) {
-                    for (TokenProperty p : token.getPropertyTypes()) {
-                        StringBuffer buffer = sentences.get(p);
-                        if (buffer == null) {
-                            buffer = new StringBuffer();
-                            sentences.put(p, buffer);
-                        }
-                        if (token.getIndex() > 0) buffer.append(" ");
-                        buffer.append(token.getProperty(p));
-                    }
-                }
-                for (TokenProperty p : sentences.keySet()) {
-                    doc.add(new Field(p.getName(), sentences.get(p).toString(),
-                        Field.Store.YES, Field.Index.TOKENIZED));
-                }
-
-                //edges
-                HashMap<String, StringBuffer> edges = new HashMap<String, StringBuffer>();
-                StringBuffer types = new StringBuffer();
-                for (Edge e : instance.getEdges()) {
-                    String prefix = e.getTypePrefix();
-                    StringBuffer prefixBuffer = edges.get(prefix);
-                    types.append(prefix).append(" ");
-                    if (prefixBuffer == null) {
-                        prefixBuffer = new StringBuffer();
-                        edges.put(prefix, prefixBuffer);
-                    }
-                    prefixBuffer.append(e.getLabel()).append(" ");
-                    String postfix = e.getTypePostfix();
-                    if (postfix != null) {
-                        types.append(postfix).append(" ");
-                        StringBuffer postfixBuffer = edges.get(postfix);
-                        if (postfixBuffer == null) {
-                            postfixBuffer = new StringBuffer();
-                            edges.put(postfix, postfixBuffer);
-                        }
-                        postfixBuffer.append(e.getLabel()).append(" ");
-                    }
-                }
-
-                doc.add(new Field("types", types.toString(), Field.Store.YES, Field.Index.TOKENIZED));
-
-                for (String type : edges.keySet()) {
-                    doc.add(new Field(type, edges.get(type).toString(), Field.Store.YES, Field.Index.TOKENIZED));
-                }
-
-                //for (DependencyEdge e : instance.getTokens())
-                doc.add(new Field("<nr>", String.valueOf(nr), Field.Store.YES, Field.Index.UN_TOKENIZED));
-
-                System.err.print(".");
-                iwriter.addDocument(doc);
-                nr++;
-            }
-            System.err.println();
-            iwriter.optimize();
-            iwriter.close();
-            return new IndexSearcher(directory);
-        } catch (IOException e) {
-            throw new RuntimeException("Couldn't build the index");
-        }
-
-    }
-    """
-        return self, corpus
-
-    """
-     * Updates the canvas based on the current state of the navigator and the corpus loaders.
-    """
-    def updateCanvas(self):  # XXX MISSING STUFF HERE!
+         * Updates the canvas based on the current state of the navigator and the corpus loaders.
+        """
         index = self._spinner.value() - 1
         if self._gold is not None:
-            # searchButton.setEnabled(true);
-            # search.setEnabled(true);
-            # spinner.setEnabled(true);
-            # results.setEnabled(true);
             if self._guess is None:
                 if index in self._indices:
                     self._instance = self._indices[index]
                 else:
-                    self._instance = self._goldCorpora[index]
+                    self._instance = self._gold_corpora[index]
                     self._indices[index] = self._instance
                 # indexSearcher = getIndex(gold.getSelected());
                 # canvas.setNLPInstance(gold.getSelected().get(index));
@@ -672,23 +366,10 @@ class CorpusNavigator:
                 if index in self._indices:
                     self._instance = self._indices[index]
                 else:
-                    self._instance = self.getDiffCorpus(self._gold, self._guess)[index]
+                    self._instance = self.get_diff_corpus(self._gold, self._guess)[index]
                     self._indices[index] = self._instance
-                self._canvas.renderer.set_edge_type_color("FN", (000, 000, 255))  # Blue
-                self._canvas.renderer.set_edge_type_color("FP", (255, 000, 000))  # Red
                 self._canvas.set_nlp_instance(self._instance)
-                self._canvas.fire_instance_changed()
-                self._canvas.update_nlp_graphics()
         else:
-            """
-            searchButton.setEnabled(false);
-            search.setEnabled(false);
-            spinner.setEnabled(false);
-            spinner.setValue(0);
-            searchButton.setEnabled(false);
-            results.setEnabled(false);
-            ofHowMany.setText(" of 1");
-            """
 
             example = NLPInstance()
             example.add_token().add_property("Word", "[root]").add_property("Index", "0")
@@ -697,15 +378,14 @@ class CorpusNavigator:
             example.add_token().add_property("Word", "gold").add_property("Index", "3")
             example.add_token().add_property("Word", "corpus").add_property("Index", "4")
             example.add_token().add_property("Word", "!").add_property("Index", "5")
-            example.add_edge(0, 1, "ROOT", "dep", render_type=EdgeRenderType.dependency)
-            example.add_edge(0, 5, "PUNC", "dep", render_type=EdgeRenderType.dependency)
-            example.add_edge(1, 4, "OBJ", "dep", render_type=EdgeRenderType.dependency)
-            example.add_edge(4, 2, "DET", "dep", render_type=EdgeRenderType.dependency)
-            example.add_edge(4, 3, "MOD", "dep", render_type=EdgeRenderType.dependency)
-            example.add_edge(1, 4, "A1", "role", render_type=EdgeRenderType.dependency)
-            example.add_edge(1, 1, "add.1", "sense", render_type=EdgeRenderType.span)
+            example.add_dependency(0, 1, "ROOT", "dep")
+            example.add_dependency(0, 5, "PUNC", "dep")
+            example.add_dependency(1, 4, "OBJ", "dep")
+            example.add_dependency(4, 2, "DET", "dep")
+            example.add_dependency(4, 3, "MOD", "dep")
+            example.add_dependency(1, 4, "A1", "role")
+            example.add_dependency(1, 1, "add.1", "sense")
             self._canvas.set_nlp_instance(example)
-            self._canvas.fire_instance_changed()
             self._edgeTypeFilter.allowed_edge_types.add("dep")
             self._edgeTypeFilter.allowed_edge_types.add("role")
             self._edgeTypeFilter.allowed_edge_types.add("sense")
@@ -725,4 +405,6 @@ class CorpusNavigator:
             self._canvas.renderer.set_edge_type_order("sense", 4)
             self._canvas.renderer.set_edge_type_order("role", 5)
             self._canvas.renderer.set_edge_type_order("phrase", 5)
-            self._canvas.update_nlp_graphics()
+
+        # self._canvas.fire_instance_changed()
+        self._canvas.update_nlp_graphics()

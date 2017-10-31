@@ -84,6 +84,7 @@ class MyForm(QtWidgets.QMainWindow):
         TokenFilterPanel(self.ui, self.canvas, self.canvas.filter)
 
         self.ui.actionExport.setEnabled(True)
+        self.refresh()
 
     def browse_gold_folder(self):
         QtWidgets.QMainWindow()
@@ -139,9 +140,9 @@ class MyForm(QtWidgets.QMainWindow):
         if selected_guess:
             guess = self.guessMap[str(selected_guess[0].text())]
 
-        if gold:
-            CorpusNavigator(canvas=self.canvas, ui=self.ui, goldLoader=gold, guessLoader=guess,
-                            edgeTypeFilter=self.canvas.filter)
+        #if gold:
+        CorpusNavigator(canvas=self.canvas, ui=self.ui, gold_loader=gold, guess_loader=guess,
+                        edge_type_filter=self.canvas.filter)
 
     def on_item_changed(self):
         self.refresh()
