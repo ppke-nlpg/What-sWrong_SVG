@@ -6,20 +6,20 @@ from os.path import basename
 
 from PyQt5 import QtWidgets
 
-# from CorpusLoader import CorpusLoader
-
-
-from CorpusNavigator import CorpusNavigator
-from .DependencyFilterPanel import DependencyFilterPanel
-from .EdgeTypeFilterPanel import EdgeTypeFilterPanel
-from .TokenFilterPanel import TokenFilterPanel
-from .GUI.GUI import Ui_MainWindow
-from .GUI.ChooseFormat import Ui_ChooseFormat
-from .Qt5NLPCanvas import Qt5NLPCanvas
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
+from libwwnlp.CorpusNavigator import CorpusNavigator
 from libwwnlp.model.filter import Filter
 from libwwnlp.render.svg_writer import render_nlpgraphics
+from .DependencyFilterPanel import DependencyFilterPanel
+from .EdgeTypeFilterPanel import EdgeTypeFilterPanel
+from .GUI.ChooseFormat import Ui_ChooseFormat
+from .GUI.GUI import Ui_MainWindow
+from .Qt5NLPCanvas import Qt5NLPCanvas
+from .TokenFilterPanel import TokenFilterPanel
+
+
+# from CorpusLoader import CorpusLoader
 
 
 class MyWindow(QtWidgets.QMainWindow):

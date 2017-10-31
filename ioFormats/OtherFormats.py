@@ -29,7 +29,7 @@ class GizaAlignmentFormat(CorpusFormat):
         """
         self._reverseCheckBox = False  # JCheckBox
 
-    def load(self, file_name, from_sentence_nr: int, to_sentence_nr: int):
+    def load(self, file_name: str, from_sentence_nr: int, to_sentence_nr: int):
         with open(file_name, encoding='UTF-8') as reader:
             """
              * Skip past the next aligned segment pair in the given reader.
@@ -331,7 +331,7 @@ class LispSExprFormat(CorpusFormat):
         self.tag = "pos"     # Tag .sexpr.tag
         self.phrase = "phrase"  # Phrase .sexpr.phrase
 
-    def load(self, file_name: str, from_sent_nr, to_sent_nr):
+    def load(self, file_name: str, from_sent_nr: int, to_sent_nr: int):
 
         result = []
         instance_nr = 0
@@ -492,7 +492,7 @@ class TheBeastFormat(CorpusFormat):
         self.deps = ""
         self.spans = ""
 
-    def load(self, file_name, from_sent_nr, to_sent_nr):
+    def load(self, file_name: str, from_sent_nr: int, to_sent_nr: int):
         with open(file_name, encoding='UTF-8') as reader:
             token_preds = self._extract_predicates_from_string(self.tokens)
             dep_preds = self._extract_predicates_from_string(self.deps)

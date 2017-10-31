@@ -22,13 +22,13 @@ class CorpusLoader:
 
     """
      * A CorpusLoader is responsible for loading and managing corpora. A corpus is implemented as a list of NLPInstance
-     * objects. Each CorpusLoader maintains a list of such corpora, which can be extended by loading corpora from files. The
-     * loader displays the corpora and allows the user to select one such corpus. The selected corpus will then be used by
-     * other components (such as the {@link com.googlecode.whatswrong.CorpusNavigator} to pick and render NLPInstance
-     * objects from.
+     * objects. Each CorpusLoader maintains a list of such corpora, which can be extended by loading corpora from files.
+     * The loader displays the corpora and allows the user to select one such corpus. The selected corpus will then be
+     * used by other components (such as the {@link com.googlecode.whatswrong.CorpusNavigator} to pick and render
+     * NLPInstance objects from.
      * <p/>
-     * <p>A CorpusLoader sends out messages to {@link com.googlecode.whatswrong.CorpusLoader.Listener} objects whenever a
-     * new corpus is added, removed or selected.
+     * <p>A CorpusLoader sends out messages to {@link com.googlecode.whatswrong.CorpusLoader.Listener} objects whenever
+     * a new corpus is added, removed or selected.
      * <p/>
      * <p>The CorpusLoader loads files using {@link com.googlecode.whatswrong.io.CorpusFormat} objects. Each such object
      * provides an swing panel that will be used in the file dialog to configure how the particular format needs to be
@@ -195,9 +195,10 @@ class CorpusNavigator:
         """
         self._indices = {}
         self._diffCorpora = {}
+
+        # TODO: What is the difference in _gold and _gold_corpora ?
         self._gold_corpora = gold_loader  # XXX Should be set
         self._guess_corpora = guess_loader  # XXX Should be set
-
         self._guess = guess_loader
         self._gold = gold_loader
         self._canvas = canvas
@@ -216,12 +217,26 @@ class CorpusNavigator:
         self._canvas.renderer.set_edge_type_order("role", 5)
         self._canvas.renderer.set_edge_type_order("phase", 5)
 
+        # Spinner stuff
         self._spinner = ui.spinBox
+        self._spinner.valueChanged.connect(self.update_canvas)
+        self.update_spinner_borders()
 
-        def index_changed():
-            self.update_canvas()
-        self._spinner.valueChanged.connect(index_changed)
+        # Search stuff
+        self._search = ui.searchCorpusLineEdit
+        self._searchResultDictModel = {}
+        self._searchResultListWidget = ui.searchResultLisWidget
+        self._searchResultListWidget.itemClicked.connect(self.item_clicked)
+        self._searchButton = ui.searchButton
+        self._searchButton.clicked.connect(self.search_corpus)
 
+        self.update_canvas()
+
+    def item_clicked(self, item):
+        i = self._searchResultListWidget.row(item)
+        self._spinner.setValue(self._searchResultDictModel[i + 1])
+
+    def update_spinner_borders(self):
         if self._gold_corpora is not None:
             if self._guess_corpora is None:
                 index = len(self._gold_corpora)
@@ -235,20 +250,6 @@ class CorpusNavigator:
             self._spinner.setValue(0)
             self._spinner.setMinimum(0)
             self._ui.SpinBoxLabel.setText("of 0")
-
-        self._search = ui.searchCorpusLineEdit
-        self._searchResultDictModel = {}
-        self._searchResultListWidget = ui.searchResultLisWidget
-
-        def item_clicked(item):
-            i = self._searchResultListWidget.row(item)
-            self._spinner.setValue(self._searchResultDictModel[i+1])
-        self._searchResultListWidget.itemClicked.connect(item_clicked)
-
-        self._searchButton = ui.searchButton
-        self._searchButton.clicked.connect(self.search_corpus)
-
-        self.update_canvas()
 
     def corpus_added(self, corpus: [NLPInstance], src: CorpusLoader):
         """
