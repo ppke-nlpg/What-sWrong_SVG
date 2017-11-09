@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from Qt5GUI.GUIMain import main
 
 malt = False
 giza = False
@@ -111,4 +110,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "TEST":
         test()
         exit(0)
-    main(sys.argv)
+    else:
+        from Qt5GUI.GUIMain import main
+        main(sys.argv)
