@@ -61,7 +61,7 @@ class SpanLayout(AbstractEdgeLayout):
                     result.get(edge.start, 0))
         return result
 
-    def layout_edges(self, edges, bounds, scene: Scene):
+    def layout_edges(self, edges, bounds, scene: Scene, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:
@@ -155,7 +155,7 @@ class SpanLayout(AbstractEdgeLayout):
             self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
             # If curved int(self.curve) = 1 else 0
-            scene.add(Rectangle(scene, (min_x, height_minus_buffer), max_x - min_x, rect_height,
+            scene.add(Rectangle(scene, (min_x+origin[0], height_minus_buffer+origin[1]), max_x - min_x, rect_height,
                                 self.span_fill_color, edge_color, self.span_line_width,
                                 rx=self.span_radius * int(self.curve), ry=self.span_radius * int(self.curve)))
 
@@ -163,7 +163,7 @@ class SpanLayout(AbstractEdgeLayout):
             labelx = min_x + (max_x - min_x) // 2
             labely = height_minus_buffer + rect_height // 2 + 4  # TODO: Should be drawn in the center, + 4 not needed!
 
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
+            scene.add(Text(scene, (labelx+origin[0], labely+origin[1]), edge.get_label_with_note(), self.font_size, self.font_family,
                            edge_color))
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
@@ -178,5 +178,5 @@ class SpanLayout(AbstractEdgeLayout):
                 if not self.revert:
                     depth = max_depth - depth
                 height = self.baseline - 1 + depth * self.height_per_level
-                scene.add(Line(scene, (0, height), (max_width, height), color=self.separator_line_color))
+                scene.add(Line(scene, (0+origin[1], height+origin[1]), (max_width+origin[0], height+origin[1]), color=self.separator_line_color))
         return max_width, max_height - 2 * self.buffer_height

@@ -12,11 +12,7 @@ from svgwrite.utils import rgb
 
 
 class Scene(sw.drawing.Drawing):
-    """An svgwrite Drawing with stored offsets.
-
-    Attributes:
-        offsetx (int): Horizontal offset.
-        offsety (int): Vertical offset.
+    """An svgwrite Drawing.
     """
 
     def __init__(self, width: str='100%', height: str='100%'):
@@ -27,29 +23,6 @@ class Scene(sw.drawing.Drawing):
             height (int): The height of the scene in pixels.
         """
         super().__init__(size=(width, height))
-        self.offsetx = 0
-        self.offsety = 0
-
-    def translate(self, offx: int, offy: int):
-        """Shift the scene by the given offsets.
-
-        Args:
-            offx (int): Horizontal offset for the shift.
-            offy (int): Vertical offset for the shift.
-        """
-        self.offsetx += offx
-        self.offsety += offy
-
-    def translate_to(self, vect: tuple):
-        """Shift a vector by the offsets of this scene.
-
-        Args:
-            vect (tuple): The (two-dimensional) vector to be shifted.
-
-        Returns:
-            tuple: The shifted vector.
-        """
-        return vect[0] + self.offsetx, vect[1] + self.offsety
 
 
 class Line(sw.shapes.Line):
@@ -66,8 +39,8 @@ class Line(sw.shapes.Line):
             color (tuple): The color of the line.
             width: (int): The width of the line.
         """
-        super().__init__(scene.translate_to(start),
-                         scene.translate_to(end),
+        super().__init__(start,
+                         end,
                          shape_rendering='inherit',
                          stroke=rgb(*color),
                          stroke_width=width)
@@ -89,11 +62,10 @@ class QuadraticBezierCurve(sw.path.Path):
             color (tuple): The color of the line.
             width: (int): The width of the line.
         """
-
-        super().__init__(d=['M', scene.translate_to(start),
-                            'C', scene.translate_to(control1),
-                            scene.translate_to(control2),
-                            scene.translate_to(end)],
+        super().__init__(d=['M', start,
+                            'C', control1,
+                            control2,
+                            end],
                          stroke=rgb(*color),
                          stroke_width=width,
                          fill='none')
@@ -118,7 +90,7 @@ class Rectangle(sw.shapes.Rect):
             rx (int): Horizontal radius of corner rounding.
             ry (int): Vertical radius of corner rounding.
         """
-        super().__init__(insert=scene.translate_to(origin),
+        super().__init__(insert=origin,
                          size=(width, height),
                          shape_rendering='inherit',
                          fill=rgb(*fill_color),
@@ -142,7 +114,6 @@ class Text(sw.text.Text):
             font (str): The font specification.
             color (tuple): Color to use for the text.
         """
-        origin = scene.translate_to(origin)
         super().__init__(text,
                          insert=origin,
                          fill=rgb(*color),
@@ -187,7 +158,6 @@ class TextToken(sw.text.Text):
             font (str): The font specification.
             color (tuple): Color to use for the text.
         """
-        origin = scene.translate_to(origin)
         super().__init__(text,
                          x=[origin[0]],
                          y=[origin[1]],

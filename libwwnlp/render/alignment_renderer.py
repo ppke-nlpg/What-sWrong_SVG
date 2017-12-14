@@ -74,8 +74,7 @@ class AlignmentRenderer:
                 scene.add(Line(scene, start, end, edge_color))
 
         # add spans
-        scene.translate(0, dim[1] + self._height_factor)
-        dim = self._token_layout2.layout(instance, {}, scene)
+        dim = self._token_layout2.layout(instance, {}, scene, (0, dim[1] + self._height_factor))
         height += dim[1] + self._height_factor
         width = max(dim[0], width)
 

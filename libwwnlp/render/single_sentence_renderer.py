@@ -59,15 +59,13 @@ class SingleSentenceRenderer:
                                                                  token_x_bounds, scene)
 
         # add tokens
-        scene.translate(0, d_height)
-        t_width, t_height = self._token_layout.layout(instance, widths, scene)
+        t_width, t_height = self._token_layout.layout(instance, widths, scene, (0, d_height))
         self._start_of_tokens = t_height
 
         # add spans
         s_width, s_height = 0, 0
         if render_spans:
-            scene.translate(0, t_height)
-            s_width, s_height = self._span_layout.layout_edges(spans, token_x_bounds, scene)
+            s_width, s_height = self._span_layout.layout_edges(spans, token_x_bounds, scene, (0, d_height + t_height))
 
         return max(d_width, t_width, s_width), sum((d_height, t_height, s_height, 1))  # TODO: Why +1?
 

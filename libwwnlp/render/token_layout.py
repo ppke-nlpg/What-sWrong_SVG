@@ -126,7 +126,7 @@ class TokenLayout:
         return result
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
-    def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene):
+    def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -139,6 +139,7 @@ class TokenLayout:
                 because they have self loops in a DependencyLayout the space
                 they need can be provided through this map.
             scene: The graphics object to draw to.
+            origin (tuple): The origin of the layout as a pair of coordinates.
 
         Returns:
             The dimension of the drawn graph.
@@ -170,7 +171,7 @@ class TokenLayout:
                     lasty += self.row_height
                     curr_property_value = token.get_property_value(prop_name)
                     self.text_layouts[(token, index)] = curr_property_value
-                    text_token = TextToken(scene, (lastx, lasty), curr_property_value, self.token_fontsize,
+                    text_token = TextToken(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value, self.token_fontsize,
                                            self.font_family, color)
                     maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family).
                                get_width())  # TODO: We do not need Text here just the width!
@@ -178,7 +179,7 @@ class TokenLayout:
 
                 lasty += self.font_desc_size
                 # TODO: Do we use this anywhere? What is this?
-                self.bounds[token] = Rectangle(scene, (lastx, self.base_line), maxx, lasty - self.base_line,
+                self.bounds[token] = Rectangle(scene, (lastx + origin[0], self.base_line + origin[1]), maxx, lasty - self.base_line,
                                                self.fill_color, self.line_color, self.line_width)
                 # scene.add(self.bounds[token])
 
