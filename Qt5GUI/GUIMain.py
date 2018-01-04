@@ -140,7 +140,7 @@ class MyForm(QtWidgets.QMainWindow):
         if selected_guess:
             guess = self.guessMap[str(selected_guess[0].text())]
 
-        #if gold:
+        # if gold:
         CorpusNavigator(canvas=self.canvas, ui=self.ui, gold_loader=gold, guess_loader=guess,
                         edge_type_filter=self.canvas.filter)
 
