@@ -41,8 +41,8 @@ class AlignmentRenderer:
         Returns:
             tuple: The width and height of the drawn object.
         """
-        token_xbounds1 = self._token_layout1.estimate_token_bounds(instance, {}, scene)
-        token_xbounds2 = self._token_layout2.estimate_token_bounds(instance, {}, scene)
+        token_xbounds1 = self._token_layout1.estimate_token_bounds(instance, {})
+        token_xbounds2 = self._token_layout2.estimate_token_bounds(instance, {})
 
         width = 0
         height = 0
@@ -67,11 +67,11 @@ class AlignmentRenderer:
                 ctrl1 = (middle(bound1), height + self._height_factor // 2)
                 ctrl2 = (middle(bound2), height + self._height_factor // 2)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(QuadraticBezierCurve(scene, start, ctrl1, ctrl2, end, edge_color))
+                scene.add(QuadraticBezierCurve(start, ctrl1, ctrl2, end, edge_color))
             else:
                 start = (middle(bound1), height)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(Line(scene, start, end, edge_color))
+                scene.add(Line(start, end, edge_color))
 
         # add spans
         dim = self._token_layout2.layout(instance, {}, scene, (0, dim[1] + self._height_factor))

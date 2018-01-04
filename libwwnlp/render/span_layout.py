@@ -38,7 +38,7 @@ class SpanLayout(AbstractEdgeLayout):
         self.span_line_width = 1  # TODO: Constants?
         self.span_fill_color = (255, 255, 255)  # TODO: Constants?
 
-    def estimate_required_token_widths(self, edges, scene):
+    def estimate_required_token_widths(self, edges):
         """Return the required token widths for self-loops.
 
         For each token that has a self-loop we need the token to be wide enough.
@@ -48,7 +48,6 @@ class SpanLayout(AbstractEdgeLayout):
 
         Args:
             edges (set): The set of edges that can contain self-loops.
-            scene: The graphics object needed to find out the actual width of text.
 
         Returns:
             Dict[Token, Integer]: A mapping from tokens with self-loops to pixel widths.
@@ -57,7 +56,7 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = self.total_text_margin + max(
-                    Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width(),
+                    Text((0, 0), edge.label, self.font_size, self.font_family).get_width(),
                     result.get(edge.start, 0))
         return result
 
@@ -68,6 +67,7 @@ class SpanLayout(AbstractEdgeLayout):
             edges: The edges to layout.
             bounds: The bounds of the tokens the spans connect.
             scene: The graphics object to draw on.
+            origin: The origin coordinates.
 
         Note on types:
         depth (Counter(Edge))
@@ -140,7 +140,7 @@ class SpanLayout(AbstractEdgeLayout):
                 max_width = max_x + 1
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text(scene, (0, 0), edge.label, self.font_size, self.font_family).get_width()
+            labelwidth = Text((0, 0), edge.label, self.font_size, self.font_family).get_width()
 
             if max_x - min_x < labelwidth + self.total_text_margin:
                 middle = min_x + (max_x - min_x) // 2
@@ -155,7 +155,7 @@ class SpanLayout(AbstractEdgeLayout):
             self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
 
             # If curved int(self.curve) = 1 else 0
-            scene.add(Rectangle(scene, (min_x+origin[0], height_minus_buffer+origin[1]), max_x - min_x, rect_height,
+            scene.add(Rectangle((min_x+origin[0], height_minus_buffer+origin[1]), max_x - min_x, rect_height,
                                 self.span_fill_color, edge_color, self.span_line_width,
                                 rx=self.span_radius * int(self.curve), ry=self.span_radius * int(self.curve)))
 
@@ -163,8 +163,8 @@ class SpanLayout(AbstractEdgeLayout):
             labelx = min_x + (max_x - min_x) // 2
             labely = height_minus_buffer + rect_height // 2 + 4  # TODO: Should be drawn in the center, + 4 not needed!
 
-            scene.add(Text(scene, (labelx+origin[0], labely+origin[1]), edge.get_label_with_note(), self.font_size, self.font_family,
-                           edge_color))
+            scene.add(Text((labelx+origin[0], labely+origin[1]), edge.get_label_with_note(), self.font_size,
+                           self.font_family, edge_color))
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
 
@@ -178,5 +178,6 @@ class SpanLayout(AbstractEdgeLayout):
                 if not self.revert:
                     depth = max_depth - depth
                 height = self.baseline - 1 + depth * self.height_per_level
-                scene.add(Line(scene, (0+origin[1], height+origin[1]), (max_width+origin[0], height+origin[1]), color=self.separator_line_color))
+                scene.add(Line((0+origin[1], height+origin[1]), (max_width+origin[0], height+origin[1]),
+                               color=self.separator_line_color))
         return max_width, max_height - 2 * self.buffer_height

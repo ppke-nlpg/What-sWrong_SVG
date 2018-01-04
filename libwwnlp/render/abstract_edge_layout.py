@@ -214,4 +214,4 @@ class AbstractEdgeLayout:
         props_with_color = edge.properties & self.property_colors.keys()
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
         return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
-                   default=(None, None, self.type_colors.get(edge.edge_type, self.default_edge_color)))[2]
+                   default=(0, None, self.type_colors.get(edge.edge_type, self.default_edge_color)))[2]

@@ -173,14 +173,13 @@ class DependencyLayout(AbstractEdgeLayout):
             y_coord = (point4[0], point4[1])
 
             # Draw the arrow head
-            scene.add(Line(scene, x_coord, y_coord, edge_color))
-            scene.add(Line(scene, z_coord, y_coord, edge_color))
+            scene.add(Line(x_coord, y_coord, edge_color))
+            scene.add(Line(z_coord, y_coord, edge_color))
 
             # write label in the middle under
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
             labely = height + self.font_size
-            scene.add(Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family,
-                           edge_color))
+            scene.add(Text((labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family, edge_color))
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
@@ -202,9 +201,9 @@ class DependencyLayout(AbstractEdgeLayout):
         Returns:
             The modified scene
         """
-        scene.add(Line(scene, point1, point2, color))
-        scene.add(Line(scene, point2, point3, color))
-        scene.add(Line(scene, point3, point4, color))
+        scene.add(Line(point1, point2, color))
+        scene.add(Line(point2, point3, color))
+        scene.add(Line(point3, point4, color))
         return scene
 
     @staticmethod
@@ -226,8 +225,8 @@ class DependencyLayout(AbstractEdgeLayout):
             The modified scene
         """
         middle = (control_point1[0] + (control_point2[0] - control_point1[0]) // 2, control_point1[1])
-        scene.add(QuadraticBezierCurve(scene, start, control_point1, control_point1, middle, color))
-        scene.add(QuadraticBezierCurve(scene, middle, control_point2, control_point2, end, color))
+        scene.add(QuadraticBezierCurve(start, control_point1, control_point1, middle, color))
+        scene.add(QuadraticBezierCurve(middle, control_point2, control_point2, end, color))
         return scene
 
     @staticmethod

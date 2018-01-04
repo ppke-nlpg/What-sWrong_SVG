@@ -79,7 +79,7 @@ class TokenLayout:
         self.width = 0
         self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, scene: Scene):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -89,7 +89,6 @@ class TokenLayout:
                 requirements specified by this map. If a token has no required
                 width its estimated width will be based on the length of its
                 textual properties.
-            scene (): The scene object to render to.
 
         Returns:
             dict: A mapping from tokens to estimated horizontal bounds in the
@@ -115,7 +114,7 @@ class TokenLayout:
 
                 props = token.get_property_names()
                 lasty = self.base_line + self.row_height*(len(props))
-                maxx = max(chain((Text(scene, (0, 0), token.get_property_value(prop_name), self.text_fontsize,
+                maxx = max(chain((Text((0, 0), token.get_property_value(prop_name), self.text_fontsize,
                                        self.font_family).get_width() for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
@@ -171,16 +170,17 @@ class TokenLayout:
                     lasty += self.row_height
                     curr_property_value = token.get_property_value(prop_name)
                     self.text_layouts[(token, index)] = curr_property_value
-                    text_token = TextToken(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value, self.token_fontsize,
-                                           self.font_family, color)
-                    maxx = max(maxx, Text(scene, (0, 0), curr_property_value, self.text_fontsize, self.font_family).
+                    text_token = TextToken((lastx + origin[0], lasty + origin[1]), curr_property_value,
+                                           self.token_fontsize, self.font_family, color)
+                    maxx = max(maxx, Text((0, 0), curr_property_value, self.text_fontsize, self.font_family).
                                get_width())  # TODO: We do not need Text here just the width!
                     scene.add(text_token)
 
                 lasty += self.font_desc_size
                 # TODO: Do we use this anywhere? What is this?
-                self.bounds[token] = Rectangle(scene, (lastx + origin[0], self.base_line + origin[1]), maxx, lasty - self.base_line,
-                                               self.fill_color, self.line_color, self.line_width)
+                self.bounds[token] = Rectangle((lastx + origin[0], self.base_line + origin[1]), maxx,
+                                               lasty - self.base_line, self.fill_color, self.line_color,
+                                               self.line_width)
                 # scene.add(self.bounds[token])
 
                 lastx += maxx + self.margin

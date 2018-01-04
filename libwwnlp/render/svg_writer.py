@@ -29,11 +29,10 @@ class Line(sw.shapes.Line):
     """A straight line between two points.
     """
 
-    def __init__(self, scene: Scene, start: tuple, end: tuple, color: tuple, width: int=1):
+    def __init__(self, start: tuple, end: tuple, color: tuple, width: int=1):
         """Initialize a line.
 
         Args:
-            scene (Scene): The scene to draw on.
             start (tuple): The line's starting point.
             end (tuple): The line's ending point.
             color (tuple): The color of the line.
@@ -50,11 +49,10 @@ class QuadraticBezierCurve(sw.path.Path):
     """A quadratic Bezier curve.
     """
 
-    def __init__(self, scene, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
+    def __init__(self, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
         """Initialize a quadratic Bezier curve.
 
         Args:
-            scene (Scene): The scene to draw on.
             start (tuple): The line's starting point.
             control1 (tuple): The first control point for the curve.
             control2 (tuple): The second control point for the curve.
@@ -75,12 +73,11 @@ class Rectangle(sw.shapes.Rect):
     """A rectangle.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, width: int, height: int,
+    def __init__(self, origin: tuple, width: int, height: int,
                  fill_color: tuple, line_color: tuple, line_width: int, rx: int=0, ry: int=0):
         """Initialize a rectangle.
 
         Args:
-            scene (Scene): The scene to draw on.
             origin (tuple): The top left corner of the rectangle.
             width: (int): The width of the rectangle.
             height: (int): The height of the rectangle.
@@ -103,11 +100,10 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
+    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
         """Initialize a text object.
 
         Args:
-            scene (Scene): The scene to write on.
             origin (tuple): The top left corner of the text area.
             text (str): The text to write on the scene.
             size (int): The size of the text.
@@ -147,11 +143,10 @@ class TextToken(sw.text.Text):
     """A text token.
     """
 
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
+    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
         """Initialize a text token.
 
         Args:
-            scene (Scene): The scene to write on.
             origin (tuple): The top left corner of the text area.
             text (str): The text to write on the scene.
             size (int): The size of the text.

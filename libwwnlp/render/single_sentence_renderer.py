@@ -49,10 +49,10 @@ class SingleSentenceRenderer:
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
-        widths = self._span_layout.estimate_required_token_widths(spans, scene)
+        widths = self._span_layout.estimate_required_token_widths(spans)
 
         # find token bounds
-        token_x_bounds = self._token_layout.estimate_token_bounds(instance, widths, scene)
+        token_x_bounds = self._token_layout.estimate_token_bounds(instance, widths)
 
         # place dependencies on top
         d_width, d_height = self._dependency_layout.layout_edges(instance.get_edges(EdgeRenderType.dependency),
