@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Todo: GUI Export to PDF, EPS, etc.
 
 from PyQt5 import QtWidgets, QtSvg
 

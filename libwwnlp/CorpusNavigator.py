@@ -4,16 +4,6 @@
 from libwwnlp.NLPCanvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
-"""
- * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
- * (or one difference of two NLPInstance objects in terms of their edges). The CorpusNavigator also allows us to search
- * a corpus for keywords by using the Lucene IR engine. The instances that match the user's query are presented in a
- * list and one of them can then be picked to be rendered. The CorpusNavigator has also a spinner panel that allows to
- * go through this corpus by index. This spinner is not part of the navigator panel and can be placed anywhere.
- *
- * @author Sebastian Riedel
-"""
-
 
 class CorpusLoader:
     # TODO: This class in the past had many GUI stuff to do dinamically. Those features were eliminated in favour
@@ -52,7 +42,7 @@ class CorpusLoader:
         """
          * The set of all loaded corpora.
         """
-        self._corpora = []
+        self.corpora = []  # ArrayList<List<NLPInstance>>() # TODO: PUBLIC attribute
 
         """
          * The file names the corpora came from, stored in a list model.
@@ -65,113 +55,23 @@ class CorpusLoader:
           name.
         """
         self._formats = {}
-        """
-         * The list of listeners of this loader.
-        """
-
-        self._changeListeners = []
-        """
-         * The file chooser dialog.
-        """
-        self._fileChooser = None
-
-        """
-         * The file dialog accessory to define the range of instances.
-        """
-        self._accessory = None
 
         """
          * The id of this loader (used when loading properties from the user configuration file).
         """
         self.id = title.replace(" ", "_").lower()
 
-        self._corpora = []  # ArrayList<List<NLPInstance>>()
-
-    """
-     * Adds a listener to this loader.
-     *
-     * @param changeListener the listener to add.
-    """
-
-    def addChangeListener(self, changelistener):
-        self._changeListeners.append(changelistener)
-
-    """
-     * Notifies all listeners that a corpus was added.
-     *
-     * @param corpus the added corpus.
-    """
-
-    def fireAdded(self, corpus: list):  # List<NLPInstance>
-        for listener in self._changeListeners:
-            listener.corpus_added(corpus, self)
-
-    """
-     * Notifies all listeners that a corpus was removed.
-     *
-     * @param corpus the removed corpus.
-    """
-
-    def fireRemoved(self, corpus):  # List<NLPInstance>
-        for listener in self._changeListeners:
-            listener.corpus_removed(corpus, self)
-
-    """
-     * Notifies all listeners that a corpus was selected.
-     *
-     * @param corpus the selected corpus.
-    """
-
-    def fireSelected(self, corpus):  # List<NLPInstance>
-        for listener in self._changeListeners:
-            listener.corpusSelected(corpus, self)
-
-    """
-     * Adds a CorpusFormat.
-     *
-     * @param format the format to add.
-    """
-
-    def addFormat(self, corpus_format):  # CorpusFormat
-        self._formats[corpus_format.getName()] = corpus_format
-
-    """
-     * Sets the directory to use in the file dialog.
-     *
-     * @param dir the directory of the file dialog.
-    """
-
-    def setDirectory(self, directory: str):  # XXX
-        pass  # fileChooser.setCurrentDirectory(new File(dir))
-
-    """
-     * gets the directory to use in the file dialog.
-     *
-     * @return the directory of the file dialog.
-    """
-
-    def getDirectory(self):  # XXX
-        pass  # fileChooser.getCurrentDirectory().getPath()
-
-    def __len__(self):
-        return len(self._corpora)
-
-    def append(self, corpus):
-        self._corpora.append(corpus)
-
-    def remove(self, corpus):
-        if corpus in self._corpora:
-            self._corpora.remove(corpus)
-
-    def __iter__(self):
-        return iter(self._corpora)
-
-    def __getitem__(self, sentence_nr):
-        # TODO: get the sentence_nr-th NLPInstance from corpora
-        pass
-
 
 class CorpusNavigator:
+    """
+     * A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to draw
+     * (or one difference of two NLPInstance objects in terms of their edges). The CorpusNavigator also allows us to search
+     * a corpus for keywords by using the Lucene IR engine. The instances that match the user's query are presented in a
+     * list and one of them can then be picked to be rendered. The CorpusNavigator has also a spinner panel that allows to
+     * go through this corpus by index. This spinner is not part of the navigator panel and can be placed anywhere.
+     *
+     * @author Sebastian Riedel
+    """
     """
      * The loader for guess instances.
     """
@@ -259,10 +159,10 @@ class CorpusNavigator:
          * @param src    the source loader.
         """
         if src == self._gold:
-            self._gold_corpora.append(corpus)
+            self._gold_corpora.append(corpus)  # TODO: CorpusLoader append
             # indices[corpus] = self.createIndex(corpus)
         else:
-            self._guess_corpora.append(corpus)
+            self._guess_corpora.append(corpus)  # TODO: CorpusLoader append
             # indices[corpus] = self.createIndex(corpus)
 
     @staticmethod
@@ -307,12 +207,12 @@ class CorpusNavigator:
          * @param src    the loader that removed the corpus.
         """
         if src == self._gold:
-            self._gold_corpora.remove(corpus)
+            self._gold_corpora.remove(corpus)  # TODO: CorpusLoader remove
             del self._indices[corpus]
             for c in self._guess_corpora:
                 self.remove_diff_corpus(corpus, c)
         else:
-            self._guess_corpora.remove(corpus)
+            self._guess_corpora.remove(corpus)  # TODO: CorpusLoader remove
             del self._indices[corpus]
             for c in self._gold_corpora:
                 self.remove_diff_corpus(corpus, c)

@@ -88,12 +88,12 @@ class MyForm(QtWidgets.QMainWindow):
 
     def browse_gold_folder(self):
         QtWidgets.QMainWindow()
-        myapp2 = MyWindow(self, corp_type="gold")
+        myapp2 = MyWindow(self, corp_type='gold')
         myapp2.show()
 
     def browse_guess_folder(self):
         QtWidgets.QMainWindow()
-        myapp2 = MyWindow(self, corp_type="guess")
+        myapp2 = MyWindow(self, corp_type='guess')
         myapp2.show()
 
     def remove_gold(self):
@@ -153,8 +153,14 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.graphicsView.show()
 
     def file_save(self):
-        name = QtWidgets.QFileDialog.getSaveFileName(QtWidgets.QFileDialog(), 'Save File')[0]
-        render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name)
+        supported_formats = {'Scalable Vector Graphics (*.svg)': 'SVG',
+                             'Portable Document Format (*.pdf)': 'PDF',
+                             'Encapsulated PostScript (*.eps)': 'EPS'}
+        name, file_type = QtWidgets.QFileDialog.getSaveFileName(QtWidgets.QFileDialog(), 'Save File',
+                                                                filter=';;'.join(sorted(supported_formats.keys(),
+                                                                                        reverse=True)))
+        if len(name) > 0:
+            render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name, supported_formats[file_type])
 
 
 def test(f):
