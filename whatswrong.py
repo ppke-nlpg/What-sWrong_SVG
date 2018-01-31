@@ -26,7 +26,7 @@ def test():
     from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
         BioNLP2009SharedTaskFormat, TheBeastFormat
     from libwwnlp.model.nlp_instance import RenderType
-    from libwwnlp.render.svg_writer import render_nlpgraphics
+    from libwwnlp.render.backend.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
     from libwwnlp.model.filter import Filter
 

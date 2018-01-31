@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from .svg_writer import Line, Scene, Text, QubicBezierCurve
+from libwwnlp.render.backend.svg_writer import Line, Scene, Text, QubicBezierCurve
 
 
 class DependencyLayout(AbstractEdgeLayout):

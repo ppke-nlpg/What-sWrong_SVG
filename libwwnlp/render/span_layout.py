@@ -4,7 +4,7 @@
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from .svg_writer import Line, Rectangle, Scene, Text
+from libwwnlp.render.backend.svg_writer import Line, Rectangle, Scene, Text
 
 
 class SpanLayout(AbstractEdgeLayout):

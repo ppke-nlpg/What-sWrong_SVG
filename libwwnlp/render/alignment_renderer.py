@@ -3,7 +3,7 @@
 
 from .token_layout import TokenLayout, middle
 from ..model.edge import EdgeRenderType
-from .svg_writer import Line, QubicBezierCurve
+from libwwnlp.render.backend.svg_writer import Line, QubicBezierCurve
 
 
 class AlignmentRenderer:
