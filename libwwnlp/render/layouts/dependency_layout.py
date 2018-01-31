@@ -6,7 +6,7 @@ import itertools
 import operator
 from collections import Counter, defaultdict
 
-from .abstract_edge_layout import AbstractEdgeLayout
+from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
 from libwwnlp.render.backend.svg_writer import Scene, draw_arrow_w_text_middle
 
 

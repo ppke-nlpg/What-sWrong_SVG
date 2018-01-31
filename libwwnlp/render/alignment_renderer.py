@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from libwwnlp.render.layouts.token_layout import TokenLayout, middle
-from ..model.edge import EdgeRenderType
-from libwwnlp.render.backend.svg_writer import draw_line
+from libwwnlp.render.layouts.token_layout import TokenLayout
+from libwwnlp.render.layouts.alignment_layout import AlignmentLayout
+from libwwnlp.model.edge import EdgeRenderType
 
 
 class AlignmentRenderer:
@@ -14,8 +14,6 @@ class AlignmentRenderer:
             sentence.
         _token_layout2 (TokenLayout): The the token layout for the second
             sentence.
-        _height_factor (int): Controls the height of the graph.
-        _is_curved (bool): Whether the graph is should be curved or rectangular.
     """
 
     def __init__(self):
@@ -23,13 +21,9 @@ class AlignmentRenderer:
         """
         self._token_layout1 = TokenLayout()
         self._token_layout2 = TokenLayout()
-        self._height_factor = 100              # TODO: Constants?
-        self._is_curved = True
+        self._alignment_layout = AlignmentLayout()
         self._token_layout1.to_split_point = 0
         self._token_layout2.from_split_point = 0
-        self.fp_color = (255, 0, 0)   # Red    # TODO: Constants?
-        self.fn_color = (0, 0, 255)   # Blue   # TODO: Constants?
-        self.match_color = (0, 0, 0)  # Black  # TODO: Constants?
 
     def render(self, instance, scene):
         """Renders the given instance as a pair of aligned sentences.
@@ -41,41 +35,18 @@ class AlignmentRenderer:
         Returns:
             tuple: The width and height of the drawn object.
         """
-        token_xbounds1 = self._token_layout1.estimate_token_bounds(instance, {})
-        token_xbounds2 = self._token_layout2.estimate_token_bounds(instance, {})
-
-        width = 0
-        height = 0
-
         # place dependencies on top
-        dim = self._token_layout1.layout(instance, {}, scene)
-        height += dim[1]
-        width = max(dim[0], width)
+        dim1 = self._token_layout1.layout(instance, {}, scene)
 
-        # TODO: This should be in some layout class?
-        for edge in instance.get_edges(EdgeRenderType.dependency):
-            if 'eval_status_FP' in edge.properties:
-                edge_color = self.fp_color
-            elif 'eval_status_FN' in edge.properties:
-                edge_color = self.fn_color
-            else:
-                edge_color = self.match_color
-
-            bound1 = middle(token_xbounds1[edge.start])
-            bound2 = middle(token_xbounds2[edge.end])
-            start = (bound1, height)
-            ctrl1 = (bound1, height + self._height_factor // 2)
-            ctrl2 = (bound2, height + self._height_factor // 2)
-            end = (bound2, height + self._height_factor)
-
-            draw_line(scene, start, ctrl1, ctrl2, end, self._is_curved, edge_color)
+        height_factor = self._alignment_layout.layout_edges(dim1[1], instance.get_edges(EdgeRenderType.dependency),
+                                                            self._token_layout1.estimate_token_bounds(instance, {}),
+                                                            self._token_layout2.estimate_token_bounds(instance, {}),
+                                                            scene)
 
         # add spans
-        dim = self._token_layout2.layout(instance, {}, scene, (0, dim[1] + self._height_factor))
-        height += dim[1] + self._height_factor
-        width = max(dim[0], width)
+        dim2 = self._token_layout2.layout(instance, {}, scene, (0, dim1[1] + height_factor))
 
-        return width, height + 1
+        return max(dim1[0], dim2[0]), dim1[1] + dim2[1] + height_factor + 1
 
     @property
     def margin(self):
@@ -95,3 +66,49 @@ class AlignmentRenderer:
         """
         self._token_layout1.margin = value
         self._token_layout2.margin = value
+
+    def set_height_factor(self, height_factor):
+        """Controls the height of the graph.
+
+        Args:
+            height_factor (int): Indicates how high the graph should be.
+        """
+        self._alignment_layout.height_per_level = height_factor
+
+    def get_height_factor(self):
+        """Returns an integer that reflects the height of the graph.
+
+        Returns:
+            int: A number hat reflects the height of the graph. The higher this
+            value, the higher the graph.
+        """
+        return self._alignment_layout.height_per_level
+
+    def set_curved(self, is_curved):
+        """Controls whether the graph should be curved or rectangular.
+
+        If curved the dependencies are drawn as curves instead of rectangular
+        lines, and spans are drawn as rounded rectangles.
+
+        Args:
+            is_curved (bool): Whether the graph should be more curved.
+        """
+        self._alignment_layout.curve = is_curved
+
+    def is_curved(self):
+        """Returns whether the renderer draws a more curved graph or not.
+
+        Returns:
+            bool: True iff the renderer draws a more curved graph.
+        """
+        return self._alignment_layout.curve
+
+    # TODO: Simplify
+    def set_edge_type_color(self, edge_type, color):
+        """Set the color for edges of a certain type.
+
+        Args:
+            edge_type (str): The type of the edges we want to change the color for.
+            color: The color of the edges of the given type.
+        """
+        self._alignment_layout.type_colors[edge_type] = color
