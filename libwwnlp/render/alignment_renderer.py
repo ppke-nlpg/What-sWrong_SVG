@@ -3,7 +3,7 @@
 
 from .token_layout import TokenLayout, middle
 from ..model.edge import EdgeRenderType
-from .svg_writer import Line, QuadraticBezierCurve
+from .svg_writer import Line, QubicBezierCurve
 
 
 class AlignmentRenderer:
@@ -67,7 +67,7 @@ class AlignmentRenderer:
                 ctrl1 = (middle(bound1), height + self._height_factor // 2)
                 ctrl2 = (middle(bound2), height + self._height_factor // 2)
                 end = (middle(bound2), height + self._height_factor)
-                scene.add(QuadraticBezierCurve(start, ctrl1, ctrl2, end, edge_color))
+                scene.add(QubicBezierCurve(start, ctrl1, ctrl2, end, edge_color))
             else:
                 start = (middle(bound1), height)
                 end = (middle(bound2), height + self._height_factor)

@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from .svg_writer import Line, Scene, Text, QuadraticBezierCurve
+from .svg_writer import Line, Scene, Text, QubicBezierCurve
 
 
 class DependencyLayout(AbstractEdgeLayout):
@@ -225,8 +225,8 @@ class DependencyLayout(AbstractEdgeLayout):
             The modified scene
         """
         middle = (control_point1[0] + (control_point2[0] - control_point1[0]) // 2, control_point1[1])
-        scene.add(QuadraticBezierCurve(start, control_point1, control_point1, middle, color))
-        scene.add(QuadraticBezierCurve(middle, control_point2, control_point2, end, color))
+        scene.add(QubicBezierCurve(start, control_point1, control_point1, middle, color))
+        scene.add(QubicBezierCurve(middle, control_point2, control_point2, end, color))
         return scene
 
     @staticmethod

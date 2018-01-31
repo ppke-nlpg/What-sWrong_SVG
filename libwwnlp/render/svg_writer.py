@@ -45,12 +45,12 @@ class Line(sw.shapes.Line):
                          stroke_width=width)
 
 
-class QuadraticBezierCurve(sw.path.Path):
-    """A quadratic Bezier curve.
+class QubicBezierCurve(sw.path.Path):
+    """A qubic Bezier curve.
     """
 
     def __init__(self, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
-        """Initialize a quadratic Bezier curve.
+        """Initialize a qubic Bezier curve.
 
         Args:
             start (tuple): The line's starting point.
@@ -100,7 +100,7 @@ class Text(sw.text.Text):
     """Text.
     """
 
-    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
+    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0), token=False):
         """Initialize a text object.
 
         Args:
@@ -110,14 +110,16 @@ class Text(sw.text.Text):
             font (str): The font specification.
             color (tuple): Color to use for the text.
         """
+        additional = {}
+        if not token:  # TODO: Remove hack. The only difference is the alignemnt and text_anchor
+            additional = {'alignment_baseline': 'central', 'text_anchor': 'middle'}
         super().__init__(text,
                          insert=origin,
                          fill=rgb(*color),
                          font_family=font,
                          font_size=size,
                          text_rendering='inherit',
-                         alignment_baseline='central',
-                         text_anchor='middle')
+                         **additional)
 
     def get_width(self) -> int:
         """Return the width of the text.
@@ -137,29 +139,6 @@ class Text(sw.text.Text):
         width = ccontext.text_extents(self.text)[2]
 
         return width
-
-
-class TextToken(sw.text.Text):
-    """A text token.
-    """
-
-    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0)):
-        """Initialize a text token.
-
-        Args:
-            origin (tuple): The top left corner of the text area.
-            text (str): The text to write on the scene.
-            size (int): The size of the text.
-            font (str): The font specification.
-            color (tuple): Color to use for the text.
-        """
-        super().__init__(text,
-                         x=[origin[0]],
-                         y=[origin[1]],
-                         fill=rgb(*color),
-                         font_family=font,
-                         font_size=size,
-                         text_rendering='inherit')
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
