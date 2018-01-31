@@ -69,12 +69,88 @@ class QubicBezierCurve(sw.path.Path):
                          fill='none')
 
 
+def draw_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int, is_curved: bool,
+               color: tuple):
+        # Store the appropriate function ouside of the loop
+        if is_curved:
+            return create_curve_arrow(scene, start, point1, point2, end, arrowsize, color)
+        else:
+            return create_rect_arrow
+
+
+def create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
+                      color: tuple):
+    """Create an rectangular path through the given points.
+
+    The path starts at p1 the goes to point1, p2 and finally to end.
+
+    Args:
+        scene (Scene): The scene where the path should be created.
+        start: The first point.
+        point1: The second point.
+        point2: The third point.
+        arrowsize: The size of the arrow head.
+        end: The last point.
+        color: The arrow's color.
+
+    Returns:
+        The modified scene
+    """
+    scene.add(Line(start, point1, color))
+    scene.add(Line(point1, point2, color))
+    scene.add(Line(point2, end, color))
+
+    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+    y_coord = (end[0], end[1])
+
+    # Draw the arrow head
+    scene.add(Line(x_coord, y_coord, color))
+    scene.add(Line(z_coord, y_coord, color))
+
+    return scene
+
+
+def create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
+                       color: tuple):
+    """Create an curved path around the given points in a scene.
+
+    The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
+    bezier control points.
+
+    Args:
+        scene (Scene): The scene where the path should be created.
+        start: The start point.
+        point1: The first control point.
+        point2: The second control point.
+        end: The end point.
+        arrowsize: The size of the arrow head.
+        color: The arrow's color.
+
+    Return:
+        The modified scene
+    """
+    middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
+    scene.add(QubicBezierCurve(start, point1, point1, middle, color))
+    scene.add(QubicBezierCurve(middle, point2, point2, end, color))
+
+    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+    y_coord = (end[0], end[1])
+
+    # Draw the arrow head
+    scene.add(Line(x_coord, y_coord, color))
+    scene.add(Line(z_coord, y_coord, color))
+
+    return scene
+
+
 class Rectangle(sw.shapes.Rect):
     """A rectangle.
     """
 
     def __init__(self, origin: tuple, width: int, height: int,
-                 fill_color: tuple, line_color: tuple, line_width: int, rx: int=0, ry: int=0):
+                 fill_color: tuple, line_color: tuple, line_width: int, round: int):
         """Initialize a rectangle.
 
         Args:
@@ -84,8 +160,7 @@ class Rectangle(sw.shapes.Rect):
             fill_color (tuple): Color to fill the rectangle with.
             line_color (tuple): Color to use for the rectangle's outline.
             line_width (int): The line's ending point.
-            rx (int): Horizontal radius of corner rounding.
-            ry (int): Vertical radius of corner rounding.
+            round (int): Has corner rounding or not. > 0 -> round...
         """
         super().__init__(insert=origin,
                          size=(width, height),
@@ -93,13 +168,12 @@ class Rectangle(sw.shapes.Rect):
                          fill=rgb(*fill_color),
                          stroke=rgb(*line_color),
                          stroke_width=line_width,
-                         rx=rx, ry=ry)
+                         rx=round, ry=round)
 
 
 class Text(sw.text.Text):
     """Text.
     """
-
     def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0), token=False):
         """Initialize a text object.
 
@@ -121,7 +195,8 @@ class Text(sw.text.Text):
                          text_rendering='inherit',
                          **additional)
 
-    def get_width(self) -> int:
+    @staticmethod
+    def get_width(text: str, size: int, font: str) -> int:
         """Return the width of the text.
 
         Returns:
@@ -129,14 +204,14 @@ class Text(sw.text.Text):
         """
         # Thx to: http://blog.mathieu-leplatre.info/text-extents-with-python-cairo.html
         if 'cairo' not in sys.modules:
-            return len(self.text) * self.font_size
+            return len(text) * size
 
         surface = cairo.SVGSurface(None, 0, 0)
         ccontext = cairo.Context(surface)
-        ccontext.select_font_face(self.attribs['font-family'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        ccontext.set_font_size(self.attribs['font-size'])
+        ccontext.select_font_face(font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        ccontext.set_font_size(size)
         # xbearing, ybearing, width, height, xadvance, yadvance
-        width = ccontext.text_extents(self.text)[2]
+        width = ccontext.text_extents(text)[2]
 
         return width
 

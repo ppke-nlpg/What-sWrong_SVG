@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from ..model.nlp_instance import NLPInstance
-from libwwnlp.render.backend.svg_writer import Rectangle, Scene, Text
+from libwwnlp.render.backend.svg_writer import Scene, Text
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
@@ -114,8 +114,8 @@ class TokenLayout:
 
                 props = token.get_property_names()
                 lasty = self.base_line + self.row_height*(len(props))
-                maxx = max(chain((Text((0, 0), token.get_property_value(prop_name), self.text_fontsize,
-                                       self.font_family).get_width() for prop_name in props),
+                maxx = max(chain((Text.get_width(token.get_property_value(prop_name), self.text_fontsize,
+                                                 self.font_family) for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
 
@@ -173,16 +173,15 @@ class TokenLayout:
                     # TODO: Here was TextToken
                     text_token = Text((lastx + origin[0], lasty + origin[1]), curr_property_value,
                                       self.token_fontsize, self.font_family, color, token=True)
-                    maxx = max(maxx, Text((0, 0), curr_property_value, self.text_fontsize, self.font_family).
-                               get_width())  # TODO: We do not need Text here just the width!
+                    maxx = max(maxx, Text.get_width(curr_property_value, self.text_fontsize, self.font_family))
                     scene.add(text_token)
 
                 lasty += self.font_desc_size
                 # TODO: Do we use this anywhere? What is this?
                 # Maybe a the bounding box for clicking on a token?
-                self.bounds[token] = Rectangle((lastx + origin[0], self.base_line + origin[1]), maxx,
-                                               lasty - self.base_line, self.fill_color, self.line_color,
-                                               self.line_width)
+                self.bounds[token] = ((lastx + origin[0], self.base_line + origin[1]), maxx,
+                                      lasty - self.base_line, self.fill_color, self.line_color,
+                                      self.line_width)
                 # scene.add(self.bounds[token])
 
                 lastx += maxx + self.margin

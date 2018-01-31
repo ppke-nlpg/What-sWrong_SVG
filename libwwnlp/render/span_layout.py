@@ -56,7 +56,7 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = self.total_text_margin + max(
-                    Text((0, 0), edge.label, self.font_size, self.font_family).get_width(),
+                    Text.get_width(edge.label, self.font_size, self.font_family),
                     result.get(edge.start, 0))
         return result
 
@@ -140,7 +140,7 @@ class SpanLayout(AbstractEdgeLayout):
                 max_width = max_x + 1
 
             # prepare label (will be needed for spacing)
-            labelwidth = Text((0, 0), edge.label, self.font_size, self.font_family).get_width()
+            labelwidth = Text.get_width(edge.label, self.font_size, self.font_family)
 
             if max_x - min_x < labelwidth + self.total_text_margin:
                 middle = min_x + (max_x - min_x) // 2
@@ -157,7 +157,7 @@ class SpanLayout(AbstractEdgeLayout):
             # If curved int(self.curve) = 1 else 0
             scene.add(Rectangle((min_x+origin[0], height_minus_buffer+origin[1]), max_x - min_x, rect_height,
                                 self.span_fill_color, edge_color, self.span_line_width,
-                                rx=self.span_radius * int(self.curve), ry=self.span_radius * int(self.curve)))
+                                self.span_radius * int(self.curve)))
 
             # write label in the middle under
             labelx = min_x + (max_x - min_x) // 2

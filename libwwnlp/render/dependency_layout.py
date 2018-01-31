@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import Line, Scene, Text, QubicBezierCurve
+from libwwnlp.render.backend.svg_writer import Scene, Text, draw_arrow
 
 
 class DependencyLayout(AbstractEdgeLayout):
@@ -143,12 +143,6 @@ class DependencyLayout(AbstractEdgeLayout):
                 end[loop] = (x_coord, self.baseline + max_height)
                 x_coord += width
 
-        # Store the appropriate function ouside of the loop
-        if self.curve:
-            draw_arrow = self.create_curve_arrow
-        else:
-            draw_arrow = self.create_rect_arrow
-
         # draw each edge
         edges_ |= all_loops
         for edge in edges_:
@@ -166,68 +160,16 @@ class DependencyLayout(AbstractEdgeLayout):
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge
 
-            scene = draw_arrow(scene, point1, point2, point3, point4, edge_color)
+            # Draw arrow
+            scene = draw_arrow(scene, point1, point2, point3, point4, self.arrowsize, self.curve, edge_color)
 
-            x_coord = (point4[0] - self.arrowsize, point4[1] - self.arrowsize)
-            z_coord = (point4[0] + self.arrowsize, point4[1] - self.arrowsize)
-            y_coord = (point4[0], point4[1])
-
-            # Draw the arrow head
-            scene.add(Line(x_coord, y_coord, edge_color))
-            scene.add(Line(z_coord, y_coord, edge_color))
-
-            # write label in the middle under
+            # Write label in the middle under
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
             labely = height + self.font_size
             scene.add(Text((labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family, edge_color))
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
-
-    @staticmethod
-    def create_rect_arrow(scene: Scene, point1, point2, point3, point4, color):
-        """Create an rectangular path through the given points.
-
-        The path starts at p1 the goes to point2, p3 and finally to point4.
-
-        Args:
-            scene (Scene): The scene where the path should be created.
-            point1: The first point.
-            point2: The second point.
-            point3: The third point.
-            point4: The last point.
-            color: The arrow's color.
-
-        Returns:
-            The modified scene
-        """
-        scene.add(Line(point1, point2, color))
-        scene.add(Line(point2, point3, color))
-        scene.add(Line(point3, point4, color))
-        return scene
-
-    @staticmethod
-    def create_curve_arrow(scene: Scene, start: tuple, control_point1: tuple, control_point2: tuple, end: tuple, color):
-        """Create an curved path around the given points in a scene.
-
-        The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
-        bezier control points.
-
-        Args:
-            scene (Scene): The scene where the path should be created.
-            start: The start point.
-            control_point1: The first control point.
-            control_point2: The second control point.
-            end: The end point.
-            color: The arrow's color.
-
-        Return:
-            The modified scene
-        """
-        middle = (control_point1[0] + (control_point2[0] - control_point1[0]) // 2, control_point1[1])
-        scene.add(QubicBezierCurve(start, control_point1, control_point1, middle, color))
-        scene.add(QubicBezierCurve(middle, control_point2, control_point2, end, color))
-        return scene
 
     @staticmethod
     def compare_edges(edge1, edge2, token):
