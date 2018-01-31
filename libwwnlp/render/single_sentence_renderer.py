@@ -7,10 +7,10 @@ analysed sentence.
 """
 
 from ..model.edge import EdgeRenderType
-from .span_layout import SpanLayout
-from .dependency_layout import DependencyLayout
-from .token_layout import TokenLayout
-from .abstract_edge_layout import Point
+from libwwnlp.render.layouts.span_layout import SpanLayout
+from libwwnlp.render.layouts.dependency_layout import DependencyLayout
+from libwwnlp.render.layouts.token_layout import TokenLayout
+from libwwnlp.render.layouts.abstract_edge_layout import Point
 
 
 class SingleSentenceRenderer:

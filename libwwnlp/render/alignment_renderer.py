@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .token_layout import TokenLayout, middle
+from libwwnlp.render.layouts.token_layout import TokenLayout, middle
 from ..model.edge import EdgeRenderType
 from libwwnlp.render.backend.svg_writer import draw_line
 
