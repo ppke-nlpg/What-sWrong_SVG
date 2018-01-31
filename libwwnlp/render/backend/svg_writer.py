@@ -225,9 +225,16 @@ def draw_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tu
             _create_rect_arrow(scene, start, point1, point2, end, arrowsize, color)
 
 
-def draw_rectangle(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple, line_color: tuple,
-                   line_width: int, rounded: int):
+def draw_rectangle_w_text_inside(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple,
+                                 line_color: tuple, line_width: int, rounded: int,
+                                 text: str, font_size: int, font_family: str):
     Rectangle(scene, origin, width, height, fill_color, line_color, line_width, rounded)
+
+    # write label in the middle under
+    labelx = origin[0] + width // 2
+    labely = origin[1] + height // 2 + 4  # TODO: Should be drawn in the vertical center, so + 4 not needed!
+
+    Text(scene, (labelx, labely), text, font_size, font_family, line_color)
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):

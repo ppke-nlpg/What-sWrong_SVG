@@ -4,7 +4,7 @@
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import draw_line, draw_rectangle, Scene, Text
+from libwwnlp.render.backend.svg_writer import draw_line, draw_rectangle_w_text_inside, Scene, Text
 
 
 class SpanLayout(AbstractEdgeLayout):
@@ -118,7 +118,6 @@ class SpanLayout(AbstractEdgeLayout):
         # have height of 1.5 levels
 
         # draw each edge
-        max_width = 0
         for edge in edges_:
             # draw lines
             if self.revert:
@@ -130,13 +129,10 @@ class SpanLayout(AbstractEdgeLayout):
             height_minus_buffer = height - self.buffer_height
             rect_height = self.height_per_level - 2 * self.buffer_height
 
-            from_bounds = bounds[edge.start]
-            to_bounds = bounds[edge.end]
-            min_x = min(from_bounds.start, to_bounds.start)
-            max_x = max(from_bounds.end, to_bounds.end)
-
-            if max_x > max_width:
-                max_width = max_x + 1
+            from_bounds_start, from_bounds_end = bounds[edge.start]
+            to_bounds_start, to_bounds_end = bounds[edge.end]
+            min_x = min(from_bounds_start, to_bounds_start)
+            max_x = max(from_bounds_end, to_bounds_end)
 
             # prepare label (will be needed for spacing)
             labelwidth = Text.get_width(edge.label, self.font_size, self.font_family)
@@ -147,23 +143,17 @@ class SpanLayout(AbstractEdgeLayout):
                 min_x = middle - text_width // 2
                 max_x = middle + text_width // 2
 
-            # set Color and remember old color
-            edge_color = self.get_color(edge)
-
+            min_x += origin[0]
+            height_minus_buffer += origin[1]
+            rect_width = max_x - min_x
             # Store shape coordinates for selection with mouse click
-            self.shapes[(min_x, height_minus_buffer, max_x - min_x, rect_height)] = edge
+            self.shapes[(min_x, height_minus_buffer, rect_width, rect_height)] = edge
 
             # If curved int(self.curve) = 1 else 0
-            draw_rectangle(scene, (min_x+origin[0], height_minus_buffer+origin[1]), max_x - min_x, rect_height,
-                           self.span_fill_color, edge_color, self.span_line_width, self.span_radius * int(self.curve))
-
-            # TODO: Should be drawn in the center,  + 4 not needed!
-            # write label in the middle under
-            labelx = min_x + (max_x - min_x) // 2 + origin[0]
-            labely = height_minus_buffer + rect_height // 2 + 4 + origin[1]
-
-            Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size,
-                 self.font_family, edge_color)
+            draw_rectangle_w_text_inside(scene, (min_x, height_minus_buffer),
+                                         rect_width, rect_height, self.span_fill_color, self.get_color(edge),
+                                         self.span_line_width, self.span_radius * int(self.curve),
+                                         edge.get_label_with_note(), self.font_size, self.font_family)
 
         max_width = max((bound.end for bound in bounds.values()), default=0)
 
