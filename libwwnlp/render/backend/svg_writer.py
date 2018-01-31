@@ -216,18 +216,28 @@ def draw_line(scene: Scene, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple
         Line(scene, start, end, edge_color)
 
 
-def draw_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int, is_curved: bool,
-               color: tuple):
+def draw_arrow_w_text_middle(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
+                             arrowsize: int, is_curved: bool, text: str, font_size: int, font_family: str, over: bool,
+                             color: tuple):
         # Store the appropriate function ouside of the loop
         if is_curved:
             _create_curve_arrow(scene, start, point1, point2, end, arrowsize, color)
         else:
             _create_rect_arrow(scene, start, point1, point2, end, arrowsize, color)
 
+        direction = 1
+        if over:
+            direction = -1
 
-def draw_rectangle_w_text_inside(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple,
-                                 line_color: tuple, line_width: int, rounded: int,
-                                 text: str, font_size: int, font_family: str):
+        # Write label in the middle under
+        labelx = min(start[0], point2[0]) + abs(start[0]-point2[0]) // 2
+        labely = height + direction*font_size  # TODO: Should be font height!
+        Text(scene, (labelx, labely), text, font_size, font_family, color)
+
+
+def draw_rectangle_around_text(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple,
+                               line_color: tuple, line_width: int, rounded: int,
+                               text: str, font_size: int, font_family: str):
     Rectangle(scene, origin, width, height, fill_color, line_color, line_width, rounded)
 
     # write label in the middle under
@@ -235,6 +245,13 @@ def draw_rectangle_w_text_inside(scene: Scene, origin: tuple, width: int, height
     labely = origin[1] + height // 2 + 4  # TODO: Should be drawn in the vertical center, so + 4 not needed!
 
     Text(scene, (labelx, labely), text, font_size, font_family, line_color)
+
+    return origin[0], origin[1], width, height
+
+
+def draw_text(scene: Scene, origin: tuple, text: str, font_size: int, font_family: str, color: tuple, token: bool):
+    Text(scene, origin, text, font_size, font_family, color, token)
+    return Text.get_width(text, font_size, font_family)  # Should return bounding box
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):

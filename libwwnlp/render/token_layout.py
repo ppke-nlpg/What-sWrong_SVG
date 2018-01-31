@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from ..model.nlp_instance import NLPInstance
-from libwwnlp.render.backend.svg_writer import Scene, Text
+from libwwnlp.render.backend.svg_writer import Scene, Text, draw_text
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
@@ -169,11 +169,12 @@ class TokenLayout:
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
                     lasty += self.row_height
                     curr_property_value = token.get_property_value(prop_name)
+                    # TODO: Do we use this anywhere? What is this?
                     self.text_layouts[(token, index)] = curr_property_value
                     # TODO: Here was TextToken
-                    Text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value, self.token_fontsize,
-                         self.font_family, color, token=True)
-                    maxx = max(maxx, Text.get_width(curr_property_value, self.text_fontsize, self.font_family))
+                    width = draw_text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value,
+                                      self.token_fontsize, self.font_family, color, token=True)
+                    maxx = max(maxx, width)
 
                 lasty += self.font_desc_size
                 # TODO: Do we use this anywhere? What is this?

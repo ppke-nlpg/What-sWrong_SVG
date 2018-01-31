@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import Scene, Text, draw_arrow
+from libwwnlp.render.backend.svg_writer import Scene, draw_arrow_w_text_middle
 
 
 class DependencyLayout(AbstractEdgeLayout):
@@ -32,6 +32,7 @@ class DependencyLayout(AbstractEdgeLayout):
     def __init__(self):
         super().__init__()
         self.arrowsize = 2  # TODO: Constants?
+        self.label_over = False  # TODO: Constants?
 
     def layout_edges(self, edges, bounds, scene: Scene):
         """Lays out the edges as directed labelled dependency links between tokens.
@@ -155,18 +156,14 @@ class DependencyLayout(AbstractEdgeLayout):
             point2 = (point1[0], height)
             point4 = end[edge]
             point3 = (point4[0], height)
-            edge_color = self.get_color(edge)
+
+            # Draw arrow and text middle under
+            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, self.arrowsize, self.curve,
+                                     edge.get_label_with_note(), self.font_size, self.font_family, self.label_over,
+                                     self.get_color(edge))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge
-
-            # Draw arrow
-            draw_arrow(scene, point1, point2, point3, point4, self.arrowsize, self.curve, edge_color)
-
-            # Write label in the middle under
-            labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
-            labely = height + self.font_size
-            Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family, edge_color)
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
