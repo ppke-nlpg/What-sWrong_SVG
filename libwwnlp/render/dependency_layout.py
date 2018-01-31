@@ -161,12 +161,12 @@ class DependencyLayout(AbstractEdgeLayout):
             self.shapes[(point1, point2, point3, point4)] = edge
 
             # Draw arrow
-            scene = draw_arrow(scene, point1, point2, point3, point4, self.arrowsize, self.curve, edge_color)
+            draw_arrow(scene, point1, point2, point3, point4, self.arrowsize, self.curve, edge_color)
 
             # Write label in the middle under
             labelx = min(point1[0], point3[0]) + abs(point1[0]-point3[0]) // 2
             labely = height + self.font_size
-            scene.add(Text((labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family, edge_color))
+            Text(scene, (labelx, labely), edge.get_label_with_note(), self.font_size, self.font_family, edge_color)
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?

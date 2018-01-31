@@ -29,7 +29,7 @@ class Line(sw.shapes.Line):
     """A straight line between two points.
     """
 
-    def __init__(self, start: tuple, end: tuple, color: tuple, width: int=1):
+    def __init__(self, scene: Scene, start: tuple, end: tuple, color: tuple, width: int=1):
         """Initialize a line.
 
         Args:
@@ -43,13 +43,15 @@ class Line(sw.shapes.Line):
                          shape_rendering='inherit',
                          stroke=rgb(*color),
                          stroke_width=width)
+        scene.add(self)
 
 
 class QubicBezierCurve(sw.path.Path):
     """A qubic Bezier curve.
     """
 
-    def __init__(self, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
+    def __init__(self, scene: Scene, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple,
+                 width: int=1):
         """Initialize a qubic Bezier curve.
 
         Args:
@@ -67,90 +69,15 @@ class QubicBezierCurve(sw.path.Path):
                          stroke=rgb(*color),
                          stroke_width=width,
                          fill='none')
-
-
-def draw_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int, is_curved: bool,
-               color: tuple):
-        # Store the appropriate function ouside of the loop
-        if is_curved:
-            return create_curve_arrow(scene, start, point1, point2, end, arrowsize, color)
-        else:
-            return create_rect_arrow
-
-
-def create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
-                      color: tuple):
-    """Create an rectangular path through the given points.
-
-    The path starts at p1 the goes to point1, p2 and finally to end.
-
-    Args:
-        scene (Scene): The scene where the path should be created.
-        start: The first point.
-        point1: The second point.
-        point2: The third point.
-        arrowsize: The size of the arrow head.
-        end: The last point.
-        color: The arrow's color.
-
-    Returns:
-        The modified scene
-    """
-    scene.add(Line(start, point1, color))
-    scene.add(Line(point1, point2, color))
-    scene.add(Line(point2, end, color))
-
-    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-    y_coord = (end[0], end[1])
-
-    # Draw the arrow head
-    scene.add(Line(x_coord, y_coord, color))
-    scene.add(Line(z_coord, y_coord, color))
-
-    return scene
-
-
-def create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
-                       color: tuple):
-    """Create an curved path around the given points in a scene.
-
-    The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
-    bezier control points.
-
-    Args:
-        scene (Scene): The scene where the path should be created.
-        start: The start point.
-        point1: The first control point.
-        point2: The second control point.
-        end: The end point.
-        arrowsize: The size of the arrow head.
-        color: The arrow's color.
-
-    Return:
-        The modified scene
-    """
-    middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
-    scene.add(QubicBezierCurve(start, point1, point1, middle, color))
-    scene.add(QubicBezierCurve(middle, point2, point2, end, color))
-
-    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-    y_coord = (end[0], end[1])
-
-    # Draw the arrow head
-    scene.add(Line(x_coord, y_coord, color))
-    scene.add(Line(z_coord, y_coord, color))
-
-    return scene
+        scene.add(self)
 
 
 class Rectangle(sw.shapes.Rect):
     """A rectangle.
     """
 
-    def __init__(self, origin: tuple, width: int, height: int,
-                 fill_color: tuple, line_color: tuple, line_width: int, round: int):
+    def __init__(self, scene: Scene, origin: tuple, width: int, height: int,
+                 fill_color: tuple, line_color: tuple, line_width: int, rounded: int):
         """Initialize a rectangle.
 
         Args:
@@ -160,7 +87,7 @@ class Rectangle(sw.shapes.Rect):
             fill_color (tuple): Color to fill the rectangle with.
             line_color (tuple): Color to use for the rectangle's outline.
             line_width (int): The line's ending point.
-            round (int): Has corner rounding or not. > 0 -> round...
+            rounded (int): Has corner rounding or not. > 0 -> round...
         """
         super().__init__(insert=origin,
                          size=(width, height),
@@ -168,13 +95,15 @@ class Rectangle(sw.shapes.Rect):
                          fill=rgb(*fill_color),
                          stroke=rgb(*line_color),
                          stroke_width=line_width,
-                         rx=round, ry=round)
+                         rx=rounded, ry=rounded)
+        scene.add(self)
 
 
 class Text(sw.text.Text):
     """Text.
     """
-    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0), token=False):
+    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0),
+                 token=False):
         """Initialize a text object.
 
         Args:
@@ -194,6 +123,7 @@ class Text(sw.text.Text):
                          font_size=size,
                          text_rendering='inherit',
                          **additional)
+        scene.add(self)
 
     @staticmethod
     def get_width(text: str, size: int, font: str) -> int:
@@ -214,6 +144,90 @@ class Text(sw.text.Text):
         width = ccontext.text_extents(text)[2]
 
         return width
+
+
+def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
+                       color: tuple):
+    """Create an rectangular path through the given points.
+
+    The path starts at p1 the goes to point1, p2 and finally to end.
+
+    Args:
+        scene (Scene): The scene where the path should be created.
+        start: The first point.
+        point1: The second point.
+        point2: The third point.
+        arrowsize: The size of the arrow head.
+        end: The last point.
+        color: The arrow's color.
+
+    Returns:
+        The modified scene
+    """
+    Line(scene, start, point1, color)
+    Line(scene, point1, point2, color)
+    Line(scene, point2, end, color)
+
+    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+    y_coord = (end[0], end[1])
+
+    # Draw the arrow head
+    Line(scene, x_coord, y_coord, color)
+    Line(scene, z_coord, y_coord, color)
+
+
+def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
+                        color: tuple):
+    """Create an curved path around the given points in a scene.
+
+    The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
+    bezier control points.
+
+    Args:
+        scene (Scene): The scene where the path should be created.
+        start: The start point.
+        point1: The first control point.
+        point2: The second control point.
+        end: The end point.
+        arrowsize: The size of the arrow head.
+        color: The arrow's color.
+
+    Return:
+        The modified scene
+    """
+    middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
+    QubicBezierCurve(scene, start, point1, point1, middle, color)
+    QubicBezierCurve(scene, middle, point2, point2, end, color)
+
+    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+    y_coord = (end[0], end[1])
+
+    # Draw the arrow head
+    Line(scene, x_coord, y_coord, color)
+    Line(scene, z_coord, y_coord, color)
+
+
+def draw_line(scene: Scene, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple, is_curved: bool, edge_color: tuple):
+    if is_curved:
+        QubicBezierCurve(scene, start, ctrl1, ctrl2, end, edge_color)
+    else:
+        Line(scene, start, end, edge_color)
+
+
+def draw_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int, is_curved: bool,
+               color: tuple):
+        # Store the appropriate function ouside of the loop
+        if is_curved:
+            _create_curve_arrow(scene, start, point1, point2, end, arrowsize, color)
+        else:
+            _create_rect_arrow(scene, start, point1, point2, end, arrowsize, color)
+
+
+def draw_rectangle(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple, line_color: tuple,
+                   line_width: int, rounded: int):
+    Rectangle(scene, origin, width, height, fill_color, line_color, line_width, rounded)
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):

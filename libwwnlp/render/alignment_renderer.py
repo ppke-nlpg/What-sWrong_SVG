@@ -3,7 +3,7 @@
 
 from .token_layout import TokenLayout, middle
 from ..model.edge import EdgeRenderType
-from libwwnlp.render.backend.svg_writer import Line, QubicBezierCurve
+from libwwnlp.render.backend.svg_writer import draw_line
 
 
 class AlignmentRenderer:
@@ -60,18 +60,15 @@ class AlignmentRenderer:
                 edge_color = self.fn_color
             else:
                 edge_color = self.match_color
-            bound1 = token_xbounds1[edge.start]
-            bound2 = token_xbounds2[edge.end]
-            if self._is_curved:
-                start = (middle(bound1), height)
-                ctrl1 = (middle(bound1), height + self._height_factor // 2)
-                ctrl2 = (middle(bound2), height + self._height_factor // 2)
-                end = (middle(bound2), height + self._height_factor)
-                scene.add(QubicBezierCurve(start, ctrl1, ctrl2, end, edge_color))
-            else:
-                start = (middle(bound1), height)
-                end = (middle(bound2), height + self._height_factor)
-                scene.add(Line(start, end, edge_color))
+
+            bound1 = middle(token_xbounds1[edge.start])
+            bound2 = middle(token_xbounds2[edge.end])
+            start = (bound1, height)
+            ctrl1 = (bound1, height + self._height_factor // 2)
+            ctrl2 = (bound2, height + self._height_factor // 2)
+            end = (bound2, height + self._height_factor)
+
+            draw_line(scene, start, ctrl1, ctrl2, end, self._is_curved, edge_color)
 
         # add spans
         dim = self._token_layout2.layout(instance, {}, scene, (0, dim[1] + self._height_factor))

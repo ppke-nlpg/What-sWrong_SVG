@@ -171,10 +171,9 @@ class TokenLayout:
                     curr_property_value = token.get_property_value(prop_name)
                     self.text_layouts[(token, index)] = curr_property_value
                     # TODO: Here was TextToken
-                    text_token = Text((lastx + origin[0], lasty + origin[1]), curr_property_value,
-                                      self.token_fontsize, self.font_family, color, token=True)
+                    Text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value, self.token_fontsize,
+                         self.font_family, color, token=True)
                     maxx = max(maxx, Text.get_width(curr_property_value, self.text_fontsize, self.font_family))
-                    scene.add(text_token)
 
                 lasty += self.font_desc_size
                 # TODO: Do we use this anywhere? What is this?
