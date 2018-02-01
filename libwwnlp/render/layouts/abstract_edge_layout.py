@@ -18,15 +18,6 @@ class AbstractEdgeLayout:
 
     Attributes:
         baseline (int): Where do we start to draw.
-        height_per_level (int): How many pixels to use per height level. (minimum the height of the used font)
-        vertex_extra_space (int): How many extra pixels to start and end arrows from.
-        curve (bool): Should the edges be curved.
-        type_colors (Dict[str, color]): A mapping from type names to colors.
-        property_colors (Dict[str, tuple]): A mapping from edge property names
-            to (color, level) pairs. If an edge has more than one properties
-            its color will be determined by ordering the corresponding pairs in
-            property_colors first (ascending) by level an then by the property
-            name they belong to and using the color in the first pair.
         strokes (Dict[str, BasicStroke]): A mapping from string to strokes. If
             an edge has a type that matches one of the key strings it will get
             the corresponding stroke.
@@ -49,19 +40,8 @@ class AbstractEdgeLayout:
         """Initialize an AbstractEdgeLayout instance.
         """
         self.baseline = -1
-        self.height_per_level = 15  # TODO: Constants?
-        self.vertex_extra_space = 12  # TODO: Constants?
-        self.default_edge_color = (0, 0, 0)  # Black  # TODO: Constants?
-        self.font_size = 12  # TODO: Constants?
-        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
         self.curve = True
         self.type_colors = {}
-        self.match_color = (0, 0, 0)  # TODO: Constants?
-        self.fn_color = (255, 0, 0)   # TODO: Constants?
-        self.fp_color = (0, 0, 255)   # TODO: Constants?
-        self.property_colors = {"eval_status_Match": (self.match_color, 2),
-                                "eval_status_FN": (self.fn_color, 1),
-                                "eval_status_FP": (self.fp_color, 1)}
         self.strokes = {}
         self.default_stroke = None
         self.start = {}
@@ -176,6 +156,19 @@ class AbstractEdgeLayout:
         #            maxY = s.getBounds().getY();
         #    return result
 
+    def calculate_depth_maxdepth_height(self, dominates, edges_, height_per_level):
+        depth = self.calculate_depth(dominates, edges_)
+        # calculate max_height and max_width
+        if len(depth) == 0:
+            max_depth = 0
+        else:
+            max_depth = depth.most_common(1)[0][1]
+        if len(edges_) > 0:
+            max_height = (max_depth + 1) * height_per_level + 3  # TODO: Constants?
+        else:
+            max_height = 1
+        return depth, max_depth, max_height
+
     def calculate_depth(self, dominates, edges):
         depth = Counter()
         for root in edges:
@@ -208,30 +201,18 @@ class AbstractEdgeLayout:
             edges_ &= self.visible  # Intersection
         return edges_
 
-    def get_color(self, edge):
+    def get_color(self, edge, property_colors, default_edge_color):  # TODO: Obviously not good like this!
         """Return the color for the given edge.
 
         Args:
             edge (Edge): The edge we need the color for.
+            property_colors (dict):
+            default_edge_color (tuple):
 
         Returns:
             The color for the given edge.
         """
-        props_with_color = edge.properties & self.property_colors.keys()
+        props_with_color = edge.properties & property_colors.keys()
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
-        return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
-                   default=(0, None, self.type_colors.get(edge.edge_type, self.default_edge_color)))[2]
-
-    def calculate_depth_maxdepth_height(self, dominates, edges_):
-        depth = self.calculate_depth(dominates, edges_)
-        # calculate max_height and max_width
-        if len(depth) == 0:
-            max_depth = 0
-        else:
-            max_depth = depth.most_common(1)[0][1]
-        if len(edges_) > 0:
-            max_height = (max_depth + 1) * self.height_per_level + 3  # TODO: Constants?
-        else:
-            max_height = 1
-        return depth, max_depth, max_height
-
+        return min(((property_colors[x][1], x, property_colors[x][0]) for x in props_with_color),
+                   default=(0, None, self.type_colors.get(edge.edge_type, default_edge_color)))[2]

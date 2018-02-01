@@ -108,6 +108,8 @@ class CorpusNavigator:
         self._instance = None
         self._ui = ui
 
+        # TODO: Find the actual place of edge_type_order
+        """
         self._canvas.renderer.set_edge_type_order("pos", 0)
         self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
         self._canvas.renderer.set_edge_type_order("chunk", 2)
@@ -116,6 +118,7 @@ class CorpusNavigator:
         self._canvas.renderer.set_edge_type_order("sense", 4)
         self._canvas.renderer.set_edge_type_order("role", 5)
         self._canvas.renderer.set_edge_type_order("phase", 5)
+        """
 
         # Spinner stuff
         self._spinner = ui.spinBox
@@ -298,6 +301,8 @@ class CorpusNavigator:
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FN')
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_Match')
 
+            # TODO: Find the actual place of edge_type_order
+            """
             self._canvas.renderer.set_edge_type_order("pos", 0)
             self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
             self._canvas.renderer.set_edge_type_order("chunk", 2)
@@ -306,6 +311,7 @@ class CorpusNavigator:
             self._canvas.renderer.set_edge_type_order("sense", 4)
             self._canvas.renderer.set_edge_type_order("role", 5)
             self._canvas.renderer.set_edge_type_order("phrase", 5)
+            """
 
         # self._canvas.fire_instance_changed()
         self._canvas.update_nlp_graphics()

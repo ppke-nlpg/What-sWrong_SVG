@@ -10,15 +10,39 @@ class AlignmentRenderer:
     """An AlignmentRenderer renders two aligned sentences.
 
     Attributes:
-        _token_layout1 (TokenLayout): The the token layout for the first
-            sentence.
-        _token_layout2 (TokenLayout): The the token layout for the second
-            sentence.
+        _token_layout1 (TokenLayout): The the token layout for the first sentence.
+        _token_layout2 (TokenLayout): The the token layout for the second sentence.
+        token_constants (dict): row_height (int): The height of each property value row in the stack.
     """
 
-    def __init__(self):
+    def __init__(self, height_factor=100, is_curved=True):
         """Initialize an AlignmentRenderer.
         """
+        self.height_factor = height_factor
+        self.is_curved = is_curved
+
+        # TODO: Token layout constants maybe common
+        self.token_constants = {'token_fontsize': 12, 'text_fontsize': 12, 'row_height': 14,
+                                'font_family': 'Courier New, Courier, monospace', 'fill_color': (255, 255, 255),
+                                'line_color': (0, 0, 0), 'token_color': (0, 0, 0),  # Black
+                                'token_prop_color': (120, 120, 120),  # Grey
+                                'font_desc_size': 3, 'line_width': 1
+                                }
+
+        # TODO: Constants?
+        self.common_constants = {'height_per_level': 15, 'vertex_extra_space': 12,
+                                 'default_edge_color': (0, 0, 0),  # Black
+                                 'font_size': 12,
+                                 'font_family': 'Courier New, Courier, monospace',
+                                 'match_color': (0, 0, 0),
+                                 'fn_color': (255, 0, 0),
+                                 'fp_color': (0, 0, 255),
+                                 }
+        self.common_constants['property_colors'] = {'eval_status_Match': (self.common_constants['match_color'], 2),
+                                                    'eval_status_FN': (self.common_constants['fn_color'], 1),
+                                                    'eval_status_FP': (self.common_constants['fp_color'], 1)
+                                                    }
+
         self._token_layout1 = TokenLayout()
         self._token_layout2 = TokenLayout()
         self._alignment_layout = AlignmentLayout()
@@ -35,18 +59,19 @@ class AlignmentRenderer:
         Returns:
             tuple: The width and height of the drawn object.
         """
-        # place dependencies on top
-        dim1 = self._token_layout1.layout(instance, {}, scene)
+        # add first token span
+        dim1 = self._token_layout1.layout(instance, {}, scene, self.token_constants)
 
-        height_factor = self._alignment_layout.layout_edges(dim1[1], instance.get_edges(EdgeRenderType.dependency),
-                                                            self._token_layout1.estimate_token_bounds(instance, {})[0],
-                                                            self._token_layout2.estimate_token_bounds(instance, {})[0],
-                                                            scene)
+        self._alignment_layout.layout_edges(dim1[1], instance.get_edges(EdgeRenderType.dependency),
+                                            self._token_layout1.estimate_token_bounds(instance, {},
+                                                                                      self.token_constants)[0],
+                                            self._token_layout2.estimate_token_bounds(instance, {},
+                                                                                      self.token_constants)[0],
+                                            self.height_factor, self.is_curved, self.common_constants, scene)
+        # add second token span
+        dim2 = self._token_layout2.layout(instance, {}, scene, self.token_constants, (0, dim1[1] + self.height_factor))
 
-        # add spans
-        dim2 = self._token_layout2.layout(instance, {}, scene, (0, dim1[1] + height_factor))
-
-        return max(dim1[0], dim2[0]), dim1[1] + dim2[1] + height_factor + 1
+        return max(dim1[0], dim2[0]), dim1[1] + dim2[1] + self.height_factor + 1
 
     @property
     def margin(self):
@@ -66,42 +91,6 @@ class AlignmentRenderer:
         """
         self._token_layout1.margin = value
         self._token_layout2.margin = value
-
-    def set_height_factor(self, height_factor):
-        """Controls the height of the graph.
-
-        Args:
-            height_factor (int): Indicates how high the graph should be.
-        """
-        self._alignment_layout.height_per_level = height_factor
-
-    def get_height_factor(self):
-        """Returns an integer that reflects the height of the graph.
-
-        Returns:
-            int: A number hat reflects the height of the graph. The higher this
-            value, the higher the graph.
-        """
-        return self._alignment_layout.height_per_level
-
-    def set_curved(self, is_curved):
-        """Controls whether the graph should be curved or rectangular.
-
-        If curved the dependencies are drawn as curves instead of rectangular
-        lines, and spans are drawn as rounded rectangles.
-
-        Args:
-            is_curved (bool): Whether the graph should be more curved.
-        """
-        self._alignment_layout.curve = is_curved
-
-    def is_curved(self):
-        """Returns whether the renderer draws a more curved graph or not.
-
-        Returns:
-            bool: True iff the renderer draws a more curved graph.
-        """
-        return self._alignment_layout.curve
 
     # TODO: Simplify
     def set_edge_type_color(self, edge_type, color):

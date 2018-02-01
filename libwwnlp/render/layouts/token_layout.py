@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.render.backend.svg_writer import Scene, get_text_width, draw_text
+from libwwnlp.render.backend.svg_writer import get_text_width, draw_text
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
@@ -42,7 +42,6 @@ class TokenLayout:
         text_layouts (dict):
         bounds (dict): A dict specifying the horizontal bounds as a Bounds1D
             tuple.
-        row_height (int): The height of each property value row in the stack.
         base_line (int): Where should we start to draw the stacks.
         margin (int): The margin between tokens (i.e., their stacks).
         from_split_point (int): The index of the the split point at which the
@@ -51,35 +50,19 @@ class TokenLayout:
         to_split_point (int): The index of the the split point at which the
             renderer stops to draw the token sequence or -1 if it should stop
             at the end.
-        width (int): The total width of the graph that consists of all token
-            stacks next to each other.
-        height (int): The total height of the graph that consists of all token
-            stacks next to each other.
     """
 
     def __init__(self):
         """Initialize a token layout with suitable default values.
         """
-        self.token_fontsize = 12  # TODO: Constants?
-        self.text_fontsize = 12  # TODO: Constants?
-        self.row_height = 14  # TODO: Constants?
-        self.font_family = 'Courier New, Courier, monospace'  # TODO: Constants?
-        self.fill_color = (255, 255, 255)  # TODO: Constants?
-        self.line_color = (0, 0, 0)  # TODO: Constants?
-        self.token_color = (0, 0, 0)  # Black  # TODO: Constants?
-        self.token_prop_color = (120, 120, 120)  # Grey  # TODO: Constants?
-        self.font_desc_size = 3  # TODO: Constants?
-        self.line_width = 1  # TODO: Constants?
         self.base_line = 0
         self.margin = 20
         self.from_split_point = -1
         self.to_split_point = -1
         self.text_layouts = {}
         self.bounds = {}
-        self.width = 0
-        self.height = 0
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, constants):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -89,13 +72,22 @@ class TokenLayout:
                 requirements specified by this map. If a token has no required
                 width its estimated width will be based on the length of its
                 textual properties.
+            constants (dict): Constants handled uniformly at an upper level
 
         Returns:
             dict: A mapping from tokens to estimated horizontal bounds in the
             layout.
+            width (int): The total width of the graph that consists of all token
+            stacks next to each other.
+            height (int): The total height of the graph that consists of all token
+            stacks next to each other.
         """
+        row_height = constants['row_height']
+        font_family = constants['font_family']
+        text_fontsize = constants['text_fontsize']
+
         result = {}
-        self.height = 0
+        height = 0
         width = 0
         tokens = instance.tokens
 
@@ -113,21 +105,21 @@ class TokenLayout:
                 token = tokens[token_index]
 
                 props = token.get_property_names()
-                lasty = self.base_line + self.row_height*(len(props))
-                maxx = max(chain((get_text_width(token.get_property_value(prop_name), self.text_fontsize,
-                                                 self.font_family) for prop_name in props),
+                lasty = self.base_line + row_height*(len(props))
+                maxx = max(chain((get_text_width(token.get_property_value(prop_name), text_fontsize, font_family)
+                                  for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
 
                 lastx += maxx
                 width = max(width, lastx)
-                self.height = max(self.height, lasty)
+                height = max(height, lasty)
                 lastx += self.margin
 
         return result, width
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
-    def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene, origin=(0, 0)):
+    def layout(self, instance: NLPInstance, token_widths: dict, scene,  constants, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -141,17 +133,28 @@ class TokenLayout:
                 they need can be provided through this map.
             scene: The graphics object to draw to.
             origin (tuple): The origin of the layout as a pair of coordinates.
+            constants (dict): Constants handled uniformly at an upper level
 
         Returns:
             The dimension of the drawn graph.
         """
+        token_color = constants['token_color']
+        token_prop_color = constants['token_prop_color']
+        row_height = constants['row_height']
+        token_fontsize = constants['token_fontsize']
+        font_family = constants['font_family']
+        font_desc_size = constants['font_desc_size']
+        fill_color = constants['fill_color']
+        line_color = constants['line_color']
+        line_width = constants['line_width']
+
         tokens = instance.tokens
         if len(tokens) == 0:
-            self.height = 1
-            self.width = 1
+            height = 1
+            width = 1
         else:
             self.text_layouts.clear()
-            self.height = 0
+            height = 0
             lastx = 0
             from_token = 0
             to_token = len(tokens)
@@ -167,27 +170,26 @@ class TokenLayout:
                 lasty = self.base_line
                 maxx = token_widths.get(token, 0)
                 # First comes the token, then the properties
-                colors = chain((self.token_color,), repeat(self.token_prop_color))
+                colors = chain((token_color,), repeat(token_prop_color))
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
-                    lasty += self.row_height
+                    lasty += row_height
                     curr_property_value = token.get_property_value(prop_name)
                     # TODO: Do we use this anywhere? What is this?
                     self.text_layouts[(token, index)] = curr_property_value
                     # TODO: Here was TextToken
-                    width = draw_text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value,
-                                      self.token_fontsize, self.font_family, color, token=True)
-                    maxx = max(maxx, width)
+                    text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value,
+                                           token_fontsize, font_family, color, token=True)
+                    maxx = max(maxx, text_width)
 
-                lasty += self.font_desc_size
+                lasty += font_desc_size
                 # TODO: Do we use this anywhere? What is this?
                 # Maybe a the bounding box for clicking on a token?
                 self.bounds[token] = ((lastx + origin[0], self.base_line + origin[1]), maxx,
-                                      lasty - self.base_line, self.fill_color, self.line_color,
-                                      self.line_width)
+                                      lasty - self.base_line, fill_color, line_color, line_width)
                 # scene.add(self.bounds[token])
 
                 lastx += maxx + self.margin
-                self.height = max(self.height, lasty)
+                height = max(height, lasty)
 
-            self.width = lastx - self.margin
-        return self.width, self.height
+            width = lastx - self.margin
+        return width, height

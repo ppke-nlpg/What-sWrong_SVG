@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import Scene, draw_arrow_w_text_middle
+from libwwnlp.render.backend.svg_writer import draw_arrow_w_text_middle
 
 
 class DependencyLayout(AbstractEdgeLayout):
@@ -24,17 +24,12 @@ class DependencyLayout(AbstractEdgeLayout):
         closer the edge start or end point is to the middle of the token
         bounding box. There is one exception to this rule: self loops always
         start at the leftmost position and end at the rightmost position.
-
-    Attributes:
-       arrowsize (int): The size of the arrow.
     """
 
     def __init__(self):
         super().__init__()
-        self.arrowsize = 2  # TODO: Constants?
-        self.label_over = False  # TODO: Constants?
 
-    def layout_edges(self, edges, bounds, scene: Scene):
+    def layout_edges(self, edges, bounds, scene, constants, common_constants):
         """Lays out the edges as directed labelled dependency links between tokens.
 
         Note on types:
@@ -52,10 +47,21 @@ class DependencyLayout(AbstractEdgeLayout):
            edges: Edges to layout.
            bounds: Bounds of the tokens the edges connect.
            scene: Graphics object to draw on.
+           constants (dict): Constants handled uniformly at an upper level
+           common_constants (dict): Constants handled uniformly at an upper level
 
         Returns:
            The dimensions of the drawn graph.
         """
+        arrowsize = constants['arrowsize']
+        label_over = constants['label_over']
+        height_per_level = common_constants['height_per_level']
+        font_size = common_constants['font_size']
+        font_family = common_constants['font_family']
+        vertex_extra_space = common_constants['vertex_extra_space']
+        property_colors = common_constants['property_colors']
+        default_edge_color = common_constants['default_edge_color']
+
         edges_ = self.filter_to_visible_edges(edges)
 
         # find out height of each edge
@@ -87,13 +93,13 @@ class DependencyLayout(AbstractEdgeLayout):
                                       over.covers_exactly(under) and over.lexicographic_order(under) > 0):
                     dominates[over].append(under)
 
-        depth, max_depth, max_height = self.calculate_depth_maxdepth_height(dominates, edges_wo_loops)
+        depth, max_depth, max_height = self.calculate_depth_maxdepth_height(dominates, edges_wo_loops, height_per_level)
 
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
         if max_depth == 0 and len(all_loops) > 0:
-            max_height += self.height_per_level // 2  # 1 + 0.5 = 1.5
+            max_height += height_per_level // 2  # 1 + 0.5 = 1.5
 
         max_height_w_baseline = max_height + self.baseline
 
@@ -103,10 +109,10 @@ class DependencyLayout(AbstractEdgeLayout):
             for right in edges_wo_loops:
                 if left != right and left.crosses(right) and depth[left] == depth[right]:
                     if offset[left] == 0 and offset[right] == 0:
-                        offset[left] += self.height_per_level // 2      # 1/2
+                        offset[left] += height_per_level // 2      # 1/2
                     elif offset[left] == offset[right]:
-                        offset[left] = self.height_per_level // 3       # 1/3
-                        offset[right] = self.height_per_level * 2 // 3  # 2/3
+                        offset[left] = height_per_level // 3       # 1/3
+                        offset[right] = height_per_level * 2 // 3  # 2/3
 
             # assign starting and end points of edges by sorting the edges per vertex
         start, end = {}, {}
@@ -116,9 +122,9 @@ class DependencyLayout(AbstractEdgeLayout):
             loops_on_vertex = loops[token]
             token_bound_start = bounds[token].start
             token_bound_end = bounds[token].end
-            width = (token_bound_end - token_bound_start + self.vertex_extra_space) // \
+            width = (token_bound_end - token_bound_start + vertex_extra_space) // \
                     (len(vertex2edges[token]) + 1 + len(loops_on_vertex) * 2)
-            x_coord = (token_bound_start - (self.vertex_extra_space // 2)) + width
+            x_coord = (token_bound_start - (vertex_extra_space // 2)) + width
 
             for loop in loops_on_vertex:
                 start[loop] = (x_coord, max_height_w_baseline)
@@ -142,9 +148,9 @@ class DependencyLayout(AbstractEdgeLayout):
         # draw each edge
         for edge in edges_:
             # TODO: Do that more properly!
-            height = max_height_w_baseline - (depth[edge] + 1) * self.height_per_level + offset[edge]
+            height = max_height_w_baseline - (depth[edge] + 1) * height_per_level + offset[edge]
             if edge.start == edge.end:
-                height -= self.height_per_level // 2
+                height -= height_per_level // 2
 
             point1 = start[edge]
             point2 = (point1[0], height)
@@ -152,14 +158,14 @@ class DependencyLayout(AbstractEdgeLayout):
             point3 = (point4[0], height)
 
             # Draw arrow and text middle
-            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, self.arrowsize, self.curve,
-                                     edge.get_label_with_note(), self.font_size, self.font_family, self.label_over,
-                                     self.get_color(edge))
+            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, self.curve,
+                                     edge.get_label_with_note(), font_size, font_family, label_over,
+                                     self.get_color(edge, property_colors, default_edge_color))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge
 
-        return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
+        return max_width + arrowsize + 2, max_height  # TODO: Constants?
 
     @staticmethod
     def compare_edges(edge1, edge2, token):
