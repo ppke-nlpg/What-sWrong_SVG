@@ -115,6 +115,7 @@ class TokenLayout:
         return result, width
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
+    # TODO: Merge the two functions with a pseudo-scene like set() which also have add(...) to prevent double drawing
     def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
@@ -169,7 +170,7 @@ class TokenLayout:
                     # TODO: Here was TextToken (must align to left)
                     text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]),
                                            token.get_property_value(prop_name),
-                                           token_fontsize, token_font_family, color, token=True)
+                                           token_fontsize, token_font_family, color)
                     maxx = max(maxx, text_width)
 
                 lasty += font_desc_size

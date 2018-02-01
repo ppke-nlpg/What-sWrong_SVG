@@ -7,123 +7,11 @@ Specialised svgwrite subclasses for visualising linguistic parses in SVG.
 import sys
 import cairo
 import cairosvg
-import svgwrite as sw
+from svgwrite.drawing import Drawing
+from svgwrite.shapes import Line, Rect
+from svgwrite.path import Path
+from svgwrite.text import Text
 from svgwrite.utils import rgb
-
-
-class Scene(sw.drawing.Drawing):
-    """An svgwrite Drawing.
-    """
-
-    def __init__(self, width: str='100%', height: str='100%'):
-        """Initialize a Scene instance.
-
-        Args:
-            width (int): The width of the scene in pixels.
-            height (int): The height of the scene in pixels.
-        """
-        super().__init__(size=(width, height))
-
-
-class Line(sw.shapes.Line):
-    """A straight line between two points.
-    """
-
-    def __init__(self, scene: Scene, start: tuple, end: tuple, color: tuple, width: int=1):
-        """Initialize a line.
-
-        Args:
-            start (tuple): The line's starting point.
-            end (tuple): The line's ending point.
-            color (tuple): The color of the line.
-            width: (int): The width of the line.
-        """
-        super().__init__(start,
-                         end,
-                         shape_rendering='inherit',
-                         stroke=rgb(*color),
-                         stroke_width=width)
-        scene.add(self)
-
-
-class QubicBezierCurve(sw.path.Path):
-    """A qubic Bezier curve.
-    """
-
-    def __init__(self, scene: Scene, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple,
-                 width: int=1):
-        """Initialize a qubic Bezier curve.
-
-        Args:
-            start (tuple): The line's starting point.
-            control1 (tuple): The first control point for the curve.
-            control2 (tuple): The second control point for the curve.
-            end (tuple): The line's ending point.
-            color (tuple): The color of the line.
-            width: (int): The width of the line.
-        """
-        super().__init__(d=['M', start,
-                            'C', control1,
-                            control2,
-                            end],
-                         stroke=rgb(*color),
-                         stroke_width=width,
-                         fill='none')
-        scene.add(self)
-
-
-class Rectangle(sw.shapes.Rect):
-    """A rectangle.
-    """
-
-    def __init__(self, scene: Scene, origin: tuple, width: int, height: int,
-                 fill_color: tuple, line_color: tuple, line_width: int, rounded: int):
-        """Initialize a rectangle.
-
-        Args:
-            origin (tuple): The top left corner of the rectangle.
-            width: (int): The width of the rectangle.
-            height: (int): The height of the rectangle.
-            fill_color (tuple): Color to fill the rectangle with.
-            line_color (tuple): Color to use for the rectangle's outline.
-            line_width (int): The line's ending point.
-            rounded (int): Has corner rounding or not. > 0 -> round...
-        """
-        super().__init__(insert=origin,
-                         size=(width, height),
-                         shape_rendering='inherit',
-                         fill=rgb(*fill_color),
-                         stroke=rgb(*line_color),
-                         stroke_width=line_width,
-                         rx=rounded, ry=rounded)
-        scene.add(self)
-
-
-class Text(sw.text.Text):
-    """Text.
-    """
-    def __init__(self, scene: Scene, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0),
-                 token=False):
-        """Initialize a text object.
-
-        Args:
-            origin (tuple): The top left corner of the text area.
-            text (str): The text to write on the scene.
-            size (int): The size of the text.
-            font (str): The font specification.
-            color (tuple): Color to use for the text.
-        """
-        additional = {}
-        if not token:  # TODO: Remove hack. The only difference is the alignemnt and text_anchor
-            additional = {'alignment_baseline': 'central', 'text_anchor': 'middle'}
-        super().__init__(text,
-                         insert=origin,
-                         fill=rgb(*color),
-                         font_family=font,
-                         font_size=size,
-                         text_rendering='inherit',
-                         **additional)
-        scene.add(self)
 
 
 def get_text_width(text: str, size: int, font: str) -> int:
@@ -146,7 +34,7 @@ def get_text_width(text: str, size: int, font: str) -> int:
         return width
 
 
-def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
+def _create_rect_arrow(scene: Drawing, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
     """Create an rectangular path through the given points.
 
     The path starts at p1 the goes to point1, p2 and finally to end.
@@ -162,13 +50,13 @@ def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple,
     Returns:
         The modified scene
     """
-    Line(scene, start, point1, color)
-    Line(scene, point1, point2, color)
-    Line(scene, point2, end, color)
+    scene.add(Line(start, point1, shape_rendering='inherit', stroke=rgb(*color), stroke_width=1))
+    scene.add(Line(point1, point2, shape_rendering='inherit', stroke=rgb(*color), stroke_width=1))
+    scene.add(Line(point2, end, shape_rendering='inherit', stroke=rgb(*color), stroke_width=1))
 
 
-def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
-    """Create an curved path around the given points in a scene.
+def _create_curve_arrow(scene: Drawing, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
+    """Create an curved path (with cubic Bezier curve) around the given points in a scene.
 
     The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
     bezier control points.
@@ -185,18 +73,18 @@ def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple
         The modified scene
     """
     middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
-    QubicBezierCurve(scene, start, point1, point1, middle, color)
-    QubicBezierCurve(scene, middle, point2, point2, end, color)
+    scene.add(Path(d=['M', start, 'C', point1, point1, middle], stroke=rgb(*color), stroke_width=1, fill='none'))
+    scene.add(Path(d=['M', middle, 'C', point2, point2, end], stroke=rgb(*color), stroke_width=1, fill='none'))
 
 
-def draw_line(scene: Scene, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple, is_curved: bool, edge_color: tuple):
-    if is_curved:
-        QubicBezierCurve(scene, start, ctrl1, ctrl2, end, edge_color)
+def draw_line(scene: Drawing, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple, is_curved: bool, edge_color: tuple):
+    if is_curved:  # cubic Bezier curve
+        scene.add(Path(d=['M', start, 'C', ctrl1, ctrl2, end], stroke=rgb(*edge_color), stroke_width=1, fill='none'))
     else:
-        Line(scene, start, end, edge_color)
+        scene.add(Line(start, end, shape_rendering='inherit', stroke=rgb(*edge_color), stroke_width=1))
 
 
-def draw_arrow_w_text_middle(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
+def draw_arrow_w_text_middle(scene: Drawing, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
                              arrowsize: int, is_curved: bool, text: str, font_size: int, font_family: str, over: bool,
                              color: tuple):
         # Store the appropriate function ouside of the loop
@@ -211,8 +99,8 @@ def draw_arrow_w_text_middle(scene: Scene, start: tuple, point1: tuple, point2: 
         y_coord = (end[0], end[1])
 
         # Draw the arrow head
-        Line(scene, x_coord, y_coord, color)
-        Line(scene, z_coord, y_coord, color)
+        scene.add(Line(x_coord, y_coord, shape_rendering='inherit', stroke=rgb(*color), stroke_width=1))
+        scene.add(Line(z_coord, y_coord, shape_rendering='inherit', stroke=rgb(*color), stroke_width=1))
 
         direction = 1
         if over:
@@ -221,25 +109,30 @@ def draw_arrow_w_text_middle(scene: Scene, start: tuple, point1: tuple, point2: 
         # Write label in the middle under
         labelx = min(start[0], point2[0]) + abs(start[0]-point2[0]) // 2
         labely = height + direction*font_size  # TODO: Should be font height!
-        Text(scene, (labelx, labely), text, font_size, font_family, color)
+
+        scene.add(Text(text, insert=(labelx, labely), fill=rgb(*color), font_family=font_family, font_size=font_size,
+                       text_rendering='inherit', alignment_baseline='central', text_anchor='middle'))
 
 
-def draw_rectangle_around_text(scene: Scene, origin: tuple, width: int, height: int, fill_color: tuple,
+def draw_rectangle_around_text(scene: Drawing, origin: tuple, width: int, height: int, fill_color: tuple,
                                line_color: tuple, line_width: int, rounded: int,
                                text: str, font_size: int, font_family: str):
-    Rectangle(scene, origin, width, height, fill_color, line_color, line_width, rounded)
+    scene.add(Rect(insert=origin, size=(width, height), shape_rendering='inherit', fill=rgb(*fill_color),
+              stroke=rgb(*line_color), stroke_width=line_width, rx=rounded, ry=rounded))
 
     # write label in the middle under
     labelx = origin[0] + width // 2
     labely = origin[1] + height // 2 + 4  # TODO: Should be drawn in the vertical center, so + 4 not needed!
 
-    Text(scene, (labelx, labely), text, font_size, font_family, line_color)
+    scene.add(Text(text, insert=(labelx, labely), fill=rgb(*line_color), font_family=font_family, font_size=font_size,
+                   text_rendering='inherit', alignment_baseline='central', text_anchor='middle'))
 
     return origin[0], origin[1], width, height
 
 
-def draw_text(scene: Scene, origin: tuple, text: str, font_size: int, font_family: str, color: tuple, token: bool):
-    Text(scene, origin, text, font_size, font_family, color, token)
+def draw_text(scene: Drawing, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+    scene.add(Text(text, insert=origin, fill=rgb(*color), font_family=font_family, font_size=font_size,
+                   text_rendering='inherit'))
     return get_text_width(text, font_size, font_family)  # Should return bounding box
 
 
@@ -254,7 +147,7 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
 
     Returns: The bytesting of the rendered object if needed.
     """
-    svg_scene = Scene()  # default: '100%', '100%'
+    svg_scene = Drawing(size=('100%', '100%'))  # default: '100%', '100%'
 
     dim = renderer.render(filtered, svg_scene)
 
