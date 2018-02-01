@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from collections import namedtuple
+from collections import namedtuple, Counter
 
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
@@ -18,9 +18,8 @@ class AbstractEdgeLayout:
 
     Attributes:
         baseline (int): Where do we start to draw.
-        height_per_level (int): How many pixels to use per height level.
-        vertex_extra_space (int): How many extra pixels to start and end arrows
-            from.
+        height_per_level (int): How many pixels to use per height level. (minimum the height of the used font)
+        vertex_extra_space (int): How many extra pixels to start and end arrows from.
         curve (bool): Should the edges be curved.
         type_colors (Dict[str, color]): A mapping from type names to colors.
         property_colors (Dict[str, tuple]): A mapping from edge property names
@@ -177,7 +176,8 @@ class AbstractEdgeLayout:
         #            maxY = s.getBounds().getY();
         #    return result
 
-    def calculate_depth(self, dominates, depth, edges):
+    def calculate_depth(self, dominates, edges):
+        depth = Counter()
         for root in edges:
             self.calculate_depth_r(dominates, depth, root)
         return depth
@@ -202,6 +202,12 @@ class AbstractEdgeLayout:
         depth[root] = maximum
         return maximum
 
+    def filter_to_visible_edges(self, edges):
+        edges_ = set(edges)
+        if len(self.visible) > 0:
+            edges_ &= self.visible  # Intersection
+        return edges_
+
     def get_color(self, edge):
         """Return the color for the given edge.
 
@@ -215,3 +221,17 @@ class AbstractEdgeLayout:
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
         return min(((self.property_colors[x][1], x, self.property_colors[x][0]) for x in props_with_color),
                    default=(0, None, self.type_colors.get(edge.edge_type, self.default_edge_color)))[2]
+
+    def calculate_depth_maxdepth_height(self, dominates, edges_):
+        depth = self.calculate_depth(dominates, edges_)
+        # calculate max_height and max_width
+        if len(depth) == 0:
+            max_depth = 0
+        else:
+            max_depth = depth.most_common(1)[0][1]
+        if len(edges_) > 0:
+            max_height = (max_depth + 1) * self.height_per_level + 3  # TODO: Constants?
+        else:
+            max_height = 1
+        return depth, max_depth, max_height
+

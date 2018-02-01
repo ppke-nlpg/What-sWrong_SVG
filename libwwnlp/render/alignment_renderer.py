@@ -39,8 +39,8 @@ class AlignmentRenderer:
         dim1 = self._token_layout1.layout(instance, {}, scene)
 
         height_factor = self._alignment_layout.layout_edges(dim1[1], instance.get_edges(EdgeRenderType.dependency),
-                                                            self._token_layout1.estimate_token_bounds(instance, {}),
-                                                            self._token_layout2.estimate_token_bounds(instance, {}),
+                                                            self._token_layout1.estimate_token_bounds(instance, {})[0],
+                                                            self._token_layout2.estimate_token_bounds(instance, {})[0],
                                                             scene)
 
         # add spans

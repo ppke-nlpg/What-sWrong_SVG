@@ -125,8 +125,8 @@ class Text(sw.text.Text):
                          **additional)
         scene.add(self)
 
-    @staticmethod
-    def get_width(text: str, size: int, font: str) -> int:
+
+def get_text_width(text: str, size: int, font: str) -> int:
         """Return the width of the text.
 
         Returns:
@@ -146,8 +146,7 @@ class Text(sw.text.Text):
         return width
 
 
-def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
-                       color: tuple):
+def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
     """Create an rectangular path through the given points.
 
     The path starts at p1 the goes to point1, p2 and finally to end.
@@ -157,7 +156,6 @@ def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple,
         start: The first point.
         point1: The second point.
         point2: The third point.
-        arrowsize: The size of the arrow head.
         end: The last point.
         color: The arrow's color.
 
@@ -168,17 +166,8 @@ def _create_rect_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple,
     Line(scene, point1, point2, color)
     Line(scene, point2, end, color)
 
-    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-    y_coord = (end[0], end[1])
 
-    # Draw the arrow head
-    Line(scene, x_coord, y_coord, color)
-    Line(scene, z_coord, y_coord, color)
-
-
-def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, arrowsize: int,
-                        color: tuple):
+def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
     """Create an curved path around the given points in a scene.
 
     The path starts at `start` and ends at `end`. Points control_point1 and c2 are used as
@@ -190,7 +179,6 @@ def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple
         point1: The first control point.
         point2: The second control point.
         end: The end point.
-        arrowsize: The size of the arrow head.
         color: The arrow's color.
 
     Return:
@@ -199,14 +187,6 @@ def _create_curve_arrow(scene: Scene, start: tuple, point1: tuple, point2: tuple
     middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
     QubicBezierCurve(scene, start, point1, point1, middle, color)
     QubicBezierCurve(scene, middle, point2, point2, end, color)
-
-    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-    y_coord = (end[0], end[1])
-
-    # Draw the arrow head
-    Line(scene, x_coord, y_coord, color)
-    Line(scene, z_coord, y_coord, color)
 
 
 def draw_line(scene: Scene, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple, is_curved: bool, edge_color: tuple):
@@ -221,9 +201,18 @@ def draw_arrow_w_text_middle(scene: Scene, start: tuple, point1: tuple, point2: 
                              color: tuple):
         # Store the appropriate function ouside of the loop
         if is_curved:
-            _create_curve_arrow(scene, start, point1, point2, end, arrowsize, color)
+            _create_curve_arrow(scene, start, point1, point2, end, color)
         else:
-            _create_rect_arrow(scene, start, point1, point2, end, arrowsize, color)
+            _create_rect_arrow(scene, start, point1, point2, end, color)
+
+        # Draw arrow
+        x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+        z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+        y_coord = (end[0], end[1])
+
+        # Draw the arrow head
+        Line(scene, x_coord, y_coord, color)
+        Line(scene, z_coord, y_coord, color)
 
         direction = 1
         if over:
@@ -251,7 +240,7 @@ def draw_rectangle_around_text(scene: Scene, origin: tuple, width: int, height: 
 
 def draw_text(scene: Scene, origin: tuple, text: str, font_size: int, font_family: str, color: tuple, token: bool):
     Text(scene, origin, text, font_size, font_family, color, token)
-    return Text.get_width(text, font_size, font_family)  # Should return bounding box
+    return get_text_width(text, font_size, font_family)  # Should return bounding box
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):

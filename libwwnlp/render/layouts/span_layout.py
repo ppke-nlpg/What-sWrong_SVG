@@ -4,7 +4,7 @@
 from collections import Counter, defaultdict
 
 from .abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import draw_line, draw_rectangle_around_text, Scene, Text
+from libwwnlp.render.backend.svg_writer import draw_line, draw_rectangle_around_text, Scene, get_text_width
 
 
 class SpanLayout(AbstractEdgeLayout):
@@ -56,15 +56,17 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = self.total_text_margin + max(
-                    Text.get_width(edge.label, self.font_size, self.font_family), result.get(edge.start, 0))
+                    get_text_width(edge.get_label_with_note(), self.font_size, self.font_family),
+                    result.get(edge.start, 0))
         return result
 
-    def layout_edges(self, edges, bounds, scene: Scene, origin=(0, 0)):
+    def layout_edges(self, edges, bounds, max_width: int, scene: Scene, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:
             edges: The edges to layout.
             bounds: The bounds of the tokens the spans connect.
+            max_width: The maximum width computed from token bounds earlier
             scene: The graphics object to draw on.
             origin: The origin coordinates.
 
@@ -76,16 +78,12 @@ class SpanLayout(AbstractEdgeLayout):
         Returns:
             The dimensions of the drawn graph.
         """
-        edges_ = set(edges)
-        if len(self.visible) > 0:
-            edges_ = edges_ & self.visible  # Intersection
+        max_width += origin[0]
+
+        edges_ = self.filter_to_visible_edges(edges)
 
         # find out height of each edge
-        self.shapes.clear()
-
-        depth = Counter()
         dominates = defaultdict(list)
-
         for over in edges_:
             for under in edges_:
                 order_over = self.orders.get(over.edge_type)
@@ -101,31 +99,20 @@ class SpanLayout(AbstractEdgeLayout):
 
                     dominates[over].append(under)
 
-        depth = self.calculate_depth(dominates, depth, edges_)
-
         # calculate max_height and max_width
-        if len(depth) == 0:
-            max_depth = 0
-        else:
-            max_depth = depth.most_common(1)[0][1]
-        if len(edges_) > 0:
-            max_height = (max_depth + 1) * self.height_per_level + 3  # TODO: Constants?
-        else:
-            max_height = 1
-
-        # in case there are no edges_ that cover other edges (depth == 0) we need
-        # to increase the height slightly because loops on the same token
-        # have height of 1.5 levels
+        depth, max_depth, max_height = self.calculate_depth_maxdepth_height(dominates, edges_)
 
         # draw each edge
+        self.shapes.clear()
         for edge in edges_:
             # draw lines
+            span_level = 1  # starts from 1
             if self.revert:
-                span_level = max_depth - depth[edge]
+                span_level += max_depth - depth[edge]
             else:
-                span_level = depth[edge]
+                span_level += depth[edge]
 
-            height = self.baseline + max_height - (span_level + 1) * self.height_per_level
+            height = self.baseline + max_height - span_level * self.height_per_level
             height_minus_buffer = height - self.buffer_height + origin[1]
             rect_height = self.height_per_level - 2 * self.buffer_height
 
@@ -144,18 +131,17 @@ class SpanLayout(AbstractEdgeLayout):
             # Store shape coordinates for selection with mouse click
             self.shapes[bbox] = edge
 
-        max_width = max((bound.end for bound in bounds.values()), default=0)
-
         if self.separation_lines:
             # find largest depth for each prefix type
             min_depths = Counter()
             for edge in edges_:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
+            baseline = self.baseline + origin[1] - 1  # TODO: Why -1?
             for depth in min_depths.values():
                 if not self.revert:
                     depth = max_depth - depth
-                height = self.baseline - 1 + depth * self.height_per_level
-                draw_line(scene, (0+origin[1], height+origin[1]), (), (), (max_width+origin[0], height+origin[1]),
-                          False, edge_color=self.separator_line_color)
-        return max_width, max_height - 2 * self.buffer_height
+                height = baseline + depth * self.height_per_level
+                draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
+                          edge_color=self.separator_line_color)
+        return max_height - 2 * self.buffer_height

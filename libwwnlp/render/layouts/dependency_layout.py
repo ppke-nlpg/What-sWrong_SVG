@@ -56,9 +56,7 @@ class DependencyLayout(AbstractEdgeLayout):
         Returns:
            The dimensions of the drawn graph.
         """
-        edges_ = set(edges)
-        if len(self.visible) > 0:
-            edges_ = edges & self.visible
+        edges_ = self.filter_to_visible_edges(edges)
 
         # find out height of each edge
         self.shapes.clear()
@@ -66,74 +64,69 @@ class DependencyLayout(AbstractEdgeLayout):
         loops = defaultdict(list)
         all_loops = set()
         tokens = set()
+        # build map from vertex to incoming/outgoing edges to leave enough space over the token for all edges
+        vertex2edges = defaultdict(list)
+
         for edge in edges_:
             tokens.add(edge.start)
             tokens.add(edge.end)
             if edge.start == edge.end:
                 loops[edge.start].append(edge)
                 all_loops.add(edge)
+            else:
+                # assign starting and end points of edges by sorting the edges per vertex
+                vertex2edges[edge.start].append(edge)
+                vertex2edges[edge.end].append(edge)
 
-        edges_ -= all_loops
+        edges_wo_loops = edges_ - all_loops
 
-        depth = Counter()
-        offset = Counter()
         dominates = defaultdict(list)
-
-        for over in edges_:
-            for under in edges_:
+        for over in edges_wo_loops:
+            for under in edges_wo_loops:
                 if over != under and (over.covers(under) or over.covers_semi(under) or
                                       over.covers_exactly(under) and over.lexicographic_order(under) > 0):
                     dominates[over].append(under)
 
-        depth = self.calculate_depth(dominates, depth, edges_)
+        depth, max_depth, max_height = self.calculate_depth_maxdepth_height(dominates, edges_wo_loops)
 
-        for left in edges_:
-            for right in edges_:
-                if left != right and left.crosses(right) and depth[left] == depth[right]:
-                    if offset[left] == 0 and offset[right] == 0:
-                        offset[left] += self.height_per_level // 2
-                    elif offset[left] == offset[right]:
-                        offset[left] = self.height_per_level // 3
-                        offset[right] = self.height_per_level * 2 // 3
-
-        # calculate max_height and max_width
-        most_common = depth.most_common(1)
-        if len(most_common) == 0:
-            max_depth = 0
-        else:
-            max_depth = most_common[0][1]
-
-        max_height = (max_depth + 1) * self.height_per_level + 3
         # in case there are no edges that cover other edges (depth == 0) we need
         # to increase the height slightly because loops on the same token
         # have height of 1.5 levels
         if max_depth == 0 and len(all_loops) > 0:
-            max_height += self.height_per_level // 2
+            max_height += self.height_per_level // 2  # 1 + 0.5 = 1.5
 
-        # build map from vertex to incoming/outgoing edges
-        vertex2edges = defaultdict(list)
-        for edge in edges_:
+        max_height_w_baseline = max_height + self.baseline
+
+        # Eliminate crossings
+        offset = Counter()
+        for left in edges_wo_loops:
+            for right in edges_wo_loops:
+                if left != right and left.crosses(right) and depth[left] == depth[right]:
+                    if offset[left] == 0 and offset[right] == 0:
+                        offset[left] += self.height_per_level // 2      # 1/2
+                    elif offset[left] == offset[right]:
+                        offset[left] = self.height_per_level // 3       # 1/3
+                        offset[right] = self.height_per_level * 2 // 3  # 2/3
+
             # assign starting and end points of edges by sorting the edges per vertex
-            vertex2edges[edge.start].append(edge)
-            vertex2edges[edge.end].append(edge)
-
-        # assign starting and end points of edges by sorting the edges per vertex
         start, end = {}, {}
         for token in tokens:
 
             # now put points along the token vertex wrt to ordering
             loops_on_vertex = loops[token]
-            width = (bounds[token].end - bounds[token].start + self.vertex_extra_space) // \
+            token_bound_start = bounds[token].start
+            token_bound_end = bounds[token].end
+            width = (token_bound_end - token_bound_start + self.vertex_extra_space) // \
                     (len(vertex2edges[token]) + 1 + len(loops_on_vertex) * 2)
-            x_coord = (bounds[token].start - (self.vertex_extra_space // 2)) + width
+            x_coord = (token_bound_start - (self.vertex_extra_space // 2)) + width
 
             for loop in loops_on_vertex:
-                start[loop] = (x_coord, self.baseline + max_height)
+                start[loop] = (x_coord, max_height_w_baseline)
                 x_coord += width
 
             for edge in sorted(vertex2edges[token], key=functools.cmp_to_key(
                     lambda e1, e2, tok=token: self.compare_edges(e1, e2, tok))):
-                point = (x_coord, self.baseline + max_height)
+                point = (x_coord, max_height_w_baseline)
                 if edge.start == token:
                     start[edge] = point
                 else:
@@ -141,14 +134,15 @@ class DependencyLayout(AbstractEdgeLayout):
                 x_coord += width
 
             for loop in loops_on_vertex:
-                end[loop] = (x_coord, self.baseline + max_height)
+                end[loop] = (x_coord, max_height_w_baseline)
                 x_coord += width
 
+        max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
+
         # draw each edge
-        edges_ |= all_loops
         for edge in edges_:
             # TODO: Do that more properly!
-            height = self.baseline + max_height - (depth[edge] + 1) * self.height_per_level + offset[edge]
+            height = max_height_w_baseline - (depth[edge] + 1) * self.height_per_level + offset[edge]
             if edge.start == edge.end:
                 height -= self.height_per_level // 2
 
@@ -157,7 +151,7 @@ class DependencyLayout(AbstractEdgeLayout):
             point4 = end[edge]
             point3 = (point4[0], height)
 
-            # Draw arrow and text middle under
+            # Draw arrow and text middle
             draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, self.arrowsize, self.curve,
                                      edge.get_label_with_note(), self.font_size, self.font_family, self.label_over,
                                      self.get_color(edge))
@@ -165,7 +159,6 @@ class DependencyLayout(AbstractEdgeLayout):
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge
 
-        max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
         return max_width + self.arrowsize + 2, max_height  # TODO: Constants?
 
     @staticmethod

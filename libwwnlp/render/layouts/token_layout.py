@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.render.backend.svg_writer import Scene, Text, draw_text
+from libwwnlp.render.backend.svg_writer import Scene, get_text_width, draw_text
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
@@ -96,7 +96,7 @@ class TokenLayout:
         """
         result = {}
         self.height = 0
-
+        width = 0
         tokens = instance.tokens
 
         if len(tokens) > 0:
@@ -114,15 +114,17 @@ class TokenLayout:
 
                 props = token.get_property_names()
                 lasty = self.base_line + self.row_height*(len(props))
-                maxx = max(chain((Text.get_width(token.get_property_value(prop_name), self.text_fontsize,
+                maxx = max(chain((get_text_width(token.get_property_value(prop_name), self.text_fontsize,
                                                  self.font_family) for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
 
-                lastx += maxx + self.margin
+                lastx += maxx
+                width = max(width, lastx)
                 self.height = max(self.height, lasty)
+                lastx += self.margin
 
-        return result
+        return result, width
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
     def layout(self, instance: NLPInstance, token_widths: dict, scene: Scene, origin=(0, 0)):
