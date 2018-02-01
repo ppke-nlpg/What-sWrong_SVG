@@ -34,14 +34,11 @@ class TokenLayout:
     values are rendered in gray.
 
     Note:
-        The TokenLayout remembers the bounds of each token property stack and
+        The TokenLayout computes the bounds of each token property stack and
         the text layout of each property value. This can be handy when other
         layouts (e.g. DependencyLayout) want to connect the tokens.
 
     Attributes:
-        text_layouts (dict):
-        bounds (dict): A dict specifying the horizontal bounds as a Bounds1D
-            tuple.
         base_line (int): Where should we start to draw the stacks.
         margin (int): The margin between tokens (i.e., their stacks).
         from_split_point (int): The index of the the split point at which the
@@ -60,7 +57,6 @@ class TokenLayout:
         self.from_split_point = -1
         self.to_split_point = -1
         self.text_layouts = {}
-        self.bounds = {}
 
     def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, constants):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
@@ -83,7 +79,7 @@ class TokenLayout:
             stacks next to each other.
         """
         row_height = constants['row_height']
-        font_family = constants['font_family']
+        token_font_family = constants['token_font_family']
         text_fontsize = constants['text_fontsize']
 
         result = {}
@@ -106,7 +102,7 @@ class TokenLayout:
 
                 props = token.get_property_names()
                 lasty = self.base_line + row_height*(len(props))
-                maxx = max(chain((get_text_width(token.get_property_value(prop_name), text_fontsize, font_family)
+                maxx = max(chain((get_text_width(token.get_property_value(prop_name), text_fontsize, token_font_family)
                                   for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
@@ -119,7 +115,7 @@ class TokenLayout:
         return result, width
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
-    def layout(self, instance: NLPInstance, token_widths: dict, scene,  constants, origin=(0, 0)):
+    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -140,20 +136,17 @@ class TokenLayout:
         """
         token_color = constants['token_color']
         token_prop_color = constants['token_prop_color']
-        row_height = constants['row_height']
         token_fontsize = constants['token_fontsize']
-        font_family = constants['font_family']
+        token_font_family = constants['token_font_family']
+
+        row_height = constants['row_height']
         font_desc_size = constants['font_desc_size']
-        fill_color = constants['fill_color']
-        line_color = constants['line_color']
-        line_width = constants['line_width']
 
         tokens = instance.tokens
         if len(tokens) == 0:
             height = 1
             width = 1
         else:
-            self.text_layouts.clear()
             height = 0
             lastx = 0
             from_token = 0
@@ -173,21 +166,13 @@ class TokenLayout:
                 colors = chain((token_color,), repeat(token_prop_color))
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
                     lasty += row_height
-                    curr_property_value = token.get_property_value(prop_name)
-                    # TODO: Do we use this anywhere? What is this?
-                    self.text_layouts[(token, index)] = curr_property_value
-                    # TODO: Here was TextToken
-                    text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]), curr_property_value,
-                                           token_fontsize, font_family, color, token=True)
+                    # TODO: Here was TextToken (must align to left)
+                    text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]),
+                                           token.get_property_value(prop_name),
+                                           token_fontsize, token_font_family, color, token=True)
                     maxx = max(maxx, text_width)
 
                 lasty += font_desc_size
-                # TODO: Do we use this anywhere? What is this?
-                # Maybe a the bounding box for clicking on a token?
-                self.bounds[token] = ((lastx + origin[0], self.base_line + origin[1]), maxx,
-                                      lasty - self.base_line, fill_color, line_color, line_width)
-                # scene.add(self.bounds[token])
-
                 lastx += maxx + self.margin
                 height = max(height, lasty)
 

@@ -20,7 +20,7 @@ class SpanLayout(AbstractEdgeLayout):
         super().__init__()
 
     @staticmethod
-    def estimate_required_token_widths(edges, total_text_margin, constants):
+    def estimate_required_token_widths(edges, constants):
         """Return the required token widths for self-loops.
 
         For each token that has a self-loop we need the token to be wide enough.
@@ -30,8 +30,6 @@ class SpanLayout(AbstractEdgeLayout):
 
         Args:
             edges (set): The set of edges that can contain self-loops.
-            total_text_margin (int): How much space should at least be between the label of a span and the right and
-                left edges of the span.
             constants (dict):
 
         Returns:
@@ -39,6 +37,7 @@ class SpanLayout(AbstractEdgeLayout):
         """
         font_size = constants['font_size']
         font_family = constants['font_family']
+        total_text_margin = constants['total_text_margin']
         result = {}
         for edge in edges:
             if edge.start == edge.end:
@@ -47,7 +46,7 @@ class SpanLayout(AbstractEdgeLayout):
                                          result.get(edge.start, 0))
         return result
 
-    def layout_edges(self, edges, bounds, max_width: int, scene, constants, common_constants, origin=(0, 0)):
+    def layout_edges(self, scene, edges, bounds, max_width: int, constants, common_constants, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:
@@ -71,7 +70,16 @@ class SpanLayout(AbstractEdgeLayout):
         font_size = common_constants['font_size']
         font_family = common_constants['font_family']
         property_colors = common_constants['property_colors']
-        default_edge_color = common_constants['default_edge_color']
+        curve = common_constants['curve']
+        revert = common_constants['revert']
+
+        buffer_height = constants['buffer_height']
+        span_line_width = constants['span_line_width']
+        span_curve_radius = constants['span_curve_radius']
+        span_fill_color = constants['span_fill_color']
+        separation_lines = constants['separation_lines']
+        separator_line_color = constants['separator_line_color']
+        orders = constants['orders']
 
         max_width += origin[0]
 
@@ -79,7 +87,6 @@ class SpanLayout(AbstractEdgeLayout):
 
         # find out height of each edge
         dominates = defaultdict(list)
-        orders = constants['orders']
         for over in edges_:
             for under in edges_:
                 order_over = orders.get(over.edge_type)
@@ -100,13 +107,6 @@ class SpanLayout(AbstractEdgeLayout):
 
         # draw each edge
 
-        revert = constants['revert']
-        buffer_height = constants['buffer_height']
-        span_line_width = constants['span_line_width']
-        span_radius = constants['span_radius']
-        span_fill_color = constants['span_fill_color']
-        separation_lines = constants['separation_lines']
-        separator_line_color = constants['separator_line_color']
         self.shapes.clear()
         for edge in edges_:
             # draw lines
@@ -129,8 +129,8 @@ class SpanLayout(AbstractEdgeLayout):
             # If curved int(self.curve) = 1 else 0
             bbox = draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
                                               max_x - min_x, rect_height, span_fill_color,
-                                              self.get_color(edge, property_colors, default_edge_color),
-                                              span_line_width, span_radius * int(self.curve),
+                                              self.get_color(edge, property_colors),
+                                              span_line_width, span_curve_radius * int(curve),
                                               edge.get_label_with_note(), font_size, font_family)
 
             # Store shape coordinates for selection with mouse click

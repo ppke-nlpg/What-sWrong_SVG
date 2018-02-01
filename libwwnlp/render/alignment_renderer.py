@@ -22,26 +22,26 @@ class AlignmentRenderer:
         self.is_curved = is_curved
 
         # TODO: Token layout constants maybe common
-        self.token_constants = {'token_fontsize': 12, 'text_fontsize': 12, 'row_height': 14,
-                                'font_family': 'Courier New, Courier, monospace', 'fill_color': (255, 255, 255),
-                                'line_color': (0, 0, 0), 'token_color': (0, 0, 0),  # Black
-                                'token_prop_color': (120, 120, 120),  # Grey
-                                'font_desc_size': 3, 'line_width': 1
-                                }
+        self.tok_constants = {'token_fontsize': 12, 'text_fontsize': 12,
+                              'token_font_family': 'Courier New, Courier, monospace',
+                              'token_color': (0, 0, 0),  # Black
+                              'token_prop_color': (120, 120, 120),  # Grey
+                              'font_desc_size': 3,  # TODO: What is this?
+                              'row_height': 14      # TODO: Text height?
+                              }
 
         # TODO: Constants?
         self.common_constants = {'height_per_level': 15, 'vertex_extra_space': 12,
-                                 'default_edge_color': (0, 0, 0),  # Black
-                                 'font_size': 12,
                                  'font_family': 'Courier New, Courier, monospace',
-                                 'match_color': (0, 0, 0),
-                                 'fn_color': (255, 0, 0),
-                                 'fp_color': (0, 0, 255),
+                                 'font_size': 12,
+                                 'height_factor': self.height_factor,  # From here elems are used in alignment layout!
+                                 'curve': self.is_curved,
+                                 'property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
+                                                     'eval_status_FN': ((255, 0, 0), 1),   # Red
+                                                     'eval_status_FP': ((0, 0, 255), 1),   # Blue
+                                                     'default_edge_color': ((0, 0, 0), 1)  # Black
+                                                     }
                                  }
-        self.common_constants['property_colors'] = {'eval_status_Match': (self.common_constants['match_color'], 2),
-                                                    'eval_status_FN': (self.common_constants['fn_color'], 1),
-                                                    'eval_status_FP': (self.common_constants['fp_color'], 1)
-                                                    }
 
         self._token_layout1 = TokenLayout()
         self._token_layout2 = TokenLayout()
@@ -60,16 +60,14 @@ class AlignmentRenderer:
             tuple: The width and height of the drawn object.
         """
         # add first token span
-        dim1 = self._token_layout1.layout(instance, {}, scene, self.token_constants)
+        dim1 = self._token_layout1.layout(scene, instance, {}, self.tok_constants)
 
-        self._alignment_layout.layout_edges(dim1[1], instance.get_edges(EdgeRenderType.dependency),
-                                            self._token_layout1.estimate_token_bounds(instance, {},
-                                                                                      self.token_constants)[0],
-                                            self._token_layout2.estimate_token_bounds(instance, {},
-                                                                                      self.token_constants)[0],
-                                            self.height_factor, self.is_curved, self.common_constants, scene)
+        token_bounds1 = self._token_layout1.estimate_token_bounds(instance, {}, self.tok_constants)[0]
+        token_bounds2 = self._token_layout2.estimate_token_bounds(instance, {}, self.tok_constants)[0]
+        self._alignment_layout.layout_edges(scene, dim1[1], instance.get_edges(EdgeRenderType.dependency),
+                                            token_bounds1, token_bounds2, self.common_constants)
         # add second token span
-        dim2 = self._token_layout2.layout(instance, {}, scene, self.token_constants, (0, dim1[1] + self.height_factor))
+        dim2 = self._token_layout2.layout(scene, instance, {}, self.tok_constants, (0, dim1[1] + self.height_factor))
 
         return max(dim1[0], dim2[0]), dim1[1] + dim2[1] + self.height_factor + 1
 

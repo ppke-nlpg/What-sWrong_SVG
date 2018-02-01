@@ -29,7 +29,7 @@ class DependencyLayout(AbstractEdgeLayout):
     def __init__(self):
         super().__init__()
 
-    def layout_edges(self, edges, bounds, scene, constants, common_constants):
+    def layout_edges(self, scene, edges, bounds, constants, common_constants):
         """Lays out the edges as directed labelled dependency links between tokens.
 
         Note on types:
@@ -60,7 +60,7 @@ class DependencyLayout(AbstractEdgeLayout):
         font_family = common_constants['font_family']
         vertex_extra_space = common_constants['vertex_extra_space']
         property_colors = common_constants['property_colors']
-        default_edge_color = common_constants['default_edge_color']
+        curve = common_constants['curve']
 
         edges_ = self.filter_to_visible_edges(edges)
 
@@ -114,7 +114,9 @@ class DependencyLayout(AbstractEdgeLayout):
                         offset[left] = height_per_level // 3       # 1/3
                         offset[right] = height_per_level * 2 // 3  # 2/3
 
-            # assign starting and end points of edges by sorting the edges per vertex
+        # assign starting and end points of edges by sorting the edges per vertex
+        # start (Dict[Edge, Point]): A mapping from edges to their start points in the layout.
+        # end (Dict[Edge, Point]): A mapping from edges to their end points in the layout.
         start, end = {}, {}
         for token in tokens:
 
@@ -158,9 +160,9 @@ class DependencyLayout(AbstractEdgeLayout):
             point3 = (point4[0], height)
 
             # Draw arrow and text middle
-            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, self.curve,
+            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
                                      edge.get_label_with_note(), font_size, font_family, label_over,
-                                     self.get_color(edge, property_colors, default_edge_color))
+                                     self.get_color(edge, property_colors))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge

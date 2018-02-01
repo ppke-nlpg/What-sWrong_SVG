@@ -22,10 +22,6 @@ class AbstractEdgeLayout:
             an edge has a type that matches one of the key strings it will get
             the corresponding stroke.
         default_stroke (BasicStroke): The stroke to use as default.
-        start (Dict[Edge, Point]): A mapping from edges to their start points
-            in the layout.
-        end (Dict[Edge, Point]): A mapping from edges to their end points in
-            the layout.
         shapes (Dict[Shape, Edge]): A mapping from edge shapes to the
             corresponding edge objects.
         selected (Set[Edge]): The set of selected edges.
@@ -40,12 +36,9 @@ class AbstractEdgeLayout:
         """Initialize an AbstractEdgeLayout instance.
         """
         self.baseline = -1
-        self.curve = True
         self.type_colors = {}
         self.strokes = {}
         self.default_stroke = None
-        self.start = {}
-        self.end = {}
         self.shapes = {}
         self.selected = set()
         self.visible = set()
@@ -201,13 +194,12 @@ class AbstractEdgeLayout:
             edges_ &= self.visible  # Intersection
         return edges_
 
-    def get_color(self, edge, property_colors, default_edge_color):  # TODO: Obviously not good like this!
+    def get_color(self, edge, property_colors):  # TODO: Obviously not good like this!
         """Return the color for the given edge.
 
         Args:
             edge (Edge): The edge we need the color for.
             property_colors (dict):
-            default_edge_color (tuple):
 
         Returns:
             The color for the given edge.
@@ -215,4 +207,4 @@ class AbstractEdgeLayout:
         props_with_color = edge.properties & property_colors.keys()
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
         return min(((property_colors[x][1], x, property_colors[x][0]) for x in props_with_color),
-                   default=(0, None, self.type_colors.get(edge.edge_type, default_edge_color)))[2]
+                   default=(0, None, self.type_colors.get(edge.edge_type, property_colors['default_edge_color'][0])))[2]
