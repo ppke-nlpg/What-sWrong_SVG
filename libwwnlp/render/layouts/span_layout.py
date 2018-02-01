@@ -80,6 +80,8 @@ class SpanLayout(AbstractEdgeLayout):
         separation_lines = constants['separation_lines']
         separator_line_color = constants['separator_line_color']
         orders = constants['orders']
+        baseline = common_constants['baseline']
+        type_colors = common_constants['type_colors']
 
         max_width += origin[0]
 
@@ -116,7 +118,7 @@ class SpanLayout(AbstractEdgeLayout):
             else:
                 span_level += depth[edge]
 
-            height = self.baseline + max_height - span_level * height_per_level
+            height = baseline + max_height - span_level * height_per_level
             height_minus_buffer = height - buffer_height + origin[1]
             rect_height = height_per_level - 2 * buffer_height
 
@@ -129,7 +131,7 @@ class SpanLayout(AbstractEdgeLayout):
             # If curved int(self.curve) = 1 else 0
             bbox = draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
                                               max_x - min_x, rect_height, span_fill_color,
-                                              self.get_color(edge, property_colors),
+                                              self.get_color(edge, type_colors, property_colors),
                                               span_line_width, span_curve_radius * int(curve),
                                               edge.get_label_with_note(), font_size, font_family)
 
@@ -142,7 +144,7 @@ class SpanLayout(AbstractEdgeLayout):
             for edge in edges_:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
-            baseline = self.baseline + origin[1] - 1  # TODO: Why -1?
+            baseline = baseline + origin[1] - 1  # TODO: Why -1?
             for depth in min_depths.values():
                 if not revert:
                     depth = max_depth - depth

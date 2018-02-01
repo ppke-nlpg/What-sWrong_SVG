@@ -37,28 +37,14 @@ class TokenLayout:
         The TokenLayout computes the bounds of each token property stack and
         the text layout of each property value. This can be handy when other
         layouts (e.g. DependencyLayout) want to connect the tokens.
-
-    Attributes:
-        base_line (int): Where should we start to draw the stacks.
-        margin (int): The margin between tokens (i.e., their stacks).
-        from_split_point (int): The index of the the split point at which the
-            renderer starts to draw the token sequence or -1 if it should
-            start from the first token.
-        to_split_point (int): The index of the the split point at which the
-            renderer stops to draw the token sequence or -1 if it should stop
-            at the end.
     """
 
     def __init__(self):
         """Initialize a token layout with suitable default values.
         """
-        self.base_line = 0
-        self.margin = 20
-        self.from_split_point = -1
-        self.to_split_point = -1
-        self.text_layouts = {}
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, constants):
+    @staticmethod
+    def estimate_token_bounds(instance: NLPInstance, token_widths: dict, constants):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -81,6 +67,10 @@ class TokenLayout:
         row_height = constants['row_height']
         token_font_family = constants['token_font_family']
         text_fontsize = constants['text_fontsize']
+        baseline = constants['baseline']
+        margin = constants['margin']
+        from_split_point = constants['from_split_point']
+        to_split_point = constants['to_split_point']
 
         result = {}
         height = 0
@@ -92,16 +82,16 @@ class TokenLayout:
             from_token = 0
             to_token = len(tokens)
 
-            if self.from_split_point != -1:
-                from_token = instance.split_points[self.from_split_point]
-            if self.to_split_point != -1:
-                to_token = instance.split_points[self.to_split_point]
+            if from_split_point != -1:
+                from_token = instance.split_points[from_split_point]
+            if to_split_point != -1:
+                to_token = instance.split_points[to_split_point]
 
             for token_index in range(from_token, to_token):
                 token = tokens[token_index]
 
                 props = token.get_property_names()
-                lasty = self.base_line + row_height*(len(props))
+                lasty = baseline + row_height*(len(props))
                 maxx = max(chain((get_text_width(token.get_property_value(prop_name), text_fontsize, token_font_family)
                                   for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
@@ -110,13 +100,14 @@ class TokenLayout:
                 lastx += maxx
                 width = max(width, lastx)
                 height = max(height, lasty)
-                lastx += self.margin
+                lastx += margin
 
         return result, width
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
     # TODO: Merge the two functions with a pseudo-scene like set() which also have add(...) to prevent double drawing
-    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
+    @staticmethod
+    def layout(scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -139,6 +130,10 @@ class TokenLayout:
         token_prop_color = constants['token_prop_color']
         token_fontsize = constants['token_fontsize']
         token_font_family = constants['token_font_family']
+        baseline = constants['baseline']
+        margin = constants['margin']
+        from_split_point = constants['from_split_point']
+        to_split_point = constants['to_split_point']
 
         row_height = constants['row_height']
         font_desc_size = constants['font_desc_size']
@@ -153,29 +148,28 @@ class TokenLayout:
             from_token = 0
             to_token = len(tokens)
 
-            if self.from_split_point != -1:
-                from_token = instance.split_points[self.from_split_point]
-            if self.to_split_point != -1:
-                to_token = instance.split_points[self.to_split_point]
+            if from_split_point != -1:
+                from_token = instance.split_points[from_split_point]
+            if to_split_point != -1:
+                to_token = instance.split_points[to_split_point]
 
             for token_index in range(from_token, to_token):
                 token = tokens[token_index]
 
-                lasty = self.base_line
+                lasty = baseline
                 maxx = token_widths.get(token, 0)
                 # First comes the token, then the properties
                 colors = chain((token_color,), repeat(token_prop_color))
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
                     lasty += row_height
-                    # TODO: Here was TextToken (must align to left)
                     text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]),
                                            token.get_property_value(prop_name),
                                            token_fontsize, token_font_family, color)
                     maxx = max(maxx, text_width)
 
                 lasty += font_desc_size
-                lastx += maxx + self.margin
+                lastx += maxx + margin
                 height = max(height, lasty)
 
-            width = lastx - self.margin
+            width = lastx - margin
         return width, height

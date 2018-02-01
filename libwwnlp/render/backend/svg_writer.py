@@ -131,6 +131,7 @@ def draw_rectangle_around_text(scene: Drawing, origin: tuple, width: int, height
 
 
 def draw_text(scene: Drawing, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+    # TODO: Here was TextToken (must align to left)
     scene.add(Text(text, insert=origin, fill=rgb(*color), font_family=font_family, font_size=font_size,
                    text_rendering='inherit'))
     return get_text_width(text, font_size, font_family)  # Should return bounding box

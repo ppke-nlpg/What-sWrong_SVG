@@ -61,6 +61,8 @@ class DependencyLayout(AbstractEdgeLayout):
         vertex_extra_space = common_constants['vertex_extra_space']
         property_colors = common_constants['property_colors']
         curve = common_constants['curve']
+        baseline = common_constants['baseline']
+        type_colors = common_constants['type_colors']
 
         edges_ = self.filter_to_visible_edges(edges)
 
@@ -101,7 +103,7 @@ class DependencyLayout(AbstractEdgeLayout):
         if max_depth == 0 and len(all_loops) > 0:
             max_height += height_per_level // 2  # 1 + 0.5 = 1.5
 
-        max_height_w_baseline = max_height + self.baseline
+        max_height_w_baseline = max_height + baseline
 
         # Eliminate crossings
         offset = Counter()
@@ -162,7 +164,7 @@ class DependencyLayout(AbstractEdgeLayout):
             # Draw arrow and text middle
             draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
                                      edge.get_label_with_note(), font_size, font_family, label_over,
-                                     self.get_color(edge, property_colors))
+                                     self.get_color(edge, type_colors, property_colors))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge
