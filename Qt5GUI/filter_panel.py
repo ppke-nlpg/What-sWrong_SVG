@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Untangle GUI stuff...
-
-import re
 
 from PyQt5 import QtWidgets
 
 from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
+from PyQt5.QtCore import Qt
 
 """
  * A FilterPanel controls a EdgeTokenAndTokenFilter and updates a NLPCanvas whenever the filter has been changed.
@@ -14,7 +12,6 @@ from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
  * @author Sebastian Riedel
 """
 
-interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 # QtCheckbox helper...
 checkbox_val = {True: 2, False: 0}
 
@@ -31,7 +28,8 @@ class FilterPanel:
         self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self._list.itemActivated.connect(self.selected_token_props_changed)  # XXX itemSelectionChanged
+        self._list.setSortingEnabled(True)
+        self._list.itemSelectionChanged.connect(self.selected_token_props_changed)
 
         self._allowed = gui.tokenFilterTokenLineEdit
         self._allowed.textEdited.connect(self.allowed_changed)
@@ -137,48 +135,30 @@ class FilterPanel:
                 if edge_type in self._filter.allowed_edge_types:
                     self._filter.allowed_edge_types.remove(edge_type)
         self._justChanged.clear()
-        self._canvas.update_nlp_graphics()
-
-    # add false positive/negative and match check buttons
-    def match_action_performed(self, value):
-        self._justChanged.clear()  # TODO: Why we need this here?
-        self._perform_match_action(value, "eval_status_Match")
-
-    def negative_action_performed(self, value):
-        self._perform_match_action(value, "eval_status_FN")
-
-    def positive_action_performed(self, value):
-        self._perform_match_action(value, "eval_status_FP")
-
-    def _perform_match_action(self, value, eval_status):
-        if value:
-            self._filter.allowed_edge_properties.add(eval_status)
-        elif eval_status in self._filter.allowed_edge_properties:
-                self._filter.allowed_edge_properties.remove(eval_status)
-
-        self._canvas.update_nlp_graphics()
-
-    def selected_token_props_changed(self, _=None):
-        if len(self._list) == 0 or len(self._listModel) == 0:
-            return
-        for index in range(0, len(self._list)):
-            t = self._listModel[index]
-            if self._list.item(index) in self._list.selectedItems():
-                if t in self._filter.forbidden_token_properties:
-                    self._filter.forbidden_token_properties.remove(t)
-            else:
-                self._filter.forbidden_token_properties.add(t)
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
-    def allowed_changed(self, text):  # keyReleased
-        self._filter.tok_allowed_token_propvals.clear()
-        for curr_property in text.split(','):
-            if len(curr_property) > 0:
-                m = interval.match(curr_property)
-                if m:
-                    curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                self._filter.tok_allowed_token_propvals.add(curr_property)
+    def selected_token_props_changed(self, _=None):
+        self._filter.forbidden_token_properties = {item.text() for item in self._list.findItems('', Qt.MatchStartsWith)
+                                                   if not item.isSelected()}
+        if not self._updating:
+            self._canvas.update_nlp_graphics()
+
+    def match_action_performed(self, value):
+        self._justChanged.clear()  # TODO: Why we need this here?
+        self._filter.perform_match_action(value, 'eval_status_Match')
+        self._canvas.update_nlp_graphics()
+
+    def negative_action_performed(self, value):
+        self._filter.perform_match_action(value, 'eval_status_FN')
+        self._canvas.update_nlp_graphics()
+
+    def positive_action_performed(self, value):
+        self._filter.perform_match_action(value, 'eval_status_FP')
+        self._canvas.update_nlp_graphics()
+
+    def allowed_changed(self, text):
+        self._filter.parse_interval(text, self._filter.tok_allowed_token_propvals)
         self._canvas.update_nlp_graphics()
 
     def whole_word_action_performed(self, value):
@@ -187,21 +167,11 @@ class FilterPanel:
 
     # EdgeFilter Panel
     def label_field_changed(self, text):
-        self._filter.allowed_labels.clear()
-        split = text.split(',')
-        for label in split:
-            self._filter.allowed_labels.add(label)
+        self._filter.allowed_labels = {label for label in text.split(',')}
         self._canvas.update_nlp_graphics()
 
     def token_text_field_changed(self, text):
-        self._filter.allowed_token_propvals.clear()
-        split = text.split(',')
-        for tok_property in split:
-            if len(tok_property) > 0:
-                m = interval.match(tok_property)
-                if m:
-                    tok_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-            self._filter.allowed_token_propvals.add(tok_property)
+        self._filter.parse_interval(text, self._filter.allowed_token_propvals)
         self._canvas.update_nlp_graphics()
 
     def use_path_action(self, value):
@@ -221,16 +191,13 @@ class FilterPanel:
     """
     def update_properties(self):
         self._updating = True
-        self._listModel.clear()
-        self._list.clear()
-        for index, p_name in enumerate(sorted(self._canvas.used_properties)):
-            self._listModel.append(p_name)
-            self._list.addItem(p_name)
-            if p_name not in self._filter.forbidden_token_properties and \
-                    not self._list.item(index) in self._list.selectedItems():
-                self._list.item(index).setSelected(True)
-            else:
-                self._list.item(index).setSelected(False)  # Explicitly unselect
+        list_items = {item.text() for item in self._list.findItems('', Qt.MatchStartsWith)}
+        for p_name in sorted(list_items - self._canvas.used_properties):  # Remove old elements
+            self._list.removeItem(p_name)
+        for p_name in sorted(self._canvas.used_properties - list_items):  # Add new elements
+                self._list.addItem(p_name)
+        for item in self._list.findItems('', Qt.MatchStartsWith):         # Select and unselect repsectively
+            item.setSelected(item.text() not in self._filter.forbidden_token_properties)
         self._updating = False
 
     """

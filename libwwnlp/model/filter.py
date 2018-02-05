@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import re
 from collections import defaultdict
 from operator import attrgetter
 
-from ..model.nlp_instance import NLPInstance
-from ..model.token import Token
-from ..model.edge import Edge, EdgeRenderType
+from libwwnlp.model.nlp_instance import NLPInstance
+from libwwnlp.model.token import Token
+from libwwnlp.model.edge import Edge, EdgeRenderType
+
+interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class Filter:
@@ -259,3 +262,19 @@ class Filter:
 
         return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
                            split_points=updated_split_points)
+
+    @staticmethod
+    def parse_interval(text, prop_set):
+        prop_set.clear()
+        for curr_property in text.split(','):
+            if len(curr_property) > 0:
+                m = interval.match(curr_property)
+                if m:
+                    curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
+                prop_set.add(curr_property)
+
+    def perform_match_action(self, value, eval_status):
+        if value:
+            self.allowed_edge_properties.add(eval_status)
+        elif eval_status in self.allowed_edge_properties:
+                self.allowed_edge_properties.remove(eval_status)
