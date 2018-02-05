@@ -1,30 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-This module defines a class which renders an NLPInstance model as single
-analysed sentence.
-"""
-
-from libwwnlp.model.edge import EdgeRenderType
-from libwwnlp.render.layouts.span_layout import SpanLayout
-from libwwnlp.render.layouts.dependency_layout import DependencyLayout
-from libwwnlp.render.layouts.token_layout import TokenLayout
-from libwwnlp.render.layouts.abstract_edge_layout import Point
+# from libwwnlp.render.layouts.abstract_edge_layout import Point
 
 
-# TODO: A common abstract renderer class for the constants
-class SingleSentenceRenderer:
-    """A SingleSentenceRenderer renders an NLPInstance as a single sentence.
-
-    Spans are drawn below the tokens, and dependencies above the tokens.
-
+class AbstractRenderer:
+    """
     Attributes:
-        _span_layout (EdgeLayout): The layout of span edges.
-        _dependency_layout (EdgeLayout): The layout of dep. edges.
-        _token_layout (TokenLayout): The token layout for the sentence.
-        _start_of_tokens:
-        _start_of_spans:
         constants (dict): revert (bool): Should the graph be upside-down reverted.
                             separation_lines (bool): Should we draw separation lines between the areas for different
                             span types.
@@ -56,14 +38,25 @@ class SingleSentenceRenderer:
                                     baseline (int): Where do we start to draw.
     """
 
+    # TODO: Constants?
     def __init__(self):
-        """Initialize a SingleSentenceRenderer instance.
-        """
-        self._span_layout = SpanLayout()
-        self._dependency_layout = DependencyLayout()
-        self._token_layout = TokenLayout()
-        self._start_of_tokens = 0
-        self._start_of_spans = 0
+        self.common_constants = {'height_per_level': 15,
+                                 'vertex_extra_space': 12,
+                                 'font_size': 12,
+                                 'font_family': 'Courier New, Courier, monospace',
+                                 'curve': True,
+                                 'revert': True,
+                                 'total_text_margin': 6,  # TODO: Constants? Should mean length in 'em': 2em -> 'MM'
+                                 'property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
+                                                     'eval_status_FN': ((255, 0, 0), 1),   # Red
+                                                     'eval_status_FP': ((0, 0, 255), 1),   # Blue
+                                                     'default_edge_color': ((0, 0, 0), 1)  # Black
+                                                     },
+                                 'from_split_point': 0,
+                                 'to_split_point': 0,
+                                 'baseline': 1,
+                                 'type_colors': {}
+                                 }
 
         # TODO: Token layout constants maybe common
         self.tok_constants = {'token_fontsize': 12, 'text_fontsize': 12,
@@ -87,63 +80,13 @@ class SingleSentenceRenderer:
 
         self.dependency_constants = {'arrowsize': 2, 'label_over': False}
 
-        # TODO: Constants?
-        self.common_constants = {'height_per_level': 15,
-                                 'vertex_extra_space': 12,
-                                 'font_size': 12,
-                                 'font_family': 'Courier New, Courier, monospace',
-                                 'curve': True,
-                                 'revert': True,
-                                 'total_text_margin': 6,  # TODO: Constants? Should mean length in 'em': 2em -> 'MM'
-                                 'property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
-                                                     'eval_status_FN': ((255, 0, 0), 1),   # Red
-                                                     'eval_status_FP': ((0, 0, 255), 1),   # Blue
-                                                     'default_edge_color': ((0, 0, 0), 1)  # Black
-                                                     },
-                                 'from_split_point': 0,
-                                 'to_split_point': 0,
-                                 'baseline': 1,
-                                 'type_colors': {}
-                                 }
+    def render(self, instance, scene, render_spans=False):
+        raise NotImplementedError
 
-    def render(self, instance, scene, render_spans=True):
-        """Renders the given instance as a single sentence.
-
-        Args:
-            instance (NLPInstance): The instance to render.
-            scene (Scene): The graphics object to draw upon.
-            render_spans (bool): Whether to render span edges.
-
-        Returns:
-            tuple: The width and height of the drawn object.
-        """
-        spans = instance.get_edges(EdgeRenderType.span)
-
-        # get span required token widths
-        widths = self._span_layout.estimate_required_token_widths(spans, self.common_constants)
-
-        # find token bounds
-        token_x_bounds, token_max_width = self._token_layout.estimate_token_bounds(instance, widths, self.tok_constants)
-
-        # place dependencies on top
-        d_width, d_height = self._dependency_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
-                                                                 token_x_bounds, self.dependency_constants,
-                                                                 self.common_constants)
-
-        # add tokens
-        t_width, t_height = self._token_layout.layout(scene, instance, widths, self.tok_constants, (0, d_height))
-        self._start_of_tokens = t_height
-
-        # add spans
-        s_width, s_height = 0, 0
-        if render_spans:
-            s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds, token_max_width, self.constants,
-                                                      self.common_constants, (0, d_height + t_height))
-
-        return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height, 1))  # TODO: Why +1?
-
+    # TODO: Will these ever be implemeneted?
+    """
     def get_edge_at(self, point, radius):
-        """
+        "" "
         Get the Edge at a given location.
 
         Args:
@@ -153,10 +96,11 @@ class SingleSentenceRenderer:
         Returns:
             Edge:The edge that crosses circle around the given point with the given
             radius.
-        """
+        "" "
         print("dependencyLayout height = " + self._dependency_layout.max_height)
         if point.y < self._start_of_tokens:
             return self._dependency_layout.get_edge_at(point, radius)
         else:
             shifted = Point(point.x, point.y - self._start_of_spans)
             return self._span_layout.get_edge_at(shifted, radius)
+    """

@@ -10,7 +10,7 @@ from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, C
     CoNLL2009, MaltTab
 from libwwnlp.CorpusNavigator import CorpusNavigator
 from libwwnlp.model.filter import Filter
-from libwwnlp.render.backend.svg_writer import render_nlpgraphics
+from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 from .DependencyFilterPanel import DependencyFilterPanel
 from .EdgeTypeFilterPanel import EdgeTypeFilterPanel
 from .GUI.ChooseFormat import Ui_ChooseFormat

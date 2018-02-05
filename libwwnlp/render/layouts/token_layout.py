@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.render.backend.svg_writer import get_text_width, draw_text
+from libwwnlp.render.backends.svg_writer import get_text_width, draw_text
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.

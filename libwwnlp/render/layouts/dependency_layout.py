@@ -7,7 +7,7 @@ import operator
 from collections import Counter, defaultdict
 
 from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import draw_arrow_w_text_middle
+from libwwnlp.render.backends.svg_writer import draw_arrow_w_text_middle
 
 
 class DependencyLayout(AbstractEdgeLayout):

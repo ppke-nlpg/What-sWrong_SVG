@@ -34,11 +34,13 @@ class AbstractEdgeLayout:
     def __init__(self):
         """Initialize an AbstractEdgeLayout instance.
         """
+        self.shapes = {}
+        self.visible = set()
+
+        # Selection
         self.strokes = {}
         self.default_stroke = None
-        self.shapes = {}
         self.selected = set()
-        self.visible = set()
         self.max_width = 0
         self.max_height = 0
 
@@ -88,40 +90,41 @@ class AbstractEdgeLayout:
         return edges_
 
     @staticmethod
-    def get_color(edge, type_colors, property_colors):  # TODO: Obviously not good like this!
+    def get_color(curr_edge, type_colors, property_colors):  # TODO: Obviously not good like this!
         """Return the color for the given edge.
 
         Args:
-            edge (Edge): The edge we need the color for.
+            curr_edge (Edge): The edge we need the color for.
             property_colors (dict):
             type_colors (dict):
         Returns:
             The color for the given edge.
         """
-        props_with_color = edge.properties & property_colors.keys()
+        props_with_color = curr_edge.properties & property_colors.keys()
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
         return min(((property_colors[x][1], x, property_colors[x][0]) for x in props_with_color),
-                   default=(0, None, type_colors.get(edge.edge_type, property_colors['default_edge_color'][0])))[2]
+                   default=(0, None, type_colors.get(curr_edge.edge_type, property_colors['default_edge_color'][0])))[2]
 
     # TODO: Will these ever be implemeneted?
+    """
     def set_stroke(self, edge_type, stroke):
-        """Set the stroke for edges of a certain type.
+        "" "Set the stroke for edges of a certain type.
 
         Args:
             edge_type: The type of the edges we want to change the stroke for.
             stroke: The stroke of the edges of the given type.
-        """
+        "" "
         self.strokes[edge_type] = stroke
 
     def get_stroke_for_edge(self, edge):
-        """Return the stroke for a given edge.
+        "" "Return the stroke for a given edge.
 
         Args:
             edge (Edge): The edge we need the stroke for.
 
         Returns:
             The stroke for the given type.
-        """
+        "" "
         if edge in self.selected:
             # TODO: Should we implement this here or in the decendant classes?
             # return BasicStroke(stroke.getLineWidth() + 1.5, stroke.getEndCap(), stroke.getLineJoin(),
@@ -130,66 +133,66 @@ class AbstractEdgeLayout:
         return self.strokes[edge.edge_type]
 
     def get_stroke_for_edgetype(self, edge_type):
-        """Return the stroke for a given edge.
+        "" "Return the stroke for a given edge.
 
         Args:
             edge_type (str): The edge type we need the stroke for.
 
         Returns:
             The stroke for the given edge type.
-        """
+        "" "
         for substring in self.strokes.keys():
             if substring in edge_type:
                 return self.strokes[substring]
         return self.default_stroke
 
     def add_to_selection(self, edge):
-        """Add an edge to the selection.
+        "" "Add an edge to the selection.
 
         Args:
             edge (Edge): The edge to add to the selection.
-        """
+        "" "
         self.selected.add(edge)
 
     def remove_from_selected(self, edge):
-        """Remove an edge from the selection.
+        "" "Remove an edge from the selection.
 
         Args:
             edge (Edge): The edge to remove.
-        """
+        "" "
         self.selected.remove(edge)
 
     def clear_selection(self):
-        """Remove all edges from the selection.
-        """
+        "" "Remove all edges from the selection.
+        "" "
         self.selected.clear()
 
     def show_all(self):
-        """Show all edges.
-        """
+        "" "Show all edges.
+        "" "
         self.visible.clear()
 
     def toggle_selection(self, edge):
-        """Change whether the given edge is selected or not.
+        "" "Change whether the given edge is selected or not.
 
         Args:
             edge (Edge): The edge to add or remove from the selection.
-        """
+        "" "
         if edge in self.selected:
             self.selected.remove(edge)
         else:
             self.selected.add(edge)
 
     def select(self, edge):
-        """Select only one edge.
+        "" "Select only one edge.
 
         Args:
             edge (Edge): The edge to select.
-        """
+        "" "
         self.selected = set(edge)
 
     def get_edge_at(self, point, radius):
-        """Get the Edge at a given location.
+        "" "Get the Edge at a given location.
 
         Args:
             point (Point): The location of the edge.
@@ -197,7 +200,7 @@ class AbstractEdgeLayout:
 
         Returns: The edge that crosses circle around the given point with the given
         radius.
-        """
+        "" "
         # TODO: Should we implement this here or in the decendant classes?
         # Rectangle2D cursor = new Rectangle.Double(p.getX() - radius // 2, p.getY() - radius // 2, radius, radius)
         #    double maxY = Integer.MIN_VALUE
@@ -207,3 +210,4 @@ class AbstractEdgeLayout:
         #            result = shapes.get(s);
         #            maxY = s.getBounds().getY();
         #    return result
+    """

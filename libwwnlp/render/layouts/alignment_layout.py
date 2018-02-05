@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backend.svg_writer import draw_line
+from libwwnlp.render.backends.svg_writer import draw_line
 from libwwnlp.render.layouts.token_layout import middle
 
 

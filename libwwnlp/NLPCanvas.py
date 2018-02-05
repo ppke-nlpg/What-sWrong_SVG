@@ -3,8 +3,8 @@
 # Todo: Export to PDF, EPS, etc.
 
 from libwwnlp.model.nlp_instance import RenderType
-from libwwnlp.render.alignment_renderer import AlignmentRenderer
-from libwwnlp.render.single_sentence_renderer import SingleSentenceRenderer
+from libwwnlp.render.renderers.alignment_renderer import AlignmentRenderer
+from libwwnlp.render.renderers.single_sentence_renderer import SingleSentenceRenderer
 
 
 class NLPCanvas:

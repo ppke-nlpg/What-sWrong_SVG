@@ -4,7 +4,7 @@
 from PyQt5 import QtWidgets, QtSvg
 
 from libwwnlp.NLPCanvas import NLPCanvas
-from libwwnlp.render.backend.svg_writer import render_nlpgraphics
+from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 
 
 class Qt5NLPCanvas(NLPCanvas):

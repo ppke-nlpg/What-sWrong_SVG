@@ -108,7 +108,6 @@ class CorpusNavigator:
         self._instance = None
         self._ui = ui
 
-        # TODO: Find the actual place of edge_type_order
         """
         self._canvas.renderer.set_edge_type_order("pos", 0)
         self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
@@ -301,7 +300,7 @@ class CorpusNavigator:
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FN')
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_Match')
 
-            # TODO: Find the actual place of edge_type_order
+            # TODO: Find the actual place of edge_tp
             """
             self._canvas.renderer.set_edge_type_order("pos", 0)
             self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
