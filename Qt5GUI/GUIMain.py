@@ -69,21 +69,22 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.removeGuessPushButton.clicked.connect(self.remove_guess)
         self.ui.selectGoldListWidget.itemSelectionChanged.connect(self.refresh)
         self.ui.selectGuessListWidget.itemSelectionChanged.connect(self.refresh)
-        self.goldMap = {}
-        self.guessMap = {}
 
         self.ui.actionExport.setShortcut("Ctrl+S")
         self.ui.actionExport.setStatusTip('Export to SVG')
         self.ui.actionExport.triggered.connect(self.file_save)
-        self.ui.actionExport.setEnabled(False)
+        self.ui.actionExport.setEnabled(True)
+
         self.canvas = Qt5NLPCanvas(self.ui)
         self.canvas.filter = Filter()
 
-        EdgeTypeFilterPanel(self.ui, self.canvas, self.canvas.filter)
-        DependencyFilterPanel(self.ui, self.canvas, self.canvas.filter, self.canvas.filter)
-        TokenFilterPanel(self.ui, self.canvas, self.canvas.filter)
+        EdgeTypeFilterPanel(self.ui, self.canvas)
+        DependencyFilterPanel(self.ui, self.canvas)
+        TokenFilterPanel(self.ui, self.canvas)
 
-        self.ui.actionExport.setEnabled(True)
+        self.goldMap = {}
+        self.guessMap = {}
+
         self.refresh()
 
     def browse_gold_folder(self):

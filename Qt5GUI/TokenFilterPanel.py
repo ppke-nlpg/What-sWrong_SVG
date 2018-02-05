@@ -7,7 +7,6 @@ import re
 from PyQt5 import QtWidgets
 
 from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
-from libwwnlp.model.filter import Filter
 
 """
  * A TokenFilterPanel controls a EdgeTokenAndTokenFilter and updates a NLPCanvas whenever the filter has been changed.
@@ -19,16 +18,17 @@ interval = re.compile('(\d+)-(\d+)$')  # WHOLE STRING MATCH!
 
 
 class TokenFilterPanel:
-    def __init__(self, gui, canvas: Qt5NLPCanvas, token_filter: Filter):
-        self._token_filter = token_filter
+    def __init__(self, gui, canvas: Qt5NLPCanvas):
 
         self._canvas = canvas
         self._canvas.add_change_listener(self)
 
+        self._filter = self._canvas.filter
+
         self._listModel = []  # DefaultListModel()
         self._list = gui.tokenTypesListWidget
         self._list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self._list.itemActivated.connect(self.value_changed)  # XXX itemSelectionChanged
+        self._list.itemActivated.connect(self.selected_token_props_changed)  # XXX itemSelectionChanged
 
         self._allowed = gui.tokenFilterTokenLineEdit
         self._allowed.textEdited.connect(self.allowed_changed)
@@ -39,31 +39,31 @@ class TokenFilterPanel:
         self.update_properties()
         self._updating = False
 
-    def value_changed(self, _=None):
+    def selected_token_props_changed(self, _=None):
         if len(self._list) == 0 or len(self._listModel) == 0:
             return
         for index in range(0, len(self._list)):
             t = self._listModel[index]
             if self._list.item(index) in self._list.selectedItems():
-                if t in self._token_filter.forbidden_token_properties:
-                    self._token_filter.forbidden_token_properties.remove(t)
+                if t in self._filter.forbidden_token_properties:
+                    self._filter.forbidden_token_properties.remove(t)
             else:
-                self._token_filter.forbidden_token_properties.add(t)
+                self._filter.forbidden_token_properties.add(t)
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
     def allowed_changed(self, text):  # keyReleased
-        self._token_filter.tok_allowed_token_propvals.clear()
+        self._filter.tok_allowed_token_propvals.clear()
         for curr_property in text.split(','):
             if len(curr_property) > 0:
                 m = interval.match(curr_property)
                 if m:
                     curr_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
-                self._token_filter.tok_allowed_token_propvals.add(curr_property)
+                self._filter.tok_allowed_token_propvals.add(curr_property)
         self._canvas.update_nlp_graphics()
 
     def whole_word_action_performed(self, value):
-        self._token_filter.tok_propvals_whole_word = value == 2  # Checked == True
+        self._filter.tok_propvals_whole_word = bool(value)
         self._canvas.update_nlp_graphics()
 
     """
@@ -76,7 +76,7 @@ class TokenFilterPanel:
         for index, p_name in enumerate(sorted(self._canvas.used_properties)):
             self._listModel.append(p_name)
             self._list.addItem(p_name)
-            if p_name not in self._token_filter.forbidden_token_properties and \
+            if p_name not in self._filter.forbidden_token_properties and \
                     not self._list.item(index) in self._list.selectedItems():
                 self._list.item(index).setSelected(True)
             else:

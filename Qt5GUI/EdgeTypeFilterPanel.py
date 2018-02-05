@@ -5,7 +5,6 @@
 from PyQt5 import QtWidgets
 
 from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
-from libwwnlp.model.filter import Filter
 
 """
  * An EdgeTypeFilterPanel controls an EdgeTypeAndLabelFilter and requests an update for an NLPCanvas whenever
@@ -23,7 +22,7 @@ class EdgeTypeFilterPanel:
      * @param nlpCanvas      the canvas that should be updated when the filter is changed.
      * @param edgeTypeFilter the filter that should be controlled by this panel.
     """
-    def __init__(self, gui, canvas: Qt5NLPCanvas, edge_type_filter: Filter):
+    def __init__(self, gui, canvas: Qt5NLPCanvas):
         """
          * The canvas to request the update after the filter has been changed.
         """
@@ -65,7 +64,7 @@ class EdgeTypeFilterPanel:
         """
          * The filter that this panel changes.
         """
-        self._edgeTypeFilter = edge_type_filter
+        self._filter = self._nlpCanvas.filter
         self._nlpCanvas.add_listener(listener=self)
 
         self.update_types_list()
@@ -79,10 +78,10 @@ class EdgeTypeFilterPanel:
                 edge_type = str(self._listModel[index])
                 self._justChanged.add(edge_type)
                 if self._types.isItemSelected(self._types.item(index)):
-                    self._edgeTypeFilter.allowed_edge_types.add(edge_type)
+                    self._filter.allowed_edge_types.add(edge_type)
                 else:
-                    if edge_type in self._edgeTypeFilter.allowed_edge_types:
-                        self._edgeTypeFilter.allowed_edge_types.remove(edge_type)
+                    if edge_type in self._filter.allowed_edge_types:
+                        self._filter.allowed_edge_types.remove(edge_type)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
         self._types.itemSelectionChanged.connect(value_changed)
@@ -105,11 +104,10 @@ class EdgeTypeFilterPanel:
         self._falsePositives.stateChanged.connect(positive_action_performed)
 
     def _perform_match_action(self, value, eval_status):
-        if value == 2:  # Checked
-            self._edgeTypeFilter.allowed_edge_properties.add(eval_status)
-        else:
-            if eval_status in self._edgeTypeFilter.allowed_edge_properties:
-                self._edgeTypeFilter.allowed_edge_properties.remove(eval_status)
+        if value:
+            self._filter.allowed_edge_properties.add(eval_status)
+        elif eval_status in self._filter.allowed_edge_properties:
+                self._filter.allowed_edge_properties.remove(eval_status)
 
         self._nlpCanvas.update_nlp_graphics()
 
@@ -120,25 +118,25 @@ class EdgeTypeFilterPanel:
         # TODO: deselecting items?
         for index in range(0, len(self._types)):
             edge_type = str(self._types.item(index))
-            if edge_type in self._edgeTypeFilter.allowed_edge_types:
+            if edge_type in self._filter.allowed_edge_types:
                 self._types.setItemSelected(self._types.item(index), True)
 
     @staticmethod
     def _update_match_lists(edge_props, allowed_edge_props, match_class, name):
         match_class.setEnabled(name in edge_props)
         allowed_edge_props.add(name)
-        match_class.setCheckState(checkbox_val[name in allowed_edge_props])  # Checked(2) Not(0)
+        match_class.setCheckState(checkbox_val[name in allowed_edge_props])
 
     """
      * Updates the list of available edge types and the set FP/FN/Match checkboxes.
     """
     def update_types_list(self):
         # TODO: Sholuld be enabled automatically
-        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._filter.allowed_edge_properties,
                                  self._falsePositives, "eval_status_FP")
-        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._filter.allowed_edge_properties,
                                  self._falseNegatives, "eval_status_FN")
-        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._edgeTypeFilter.allowed_edge_properties,
+        self._update_match_lists(self._nlpCanvas.used_edge_properties, self._filter.allowed_edge_properties,
                                  self._matches, "eval_status_Match")
         self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
 
