@@ -76,7 +76,7 @@ class CorpusNavigator:
      * The loader for guess instances.
     """
     def __init__(self, ui, canvas: NLPCanvas, gold_loader: CorpusLoader=None,
-                 guess_loader: CorpusLoader=None, edge_type_filter=None):
+                 guess_loader: CorpusLoader=None, filter=None):
         """
          * Creates a new CorpusNavigator.
          *
@@ -103,7 +103,7 @@ class CorpusNavigator:
         self._gold = gold_loader
         self._canvas = canvas
         # self._canvas = Qt5NLPCanvas(ui)
-        self._edgeTypeFilter = edge_type_filter
+        self._edgeTypeFilter = filter
 
         self._instance = None
         self._ui = ui
