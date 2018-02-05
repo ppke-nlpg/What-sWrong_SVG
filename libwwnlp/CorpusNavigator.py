@@ -289,6 +289,8 @@ class CorpusNavigator:
             example.add_dependency(1, 4, "A1", "role")
             example.add_dependency(1, 1, "add.1", "sense")
             self._canvas.set_nlp_instance(example)
+            self._edgeTypeFilter.allowed_edge_types = set()
+            """
             self._edgeTypeFilter.allowed_edge_types.add("dep")
             self._edgeTypeFilter.allowed_edge_types.add("role")
             self._edgeTypeFilter.allowed_edge_types.add("sense")
@@ -296,6 +298,7 @@ class CorpusNavigator:
             self._edgeTypeFilter.allowed_edge_types.add("chunk")
             self._edgeTypeFilter.allowed_edge_types.add("pos")
             self._edgeTypeFilter.allowed_edge_types.add("align")
+            """
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FP')
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_FN')
             self._edgeTypeFilter.allowed_edge_properties.add('eval_status_Match')
@@ -312,5 +315,5 @@ class CorpusNavigator:
             self._canvas.renderer.set_edge_type_order("phrase", 5)
             """
 
-        # self._canvas.fire_instance_changed()
+        self._canvas.fire_instance_changed()
         self._canvas.update_nlp_graphics()

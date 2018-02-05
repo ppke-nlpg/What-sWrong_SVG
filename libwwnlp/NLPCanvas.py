@@ -40,9 +40,8 @@ class NLPCanvas:
         self.nlp_instance = nlp_instance
         self.used_types = {edge.edge_type for edge in self.nlp_instance.get_edges()}
         self.used_properties = {prop for token in self.nlp_instance.tokens for prop in token.get_property_names()}
-        self.used_edge_properties = set()
-        for edge in self.nlp_instance.get_edges():
-            self.used_edge_properties.update(edge.properties)
+        self.used_edge_properties = {prop for edge in self.nlp_instance.get_edges() for prop in edge.properties}
+        self.filter.allowed_edge_types = self.used_types
 
     def filter_instance(self):
         """Just calls the filter on the current instance.

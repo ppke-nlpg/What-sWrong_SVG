@@ -25,11 +25,10 @@ class FilterPanel:
 
         self._filter = self._canvas.filter
 
-        self._listModel = []  # DefaultListModel()
-        self._list = gui.tokenTypesListWidget
-        self._list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self._list.setSortingEnabled(True)
-        self._list.itemSelectionChanged.connect(self.selected_token_props_changed)
+        self._token_prop_list = gui.tokenTypesListWidget
+        self._token_prop_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self._token_prop_list.setSortingEnabled(True)
+        self._token_prop_list.itemSelectionChanged.connect(self.selected_token_props_changed)
 
         self._allowed = gui.tokenFilterTokenLineEdit
         self._allowed.textEdited.connect(self.allowed_changed)
@@ -59,87 +58,72 @@ class FilterPanel:
         """
 
         self._listModel = []
-        self._types = gui.edgeTypeListWidget
-        self._types.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self._types.itemSelectionChanged.connect(self.selected_edge_types_changed)
+        self._edge_types_list = gui.edgeTypeListWidget
+        self._edge_types_list.setSortingEnabled(True)
+        self._edge_types_list.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self._edge_types_list.itemSelectionChanged.connect(self.selected_edge_types_changed)
 
         """
          * The checkbox for showing matches,
         """
-        self._matches = gui.matchesCheckBox
-        self._matches.stateChanged.connect(self.match_action_performed)
+        self._matches_checkbox = gui.matchesCheckBox
+        self._matches_checkbox.stateChanged.connect(self.match_action_performed)
 
-        self._falsePositives = gui.falsePositiveCheckBox
-        self._falsePositives.stateChanged.connect(self.positive_action_performed)
+        self._falsePositives_checkbox = gui.falsePositiveCheckBox
+        self._falsePositives_checkbox.stateChanged.connect(self.positive_action_performed)
 
-        self._falseNegatives = gui.falseNegativeCheckBox
-        self._falseNegatives.stateChanged.connect(self.negative_action_performed)
+        self._falseNegatives_checkbox = gui.falseNegativeCheckBox
+        self._falseNegatives_checkbox.stateChanged.connect(self.negative_action_performed)
 
         """
          * The set of types for which the state (filtered/not filtered) has just been changed through this controller.
         """
         self._justChanged = set()  # HashSet<String>()
-        self.update_selection()
+        self.update_edge_selection()
         self.update_types_list()  # TODO: This is to eager!
 
-        self.update_properties()
+        self.update_token_properties()
         self._updating = False
 
     @staticmethod
-    def _update_match_lists(edge_props, allowed_edge_props, match_class, name):
-        match_class.setEnabled(name in edge_props)
+    def _update_match_lists(edge_props, allowed_edge_props, match_class_checkbox, name):
+        match_class_checkbox.setEnabled(name in edge_props)
         allowed_edge_props.add(name)
-        match_class.setCheckState(checkbox_val[name in allowed_edge_props])
+        match_class_checkbox.setCheckState(checkbox_val[name in allowed_edge_props])
 
-    """
-     * Updates the list of available edge types and the set FP/FN/Match checkboxes.
-    """
     def update_types_list(self):
+        """
+         * Updates the list of available edge types and the set FP/FN/Match checkboxes.
+        """
         # TODO: Sholuld be enabled automatically
+        self._updating = True
         self._update_match_lists(self._canvas.used_edge_properties, self._filter.allowed_edge_properties,
-                                 self._falsePositives, "eval_status_FP")
+                                 self._falsePositives_checkbox, 'eval_status_FP')
         self._update_match_lists(self._canvas.used_edge_properties, self._filter.allowed_edge_properties,
-                                 self._falseNegatives, "eval_status_FN")
+                                 self._falseNegatives_checkbox, 'eval_status_FN')
         self._update_match_lists(self._canvas.used_edge_properties, self._filter.allowed_edge_properties,
-                                 self._matches, "eval_status_Match")
-        self._listModel = [self._types.item(index).text() for index in range(self._types.count())]
+                                 self._matches_checkbox, 'eval_status_Match')
+        self._updating = False
 
-        # self._types.clear()  # This makes too much refreshing
-        # for t in allTypes:
-        #     item = QtGui.QListWidgetItem(t)
-        #     if t not in self._listModel:
-        #         self._listModel.append(t)
-        #         self._types.addItem(item)
-        #         item.setSelected(True)
-
-    """
-     * Updates the set of selected (set to be visible) edge types.
-    """
-    def update_selection(self):
-        # TODO: deselecting items?
-        for index in range(0, len(self._types)):
-            edge_type = str(self._types.item(index))
-            if edge_type in self._filter.allowed_edge_types:
-                self._types.setItemSelected(self._types.item(index), True)
+    def update_edge_selection(self):
+        """Updates the set of selected (set to be visible) edge types."""
+        self._list_selection(self._edge_types_list, self._canvas.used_types, self._filter.allowed_edge_types)
 
     def selected_edge_types_changed(self):
         self._justChanged.clear()
-        if len(self._types) == 0 or len(self._listModel) == 0:
-            return
-        for index in range(0, len(self._types)):
-            edge_type = str(self._listModel[index])
-            self._justChanged.add(edge_type)
-            if self._types.isItemSelected(self._types.item(index)):
-                self._filter.allowed_edge_types.add(edge_type)
-            else:
-                if edge_type in self._filter.allowed_edge_types:
-                    self._filter.allowed_edge_types.remove(edge_type)
+        for item in self._edge_types_list.findItems('', Qt.MatchStartsWith):
+            item_text = item.text()
+            self._justChanged.add(item_text)
+            if item.isSelected():
+                self._filter.allowed_edge_types.add(item_text)
+            elif item_text in self._filter.allowed_edge_types:
+                    self._filter.allowed_edge_types.remove(item_text)
         self._justChanged.clear()
-        if not self._updating:
-            self._canvas.update_nlp_graphics()
+        self._canvas.update_nlp_graphics()
 
     def selected_token_props_changed(self, _=None):
-        self._filter.forbidden_token_properties = {item.text() for item in self._list.findItems('', Qt.MatchStartsWith)
+        self._filter.forbidden_token_properties = {item.text()
+                                                   for item in self._token_prop_list.findItems('', Qt.MatchStartsWith)
                                                    if not item.isSelected()}
         if not self._updating:
             self._canvas.update_nlp_graphics()
@@ -147,15 +131,18 @@ class FilterPanel:
     def match_action_performed(self, value):
         self._justChanged.clear()  # TODO: Why we need this here?
         self._filter.perform_match_action(value, 'eval_status_Match')
-        self._canvas.update_nlp_graphics()
+        if not self._updating:
+            self._canvas.update_nlp_graphics()
 
     def negative_action_performed(self, value):
         self._filter.perform_match_action(value, 'eval_status_FN')
-        self._canvas.update_nlp_graphics()
+        if not self._updating:
+            self._canvas.update_nlp_graphics()
 
     def positive_action_performed(self, value):
         self._filter.perform_match_action(value, 'eval_status_FP')
-        self._canvas.update_nlp_graphics()
+        if not self._updating:
+            self._canvas.update_nlp_graphics()
 
     def allowed_changed(self, text):
         self._filter.parse_interval(text, self._filter.tok_allowed_token_propvals)
@@ -186,18 +173,22 @@ class FilterPanel:
         self._filter.propvals_whole_word = bool(value)
         self._canvas.update_nlp_graphics()
 
-    """
-     * Updates the list of available token properties.
-    """
-    def update_properties(self):
+    def update_token_properties(self):
+        """ Updates the list of available token properties."""
+        self._list_selection(self._token_prop_list, self._canvas.used_properties,
+                             self._canvas.used_properties - self._filter.forbidden_token_properties)
+
+    def _list_selection(self, list_widget, all_items, selected_items):
         self._updating = True
-        list_items = {item.text() for item in self._list.findItems('', Qt.MatchStartsWith)}
-        for p_name in sorted(list_items - self._canvas.used_properties):  # Remove old elements
-            self._list.removeItem(p_name)
-        for p_name in sorted(self._canvas.used_properties - list_items):  # Add new elements
-                self._list.addItem(p_name)
-        for item in self._list.findItems('', Qt.MatchStartsWith):         # Select and unselect repsectively
-            item.setSelected(item.text() not in self._filter.forbidden_token_properties)
+        list_items = {item.text() for item in list_widget.findItems('', Qt.MatchStartsWith)}
+        to_remove = list_items - all_items
+        for item in list_widget.findItems('', Qt.MatchStartsWith):  # Remove old elements
+            if item.text() in to_remove:
+                list_widget.takeItem(list_widget.row(item))
+        for prop_name in all_items - list_items:                    # Add new elements
+            list_widget.addItem(prop_name)
+        for item in list_widget.findItems('', Qt.MatchStartsWith):  # Select and unselect repsectively
+            item.setSelected(item.text() in selected_items)
         self._updating = False
 
     """
@@ -206,14 +197,14 @@ class FilterPanel:
      * @param e the ChangeEvent corresponding to the change of the canvas.
     """
     def state_changed(self):
-        self.update_properties()
+        self.update_token_properties()
 
     """
      * Updates the type list and the selection. Afterwards request for repaint is issued.
     """
-    def instance_changed(self):  # TODO: Never called!
+    def instance_changed(self):
         self.update_types_list()
-        self.update_selection()
+        self.update_edge_selection()
 
     """
      * Updates the selection.
@@ -223,4 +214,4 @@ class FilterPanel:
     """
     def changed(self, edge_type):
         if edge_type not in self._justChanged:
-            self.update_selection()
+            self.update_edge_selection()
