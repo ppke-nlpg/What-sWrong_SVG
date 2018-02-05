@@ -36,6 +36,22 @@ class TokenFilterPanel:
         self._wholeWords = gui.tokenFilterWholeWordsCheckBox
         self._wholeWords.stateChanged.connect(self.whole_word_action_performed)
 
+        # EdgeFilter Panel
+        self.label_field = gui.labelLineEdit
+        self.label_field.textEdited.connect(self.label_field_changed)
+
+        self.token_text_field = gui.edgeFilterTokenLineEdit
+        self.token_text_field.textEdited.connect(self.token_text_field_changed)
+
+        self.use_path = gui.onlyPathCheckBox
+        self.use_path.stateChanged.connect(self.use_path_action)
+
+        self.collapse = gui.collapsCheckBox
+        self.collapse.stateChanged.connect(self.collapse_action)
+
+        self.whole_words = gui.edgeFilterWholeWordsCheckBox
+        self.whole_words.stateChanged.connect(self.whole_words_action)
+
         self.update_properties()
         self._updating = False
 
@@ -64,6 +80,37 @@ class TokenFilterPanel:
 
     def whole_word_action_performed(self, value):
         self._filter.tok_propvals_whole_word = bool(value)
+        self._canvas.update_nlp_graphics()
+
+    # EdgeFilter Panel
+    def label_field_changed(self, text):
+        self._filter.allowed_labels.clear()
+        split = text.split(',')
+        for label in split:
+            self._filter.allowed_labels.add(label)
+        self._canvas.update_nlp_graphics()
+
+    def token_text_field_changed(self, text):
+        self._filter.allowed_token_propvals.clear()
+        split = text.split(',')
+        for tok_property in split:
+            if len(tok_property) > 0:
+                m = interval.match(tok_property)
+                if m:
+                    tok_property = range(int(m.group(1)), int(m.group(2)) + 1)  # Interval parsing, without reparse
+            self._filter.allowed_token_propvals.add(tok_property)
+        self._canvas.update_nlp_graphics()
+
+    def use_path_action(self, value):
+        self._filter.use_path = bool(value)
+        self._canvas.update_nlp_graphics()
+
+    def collapse_action(self, value):
+        self._filter.collapse = bool(value)
+        self._canvas.update_nlp_graphics()
+
+    def whole_words_action(self, value):
+        self._filter.propvals_whole_word = bool(value)
         self._canvas.update_nlp_graphics()
 
     """

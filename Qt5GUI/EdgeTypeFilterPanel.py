@@ -29,12 +29,7 @@ class EdgeTypeFilterPanel:
         self._nlpCanvas = canvas
 
         """
-         * The swing list of available edge types.
-        """
-        # See below...
-
-        """
-         * The backing model for the swing list of edge types.
+         * The backing model for the list of edge types.
         """
 
         self._listModel = []
@@ -45,15 +40,7 @@ class EdgeTypeFilterPanel:
          * The checkbox for showing matches,
         """
         self._matches = gui.matchesCheckBox
-
-        """
-         * The checkbox for showing False Positives.
-        """
         self._falsePositives = gui.falsePositiveCheckBox
-
-        """
-         * The checkbox for showing False Negatives.
-        """
         self._falseNegatives = gui.falseNegativeCheckBox
 
         """
@@ -70,7 +57,7 @@ class EdgeTypeFilterPanel:
         self.update_types_list()
         self.update_selection()
 
-        def value_changed():
+        def selected_edge_types_changed():
             self._justChanged.clear()
             if len(self._types) == 0 or len(self._listModel) == 0:
                 return
@@ -84,7 +71,7 @@ class EdgeTypeFilterPanel:
                         self._filter.allowed_edge_types.remove(edge_type)
             self._justChanged.clear()
             self._nlpCanvas.update_nlp_graphics()
-        self._types.itemSelectionChanged.connect(value_changed)
+        self._types.itemSelectionChanged.connect(selected_edge_types_changed)
 
         # add false positive/negative and match check buttons
         def match_action_performed(value):
