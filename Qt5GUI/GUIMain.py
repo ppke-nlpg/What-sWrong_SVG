@@ -76,6 +76,14 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.actionExport.triggered.connect(self.file_save)
         self.ui.actionExport.setEnabled(True)
 
+        # Spinner stuff
+        self.ui.spinBox.valueChanged.connect(lambda: self.update_canvas(self.ui.spinBox))
+        # self.update_spinner_borders()  # TODO
+
+        # Search stuff
+        self.ui.searchResultLisWidget.itemClicked.connect(self.search_item_clicked)
+        # self.ui.searchButton.clicked.connect(self.search_corpus)  # TODO
+
         self.canvas = Qt5NLPCanvas(self.ui)
         self.canvas.filter = Filter()
 
@@ -101,11 +109,11 @@ class MyForm(QtWidgets.QMainWindow):
         item = QtWidgets.QListWidgetItem(basename(directory))
 
         if corp_type == 'gold':
-            self.goldMap[basename(directory)] = corpus  # CorpusLoader(directory)
+            self.goldMap[basename(directory)] = corpus
             self.ui.selectGoldListWidget.addItem(item)
             self.ui.selectGoldListWidget.item(0).setSelected(True)
         if corp_type == 'guess':
-            self.guessMap[basename(directory)] = corpus  # CorpusLoader(directory)
+            self.guessMap[basename(directory)] = corpus
             self.ui.selectGuessListWidget.addItem(item)
             self.ui.selectGuessListWidget.item(0).setSelected(True)
 
@@ -121,7 +129,7 @@ class MyForm(QtWidgets.QMainWindow):
         if selected_guess:
             guess = self.guessMap[str(selected_guess[0].text())]
 
-        CorpusNavigator(canvas=self.canvas, ui=self.ui, gold_loader=gold, guess_loader=guess, filter=self.canvas.filter)
+        CorpusNavigator(self.canvas, gold, guess, self.canvas.filter, self.ui.spinBox)
 
     def file_save(self):
         supported_formats = {'Scalable Vector Graphics (*.svg)': 'SVG',
@@ -132,6 +140,28 @@ class MyForm(QtWidgets.QMainWindow):
                                                                                  reverse=True)))
         if len(name) > 0:
             render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name, supported_formats[file_type])
+
+    def update_spinner_borders(self):
+        gold_len = 0
+        guess_len = 0
+        if self._gold_corpora is not None:
+            gold_len = len(self._gold_corpora)
+
+        if self._guess_corpora is not None:
+            guess_len = len(self._guess_corpora)
+
+        index = min(gold_len, guess_len)
+        min_value = 0
+        if index > 0:
+            self.ui.spinBox.setMaximum(index)
+            min_value = 1
+        self.ui.spinBox.setValue(min_value)
+        self.ui.spinBox.setMinimum(min_value)
+        self.ui.SpinBoxLabel.setText('of {0}'.format(index))
+
+    def search_item_clicked(self, item):
+        i = self.ui.searchResultLisWidget.row(item) + 1
+        self.ui.spinBox.setValue(self._searchResultDictModel[i])
 
 
 def main(argv):

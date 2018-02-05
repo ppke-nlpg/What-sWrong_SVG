@@ -58,3 +58,9 @@ class NLPCanvas:
         self.nlp_instance.edges = []
         self.used_types.clear()
         self.used_properties.clear()
+
+    def update_nlp_graphics(self):
+        raise NotImplementedError
+
+    def fire_instance_changed(self):
+        raise NotImplementedError
