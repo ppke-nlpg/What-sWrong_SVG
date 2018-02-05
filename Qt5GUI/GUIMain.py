@@ -11,8 +11,7 @@ from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, C
 from libwwnlp.CorpusNavigator import CorpusNavigator
 from libwwnlp.model.filter import Filter
 from libwwnlp.render.backends.svg_writer import render_nlpgraphics
-from Qt5GUI.EdgeTypeFilterPanel import EdgeTypeFilterPanel
-from Qt5GUI.TokenFilterPanel import TokenFilterPanel
+from Qt5GUI.filter_panel import FilterPanel
 from Qt5GUI.GUI.ChooseFormat import Ui_ChooseFormat
 from Qt5GUI.GUI.GUI import Ui_MainWindow
 from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
@@ -77,9 +76,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.canvas = Qt5NLPCanvas(self.ui)
         self.canvas.filter = Filter()
 
-        EdgeTypeFilterPanel(self.ui, self.canvas)
-        # DependencyFilterPanel(self.ui, self.canvas)
-        TokenFilterPanel(self.ui, self.canvas)
+        FilterPanel(self.ui, self.canvas)
 
         self.goldMap = {}
         self.guessMap = {}
