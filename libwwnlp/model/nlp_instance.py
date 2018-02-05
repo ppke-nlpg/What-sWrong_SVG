@@ -3,8 +3,8 @@
 
 from enum import Enum
 
-from .token import Token
-from .edge import EdgeRenderType, Edge
+from libwwnlp.model.token import Token
+from libwwnlp.model.edge import EdgeRenderType, Edge
 
 
 class RenderType(Enum):
