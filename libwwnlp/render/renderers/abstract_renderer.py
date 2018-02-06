@@ -82,25 +82,3 @@ class AbstractRenderer:
 
     def render(self, instance, scene, render_spans=False):
         raise NotImplementedError
-
-    # TODO: Will these ever be implemeneted?
-    """
-    def get_edge_at(self, point, radius):
-        "" "
-        Get the Edge at a given location.
-
-        Args:
-            point (Point): The location of the edge.
-            radius (int): The radius around the point which the edge should cross.
-
-        Returns:
-            Edge:The edge that crosses circle around the given point with the given
-            radius.
-        "" "
-        print("dependencyLayout height = " + self._dependency_layout.max_height)
-        if point.y < self._start_of_tokens:
-            return self._dependency_layout.get_edge_at(point, radius)
-        else:
-            shifted = Point(point.x, point.y - self._start_of_spans)
-            return self._span_layout.get_edge_at(shifted, radius)
-    """

@@ -19,12 +19,13 @@ from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 
 
 class MyWindow(QtWidgets.QMainWindow):
-    def __init__(self, parent=None, corp_type: str=None):
+    def __init__(self, parent=None, corp_widget=None, corp_map=None):
         QtWidgets.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()
         self.ui.setupUi(self)
-        self.type = corp_type
+        self.corp_widget = corp_widget
+        self.corp_map = corp_map
 
     def accept(self):
         instancefactory = None
@@ -48,10 +49,18 @@ class MyWindow(QtWidgets.QMainWindow):
             instancefactory = MaltTab()
 
         self.close()
-        self._parent.choosen_file(instancefactory, self.type)
+        self._choosen_file(instancefactory, self.corp_widget, self.corp_map)
 
     def reject(self):
         self.close()
+
+    @staticmethod
+    def _choosen_file(factory, corp_widget, corp_map):
+        directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]
+        item = QtWidgets.QListWidgetItem(basename(directory))
+        corp_map[basename(directory)] = factory.load(directory, 0, 200)  # Load first 200 sentence
+        corp_widget.addItem(item)
+        corp_widget.item(0).setSelected(True)
 
 
 class MyForm(QtWidgets.QMainWindow):
@@ -62,14 +71,16 @@ class MyForm(QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self, parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.pushButtonAddGold.clicked.connect(lambda: self._browse_folder('gold'))
-        self.ui.addGuessPushButton.clicked.connect(lambda: self._browse_folder('guess'))
+        self.ui.selectGoldListWidget.itemSelectionChanged.connect(self.refresh)
+        self.ui.selectGuessListWidget.itemSelectionChanged.connect(self.refresh)
+
+        self.ui.pushButtonAddGold.clicked.connect(lambda: self._browse_folder(self.selectGoldListWidget, self.goldMap))
+        self.ui.addGuessPushButton.clicked.connect(lambda: self._browse_folder(self.selectGuessListWidget,
+                                                                               self.guessMap))
         self.ui.removeGoldPushButton.clicked.connect(lambda: self._remove_corpus(self.ui.selectGoldListWidget,
                                                                                  self.goldMap))
         self.ui.removeGuessPushButton.clicked.connect(lambda: self._remove_corpus(self.ui.selectGuessListWidget,
                                                                                   self.guessMap))
-        self.ui.selectGoldListWidget.itemSelectionChanged.connect(self.refresh)
-        self.ui.selectGuessListWidget.itemSelectionChanged.connect(self.refresh)
 
         self.ui.actionExport.setShortcut("Ctrl+S")
         self.ui.actionExport.setStatusTip('Export to SVG')
@@ -91,9 +102,9 @@ class MyForm(QtWidgets.QMainWindow):
 
         self.refresh()
 
-    def _browse_folder(self, corp_type):
+    def _browse_folder(self, corp_widget, corp_map):
         QtWidgets.QMainWindow()
-        myapp = MyWindow(self, corp_type=corp_type)
+        myapp = MyWindow(self,  corp_widget, corp_map)
         myapp.show()
 
     def _remove_corpus(self, widget, corp_map):
@@ -101,21 +112,6 @@ class MyForm(QtWidgets.QMainWindow):
         del corp_map[str(selected_corp[0].text())]
         widget.takeItem(widget.row(selected_corp[0]))
         self.refresh()
-
-    def choosen_file(self, factory, corp_type):
-        directory = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QFileDialog())[0]
-
-        corpus = factory.load(directory, 0, 200)  # Load first 200 sentence
-        item = QtWidgets.QListWidgetItem(basename(directory))
-
-        if corp_type == 'gold':
-            self.goldMap[basename(directory)] = corpus
-            self.ui.selectGoldListWidget.addItem(item)
-            self.ui.selectGoldListWidget.item(0).setSelected(True)
-        if corp_type == 'guess':
-            self.guessMap[basename(directory)] = corpus
-            self.ui.selectGuessListWidget.addItem(item)
-            self.ui.selectGuessListWidget.item(0).setSelected(True)
 
     def refresh(self):
         selected_gold = self.ui.selectGoldListWidget.selectedItems()
