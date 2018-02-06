@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# from libwwnlp.render.layouts.abstract_edge_layout import Point
-
 
 class AbstractRenderer:
     """

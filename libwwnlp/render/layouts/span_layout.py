@@ -40,7 +40,7 @@ class SpanLayout(AbstractLayout):
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = total_text_margin + \
-                                     max(self.get_text_width(edge.get_label_with_note(), font_size, font_family),
+                                     max(self.r.get_text_width(edge.get_label_with_note(), font_size, font_family),
                                          result.get(edge.start, 0))
         return result
 
@@ -127,11 +127,11 @@ class SpanLayout(AbstractLayout):
 
             # Even if the edge label is too long the token bounds are already have laid out, so it will be ugly!
             # If curved int(self.curve) = 1 else 0
-            bbox = self.draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
-                                                   max_x - min_x, rect_height, span_fill_color,
-                                                   self.get_color(edge, type_colors, property_colors),
-                                                   span_line_width, span_curve_radius * int(curve),
-                                                   edge.get_label_with_note(), font_size, font_family)
+            bbox = self.r.draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
+                                                     max_x - min_x, rect_height, span_fill_color,
+                                                     self.get_color(edge, type_colors, property_colors),
+                                                     span_line_width, span_curve_radius * int(curve),
+                                                     edge.get_label_with_note(), font_size, font_family)
 
             # Store shape coordinates for selection with mouse click
             self.shapes[bbox] = edge
@@ -147,6 +147,6 @@ class SpanLayout(AbstractLayout):
                 if not revert:
                     depth = max_depth - depth
                 height = baseline + depth * height_per_level
-                self.draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
-                               edge_color=separator_line_color)
+                self.r.draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
+                                 edge_color=separator_line_color)
         return max_height - 2 * buffer_height

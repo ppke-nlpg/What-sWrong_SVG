@@ -24,4 +24,4 @@ class AlignmentLayout(AbstractLayout):
             ctrl2 = (bound2, height + height_per_level // 2)
             end = (bound2, height + height_per_level)
 
-            self.draw_line(scene, start, ctrl1, ctrl2, end, curve, self.get_color(edge, type_colors, property_colors))
+            self.r.draw_line(scene, start, ctrl1, ctrl2, end, curve, self.get_color(edge, type_colors, property_colors))

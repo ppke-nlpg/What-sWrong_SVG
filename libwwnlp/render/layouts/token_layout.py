@@ -92,8 +92,8 @@ class TokenLayout(AbstractLayout):
 
                 props = token.get_property_names()
                 lasty = baseline + row_height*(len(props))
-                maxx = max(chain((self.get_text_width(token.get_property_value(prop_name), text_fontsize,
-                                                      token_font_family)
+                maxx = max(chain((self.r.get_text_width(token.get_property_value(prop_name), text_fontsize,
+                                                        token_font_family)
                                   for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
@@ -162,9 +162,9 @@ class TokenLayout(AbstractLayout):
                 colors = chain((token_color,), repeat(token_prop_color))
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
                     lasty += row_height
-                    text_width = self.draw_text(scene, (lastx + origin[0], lasty + origin[1]),
-                                                token.get_property_value(prop_name),
-                                                token_fontsize, token_font_family, color)
+                    text_width = self.r.draw_text(scene, (lastx + origin[0], lasty + origin[1]),
+                                                  token.get_property_value(prop_name),
+                                                  token_fontsize, token_font_family, color)
                     maxx = max(maxx, text_width)
 
                 lasty += font_desc_size

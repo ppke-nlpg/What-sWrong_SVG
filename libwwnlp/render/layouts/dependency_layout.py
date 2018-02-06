@@ -161,9 +161,9 @@ class DependencyLayout(AbstractLayout):
             point3 = (point4[0], height)
 
             # Draw arrow and text middle
-            self.draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
-                                          edge.get_label_with_note(), font_size, font_family, label_over,
-                                          self.get_color(edge, type_colors, property_colors))
+            self.r.draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
+                                            edge.get_label_with_note(), font_size, font_family, label_over,
+                                            self.get_color(edge, type_colors, property_colors))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge

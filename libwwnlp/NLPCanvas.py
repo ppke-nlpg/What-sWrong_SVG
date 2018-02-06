@@ -5,7 +5,7 @@ from libwwnlp.model.filter import Filter
 from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.renderers.alignment_renderer import AlignmentRenderer
 from libwwnlp.render.renderers.single_sentence_renderer import SingleSentenceRenderer
-from libwwnlp.render.backends.svg_writer import render_nlpgraphics
+from libwwnlp.render.backends.svg_writer import SVGWriteRenderer
 
 
 class NLPCanvas:
@@ -67,4 +67,4 @@ class NLPCanvas:
         raise NotImplementedError
 
     def render_nlpgraphics(self, name=None, output_format='SVG'):
-        return render_nlpgraphics(self.renderer, self.filter_instance(), name, output_format)
+        return SVGWriteRenderer.render_nlpgraphics(self.renderer, self.filter_instance(), name, output_format)
