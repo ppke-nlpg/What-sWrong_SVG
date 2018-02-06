@@ -37,6 +37,9 @@ class AlignmentRenderer(AbstractRenderer):
         Returns:
             tuple: The width and height of the drawn object.
         """
+        self._token_layout1.r = self.backend
+        self._token_layout2.r = self.backend
+        self._alignment_layout.r = self.backend
         height_per_level = self.common_constants['height_per_level']
         # add first token span
         dim1 = self._token_layout1.layout(scene, instance, {}, self.tok_constants)

@@ -30,6 +30,7 @@ class MPLRenderer:
         renderer = fig._cachedRenderer
 
         bounding_box = content.get_window_extent(renderer)  # fig.canvas.get_renderer()
+        plt.close(fig)
         return bounding_box.width
 
     @staticmethod
@@ -39,10 +40,12 @@ class MPLRenderer:
             scene.add_patch(PathPatch(Path([start, ctrl1, ctrl2, end],
                                            [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4]),
                                       edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*edge_color),
+                                      facecolor=(1, 1, 1, 0),  # Transparent...
                                       linewidth=1))  # TODO: WIDTH!
         else:
             scene.add_patch(PathPatch(Path([start, end], [Path.MOVETO, Path.LINETO]),
                                       edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*edge_color),
+                                      facecolor=(1, 1, 1, 0),  # Transparent...
                                       linewidth=1))  # TODO: WIDTH!
 
     @staticmethod

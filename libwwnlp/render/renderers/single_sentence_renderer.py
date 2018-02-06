@@ -43,6 +43,10 @@ class SingleSentenceRenderer(AbstractRenderer):
         Returns:
             tuple: The width and height of the drawn object.
         """
+        self._span_layout.r = self.backend
+        self._dependency_layout.r = self.backend
+        self._token_layout.r = self.backend
+
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths

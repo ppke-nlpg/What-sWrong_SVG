@@ -77,6 +77,7 @@ class AbstractRenderer:
                           }
 
         self.dependency_constants = {'arrowsize': 2, 'label_over': False}
+        self.backend = None
 
     def render(self, instance, scene, render_spans=False):
         raise NotImplementedError

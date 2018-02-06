@@ -6,6 +6,7 @@ from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.renderers.alignment_renderer import AlignmentRenderer
 from libwwnlp.render.renderers.single_sentence_renderer import SingleSentenceRenderer
 from libwwnlp.render.backends.svg_writer import SVGWriteRenderer
+from libwwnlp.render.backends.matplotlib_writer import MPLRenderer
 
 
 class NLPCanvas:
@@ -22,6 +23,8 @@ class NLPCanvas:
     def __init__(self):
         """Creates a new canvas with default size.
         """
+        self.renderer_backend = MPLRenderer()
+        self.renderer_backends = {'SVGWrite': SVGWriteRenderer(), 'MPL': MPLRenderer()}
         self.renderer = SingleSentenceRenderer()
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
                           RenderType.alignment: AlignmentRenderer()}
@@ -67,4 +70,5 @@ class NLPCanvas:
         raise NotImplementedError
 
     def render_nlpgraphics(self, name=None, output_format='SVG'):
-        return SVGWriteRenderer.render_nlpgraphics(self.renderer, self.filter_instance(), name, output_format)
+        self.renderer.backend = self.renderer_backend
+        return self.renderer_backend.render_nlpgraphics(self.renderer, self.filter_instance(), name, output_format)

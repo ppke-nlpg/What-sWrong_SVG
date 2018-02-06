@@ -3,8 +3,6 @@
 
 from collections import namedtuple, Counter
 
-from libwwnlp.render.backends.svg_writer import SVGWriteRenderer
-
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
 Point = namedtuple('Point', ['x', 'y'])
@@ -23,7 +21,7 @@ class AbstractLayout:
         """
         self.shapes = {}
         self.visible = set()
-        self.r = SVGWriteRenderer()
+        self.r = None
 
     def calculate_depth_maxdepth_height(self, dominates, edges_, height_per_level):
         depth = self._calculate_depth(dominates, edges_)
