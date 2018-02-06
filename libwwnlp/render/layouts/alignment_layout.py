@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backends.svg_writer import draw_line
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout
 from libwwnlp.render.layouts.token_layout import middle
 
 
-class AlignmentLayout(AbstractEdgeLayout):
+class AlignmentLayout(AbstractLayout):
 
     def __init__(self):
         super().__init__()
@@ -25,4 +24,4 @@ class AlignmentLayout(AbstractEdgeLayout):
             ctrl2 = (bound2, height + height_per_level // 2)
             end = (bound2, height + height_per_level)
 
-            draw_line(scene, start, ctrl1, ctrl2, end, curve, self.get_color(edge, type_colors, property_colors))
+            self.draw_line(scene, start, ctrl1, ctrl2, end, curve, self.get_color(edge, type_colors, property_colors))

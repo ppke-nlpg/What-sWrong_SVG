@@ -3,6 +3,9 @@
 
 from collections import namedtuple, Counter
 
+from libwwnlp.render.backends.svg_writer import get_text_width, draw_line, draw_arrow_w_text_middle,\
+    draw_rectangle_around_text, draw_text
+
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
 Point = namedtuple('Point', ['x', 'y'])
@@ -10,29 +13,14 @@ Point = namedtuple('Point', ['x', 'y'])
 """
 
 
-class AbstractEdgeLayout:
-    """An AbstractEdgeLayout serves as a base class for edge layout classes.
+class AbstractLayout:
+    """An AbstractLayout serves as a base class for edge layout classes.
 
     It mostly stores properties associated with drawing edge layouts, such as
     whether lines should be curved or not.
-
-    Attributes:
-        strokes (Dict[str, BasicStroke]): A mapping from string to strokes. If
-            an edge has a type that matches one of the key strings it will get
-            the corresponding stroke.
-        default_stroke (BasicStroke): The stroke to use as default.
-        shapes (Dict[Shape, Edge]): A mapping from edge shapes to the
-            corresponding edge objects.
-        selected (Set[Edge]): The set of selected edges.
-        visible (Set[Edge]): The set of visisible edges.
-        max_height (int): The height of the layout. This property is to be set
-            by the #layout method after the layout process.
-        max_width (int): The width of the layout. This property is to be set by
-            the #layout method after the layout process.
-
     """
     def __init__(self):
-        """Initialize an AbstractEdgeLayout instance.
+        """Initialize an AbstractLayout instance.
         """
         self.shapes = {}
         self.visible = set()
@@ -82,6 +70,7 @@ class AbstractEdgeLayout:
             edges_ &= self.visible  # Intersection
         return edges_
 
+    # Render Backend
     @staticmethod
     def get_color(curr_edge, type_colors, property_colors):  # TODO: Obviously not good like this!
         """Return the color for the given edge.
@@ -97,3 +86,23 @@ class AbstractEdgeLayout:
         # sort first acc. to levels, second according to prop. names, if no common color use the default...
         return min(((property_colors[x][1], x, property_colors[x][0]) for x in props_with_color),
                    default=(0, None, type_colors.get(curr_edge.edge_type, property_colors['default_edge_color'][0])))[2]
+
+    @staticmethod
+    def get_text_width(*args, **kwargs):
+        return get_text_width(*args, **kwargs)
+
+    @staticmethod
+    def draw_line(*args, **kwargs):
+        return draw_line(*args, **kwargs)
+
+    @staticmethod
+    def draw_arrow_w_text_middle(*args, **kwargs):
+        return draw_arrow_w_text_middle(*args, **kwargs)
+
+    @staticmethod
+    def draw_rectangle_around_text(*args, **kwargs):
+        return draw_rectangle_around_text(*args, **kwargs)
+
+    @staticmethod
+    def draw_text(*args, **kwargs):
+        return draw_text(*args, **kwargs)

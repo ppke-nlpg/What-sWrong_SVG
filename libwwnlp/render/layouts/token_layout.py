@@ -4,7 +4,7 @@
 from itertools import chain, repeat
 from collections import namedtuple
 from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.render.backends.svg_writer import get_text_width, draw_text
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout
 
 Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
 """This named tuple represents one dimensional bounds.
@@ -23,7 +23,7 @@ def middle(bounds):
     return (bounds.start + bounds.end) // 2
 
 
-class TokenLayout:
+class TokenLayout(AbstractLayout):
     """Layout for a sequentially ordered collection of objects.
 
     A TokenLayout object lays out a collection of tokens in sequence by placing
@@ -42,9 +42,9 @@ class TokenLayout:
     def __init__(self):
         """Initialize a token layout with suitable default values.
         """
+        super().__init__()
 
-    @staticmethod
-    def estimate_token_bounds(instance: NLPInstance, token_widths: dict, constants):
+    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, constants):
         """Calculate the horizontal bounds of each token in the layout of the tokens.
 
         Args:
@@ -92,7 +92,8 @@ class TokenLayout:
 
                 props = token.get_property_names()
                 lasty = baseline + row_height*(len(props))
-                maxx = max(chain((get_text_width(token.get_property_value(prop_name), text_fontsize, token_font_family)
+                maxx = max(chain((self.get_text_width(token.get_property_value(prop_name), text_fontsize,
+                                                      token_font_family)
                                   for prop_name in props),
                                  [token_widths.get(token, 0)]), default=0)
                 result[token] = Bounds1D(lastx, lastx+maxx)
@@ -106,8 +107,7 @@ class TokenLayout:
 
     # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
     # TODO: Merge the two functions with a pseudo-scene like set() which also have add(...) to prevent double drawing
-    @staticmethod
-    def layout(scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
+    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
         """Lay out all tokens in the given collection.
 
         Lays out all tokens in the given collection as stacks of property
@@ -162,9 +162,9 @@ class TokenLayout:
                 colors = chain((token_color,), repeat(token_prop_color))
                 for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
                     lasty += row_height
-                    text_width = draw_text(scene, (lastx + origin[0], lasty + origin[1]),
-                                           token.get_property_value(prop_name),
-                                           token_fontsize, token_font_family, color)
+                    text_width = self.draw_text(scene, (lastx + origin[0], lasty + origin[1]),
+                                                token.get_property_value(prop_name),
+                                                token_fontsize, token_font_family, color)
                     maxx = max(maxx, text_width)
 
                 lasty += font_desc_size

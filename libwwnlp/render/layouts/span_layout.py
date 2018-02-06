@@ -3,11 +3,10 @@
 
 from collections import Counter, defaultdict
 
-from .abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backends.svg_writer import draw_line, draw_rectangle_around_text, get_text_width
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout
 
 
-class SpanLayout(AbstractEdgeLayout):
+class SpanLayout(AbstractLayout):
     """Lays out edges as rectangular blocks under or above the covered tokens.
 
     The label is written into these blocks. If there are multiple edge types
@@ -19,8 +18,7 @@ class SpanLayout(AbstractEdgeLayout):
         """
         super().__init__()
 
-    @staticmethod
-    def estimate_required_token_widths(edges, constants):
+    def estimate_required_token_widths(self, edges, constants):
         """Return the required token widths for self-loops.
 
         For each token that has a self-loop we need the token to be wide enough.
@@ -42,7 +40,7 @@ class SpanLayout(AbstractEdgeLayout):
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = total_text_margin + \
-                                     max(get_text_width(edge.get_label_with_note(), font_size, font_family),
+                                     max(self.get_text_width(edge.get_label_with_note(), font_size, font_family),
                                          result.get(edge.start, 0))
         return result
 
@@ -129,11 +127,11 @@ class SpanLayout(AbstractEdgeLayout):
 
             # Even if the edge label is too long the token bounds are already have laid out, so it will be ugly!
             # If curved int(self.curve) = 1 else 0
-            bbox = draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
-                                              max_x - min_x, rect_height, span_fill_color,
-                                              self.get_color(edge, type_colors, property_colors),
-                                              span_line_width, span_curve_radius * int(curve),
-                                              edge.get_label_with_note(), font_size, font_family)
+            bbox = self.draw_rectangle_around_text(scene, (min_x, height_minus_buffer),
+                                                   max_x - min_x, rect_height, span_fill_color,
+                                                   self.get_color(edge, type_colors, property_colors),
+                                                   span_line_width, span_curve_radius * int(curve),
+                                                   edge.get_label_with_note(), font_size, font_family)
 
             # Store shape coordinates for selection with mouse click
             self.shapes[bbox] = edge
@@ -149,6 +147,6 @@ class SpanLayout(AbstractEdgeLayout):
                 if not revert:
                     depth = max_depth - depth
                 height = baseline + depth * height_per_level
-                draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
-                          edge_color=separator_line_color)
+                self.draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
+                               edge_color=separator_line_color)
         return max_height - 2 * buffer_height

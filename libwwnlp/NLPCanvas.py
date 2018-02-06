@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Todo: Export to PDF, EPS, etc.
 
+from libwwnlp.model.filter import Filter
 from libwwnlp.model.nlp_instance import RenderType
 from libwwnlp.render.renderers.alignment_renderer import AlignmentRenderer
 from libwwnlp.render.renderers.single_sentence_renderer import SingleSentenceRenderer
+from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 
 
 class NLPCanvas:
@@ -26,7 +27,7 @@ class NLPCanvas:
                           RenderType.alignment: AlignmentRenderer()}
         self.used_types = set()
         self.used_properties = set()
-        self.filter = None
+        self.filter = Filter()
         self.nlp_instance = None
         self.used_edge_properties = set()
 
@@ -64,3 +65,6 @@ class NLPCanvas:
 
     def fire_instance_changed(self):
         raise NotImplementedError
+
+    def render_nlpgraphics(self, name=None, output_format='SVG'):
+        return render_nlpgraphics(self.renderer, self.filter_instance(), name, output_format)

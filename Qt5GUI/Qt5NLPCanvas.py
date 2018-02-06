@@ -4,7 +4,6 @@
 from PyQt5 import QtWidgets, QtSvg
 
 from libwwnlp.NLPCanvas import NLPCanvas
-from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 
 
 class Qt5NLPCanvas(NLPCanvas):
@@ -54,7 +53,7 @@ class Qt5NLPCanvas(NLPCanvas):
         scene = QtWidgets.QGraphicsScene()
         self.ui.graphicsView.setScene(scene)
         br = QtSvg.QGraphicsSvgItem()
-        rr = QtSvg.QSvgRenderer(render_nlpgraphics(self.renderer, self.filter_instance()))
+        rr = QtSvg.QSvgRenderer(self.render_nlpgraphics())
         br.setSharedRenderer(rr)
         scene.addItem(br)
         self.ui.graphicsView.show()

@@ -26,7 +26,6 @@ def test():
     from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
         BioNLP2009SharedTaskFormat, TheBeastFormat
     from libwwnlp.model.nlp_instance import RenderType
-    from libwwnlp.render.backends.svg_writer import render_nlpgraphics
     from libwwnlp.NLPCanvas import NLPCanvas
     from libwwnlp.model.filter import Filter
 
@@ -40,7 +39,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll00_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll00_output{0}.svg'.format(i))
 
     if conll2002:
         print("Testing CoNLL2002", file=sys.stderr)
@@ -52,7 +51,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll02_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll02_output{0}.svg'.format(i))
 
     if conll2003:
         print("Testing CoNLL2003", file=sys.stderr)
@@ -64,7 +63,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll03_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll03_output{0}.svg'.format(i))
 
     if conll2004:
         print("Testing CoNLL2004", file=sys.stderr)
@@ -76,7 +75,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll04_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll04_output{0}.svg'.format(i))
 
     if conll2005:
         print("Testing CoNLL2005", file=sys.stderr)
@@ -88,7 +87,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll05_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll05_output{0}.svg'.format(i))
 
     if conll2006:
         print("Testing CoNLL2006", file=sys.stderr)
@@ -100,7 +99,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll06_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll06_output{0}.svg'.format(i))
 
     if conll2008:
         print("Testing CoNLL2008", file=sys.stderr)
@@ -112,7 +111,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll08_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll08_output{0}.svg'.format(i))
 
     if conll2009:
         print("Testing CoNLL2009", file=sys.stderr)
@@ -124,7 +123,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'conll09_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('conll09_output{0}.svg'.format(i))
 
     if malt:
         print("Testing MaltTab", file=sys.stderr)
@@ -157,7 +156,7 @@ def test():
 
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'malt_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('malt_output{0}.svg'.format(i))
 
     if giza:
         print("Testing Giza Alingment Format", file=sys.stderr)
@@ -169,7 +168,7 @@ def test():
         corpus = factory.load(fn, 0, 2)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'giza_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('giza_output{0}.svg'.format(i))
 
     if gale:
         print("Testing Gale Alingment Format", file=sys.stderr)
@@ -181,7 +180,7 @@ def test():
         corpus = factory.load(fn, 0, 1)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'gale_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('gale_output{0}.svg'.format(i))
 
     if thebeast:
         print("Testing The Beast Format", file=sys.stderr)
@@ -192,7 +191,7 @@ def test():
         corpus = factory.load(fn, 0, 1)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'thebeast_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('thebeast_output{0}.svg'.format(i))
 
     if bionlp09:
         print("Testing BioNLP2009 Shared Task Format", file=sys.stderr)
@@ -203,7 +202,7 @@ def test():
         corpus = factory.load(fn, 0, 1)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'bionlp09_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('bionlp09_output{0}.svg'.format(i))
 
     if lisp_sexpr:
         print("Testing Lisp S-expr Format", file=sys.stderr)
@@ -214,7 +213,7 @@ def test():
         corpus = factory.load(fn, 0, 1)
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
-            render_nlpgraphics(canvas.renderer, canvas.filter_instance(), 'lisp_sexpr_output{0}.svg'.format(i))
+            canvas.render_nlpgraphics('lisp_sexpr_output{0}.svg'.format(i))
 
 
 if __name__ == '__main__':

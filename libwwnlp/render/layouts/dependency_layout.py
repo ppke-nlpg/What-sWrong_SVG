@@ -6,11 +6,10 @@ import itertools
 import operator
 from collections import Counter, defaultdict
 
-from libwwnlp.render.layouts.abstract_edge_layout import AbstractEdgeLayout
-from libwwnlp.render.backends.svg_writer import draw_arrow_w_text_middle
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout
 
 
-class DependencyLayout(AbstractEdgeLayout):
+class DependencyLayout(AbstractLayout):
     """A DependencyLayout lays out edges in a dependency parse layout.
 
     Here the edge from head to modifier is represented as a directed edge that
@@ -162,9 +161,9 @@ class DependencyLayout(AbstractEdgeLayout):
             point3 = (point4[0], height)
 
             # Draw arrow and text middle
-            draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
-                                     edge.get_label_with_note(), font_size, font_family, label_over,
-                                     self.get_color(edge, type_colors, property_colors))
+            self.draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
+                                          edge.get_label_with_note(), font_size, font_family, label_over,
+                                          self.get_color(edge, type_colors, property_colors))
 
             # Store shape coordinates for selection with mouse click
             self.shapes[(point1, point2, point3, point4)] = edge

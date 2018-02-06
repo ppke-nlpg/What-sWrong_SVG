@@ -14,8 +14,6 @@ from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
 from libwwnlp.CorpusNavigator import CorpusNavigator
-from libwwnlp.model.filter import Filter
-from libwwnlp.render.backends.svg_writer import render_nlpgraphics
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -96,7 +94,6 @@ class MyForm(QtWidgets.QMainWindow):
         # self.ui.searchButton.clicked.connect(self.search_corpus)  # TODO
 
         self.canvas = Qt5NLPCanvas(self.ui)
-        self.canvas.filter = Filter()
 
         FilterPanel(self.ui, self.canvas)
 
@@ -135,7 +132,7 @@ class MyForm(QtWidgets.QMainWindow):
                                                                 ';;'.join(sorted(supported_formats.keys(),
                                                                                  reverse=True)))
         if len(name) > 0:
-            render_nlpgraphics(self.canvas.renderer, self.canvas.filter_instance(), name, supported_formats[file_type])
+            self.canvas.render_nlpgraphics(name, supported_formats[file_type])
 
     def update_spinner_borders(self):
         gold_len = 0
