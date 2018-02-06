@@ -8,140 +8,138 @@ import io
 import matplotlib
 matplotlib.use('svg')  # Must be before importing matplotlib.pyplot or pylab!
 import matplotlib.pyplot as plt
-from matplotlib.patches import PathPatch, Path, FancyBboxPatch, Patch
+from matplotlib.patches import PathPatch, Path, FancyBboxPatch, FancyArrowPatch
 from matplotlib.axes import Axes
 
 
-class Scene:
-    """An svgwrite Drawing.
+def get_text_width(text: str, size: int, font: str) -> int:
+    """Return the width of the text.
+
+    Returns:
+        int: The width of the text.
     """
+    # Thx to: https://stackoverflow.com/a/22689498
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    content = Axes.text(ax, 0, 0, s=text, fontsize=size, fontname=font)
+    # Because no .get_renrerer() method
+    # import io
+    fig.canvas.print_svg(io.BytesIO())
+    renderer = fig._cachedRenderer
 
-    def __init__(self, *_, **__):
-        """Initialize a Scene instance.
-
-        """
-        self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
-
-    def add(self, elem):
-        try:
-            if isinstance(elem.content, Patch):
-                self.ax.add_patch(elem.content)
-            else:
-                self.ax.text(*elem.params[0], **elem.params[1])
-        except AttributeError:
-            pass
+    bounding_box = content.get_window_extent(renderer)  # fig.canvas.get_renderer()
+    return bounding_box.width
 
 
-class Line:
-    """A straight line between two points.
+def draw_line(scene: Axes, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple, is_curved: bool, edge_color: tuple):
+    if is_curved:  # cubic Bezier curve
+        scene.add_patch(PathPatch(Path([start, ctrl1, ctrl2, end],
+                                       [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4]),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*edge_color), linewidth=1))  # TODO: WIDTH!
+    else:
+        scene.add_patch(PathPatch(Path([start, end], [Path.MOVETO, Path.LINETO]),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*edge_color), linewidth=1))  # TODO: WIDTH!
+
+
+def draw_arrow_w_text_middle(scene: Axes, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
+                             arrowsize: int, is_curved: bool, text: str, font_size: int, font_family: str,
+                             over: bool,
+                             color: tuple):
+
     """
-
-    def __init__(self, start: tuple, end: tuple, color: tuple, width: int=1):
-        """Initialize a line.
-
-        Args:
-            start (tuple): The line's starting point.
-            end (tuple): The line's ending point.
-            color (tuple): The color of the line.
-            width: (int): The width of the line.
-        """
-        self.content = PathPatch(Path([start, end], [Path.MOVETO, Path.LINETO]),
-                                 edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color), linewidth=width)
-
-
-class QubicBezierCurve:
-    """A qubic Bezier curve.
+    # Store the appropriate function ouside of the loop
+    if is_curved:
+        shape = [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4]
+    else:
+        shape = [Path.MOVETO, Path.LINETO, Path.LINETO, Path.LINETO]
+    # This should work, but matplotlib is not ready yet: FancyArrowPatch(path=Path([start, point1, point2, end], shape)
+    scene.add_patch(PathPatch(Path([start, point1, point2, end], shape),
+                    edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                    facecolor=(1, 1, 1, 0),  # Transparent...
+                    linewidth=1))  # TODO Line width!
     """
+    if is_curved:
+        shape = [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4]
+        middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
+        scene.add_patch(PathPatch(Path([start, point1, point1, middle], shape),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                                  facecolor=(1, 1, 1, 0),  # Transparent...
+                                  linewidth=1))  # TODO Line width!
+        scene.add_patch(PathPatch(Path([middle, point2, point2, end], shape),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                                  facecolor=(1, 1, 1, 0),  # Transparent...
+                                  linewidth=1))  # TODO Line width!
+    else:
+        scene.add_patch(PathPatch(Path([start, point1], [Path.MOVETO, Path.LINETO]),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                                  facecolor=(1, 1, 1, 0),  # Transparent...
+                                  linewidth=1))  # TODO Line width!
+        scene.add_patch(PathPatch(Path([point1, point2], [Path.MOVETO, Path.LINETO]),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                                  facecolor=(1, 1, 1, 0),  # Transparent...
+                                  linewidth=1))  # TODO Line width!
+        scene.add_patch(PathPatch(Path([point2, end], [Path.MOVETO, Path.LINETO]),
+                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                                  facecolor=(1, 1, 1, 0),  # Transparent...
+                                  linewidth=1))  # TODO Line width!
 
-    def __init__(self, start: tuple, control1: tuple, control2: tuple, end: tuple, color: tuple, width: int=1):
-        """Initialize a qubic Bezier curve.
+    # Draw arrow
+    x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+    z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+    y_coord = (end[0], end[1])
 
-        Args:
-            start (tuple): The line's starting point.
-            control1 (tuple): The first control point for the curve.
-            control2 (tuple): The second control point for the curve.
-            end (tuple): The line's ending point.
-            color (tuple): The color of the line.
-            width: (int): The width of the line.
-        """
-        self.content = PathPatch(Path([start, control1, control2, end], [Path.MOVETO, Path.CURVE4, Path.CURVE4,
-                                                                         Path.CURVE4]),
-                                 edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                 facecolor=(1, 1, 1, 0),  # Transparent...
-                                 linewidth=width)
+    # Draw the arrow head
+    scene.add_patch(PathPatch(Path([x_coord, y_coord], [Path.MOVETO, Path.LINETO]),
+                              edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                              facecolor=(1, 1, 1, 0),  # Transparent...
+                              linewidth=1))  # TODO Line width!
+    scene.add_patch(PathPatch(Path([z_coord, y_coord], [Path.MOVETO, Path.LINETO]),
+                              edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                              facecolor=(1, 1, 1, 0),  # Transparent...
+                              linewidth=1))  # TODO Line width!)
 
+    direction = 1
+    if over:
+        direction = -1
 
-class Rectangle:
-    """A rectangle.
-    """
+    # Write label in the middle under
+    labelx = min(start[0], point2[0]) + abs(start[0] - point2[0]) // 2
+    labely = height + direction * font_size  # TODO: Should be font height!
 
-    def __init__(self, origin: tuple, width: int, height: int,
-                 fill_color: tuple, line_color: tuple, line_width: int, rx: int=0, ry: int=0):
-        """Initialize a rectangle.
-
-        Args:
-            origin (tuple): The top left corner of the rectangle.
-            width: (int): The width of the rectangle.
-            height: (int): The height of the rectangle.
-            fill_color (tuple): Color to fill the rectangle with.
-            line_color (tuple): Color to use for the rectangle's outline.
-            line_width (int): The line's ending point.
-            rx (int): Horizontal radius of corner rounding.
-            ry (int): Vertical radius of corner rounding.
-        """
-        if rx > 0 and ry > 0:
-            box_style = 'round'
-        else:
-            box_style = 'square'
-
-        self.content = FancyBboxPatch(origin, width, height,
-                                      facecolor='#{0:02x}{1:02x}{2:02x}'.format(*fill_color),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
-                                      linewidth=line_width, boxstyle=box_style)
+    scene.text(labelx, labely, s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*color),
+               fontname=font_family)
 
 
-class Text:
-    """Text.
-    """
+def draw_rectangle_around_text(scene: Axes, origin: tuple, width: int, height: int, fill_color: tuple,
+                               line_color: tuple, line_width: int, rounded: int,
+                               text: str, font_size: int, font_family: str):
 
-    def __init__(self, origin: tuple, text: str, size: int, font: str, color: tuple=(0, 0, 0), token=False):
-        """Initialize a text object.
+    if rounded > 0:
+        box_style = 'round'
+    else:
+        box_style = 'square'
 
-        Args:
-            origin (tuple): The top left corner of the text area.
-            text (str): The text to write on the scene.
-            size (int): The size of the text.
-            font (str): The font specification.
-            color (tuple): Color to use for the text.
-        """
-        # TODO: Token alignment
-        self.params = [origin, {'s': text, 'horizontalalignment': 'left', 'verticalalignment': 'top',
-                                'fontsize': size, 'color': '#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                'fontname': font}]
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        self.content = Axes.text(ax, origin[0], origin[1], s=text,
-                                 fontsize=size,
-                                 color='#{0:02x}{1:02x}{2:02x}'.format(*color), fontname=font)
+    scene.add_patch(FancyBboxPatch(origin, width, height,
+                                   facecolor='#{0:02x}{1:02x}{2:02x}'.format(*fill_color),
+                                   edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
+                                   linewidth=line_width, boxstyle=box_style))
 
-    def get_width(self) -> int:
-        """Return the width of the text.
+    # write label in the middle under
+    labelx = origin[0] + width // 2
+    labely = origin[1] + height // 2 + 4  # TODO: Should be drawn in the vertical center, so + 4 not needed!
 
-        Returns:
-            int: The width of the text.
-        """
-        # Thx to: https://stackoverflow.com/a/22689498
-        fig = plt.figure()
-        text = self.content
+    scene.text(labelx, labely, s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
+               fontname=font_family)
 
-        # Because no .get_renrerer() method
-        # import io
-        fig.canvas.print_svg(io.BytesIO())
-        renderer = fig._cachedRenderer
+    return origin[0], origin[1], width, height
 
-        bounding_box = text.get_window_extent(renderer)  # fig.canvas.get_renderer()
-        return bounding_box.width
+
+def draw_text(scene: Axes, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+    # TODO: Here was TextToken (must align to left)
+    scene.text(origin[0], origin[1], s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*color),
+               fontname=font_family)
+
+    return scene.get_window_extent(scene).width  # Should return bounding box
 
 
 def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
@@ -155,20 +153,21 @@ def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str=
 
     Returns: The bytesting of the rendered object if needed.
     """
-    svg_scene = Scene()  # default: '100%', '100%'
+    fig = plt.figure()
+    svg_scene = fig.add_subplot(111)
 
     renderer.render(filtered, svg_scene)
-    svg_scene.ax.plot()
+    svg_scene.plot()
 
     if filepath is not None and output_type == 'SVG':
-        svg_scene.fig.savefig(filepath, format='SVG')
+        fig.savefig(filepath, format='SVG')
     elif filepath is None and output_type == 'SVG':
         svg_bytes = io.BytesIO()
-        svg_scene.fig.canvas.print_svg(svg_bytes)
+        fig.canvas.print_svg(svg_bytes)
         return svg_bytes.getvalue()
     elif output_type == 'EPS':
-        svg_scene.fig.savefig(filepath, format='EPS')
+        fig.savefig(filepath, format='EPS')
     elif output_type == 'PDF':
-        svg_scene.fig.savefig(filepath, format='PDF')
+        fig.savefig(filepath, format='PDF')
     else:
         raise ValueError('{0} not a supported filetype!'.format(output_type))
