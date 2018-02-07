@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from os.path import basename
+
+from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
+    CoNLL2009, MaltTab
 from libwwnlp.NLPCanvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
@@ -17,7 +21,7 @@ class CorpusNavigator:
     """
      * The loader for guess instances.
     """
-    def __init__(self, canvas: NLPCanvas, gold_loader=None, guess_loader=None, instance_filter=None, spinner=None):
+    def __init__(self, canvas: NLPCanvas):
         """
          * Creates a new CorpusNavigator.
          *
@@ -34,19 +38,23 @@ class CorpusNavigator:
          * A Search result consisting of the instance index and a text snippet that indicates the position in the
          * instance where they key terms were found.
         """
-        self._indices = {}
+        self._gold_corpora = {}
+        self._guess_corpora = {}
+
+        self._selected_gold = None
+        self._selected_guess = None
+
+        self.min_length = 0
+        self.max_length = 0
+
+        # Not used
+        self._cached_instances = {}
         self._diffCorpora = {}
 
-        # TODO: What is the difference in _gold and _gold_corpora ?
-        self._gold_corpora = gold_loader  # XXX Should be set
-        self._guess_corpora = guess_loader  # XXX Should be set
-        self._gold = gold_loader
-        self._guess = guess_loader
-
         self._canvas = canvas
-        self._instance_filter = instance_filter
         self._instance = None
 
+        # TODO
         """
         self._canvas.renderer.set_edge_type_order("pos", 0)
         self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
@@ -57,75 +65,76 @@ class CorpusNavigator:
         self._canvas.renderer.set_edge_type_order("role", 5)
         self._canvas.renderer.set_edge_type_order("phase", 5)
         """
+        self.known_corpus_formats = {'CoNLL2000': CoNLL2000(),
+                                     'CoNLL2002': CoNLL2002(),
+                                     'CoNLL2003': CoNLL2003(),
+                                     'CoNLL2004': CoNLL2004(),
+                                     'CoNLL2005': CoNLL2005(),
+                                     'CoNLL2006': CoNLL2006(),
+                                     'CoNLL2008': CoNLL2008(),
+                                     'CoNLL2009': CoNLL2009(),
+                                     'MaltTab': MaltTab()
+                                     }
 
         self._searchResultDictModel = {}
-        self.update_canvas(spinner)
 
-    def corpus_added(self, corpus: [NLPInstance], src: [NLPInstance]):
-        """
-         * Adds the corpus to the corresponding internal set of corpora.
-         *
-         * @param corpus the corpus to add.
-         * @param src    the source loader.
-        """
-        if src == self._gold:
-            self._gold_corpora.append(corpus)
-            # indices[corpus] = self.createIndex(corpus)
+    def add_corpus(self, corpus_path, corpus_format, corpus_type):
+        """Adds the corpus to the corresponding internal set of corpora."""
+        if corpus_type == 'gold':
+            corp_type_dict = self._gold_corpora
+        elif corpus_type == 'guess':
+            corp_type_dict = self._guess_corpora
         else:
-            self._guess_corpora.append(corpus)
-            # indices[corpus] = self.createIndex(corpus)
+            raise ValueError
+        corpus = self.known_corpus_formats[corpus_format].load(corpus_path, 0, 200)  # Load first 200 sentence
+        corp_name = basename(corpus_path)
 
-    def corpus_removed(self, corpus: [NLPInstance], src: [NLPInstance]):
-        """
-         * Removes the corpus and all diff corpora that compare the given corpus
-         *
-         * @param corpus the corpus to remove.
-         * @param src    the loader that removed the corpus.
-        """
-        if src == self._gold:
-            self._gold_corpora.remove(corpus)
-            del self._indices[corpus]
-            for c in self._guess_corpora:
-                self.remove_diff_corpus(corpus, c)
+        if corp_name not in corp_type_dict:
+            corp_type_dict[basename(corpus_path)] = corpus
+            # indices[corpus] = self.createIndex(corpus)  # TODO
+
+    def remove_corpus(self, corpus_type, corpus_name):
+        """Removes the corpus and all diff corpora that compare the given corpus"""
+        if corpus_type == 'gold':
+            corp_type_dict = self._gold_corpora
+            self._selected_gold = None
+        elif corpus_type == 'guess':
+            corp_type_dict = self._guess_corpora
+            self._selected_guess = None
         else:
-            self._guess_corpora.remove(corpus)
-            del self._indices[corpus]
-            for c in self._gold_corpora:
-                self.remove_diff_corpus(corpus, c)
+            raise ValueError
 
-    @staticmethod
-    def get_diff_corpus(gold: [NLPInstance], guess: [NLPInstance]) -> [NLPInstance]:  # XXX
-        """
-         * Returns a difference corpus between two corpora. This difference corpus is calculated if it hasn't been
-         * calculated before.
-         *
-         * @param gold  the gold corpus.
-         * @param guess the guess corpus.
-         * @return the difference corpus.
-        """
-        # diff_corpus = self._diffCorpora.get((gold, guess))
-        diff_corpus = None
-        if diff_corpus is None:
-            diff_corpus = []
-            # self._diffCorpora[(gold, guess)] = diff_corpus
-        for i in range(min(len(gold), len(guess))):
-            diff_corpus.append(nlp_diff(gold[i], guess[i], 'eval_status_Match',  'eval_status_FN', 'eval_status_FP'))
-        # indices.put(diff_corpus, createIndex(diff_corpus))
-        return diff_corpus
-        # return nlp_diff(gold, guess)  # XX Current Working
+        del corp_type_dict[corpus_name]
+        # del self._cached_instances[corpus_name]  # TODO
+        # for c in corp_type_dict:
+        #     self.remove_diff_corpus(corpus_name, c)
 
-    def remove_diff_corpus(self, gold: [NLPInstance], guess: [NLPInstance]):
-        """
-         * Removes the difference corpus for the given corpus pair.
-         *
-         * @param gold  the gold corpus.
-         * @param guess the guess corpus.
-        """
-        pair = (gold, guess)
-        diff_corpus = self._diffCorpora.get(pair)
-        if diff_corpus is not None:
-            del self._diffCorpora[pair]
-            del self._indices[diff_corpus]
+    def select_gold(self, corp_name):
+        if corp_name in self._gold_corpora:
+            self._selected_gold = corp_name
+            self.update_length()
+        else:
+            raise ValueError
+
+    def select_guess(self, corp_name):
+        if corp_name in self._guess_corpora:
+            self._selected_guess = corp_name
+            self.update_length()
+        else:
+            raise ValueError
+
+    def update_length(self):
+        self.min_length = 0
+        self.max_length = 0
+        if self._selected_gold is not None:
+            gold_length = len(self._gold_corpora[self._selected_gold])
+            if self._selected_guess is not None:
+                guess_length = len(self._guess_corpora[self._selected_guess])
+                self.max_length = min(gold_length, guess_length)
+            else:
+                self.max_length = gold_length
+        if self.max_length > 0:
+            self.min_length = 1
 
     def search_corpus(self, text, search_result_widget, spinner):
 
@@ -138,18 +147,18 @@ class CorpusNavigator:
             return
         counter = 1
         for index in range(spinner.minimum()-1, spinner.maximum()):
-            if index not in self._indices:
+            if index not in self._cached_instances:
                 if self._gold is not None:
                     if self._guess is None:
-                        self._indices[index] = self._gold_corpora[index]
+                        self._cached_instances[index] = self._gold_corpora[index]
                     else:
-                        self._indices[index] = self.get_diff_corpus(self._gold_corpora[index],
-                                                                    self._guess_corpora[index])
+                        self._cached_instances[index] = self.get_diff_corpus(self._gold_corpora[index],
+                                                                             self._guess_corpora[index])
                 elif self._guess is not None:
-                    self._indices[index] = self._guess_corpora[index]
+                    self._cached_instances[index] = self._guess_corpora[index]
                 else:
                     raise ValueError  # No corpora given
-            instance = self._indices[index]
+            instance = self._cached_instances[index]
             sentence = ' '.join(token.get_property_value("Word") for token in instance.tokens)
 
             if text in sentence:
@@ -157,28 +166,16 @@ class CorpusNavigator:
                 search_result_widget.addItem('{0}:{1}'.format(index + 1, sentence))
                 counter += 1
 
-    def update_canvas(self, spinner):  # XXX MISSING STUFF HERE!
-        """
-         * Updates the canvas based on the current state of the navigator and the corpus loaders.
-        """
-        index = spinner.value() - 1
-        if self._gold is not None:
-            if self._guess is None:
-                if index in self._indices:
-                    self._instance = self._indices[index]
-                else:
-                    self._instance = self._gold_corpora[index]
-                    self._indices[index] = self._instance
-                # indexSearcher = getIndex(gold.getSelected());
-                # canvas.setNLPInstance(gold.getSelected().get(index));
-                # canvas.updateNLPGraphics();
+    def update_canvas(self, curr_sent_index):
+        """ Updates the canvas based on the current state of the navigator."""
+        if self._selected_gold is not None:
+            if self._selected_guess is None:
+                instance = self._gold_corpora[self._selected_gold][curr_sent_index]
             else:
-                if index in self._indices:
-                    self._instance = self._indices[index]
-                else:
-                    self._instance = self.get_diff_corpus(self._gold, self._guess)[index]
-                    self._indices[index] = self._instance
-                self._canvas.set_nlp_instance(self._instance)
+                instance = nlp_diff(self._gold_corpora[self._selected_gold][curr_sent_index],
+                                    self._guess_corpora[self._selected_guess][curr_sent_index],
+                                    'eval_status_Match',  'eval_status_FN', 'eval_status_FP')
+            self._canvas.set_nlp_instance(instance)
         else:
 
             example = NLPInstance()
@@ -196,19 +193,18 @@ class CorpusNavigator:
             example.add_dependency(1, 4, 'A1', 'role')
             example.add_dependency(1, 1, 'add.1', 'sense')
             self._canvas.set_nlp_instance(example)
-            self._instance_filter.allowed_edge_types = set()
-            """
-            self._instance_filter.allowed_edge_types.add('dep')
-            self._instance_filter.allowed_edge_types.add('role')
-            self._instance_filter.allowed_edge_types.add('sense')
-            self._instance_filter.allowed_edge_types.add('ner')
-            self._instance_filter.allowed_edge_types.add('chunk')
-            self._instance_filter.allowed_edge_types.add('pos')
-            self._instance_filter.allowed_edge_types.add('align')
-            """
-            self._instance_filter.allowed_edge_properties.add('eval_status_FP')
-            self._instance_filter.allowed_edge_properties.add('eval_status_FN')
-            self._instance_filter.allowed_edge_properties.add('eval_status_Match')
+            self._canvas.filter.allowed_edge_types = set()
+            self._canvas.filter.allowed_edge_types.add('dep')
+            self._canvas.filter.allowed_edge_types.add('role')
+            self._canvas.filter.allowed_edge_types.add('sense')
+            self._canvas.filter.allowed_edge_types.add('ner')
+            self._canvas.filter.allowed_edge_types.add('chunk')
+            self._canvas.filter.allowed_edge_types.add('pos')
+            self._canvas.filter.allowed_edge_types.add('align')
+
+            self._canvas.filter.allowed_edge_properties.add('eval_status_FP')
+            self._canvas.filter.allowed_edge_properties.add('eval_status_FN')
+            self._canvas.filter.allowed_edge_properties.add('eval_status_Match')
 
             # TODO: Find the actual place of edge_tp
             """

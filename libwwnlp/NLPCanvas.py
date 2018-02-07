@@ -23,7 +23,7 @@ class NLPCanvas:
     def __init__(self):
         """Creates a new canvas with default size.
         """
-        self.renderer_backend = MPLRenderer()
+        self.renderer_backend = SVGWriteRenderer()
         self.renderer_backends = {'SVGWrite': SVGWriteRenderer(), 'MPL': MPLRenderer()}
         self.renderer = SingleSentenceRenderer()
         self.renderers = {RenderType.single: SingleSentenceRenderer(),
