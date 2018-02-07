@@ -55,9 +55,10 @@ class MyWindow(QtWidgets.QMainWindow):
 
 class MyForm(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        self.goldMap = {}
-        self.guessMap = {}
         QtWidgets.QWidget.__init__(self, parent)
+
+        self._search_items_dict = {}
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
@@ -83,7 +84,7 @@ class MyForm(QtWidgets.QMainWindow):
 
         # Search stuff
         self.ui.searchResultLisWidget.itemClicked.connect(self.search_item_clicked)
-        # self.ui.searchButton.clicked.connect(self.search_corpus)  # TODO
+        self.ui.searchButton.clicked.connect(self._search_corpus)
 
         FilterPanel(self.ui, self.canvas)
         self.navigator.update_canvas(0)
@@ -126,9 +127,19 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.spinBox.setMaximum(self.navigator.max_length)
         self.ui.SpinBoxLabel.setText('of {0}'.format(self.navigator.max_length))
 
+    def _search_corpus(self):
+        self.ui.searchResultLisWidget.clear()
+        self._search_items_dict = {}
+        try:
+            self._search_items_dict = self.navigator.search_corpus(self.ui.searchCorpusLineEdit.text())
+        except ValueError:
+            pass  # TODO SHOW Alert!
+        for ind, (_, sentence) in self._search_items_dict.items():
+            self.ui.searchResultLisWidget.addItem('{0}:{1}'.format(ind + 1, sentence))
+
     def search_item_clicked(self, item):
         i = self.ui.searchResultLisWidget.row(item) + 1
-        self.ui.spinBox.setValue(self._searchResultDictModel[i])
+        self.ui.spinBox.setValue(self._search_items_dict[i][0])  # TODO Go to sentence
 
 
 def main(argv):

@@ -136,35 +136,34 @@ class CorpusNavigator:
         if self.max_length > 0:
             self.min_length = 1
 
-    def search_corpus(self, text, search_result_widget, spinner):
+    def search_corpus(self, text):
+        """Searches the current corpus using the search terms in the search field. (Currently words)"""
+        ret = {}
+        if len(text) > 0:
+            gold = None
+            guess = None
+            if self._selected_gold is not None:
+                gold = self._gold_corpora[self._selected_gold]
+            if self._selected_guess is not None:
+                guess = self._guess_corpora[self._selected_guess]
 
-        """
-         * Searches the current corpus using the search terms in the search field. (Currently words)
-        """
-        search_result_widget.clear()
-        search_result_widget.clear()
-        if text == "":
-            return
-        counter = 1
-        for index in range(spinner.minimum()-1, spinner.maximum()):
-            if index not in self._cached_instances:
-                if self._gold is not None:
-                    if self._guess is None:
-                        self._cached_instances[index] = self._gold_corpora[index]
-                    else:
-                        self._cached_instances[index] = self.get_diff_corpus(self._gold_corpora[index],
-                                                                             self._guess_corpora[index])
-                elif self._guess is not None:
-                    self._cached_instances[index] = self._guess_corpora[index]
-                else:
-                    raise ValueError  # No corpora given
-            instance = self._cached_instances[index]
-            sentence = ' '.join(token.get_property_value("Word") for token in instance.tokens)
+            # TODO: Do this properly
+            if gold is not None and guess is not None:
+                to_search = lambda ind: nlp_diff(gold[ind], guess[ind], 'eval_status_Match',  'eval_status_FN',
+                                                 'eval_status_FP')
+            elif gold is not None:
+                to_search = lambda ind: gold[ind]
+            else:
+                raise ValueError  # No corpora given
 
-            if text in sentence:
-                self._searchResultDictModel[counter] = index + 1
-                search_result_widget.addItem('{0}:{1}'.format(index + 1, sentence))
-                counter += 1
+            counter = 1
+            ret = {}
+            for index in range(self.min_length, self.max_length+1):
+                sentence = ' '.join(token.get_property_value('Word') for token in to_search(index).tokens)
+                if text in sentence:
+                    ret[counter] = index + 1
+                    counter += 1
+        return ret
 
     def update_canvas(self, curr_sent_index):
         """ Updates the canvas based on the current state of the navigator."""
