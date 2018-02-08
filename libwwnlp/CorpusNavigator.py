@@ -13,27 +13,12 @@ class CorpusNavigator:
     """
       A CorpusNavigator allows the user to navigate through a corpus (or a diffed corpus) and pick one NLP instance to
       draw (or one difference of two NLPInstance objects in terms of their edges). The CorpusNavigator also allows us to
-      search a corpus for keywords by using the Lucene IR engine. The instances that match the user's query are
-      presented in a list and one of them can then be picked to be rendered. The CorpusNavigator has also a spinner
-      panel that allows to go through this corpus by index. This spinner is not part of the navigator panel and can be
-      placed anywhere.
-    """
-    """
-     * The loader for guess instances.
+      search a corpus for keywords. The instances that match the user's query are presented in a list and one of them
+       can then be picked to be rendered.
+      The CorpusNavigator handles also a spinner panel that allows to go through this corpus by index.
     """
     def __init__(self, canvas: NLPCanvas):
-        """
-         * Creates a new CorpusNavigator.
-         *
-         * @param canvas         the canvas to control.
-        """
-
-        """
-         * Creates an IndexSearcher for the given corpus that allows us to search the corpus efficiently for
-         * keywords in the token properties and edges.
-         * A Search result consisting of the instance index and a text snippet that indicates the position in the
-         * instance where they key terms were found.
-        """
+        """Creates a new CorpusNavigator."""
         self._gold_corpora = {}
         self._guess_corpora = {}
 
@@ -43,24 +28,10 @@ class CorpusNavigator:
         self.min_length = 0
         self.max_length = 0
 
-        # Not used
-        self._cached_instances = {}
-        self._diffCorpora = {}
-
         self._canvas = canvas
-        self._instance = None
 
-        # TODO
-        """
-        self._canvas.renderer.set_edge_type_order("pos", 0)
-        self._canvas.renderer.set_edge_type_order("chunk (BIO)", 1)
-        self._canvas.renderer.set_edge_type_order("chunk", 2)
-        self._canvas.renderer.set_edge_type_order("ner (BIO)", 2)
-        self._canvas.renderer.set_edge_type_order("ner", 3)
-        self._canvas.renderer.set_edge_type_order("sense", 4)
-        self._canvas.renderer.set_edge_type_order("role", 5)
-        self._canvas.renderer.set_edge_type_order("phase", 5)
-        """
+        self._canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2, 'ner': 3,
+                                                     'sense': 4, 'role': 5, 'phase': 5}
         self.known_corpus_formats = {'CoNLL2000': CoNLL2000(),
                                      'CoNLL2002': CoNLL2002(),
                                      'CoNLL2003': CoNLL2003(),
@@ -72,9 +43,7 @@ class CorpusNavigator:
                                      'MaltTab': MaltTab()
                                      }
 
-        self._searchResultDictModel = {}
-
-    def add_corpus(self, corpus_path, corpus_format, corpus_type):
+    def add_corpus(self, corpus_path: str, corpus_format: str, corpus_type: str):
         """Adds the corpus to the corresponding internal set of corpora."""
         if corpus_type == 'gold':
             corp_type_dict = self._gold_corpora
@@ -88,7 +57,7 @@ class CorpusNavigator:
         if corp_name not in corp_type_dict:
             corp_type_dict[basename(corpus_path)] = corpus
 
-    def remove_corpus(self, corpus_type, corpus_name):
+    def remove_corpus(self, corpus_type: str, corpus_name: str):
         """Removes the corpus and all diff corpora that compare the given corpus"""
         if corpus_type == 'gold':
             corp_type_dict = self._gold_corpora
@@ -101,14 +70,14 @@ class CorpusNavigator:
 
         del corp_type_dict[corpus_name]
 
-    def select_gold(self, corp_name):
+    def select_gold(self, corp_name: str):
         if corp_name in self._gold_corpora:
             self._selected_gold = corp_name
             self.update_length()
         else:
             raise ValueError
 
-    def select_guess(self, corp_name):
+    def select_guess(self, corp_name: str):
         if corp_name in self._guess_corpora:
             self._selected_guess = corp_name
             self.update_length()
@@ -128,8 +97,12 @@ class CorpusNavigator:
         if self.max_length > 0:
             self.min_length = 1
 
-    def search_corpus(self, text):
-        """Searches the current corpus using the search terms in the search field. (Currently words)"""
+    def search_corpus(self, text: str):
+        """Searches the current corpus using the search terms in the search field for
+            keywords in the token properties and edges. (Currently words)
+            A Search result consisting of the instance index and a text snippet that indicates the position in the
+            instance where they key terms were found.
+        """
         ret = {}
         if len(text) > 0:
             gold = None
@@ -157,7 +130,7 @@ class CorpusNavigator:
                     counter += 1
         return ret
 
-    def update_canvas(self, curr_sent_index):
+    def update_canvas(self, curr_sent_index: int):
         """ Updates the canvas based on the current state of the navigator."""
         if self._selected_gold is not None:
             if self._selected_guess is None:
@@ -197,17 +170,8 @@ class CorpusNavigator:
             self._canvas.filter.allowed_edge_properties.add('eval_status_FN')
             self._canvas.filter.allowed_edge_properties.add('eval_status_Match')
 
-            # TODO: Find the actual place of edge_tp
-            """
-            self._canvas.renderer.set_edge_type_order('pos', 0)
-            self._canvas.renderer.set_edge_type_order('chunk (BIO)', 1)
-            self._canvas.renderer.set_edge_type_order('chunk', 2)
-            self._canvas.renderer.set_edge_type_order('ner (BIO)', 2)
-            self._canvas.renderer.set_edge_type_order('ner', 3)
-            self._canvas.renderer.set_edge_type_order('sense', 4)
-            self._canvas.renderer.set_edge_type_order('role', 5)
-            self._canvas.renderer.set_edge_type_order('phrase', 5)
-            """
+            self._canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
+                                                         'ner': 3, 'sense': 4, 'role': 5, 'phase': 5}
 
         self._canvas.fire_instance_changed()
         self._canvas.update_nlp_graphics()
