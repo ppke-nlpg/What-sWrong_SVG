@@ -26,10 +26,6 @@ class CorpusNavigator:
          * Creates a new CorpusNavigator.
          *
          * @param canvas         the canvas to control.
-         * @param gold_loader     the gold corpora.
-         * @param guess_loader    the guess corpora.
-         * @param instance_filter the Filter we need when no corpus is selected and a example sentence is chosen and
-                                  passed to the NLPCanvas.
         """
 
         """
@@ -91,7 +87,6 @@ class CorpusNavigator:
 
         if corp_name not in corp_type_dict:
             corp_type_dict[basename(corpus_path)] = corpus
-            # indices[corpus] = self.createIndex(corpus)  # TODO
 
     def remove_corpus(self, corpus_type, corpus_name):
         """Removes the corpus and all diff corpora that compare the given corpus"""
@@ -105,9 +100,6 @@ class CorpusNavigator:
             raise ValueError
 
         del corp_type_dict[corpus_name]
-        # del self._cached_instances[corpus_name]  # TODO
-        # for c in corp_type_dict:
-        #     self.remove_diff_corpus(corpus_name, c)
 
     def select_gold(self, corp_name):
         if corp_name in self._gold_corpora:
@@ -147,21 +139,21 @@ class CorpusNavigator:
             if self._selected_guess is not None:
                 guess = self._guess_corpora[self._selected_guess]
 
-            # TODO: Do this properly
             if gold is not None and guess is not None:
-                to_search = lambda ind: nlp_diff(gold[ind], guess[ind], 'eval_status_Match',  'eval_status_FN',
-                                                 'eval_status_FP')
+                def to_search(ind):
+                    return nlp_diff(gold[ind], guess[ind], 'eval_status_Match', 'eval_status_FN', 'eval_status_FP')
             elif gold is not None:
-                to_search = lambda ind: gold[ind]
+                def to_search(ind):
+                    return gold[ind]
             else:
-                raise ValueError  # No corpora given
+                raise ValueError  # No gold corpora given
 
             counter = 1
             ret = {}
-            for index in range(self.min_length, self.max_length+1):
+            for index in range(self.min_length-1, self.max_length):
                 sentence = ' '.join(token.get_property_value('Word') for token in to_search(index).tokens)
                 if text in sentence:
-                    ret[counter] = index + 1
+                    ret[counter] = (index + 1, sentence)
                     counter += 1
         return ret
 

@@ -97,9 +97,10 @@ class MyForm(QtWidgets.QMainWindow):
 
     def _remove_corpus(self, widget, corp_type):
         selected_corp = widget.selectedItems()
-        self.navigator.remove_corpus(corp_type, selected_corp[0].text())
-        widget.takeItem(widget.row(selected_corp[0]))
-        self.refresh()
+        if len(selected_corp) > 0:
+            self.navigator.remove_corpus(corp_type, selected_corp[0].text())
+            widget.takeItem(widget.row(selected_corp[0]))
+            self.refresh()
 
     def file_save(self):
         supported_formats = {'Scalable Vector Graphics (*.svg)': 'SVG',
@@ -133,7 +134,8 @@ class MyForm(QtWidgets.QMainWindow):
         try:
             self._search_items_dict = self.navigator.search_corpus(self.ui.searchCorpusLineEdit.text())
         except ValueError:
-            pass  # TODO SHOW Alert!
+            self.ui.searchResultLisWidget.addItem('At least a gold corpus must be added!')
+            return
         for ind, (_, sentence) in self._search_items_dict.items():
             self.ui.searchResultLisWidget.addItem('{0}:{1}'.format(ind + 1, sentence))
 
