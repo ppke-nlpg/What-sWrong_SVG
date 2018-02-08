@@ -21,110 +21,48 @@ lisp_sexpr = True
 
 
 def test():
-    from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
-        CoNLL2009, MaltTab
-    from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
-        BioNLP2009SharedTaskFormat, TheBeastFormat
+    from os.path import basename
+
     from libwwnlp.model.nlp_instance import RenderType
     from libwwnlp.NLPCanvas import NLPCanvas
-    from libwwnlp.model.filter import Filter
+    from libwwnlp.CorpusNavigator import CorpusNavigator
+
+    def test_process(corp_format, fname, render_type=RenderType.single, min_sent=0, max_sent=2):
+        print('Testing {0}'.format(corp_format), file=sys.stderr)
+        nav = CorpusNavigator(NLPCanvas())
+        nav.add_corpus(fname, corp_format, 'gold', min_sent, max_sent)
+        nav.select_gold(basename(fname))
+        nav.canvas.renderer = nav.canvas.renderers[render_type]
+
+        for n, inst in enumerate(nav.iter_gold()):
+            nav.canvas.set_nlp_instance(inst)
+            nav.canvas.render_nlpgraphics('{0}_output{1}.svg'.format(corp_format, n))
 
     if conll2000:
-        print("Testing CoNLL2000", file=sys.stderr)
-        factory = CoNLL2000()
-        fn = 'test_data/conll00.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll00_output{0}.svg'.format(i))
+        test_process('CoNLL2000', 'test_data/conll00.gold')
 
     if conll2002:
-        print("Testing CoNLL2002", file=sys.stderr)
-        factory = CoNLL2002()
-        fn = 'test_data/conll02.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll02_output{0}.svg'.format(i))
+        test_process('CoNLL2002', 'test_data/conll02.gold')
 
     if conll2003:
-        print("Testing CoNLL2003", file=sys.stderr)
-        factory = CoNLL2003()
-        fn = 'test_data/conll03.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll03_output{0}.svg'.format(i))
+        test_process('CoNLL2003', 'test_data/conll03.gold')
 
     if conll2004:
-        print("Testing CoNLL2004", file=sys.stderr)
-        factory = CoNLL2004()
-        fn = 'test_data/conll04.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll04_output{0}.svg'.format(i))
+        test_process('CoNLL2004', 'test_data/conll04.gold')
 
     if conll2005:
-        print("Testing CoNLL2005", file=sys.stderr)
-        factory = CoNLL2005()
-        fn = 'test_data/conll05.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll05_output{0}.svg'.format(i))
+        test_process('CoNLL2005', 'test_data/conll05.gold')
 
     if conll2006:
-        print("Testing CoNLL2006", file=sys.stderr)
-        factory = CoNLL2006()
-        fn = 'test_data/conll06.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll06_output{0}.svg'.format(i))
+        test_process('CoNLL2006', 'test_data/conll06.gold')
 
     if conll2008:
-        print("Testing CoNLL2008", file=sys.stderr)
-        factory = CoNLL2008()
-        fn = 'test_data/conll08.open'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll08_output{0}.svg'.format(i))
-
+        test_process('CoNLL2008', 'test_data/conll08.open')
+    # TODO
+    """
     if conll2009:
-        print("Testing CoNLL2009", file=sys.stderr)
-        factory = CoNLL2009()
-        fn = 'test_data/conll09.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.single]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('conll09_output{0}.svg'.format(i))
-
+        test_process('CoNLL2008', 'test_data/conll09.gold')
+    "" "
     if malt:
         print("Testing MaltTab", file=sys.stderr)
         corpus = []
@@ -157,42 +95,17 @@ def test():
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
             canvas.render_nlpgraphics('malt_output{0}.svg'.format(i))
-
+    """
     if giza:
-        print("Testing Giza Alingment Format", file=sys.stderr)
-        factory = GizaAlignmentFormat()
-        fn = 'test_data/giza.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.alignment]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 2)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('giza_output{0}.svg'.format(i))
+        test_process('Giza Alingment Format', 'test_data/giza.gold', RenderType.alignment)
 
     if gale:
-        print("Testing Gale Alingment Format", file=sys.stderr)
-        factory = GaleAlignmentFormat()
-        fn = 'test_data/gale.gold'
-        canvas = NLPCanvas()
-        canvas.renderer = canvas.renderers[RenderType.alignment]
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 1)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('gale_output{0}.svg'.format(i))
+        test_process('Gale Alingment Format', 'test_data/gale.gold', RenderType.alignment, max_sent=1)
 
     if thebeast:
-        print("Testing The Beast Format", file=sys.stderr)
-        factory = TheBeastFormat()
-        fn = 'test_data/thebeast.gold'
-        canvas = NLPCanvas()
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 1)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('thebeast_output{0}.svg'.format(i))
-
+        test_process('The Beast Format', 'test_data/gale.gold', max_sent=1)
+    # TODO
+    """
     if bionlp09:
         print("Testing BioNLP2009 Shared Task Format", file=sys.stderr)
         factory = BioNLP2009SharedTaskFormat()
@@ -203,17 +116,10 @@ def test():
         for i, instance in enumerate(corpus):
             canvas.set_nlp_instance(instance)
             canvas.render_nlpgraphics('bionlp09_output{0}.svg'.format(i))
+    """
 
     if lisp_sexpr:
-        print("Testing Lisp S-expr Format", file=sys.stderr)
-        factory = LispSExprFormat()
-        fn = 'test_data/lispsexpr.gold'
-        canvas = NLPCanvas()
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 1)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('lisp_sexpr_output{0}.svg'.format(i))
+        test_process('Lisp S-expr Format', 'test_data/lispsexpr.gold', max_sent=1)
 
 
 if __name__ == '__main__':

@@ -141,7 +141,7 @@ class MyForm(QtWidgets.QMainWindow):
 
     def search_item_clicked(self, item):
         i = self.ui.searchResultLisWidget.row(item) + 1
-        self.ui.spinBox.setValue(self._search_items_dict[i][0])  # TODO Go to sentence
+        self.ui.spinBox.setValue(self._search_items_dict[i][0])
 
 
 def main(argv):

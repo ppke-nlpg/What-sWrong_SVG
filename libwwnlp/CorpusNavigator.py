@@ -5,6 +5,8 @@ from os.path import basename
 
 from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
+from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
+    BioNLP2009SharedTaskFormat, TheBeastFormat
 from libwwnlp.NLPCanvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
@@ -28,10 +30,10 @@ class CorpusNavigator:
         self.min_length = 0
         self.max_length = 0
 
-        self._canvas = canvas
+        self.canvas = canvas
 
-        self._canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2, 'ner': 3,
-                                                     'sense': 4, 'role': 5, 'phase': 5}
+        self.canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2, 'ner': 3,
+                                                    'sense': 4, 'role': 5, 'phase': 5}
         self.known_corpus_formats = {'CoNLL2000': CoNLL2000(),
                                      'CoNLL2002': CoNLL2002(),
                                      'CoNLL2003': CoNLL2003(),
@@ -40,10 +42,15 @@ class CorpusNavigator:
                                      'CoNLL2006': CoNLL2006(),
                                      'CoNLL2008': CoNLL2008(),
                                      'CoNLL2009': CoNLL2009(),
-                                     'MaltTab': MaltTab()
+                                     'MaltTab': MaltTab(),
+                                     'Giza Alingment Format': GizaAlignmentFormat(),
+                                     'Gale Alingment Format': GaleAlignmentFormat(),
+                                     'The Beast Format': TheBeastFormat(),
+                                     'Lisp S-expr Format': LispSExprFormat(),
+                                     'BioNLP2009 Shared Task Format': BioNLP2009SharedTaskFormat()
                                      }
 
-    def add_corpus(self, corpus_path: str, corpus_format: str, corpus_type: str):
+    def add_corpus(self, corpus_path: str, corpus_format: str, corpus_type: str, min_sent=0, max_sent=200):
         """Adds the corpus to the corresponding internal set of corpora."""
         if corpus_type == 'gold':
             corp_type_dict = self._gold_corpora
@@ -51,7 +58,7 @@ class CorpusNavigator:
             corp_type_dict = self._guess_corpora
         else:
             raise ValueError
-        corpus = self.known_corpus_formats[corpus_format].load(corpus_path, 0, 200)  # Load first 200 sentence
+        corpus = self.known_corpus_formats[corpus_format].load(corpus_path, min_sent, max_sent)
         corp_name = basename(corpus_path)
 
         if corp_name not in corp_type_dict:
@@ -97,6 +104,14 @@ class CorpusNavigator:
         if self.max_length > 0:
             self.min_length = 1
 
+    def iter_gold(self):
+        if self._selected_gold is not None and self._selected_gold in self._gold_corpora:
+            return iter(self._gold_corpora[self._selected_gold])
+
+    def iter_guess(self):
+        if self._selected_guess is not None and self._selected_guess in self._guess_corpora:
+            return iter(self._guess_corpora[self._selected_guess])
+
     def search_corpus(self, text: str):
         """Searches the current corpus using the search terms in the search field for
             keywords in the token properties and edges. (Currently words)
@@ -139,7 +154,7 @@ class CorpusNavigator:
                 instance = nlp_diff(self._gold_corpora[self._selected_gold][curr_sent_index],
                                     self._guess_corpora[self._selected_guess][curr_sent_index],
                                     'eval_status_Match',  'eval_status_FN', 'eval_status_FP')
-            self._canvas.set_nlp_instance(instance)
+            self.canvas.set_nlp_instance(instance)
         else:
 
             example = NLPInstance()
@@ -156,22 +171,22 @@ class CorpusNavigator:
             example.add_dependency(4, 3, 'MOD', 'dep')
             example.add_dependency(1, 4, 'A1', 'role')
             example.add_dependency(1, 1, 'add.1', 'sense')
-            self._canvas.set_nlp_instance(example)
-            self._canvas.filter.allowed_edge_types = set()
-            self._canvas.filter.allowed_edge_types.add('dep')
-            self._canvas.filter.allowed_edge_types.add('role')
-            self._canvas.filter.allowed_edge_types.add('sense')
-            self._canvas.filter.allowed_edge_types.add('ner')
-            self._canvas.filter.allowed_edge_types.add('chunk')
-            self._canvas.filter.allowed_edge_types.add('pos')
-            self._canvas.filter.allowed_edge_types.add('align')
+            self.canvas.set_nlp_instance(example)
+            self.canvas.filter.allowed_edge_types = set()
+            self.canvas.filter.allowed_edge_types.add('dep')
+            self.canvas.filter.allowed_edge_types.add('role')
+            self.canvas.filter.allowed_edge_types.add('sense')
+            self.canvas.filter.allowed_edge_types.add('ner')
+            self.canvas.filter.allowed_edge_types.add('chunk')
+            self.canvas.filter.allowed_edge_types.add('pos')
+            self.canvas.filter.allowed_edge_types.add('align')
 
-            self._canvas.filter.allowed_edge_properties.add('eval_status_FP')
-            self._canvas.filter.allowed_edge_properties.add('eval_status_FN')
-            self._canvas.filter.allowed_edge_properties.add('eval_status_Match')
+            self.canvas.filter.allowed_edge_properties.add('eval_status_FP')
+            self.canvas.filter.allowed_edge_properties.add('eval_status_FN')
+            self.canvas.filter.allowed_edge_properties.add('eval_status_Match')
 
-            self._canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
-                                                         'ner': 3, 'sense': 4, 'role': 5, 'phase': 5}
+            self.canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
+                                                        'ner': 3, 'sense': 4, 'role': 5, 'phase': 5}
 
-        self._canvas.fire_instance_changed()
-        self._canvas.update_nlp_graphics()
+        self.canvas.fire_instance_changed()
+        self.canvas.update_nlp_graphics()
