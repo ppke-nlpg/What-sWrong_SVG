@@ -21,14 +21,14 @@ class Filter:
 
     Similarly, a filter can filter out edges based on the properties of their
     tokens. For example, we can filter out all edges that do not contain at
-    least one token with the word "blah". The filter can also be configured to
+    least one token with the word 'blah'. The filter can also be configured to
     filter out all edges which are not on a path between tokens with certain
     properties. For example, we can filter out all edges that are not on the
-    paths between a token with word "blah" and a token with word "blub".
+    paths between a token with word 'blah' and a token with word 'blub'.
 
     This filter can also filter out the tokens for which all edges have been
     filtered out via the edge filtering process. This mode is called
-    "collapsing" because the graph is collapsed to contain only connected
+    'collapsing' because the graph is collapsed to contain only connected
     components. Note that if no allowed property values are defined
     (#add_allowed_token_propval) then the filter does nothing and keeps all edges.
 
@@ -80,7 +80,7 @@ class Filter:
         self.tok_propvals_whole_word = False
         self.tok_allowed_token_propvals = set() if tok_allowed_token_propvals is None else tok_allowed_token_propvals
 
-        self._special_properties = {"eval_status_Match", "eval_status_FN", "eval_status_FP"}  # TODO: Constants?
+        self._special_properties = {'eval_status_Match', 'eval_status_FN', 'eval_status_FP'}  # TODO: Constants?
 
     @staticmethod
     def _calculate_paths(edges: set) -> set:
@@ -157,7 +157,7 @@ class Filter:
                 # 2) Constraint not range:
                 # 2a)If not whole word: containment
                 # 2b) Otherwise: full match
-                if ((prop_name == "Index" and isinstance(allowed, range) and int(prop_val) in allowed) or
+                if ((prop_name == 'Index' and isinstance(allowed, range) and int(prop_val) in allowed) or
                         (not isinstance(allowed, range) and (not propvals_whole_word and allowed in prop_val or
                                                              prop_val == allowed))):
                     return True
@@ -199,7 +199,7 @@ class Filter:
                  # Edge label in explicitly alowed labels (partial match allowed)
                  (len(self.allowed_labels) == 0 or any(label in edge.label for label in self.allowed_labels)) and
                  # Edge type in explicitly allowed types
-                 (len(self.allowed_edge_types) == 0 or edge.edge_type == "" or
+                 (len(self.allowed_edge_types) == 0 or edge.edge_type == '' or
                   edge.edge_type in self.allowed_edge_types) and
                  # Edge has explicitly allowed properties (False positive, False negative, Match)
                  (len(self.allowed_edge_properties - self._special_properties) == 0 or
@@ -233,7 +233,7 @@ class Filter:
         # XXX Why do we need to create new tokens?
         # Compute bidirectional mapping between the new and old indexes and create new tokens
         old2new, new2old, updated_tokens = {}, {}, []
-        for i, token in enumerate(sorted(tokens, key=attrgetter("index"))):  # This sould be non-capital index!
+        for i, token in enumerate(sorted(tokens, key=attrgetter('index'))):  # This sould be non-capital index!
             new_tok = Token(i)
             new_tok.merge(original.tokens[token.index], forbidden_token_properties=self.forbidden_token_properties)
             old2new[token] = new_tok

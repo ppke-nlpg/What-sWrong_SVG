@@ -110,4 +110,4 @@ class Token:
         Returns:
             str: A string representation of this token.
         """
-        return "{0}:{1}".format(self.index, ", ".join(str(prop) for prop in self.token_properties))
+        return '{0}:{1}'.format(self.index, ', '.join(str(prop) for prop in self.token_properties))

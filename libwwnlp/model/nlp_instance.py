@@ -128,17 +128,17 @@ class NLPInstance:
             self.edges.append(Edge(self.token_map[start], self.token_map[end], label, edge_type, note,
                                    render_type, desc, properties))
         else:
-            raise KeyError("Couldn't add edge: no token at positions {} and {}.".format(start, end))
+            raise KeyError('Couldn\'t add edge: no token at positions {} and {}.'.format(start, end))
 
     def add_span(self, start: int, end: int, label: str, edge_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with rendertype RenderType#span.
         """
-        self.add_edge(start, end, label, edge_type, EdgeRenderType.span, desc, "", properties)
+        self.add_edge(start, end, label, edge_type, EdgeRenderType.span, desc, '', properties)
 
     def add_dependency(self, start: int, end: int, label, edge_type: str, desc: str=None, properties=None):
         """Creates and adds an edge with render type RenderType#dependency.
         """
-        self.add_edge(start, end, label, edge_type, EdgeRenderType.dependency, desc, "", properties)
+        self.add_edge(start, end, label, edge_type, EdgeRenderType.dependency, desc, '', properties)
 
     def add_tokens(self, tokens: list):
         """Adds the given collection of tokens to this instance.
@@ -157,8 +157,8 @@ class NLPInstance:
         """
         for edge in edges:
             if not self.is_valid_edge(edge.start, edge.end):
-                raise KeyError("Couldn't add edge {}: no token at positions {} and {}.".
-                               format(edge, edge.start, edge.end))
+                raise KeyError('Couldn\'t add edge {}: no token at positions {} and {}.'.format(edge, edge.start,
+                                                                                                edge.end))
         self.edges.extend(edges)
 
     def get_edges(self, render_type: RenderType=None) -> frozenset:
@@ -234,8 +234,8 @@ class NLPInstance:
         Returns:
             str: A string representation of this instance.
         """
-        return "{0}\n{1}".format(", ".join(str(token) for token in self.token_map.values()),
-                                 ", ".join(str(edge) for edge in self.edges))
+        return '{0}\n{1}'.format(', '.join(str(token) for token in self.token_map.values()),
+                                 ', '.join(str(edge) for edge in self.edges))
 
 
 def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop, fn_prop, fp_prop) -> NLPInstance:

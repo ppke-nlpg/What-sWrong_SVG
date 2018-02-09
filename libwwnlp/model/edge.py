@@ -9,8 +9,8 @@ class EdgeRenderType(Enum):
 
     An edge can be rendered as a dependency or as a span.
     """
-    span = "span",
-    dependency = "dependency"
+    span = 'span',
+    dependency = 'dependency'
 
 
 class Edge:
@@ -24,18 +24,18 @@ class Edge:
         label (str): The label of the edge.
         description (str): A description of the edge to be printed when edge is
             clicked on. This attribute classifies edges within a certain type.
-            For example, in the case of "dep" edges we could use the label
-            "SUBJ" to denote subject dependencies.
+            For example, in the case of 'dep' edges we could use the label
+            'SUBJ' to denote subject dependencies.
         note (str): A note that is added to the label but which does not have
             an effect on the identity of the edge when compared with another
             edge in the NLPDiff#diff(NLPInstance, NLPInstance) method.
         edge_type (str): The type of the edge. The type of a edge denotes the
             type of information the edge represents. For example, the type
-            could be "dep" for edges that represent syntactic dependencies, or
-            "role" for edges that represent semantic roles (a la CoNLL 2008).
+            could be 'dep' for edges that represent syntactic dependencies, or
+            'role' for edges that represent semantic roles (a la CoNLL 2008).
         render_type (EdgeRenderType): How to render the edge. The render type
             of an edge controls how the edge will be rendered. For example,
-            both "dep" and "role" edges could have the render type
+            both 'dep' and 'role' edges could have the render type
             EdgeRenderType#dependency. Then they are both drawn as directed
             edges in a dependency style graph.
         properties (Set[str]): In addition to its type an edge can have
@@ -44,7 +44,7 @@ class Edge:
 
     def __init__(self, start, end, label: str, edge_type: str, note: str=None,
                  render_type: EdgeRenderType=None,
-                 description: str="No Description", properties: set=None):
+                 description: str='No Description', properties: set=None):
         """Initialize an Edge instance.
 
         Args:
@@ -90,9 +90,9 @@ class Edge:
         Returns:
             str: label with note in parentheses.
         """
-        note = ""
+        note = ''
         if self.note is not None and len(self.note) > 0:
-            note = "(" + self.note + ")"
+            note = '({0})'.format(self.note)
         return self.label + note
 
     def lexicographic_order(self, edge):
@@ -273,7 +273,7 @@ class Edge:
             str: A string representation of this edge that shows label, type and the indices of the start
              and end tokens.
         """
-        return "{0}-{1}->{2}({3})".format(self.start.index, self.label, self.end.index, self.edge_type)
+        return '{0}-{1}->{2}({3})'.format(self.start.index, self.label, self.end.index, self.edge_type)
 
     def __hash__(self):
         """Returns a hashcode based on type, label, note, from and to token.

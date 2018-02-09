@@ -12,7 +12,7 @@ conll2006 = True
 conll2008 = False
 conll2009 = True
 
-malt = False
+malt = True
 giza = True
 gale = True
 thebeast = True
@@ -58,44 +58,13 @@ def test():
 
     if conll2008:
         test_process('CoNLL2008', 'test_data/conll08.open')
-    # TODO
-    """
+
     if conll2009:
-        test_process('CoNLL2008', 'test_data/conll09.gold')
-    "" "
+        test_process('CoNLL2008', 'test_data/conll09.gold', max_sent=1)
+
     if malt:
-        print("Testing MaltTab", file=sys.stderr)
-        corpus = []
-        factory = MaltTab()
-        f = open('test_data/malt.gold', encoding='UTF-8')
-        lines = list(f.readlines())
-        rows = []
-        canvas = NLPCanvas()
-        canvas.filter = Filter()
-        instance_nr = 0
-        for line in lines:
-            if instance_nr == 200:
-                break
-            line = line.strip()
-            if line == '':
-                instance_nr += 1
-                instance = factory.create(rows)
-                instance.render_type = RenderType.single
-                corpus.append(instance)
-                del rows[:]
-            else:
-                rows.append(line)
+        test_process('MaltTab', 'test_data/malt.gold')
 
-        if len(rows) > 0:
-            instance_nr += 1
-            instance = factory.create(rows)
-            instance.render_type = RenderType.single
-            corpus.append(instance)
-
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('malt_output{0}.svg'.format(i))
-    """
     if giza:
         test_process('Giza Alingment Format', 'test_data/giza.gold', RenderType.alignment)
 
@@ -104,19 +73,9 @@ def test():
 
     if thebeast:
         test_process('The Beast Format', 'test_data/gale.gold', max_sent=1)
-    # TODO
-    """
+
     if bionlp09:
-        print("Testing BioNLP2009 Shared Task Format", file=sys.stderr)
-        factory = BioNLP2009SharedTaskFormat()
-        fn = 'test_data/bionlp09'
-        canvas = NLPCanvas()
-        canvas.filter = Filter()
-        corpus = factory.load(fn, 0, 1)
-        for i, instance in enumerate(corpus):
-            canvas.set_nlp_instance(instance)
-            canvas.render_nlpgraphics('bionlp09_output{0}.svg'.format(i))
-    """
+        test_process('BioNLP2009 Shared Task Format', 'test_data/bionlp09', max_sent=1)
 
     if lisp_sexpr:
         test_process('Lisp S-expr Format', 'test_data/lispsexpr.gold', max_sent=1)

@@ -74,7 +74,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.removeGuessPushButton.clicked.connect(lambda: self._remove_corpus(self.ui.selectGuessListWidget,
                                                                                   'guess'))
 
-        self.ui.actionExport.setShortcut("Ctrl+S")
+        self.ui.actionExport.setShortcut('Ctrl+S')
         self.ui.actionExport.setStatusTip('Export to SVG')
         self.ui.actionExport.triggered.connect(self.file_save)
         self.ui.actionExport.setEnabled(True)
