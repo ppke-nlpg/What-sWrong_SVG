@@ -164,6 +164,25 @@ class Filter:
 
         return False
 
+    def _is_edge_allowed(self, edge):
+        # At least one of the edge's end tokens has an allowed property if there is any
+        tok_prop = len(self.allowed_token_propvals) == 0 or \
+                    self._token_has_allowed_prop(edge.start, self.allowed_token_propvals, self.propvals_whole_word) or \
+                    self._token_has_allowed_prop(edge.end, self.allowed_token_propvals, self.propvals_whole_word)
+
+        # Edge label in explicitly alowed labels (partial match allowed)
+        edge_label = len(self.allowed_labels) == 0 or any(label in edge.label for label in self.allowed_labels)
+
+        # Edge type in explicitly allowed types
+        edge_type = len(self.allowed_edge_types) == 0 or edge.edge_type == '' or \
+            edge.edge_type in self.allowed_edge_types
+
+        # Edge has explicitly allowed properties (False positive, False negative, Match)
+        edge_prop = self.allowed_edge_properties == self._special_properties or \
+            self.allowed_edge_properties & edge.properties
+
+        return tok_prop and edge_label and edge_type and edge_prop
+
     def filter(self, original: NLPInstance) -> NLPInstance:
         """Filter an NLP instance.
 
@@ -191,20 +210,7 @@ class Filter:
             NLPInstance: The filtered NLPInstance.
         """
         # Filter edges by connecting token properties, edge label, edge type, edge property
-        edges = {edge for edge in original.get_edges()
-                 # At least one of the edge's end tokens has an allowed property if there is any
-                 if (len(self.allowed_token_propvals) == 0 or
-                     self._token_has_allowed_prop(edge.start, self.allowed_token_propvals, self.propvals_whole_word) or
-                     self._token_has_allowed_prop(edge.end, self.allowed_token_propvals, self.propvals_whole_word)) and
-                 # Edge label in explicitly alowed labels (partial match allowed)
-                 (len(self.allowed_labels) == 0 or any(label in edge.label for label in self.allowed_labels)) and
-                 # Edge type in explicitly allowed types
-                 (len(self.allowed_edge_types) == 0 or edge.edge_type == '' or
-                  edge.edge_type in self.allowed_edge_types) and
-                 # Edge has explicitly allowed properties (False positive, False negative, Match)
-                 (len(self.allowed_edge_properties - self._special_properties) == 0 or
-                  self.allowed_edge_properties & edge.properties)
-                 }
+        edges = {edge for edge in original.get_edges() if self._is_edge_allowed(edge)}
 
         # Only allow edges on the path of tokens having allowed props
         if self.use_path:
