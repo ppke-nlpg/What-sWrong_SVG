@@ -3,7 +3,7 @@
 
 from PyQt5 import QtWidgets
 
-from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
+from Qt5GUI.qt5_nlp_canvas import Qt5NLPCanvas
 from PyQt5.QtCore import Qt
 
 """A FilterPanel updates a NLPCanvas whenever the filter has been changed."""
@@ -29,14 +29,14 @@ class FilterPanel:
         self._edge_types_list.itemSelectionChanged.connect(self.selected_edge_types_changed)
 
         self._allowed = gui.tokenFilterTokenLineEdit
-        self._allowed.textEdited.connect(self.allowed_changed)
+        self._allowed.textEdited.connect(self.allowed_token_prop_vals_changed)
 
         self._wholeWords = gui.tokenFilterWholeWordsCheckBox
         self._wholeWords.stateChanged.connect(self.whole_word_action_performed)
 
         # EdgeFilter Panel
-        self.label_field = gui.labelLineEdit
-        self.label_field.textEdited.connect(self.label_field_changed)
+        self.edge_label_field = gui.labelLineEdit
+        self.edge_label_field.textEdited.connect(self.edge_label_field_changed)
 
         self.token_text_field = gui.edgeFilterTokenLineEdit
         self.token_text_field.textEdited.connect(self.token_text_field_changed)
@@ -50,11 +50,7 @@ class FilterPanel:
         self.whole_words = gui.edgeFilterWholeWordsCheckBox
         self.whole_words.stateChanged.connect(self.whole_words_action)
 
-        # EdgeTypeFilter
-
-        """
-         * The checkbox for showing matches,
-        """
+        # The checkboxes for showing matches, false positives and false negatives
         self._matches_checkbox = gui.matchesCheckBox
         self._matches_checkbox.stateChanged.connect(self.match_action_performed)
 
@@ -77,10 +73,7 @@ class FilterPanel:
         match_class_checkbox.setCheckState(checkbox_val[name in allowed_edge_props])
 
     def update_edge_types_list(self):
-        """
-         * Updates the list of available edge types and the set FP/FN/Match checkboxes.
-        """
-        # TODO: Sholuld be enabled automatically
+        """Updates the list of available edge types and the set FP/FN/Match checkboxes."""
         self._updating = True
         self._update_match_lists(self._canvas.used_edge_properties, self._canvas.filter.allowed_edge_properties,
                                  self._falsePositives_checkbox, 'eval_status_FP')
@@ -121,20 +114,21 @@ class FilterPanel:
         if not self._updating:
             self._canvas.update_nlp_graphics()
 
-    def allowed_changed(self, text):
+    def allowed_token_prop_vals_changed(self, text):
         self._canvas.filter.parse_interval(text, self._canvas.filter.tok_allowed_token_propvals)
+        self._canvas.update_nlp_graphics()
+
+    # TODO: This should not be the same as above! Should filter edges starts or ends on thefiltered tokens!
+    def token_text_field_changed(self, text):
+        self._canvas.filter.parse_interval(text, self._canvas.filter.allowed_token_propvals)
+        self._canvas.update_nlp_graphics()
+
+    def edge_label_field_changed(self, text):
+        self._canvas.filter.allowed_labels = {label for label in text.split(',')}
         self._canvas.update_nlp_graphics()
 
     def whole_word_action_performed(self, value):
         self._canvas.filter.tok_propvals_whole_word = bool(value)
-        self._canvas.update_nlp_graphics()
-
-    def label_field_changed(self, text):
-        self._canvas.filter.allowed_labels = {label for label in text.split(',')}
-        self._canvas.update_nlp_graphics()
-
-    def token_text_field_changed(self, text):
-        self._canvas.filter.parse_interval(text, self._canvas.filter.allowed_token_propvals)
         self._canvas.update_nlp_graphics()
 
     def use_path_action(self, value):

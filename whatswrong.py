@@ -24,8 +24,8 @@ def test():
     from os.path import basename
 
     from libwwnlp.model.nlp_instance import RenderType
-    from libwwnlp.NLPCanvas import NLPCanvas
-    from libwwnlp.CorpusNavigator import CorpusNavigator
+    from libwwnlp.nlp_canvas import NLPCanvas
+    from libwwnlp.corpus_navigator import CorpusNavigator
 
     def test_process(corp_format, fname, render_type=RenderType.single, min_sent=0, max_sent=2):
         print('Testing {0}'.format(corp_format), file=sys.stderr)
@@ -86,5 +86,5 @@ if __name__ == '__main__':
         test()
         exit(0)
     else:
-        from Qt5GUI.GUIMain import main
+        from Qt5GUI.gui_main import main
         main(sys.argv)

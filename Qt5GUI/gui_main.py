@@ -8,10 +8,10 @@ from PyQt5 import QtWidgets
 
 from Qt5GUI.GUI.ChooseFormat import Ui_ChooseFormat
 from Qt5GUI.GUI.GUI import Ui_MainWindow
-from Qt5GUI.Qt5NLPCanvas import Qt5NLPCanvas
+from Qt5GUI.qt5_nlp_canvas import Qt5NLPCanvas
 from Qt5GUI.filter_panel import FilterPanel
 
-from libwwnlp.CorpusNavigator import CorpusNavigator
+from libwwnlp.corpus_navigator import CorpusNavigator
 
 
 class MyWindow(QtWidgets.QMainWindow):

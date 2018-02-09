@@ -7,7 +7,7 @@ from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, C
     CoNLL2009, MaltTab
 from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
     BioNLP2009SharedTaskFormat, TheBeastFormat
-from libwwnlp.NLPCanvas import NLPCanvas
+from libwwnlp.nlp_canvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
 
 

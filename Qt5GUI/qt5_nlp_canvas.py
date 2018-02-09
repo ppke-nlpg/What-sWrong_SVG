@@ -3,7 +3,7 @@
 
 from PyQt5 import QtWidgets, QtSvg
 
-from libwwnlp.NLPCanvas import NLPCanvas
+from libwwnlp.nlp_canvas import NLPCanvas
 
 
 class Qt5NLPCanvas(NLPCanvas):
