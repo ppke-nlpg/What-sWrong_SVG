@@ -87,7 +87,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.searchButton.clicked.connect(self._search_corpus)
 
         FilterPanel(self.ui, self.canvas)
-        self.navigator.update_canvas(0)
+        self.navigator.update_canvas(-1)
 
     def _add_corpus(self, corp_widget, corp_type):
         QtWidgets.QMainWindow()
@@ -127,7 +127,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.spinBox.setMaximum(self.navigator.max_length)
         self.ui.SpinBoxLabel.setText('of {0}'.format(self.navigator.max_length))
         if prev_value == self.navigator.min_length:
-            self.navigator.update_canvas(self.navigator.min_length)
+            self.navigator.update_canvas(self.navigator.min_length-1)
 
     def _search_corpus(self):
         self.ui.searchResultLisWidget.clear()

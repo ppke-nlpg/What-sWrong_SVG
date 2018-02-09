@@ -148,12 +148,12 @@ class CorpusNavigator:
     def update_canvas(self, curr_sent_index: int):
         """ Updates the canvas based on the current state of the navigator."""
         if self._selected_gold is not None:
-            if self._selected_guess is None:
-                instance = self._gold_corpora[self._selected_gold][curr_sent_index]
-            else:
+            if self._selected_guess is not None:
                 instance = nlp_diff(self._gold_corpora[self._selected_gold][curr_sent_index],
                                     self._guess_corpora[self._selected_guess][curr_sent_index],
                                     'eval_status_Match',  'eval_status_FN', 'eval_status_FP')
+            else:
+                instance = self._gold_corpora[self._selected_gold][curr_sent_index]
             self.canvas.set_nlp_instance(instance)
         else:
 
