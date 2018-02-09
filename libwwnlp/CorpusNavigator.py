@@ -187,6 +187,4 @@ class CorpusNavigator:
 
             self.canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
                                                         'ner': 3, 'sense': 4, 'role': 5, 'phase': 5}
-
         self.canvas.fire_instance_changed()
-        self.canvas.update_nlp_graphics()

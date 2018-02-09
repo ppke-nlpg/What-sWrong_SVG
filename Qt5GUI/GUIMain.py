@@ -15,7 +15,7 @@ from libwwnlp.CorpusNavigator import CorpusNavigator
 
 
 class MyWindow(QtWidgets.QMainWindow):
-    def __init__(self, corp_widget, corp_nav, corp_type, parent=None):
+    def __init__(self, corp_widget, corp_nav: CorpusNavigator, corp_type: str, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self._parent = parent
         self.ui = Ui_ChooseFormat()
@@ -88,7 +88,6 @@ class MyForm(QtWidgets.QMainWindow):
 
         FilterPanel(self.ui, self.canvas)
         self.navigator.update_canvas(0)
-        self.refresh()
 
     def _add_corpus(self, corp_widget, corp_type):
         QtWidgets.QMainWindow()
@@ -122,11 +121,13 @@ class MyForm(QtWidgets.QMainWindow):
             self.navigator.select_guess(selected_guess[0].text())
 
         # Update spinner borders
-        self.navigator.update_length()
+        prev_value = self.ui.spinBox.value()
         self.ui.spinBox.setMinimum(self.navigator.min_length)
         self.ui.spinBox.setValue(self.navigator.min_length)
         self.ui.spinBox.setMaximum(self.navigator.max_length)
         self.ui.SpinBoxLabel.setText('of {0}'.format(self.navigator.max_length))
+        if prev_value == self.navigator.min_length:
+            self.navigator.update_canvas(self.navigator.min_length)
 
     def _search_corpus(self):
         self.ui.searchResultLisWidget.clear()
