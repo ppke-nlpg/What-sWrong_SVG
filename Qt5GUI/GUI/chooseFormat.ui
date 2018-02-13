@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>474</width>
-    <height>357</height>
+    <width>393</width>
+    <height>274</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,183 @@
   <widget class="QRadioButton" name="radioButton2000">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>21</y>
-     <width>111</width>
-     <height>20</height>
+     <x>9</x>
+     <y>9</y>
+     <width>113</width>
+     <height>22</height>
     </rect>
    </property>
    <property name="text">
     <string>CoNLL 2000</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_MalTab">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>9</y>
+     <width>81</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>MalTab</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2002">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>37</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2002</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_gale">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>37</y>
+     <width>189</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Gale Alignment Format</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2003">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>65</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2003</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_giza">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>65</y>
+     <width>188</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Giza Alignment Format</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2004">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>93</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2004</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_the_beast">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>93</y>
+     <width>152</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>The Beast Format</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2005">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>121</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2005</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_lisp_s_expr">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>121</y>
+     <width>158</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Lisp S-expr Format</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2006">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>149</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2006</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_bionlp_2009">
+   <property name="geometry">
+    <rect>
+     <x>128</x>
+     <y>149</y>
+     <width>252</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>BioNLP2009 Shared Task Format</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2008">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>177</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2008</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2009">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>205</y>
+     <width>113</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CoNLL 2009</string>
    </property>
   </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
@@ -32,10 +201,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>6</x>
-     <y>304</y>
-     <width>164</width>
-     <height>32</height>
+     <x>200</x>
+     <y>233</y>
+     <width>176</width>
+     <height>27</height>
     </rect>
    </property>
    <property name="orientation">
@@ -43,110 +212,6 @@
    </property>
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_MalTab">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>261</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MalTab</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2009">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>231</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2009</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2008">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>201</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2008</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2006">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>171</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2006</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2005">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>141</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2005</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2004">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>111</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2004</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2003">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>81</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2003</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2002">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>51</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CoNLL 2002</string>
    </property>
   </widget>
  </widget>

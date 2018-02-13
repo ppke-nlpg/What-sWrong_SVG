@@ -31,7 +31,12 @@ class MyWindow(QtWidgets.QMainWindow):
                                      'CoNLL2006': self.ui.radioButton_2006,
                                      'CoNLL2008': self.ui.radioButton_2008,
                                      'CoNLL2009': self.ui.radioButton_2009,
-                                     'MaltTab': self.ui.radioButton_MalTab
+                                     'MaltTab': self.ui.radioButton_MalTab,
+                                     'Giza Alingment Format': self.ui.radioButton_giza,
+                                     'Gale Alingment Format': self.ui.radioButton_gale,
+                                     'The Beast Format': self.ui.radioButton_the_beast,
+                                     'Lisp S-expr Format': self.ui.radioButton_lisp_s_expr,
+                                     'BioNLP2009 Shared Task Format': self.ui.radioButton_bionlp_2009
                                      }
 
     def accept(self):
