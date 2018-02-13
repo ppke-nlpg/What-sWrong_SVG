@@ -11,9 +11,10 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import PathPatch, Path, FancyBboxPatch, FancyArrowPatch
 from matplotlib.axes import Axes
 
-from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis, Grid
+from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis
 from bokeh.models.glyphs import Line, Bezier, Text
 from bokeh.io import curdoc, show
+from bokeh.plotting import figure
 
 class BokehRenderer:
     
@@ -70,45 +71,34 @@ class BokehRenderer:
                         facecolor=(1, 1, 1, 0),  # Transparent...
                         linewidth=1))  # TODO Line width!
         """
-        if is_curved:
-            shape = [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4]
-            middle = (point1[0] + (point2[0] - point1[0]) // 2, point1[1])
-            scene.add_patch(PathPatch(Path([start, point1, point1, middle], shape),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                      facecolor=(1, 1, 1, 0),  # Transparent...
-                                      linewidth=1))  # TODO Line width!
-            scene.add_patch(PathPatch(Path([middle, point2, point2, end], shape),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                      facecolor=(1, 1, 1, 0),  # Transparent...
-                                      linewidth=1))  # TODO Line width!
+        if is_curved:  # cubic Bezier curve
+            glyph = Bezier(x0=start[0], y0=start[1], x1=end[0], y1=end[1], cx0=point1[0],
+                           line_color='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                           cy0=point1[1], cx1=point2[0], cy1=point2[1],
+                           line_width=1)
+            scene.add_glyph(glyph)
         else:
-            scene.add_patch(PathPatch(Path([start, point1], [Path.MOVETO, Path.LINETO]),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                      facecolor=(1, 1, 1, 0),  # Transparent...
-                                      linewidth=1))  # TODO Line width!
-            scene.add_patch(PathPatch(Path([point1, point2], [Path.MOVETO, Path.LINETO]),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                      facecolor=(1, 1, 1, 0),  # Transparent...
-                                      linewidth=1))  # TODO Line width!
-            scene.add_patch(PathPatch(Path([point2, end], [Path.MOVETO, Path.LINETO]),
-                                      edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                      facecolor=(1, 1, 1, 0),  # Transparent...
-                                      linewidth=1))  # TODO Line width!
+            source = ColumnDataSource(dict(x=[start[0], end[0]], y=[start[1], end[1]]))
+            glyph = Line(x="x", y="y", line_width=1,
+                         line_color='#{0:02x}{1:02x}{2:02x}'.format(*color))
+            scene.add_glyph(source, glyph)
 
-        # Draw arrow
-        x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-        z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-        y_coord = (end[0], end[1])
+        
+        # # Draw arrow
+        # x_coord = (end[0] - arrowsize, end[1] - arrowsize)
+        # z_coord = (end[0] + arrowsize, end[1] - arrowsize)
+        # y_coord = (end[0], end[1])
 
-        # Draw the arrow head
-        scene.add_patch(PathPatch(Path([x_coord, y_coord], [Path.MOVETO, Path.LINETO]),
-                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                  facecolor=(1, 1, 1, 0),  # Transparent...
-                                  linewidth=1))  # TODO Line width!
-        scene.add_patch(PathPatch(Path([z_coord, y_coord], [Path.MOVETO, Path.LINETO]),
-                                  edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                                  facecolor=(1, 1, 1, 0),  # Transparent...
-                                  linewidth=1))  # TODO Line width!)
+        # # Draw the arrow head
+        
+        # scene.add_patch(PathPatch(Path([x_coord, y_coord], [Path.MOVETO, Path.LINETO]),
+        #                           edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+        #                           facecolor=(1, 1, 1, 0),  # Transparent...
+        #                           linewidth=1))  # TODO Line width!
+        # scene.add_patch(PathPatch(Path([z_coord, y_coord], [Path.MOVETO, Path.LINETO]),
+        #                           edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
+        #                           facecolor=(1, 1, 1, 0),  # Transparent...
+        #                           linewidth=1))  # TODO Line width!)
 
         direction = 1
         if over:
@@ -116,10 +106,14 @@ class BokehRenderer:
 
         # Write label in the middle under
         labelx = min(start[0], point2[0]) + abs(start[0] - point2[0]) // 2
-        labely = height + direction * font_size  # TODO: Should be font height!
+        labely = height # + direction * font_size  # TODO: Should be font height!
 
-        scene.text(labelx, labely, s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                   fontname=font_family)
+        source = ColumnDataSource(dict(x=[labelx], y=[labely], text=[text]))
+        glyph = Text(x="x", y="y", text="text",
+                     text_color='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                     text_font_size=str(font_size)+"pt", text_font=font_family)
+        # TODO: Here was TextToken (must align to left)
+        scene.add_glyph(source, glyph)
 
     @staticmethod
     def draw_rectangle_around_text(scene: Axes, origin: tuple, width: int, height: int, fill_color: tuple,
@@ -153,7 +147,6 @@ class BokehRenderer:
                      text_font_size=str(font_size)+"pt", text_font=font_family)
         # TODO: Here was TextToken (must align to left)
         scene.add_glyph(source, glyph)
-        print("scene width:", scene.width)
         return scene.plot_width  # Should return bounding box
 
     @staticmethod
@@ -191,14 +184,14 @@ class BokehRenderer:
             raise ValueError('{0} not a supported filetype!'.format(output_type))
         
     @staticmethod
-    def test():
+    def demo():
         xdr = DataRange1d()
         ydr = DataRange1d()
-        plot = Plot(title=None, x_range=xdr, y_range=ydr,
-                    # plot_width=300, plot_height=300,
-                    min_border=0)
-        BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
-        BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
+        plot = figure(title=None, x_range=xdr, y_range=ydr, match_aspect=True,
+                      min_border=0)
+        # BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
+        # BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
+        BokehRenderer.draw_arrow_w_text_middle(plot, (0,0), (0, 20), (20, 20), (20, 0), 10, 18, True, "Text", 12, "Arial", True, (70,70,70))
         show(plot)
 
         
