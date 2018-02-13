@@ -12,7 +12,7 @@ from matplotlib.patches import PathPatch, Path, FancyBboxPatch, FancyArrowPatch
 from matplotlib.axes import Axes
 
 from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis, Grid
-from bokeh.models.glyphs import Line, Bezier
+from bokeh.models.glyphs import Line, Bezier, Text
 from bokeh.io import curdoc, show
 
 class BokehRenderer:
@@ -146,12 +146,15 @@ class BokehRenderer:
         return origin[0], origin[1], width, height
 
     @staticmethod
-    def draw_text(scene: Axes, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+    def draw_text(scene: Plot, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+        source = ColumnDataSource(dict(x=[origin[0]], y=[origin[1]], text=[text]))
+        glyph = Text(x="x", y="y", text="text",
+                     text_color='#{0:02x}{1:02x}{2:02x}'.format(*color),
+                     text_font_size=str(font_size)+"pt", text_font=font_family)
         # TODO: Here was TextToken (must align to left)
-        scene.text(origin[0], origin[1], s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*color),
-                   fontname=font_family)
-
-        return scene.get_window_extent(scene).width  # Should return bounding box
+        scene.add_glyph(source, glyph)
+        print("scene width:", scene.width)
+        return scene.plot_width  # Should return bounding box
 
     @staticmethod
     def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
@@ -191,11 +194,11 @@ class BokehRenderer:
     def test():
         xdr = DataRange1d()
         ydr = DataRange1d()
-        plot = Plot(title=None, x_range=xdr, y_range=ydr, plot_width=300, plot_height=300,
+        plot = Plot(title=None, x_range=xdr, y_range=ydr,
+                    # plot_width=300, plot_height=300,
                     min_border=0)
-        BokehRenderer.draw_line(plot, (0,0), (3,10), (8, 2), (10, 10), True, (0,0,0))
         BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
-        
+        BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
         show(plot)
 
         
