@@ -41,13 +41,22 @@ class AlignmentRenderer(AbstractRenderer):
         self._token_layout2.r = self.backend
         self._alignment_layout.r = self.backend
         height_per_level = self.common_constants['height_per_level']
+        self.tok_constants['from_split_point'] = -1  # TODO: Do this properly
+        self.tok_constants['to_split_point'] = 0
         # add first token span
         dim1 = self._token_layout1.layout(scene, instance, {}, self.tok_constants)
 
+        self.tok_constants['from_split_point'] = -1
+        self.tok_constants['to_split_point'] = 0
         token_bounds1 = self._token_layout1.estimate_token_bounds(instance, {}, self.tok_constants)[0]
+        self.tok_constants['from_split_point'] = 0
+        self.tok_constants['to_split_point'] = -1
         token_bounds2 = self._token_layout2.estimate_token_bounds(instance, {}, self.tok_constants)[0]
         self._alignment_layout.layout_edges(scene, dim1[1], instance.get_edges(EdgeRenderType.dependency),
                                             token_bounds1, token_bounds2, self.common_constants)
+
+        self.tok_constants['from_split_point'] = 0
+        self.tok_constants['to_split_point'] = -1
         # add second token span
         dim2 = self._token_layout2.layout(scene, instance, {}, self.tok_constants, (0, dim1[1] + height_per_level))
 
