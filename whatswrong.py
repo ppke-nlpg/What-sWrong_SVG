@@ -23,16 +23,13 @@ lisp_sexpr = True
 def test():
     from os.path import basename
 
-    from libwwnlp.model.nlp_instance import RenderType
-    from libwwnlp.nlp_canvas import NLPCanvas
     from libwwnlp.corpus_navigator import CorpusNavigator
 
-    def test_process(corp_format, fname, render_type=RenderType.single, min_sent=0, max_sent=2):
+    def test_process(corp_format, fname, min_sent=0, max_sent=2):
         print('Testing {0}'.format(corp_format), file=sys.stderr)
-        nav = CorpusNavigator(NLPCanvas())
+        nav = CorpusNavigator()
         nav.add_corpus(fname, corp_format, 'gold', min_sent, max_sent)
         nav.select_gold(basename(fname))
-        nav.canvas.renderer = nav.canvas.renderers[render_type]
 
         for n, inst in enumerate(nav.iter_gold()):
             nav.canvas.set_nlp_instance(inst)
@@ -66,10 +63,10 @@ def test():
         test_process('MaltTab', 'test_data/malt.gold')
 
     if giza:
-        test_process('Giza Alingment Format', 'test_data/giza.gold', RenderType.alignment)
+        test_process('Giza Alingment Format', 'test_data/giza.gold')
 
     if gale:
-        test_process('Gale Alingment Format', 'test_data/gale.gold', RenderType.alignment, max_sent=1)
+        test_process('Gale Alingment Format', 'test_data/gale.gold', max_sent=1)
 
     if thebeast:
         test_process('The Beast Format', 'test_data/gale.gold', max_sent=1)

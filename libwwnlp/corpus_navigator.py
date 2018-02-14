@@ -9,7 +9,6 @@ from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, Lis
     BioNLP2009SharedTaskFormat, TheBeastFormat
 from libwwnlp.nlp_canvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff
-from libwwnlp.model.nlp_instance import RenderType
 
 
 class CorpusNavigator:
@@ -20,7 +19,7 @@ class CorpusNavigator:
        can then be picked to be rendered.
       The CorpusNavigator handles also a spinner panel that allows to go through this corpus by index.
     """
-    def __init__(self, canvas: NLPCanvas):
+    def __init__(self, canvas: NLPCanvas=NLPCanvas()):
         """Creates a new CorpusNavigator."""
         self._gold_corpora = {}
         self._guess_corpora = {}
@@ -59,8 +58,6 @@ class CorpusNavigator:
             corp_type_dict = self._guess_corpora
         else:
             raise ValueError
-        if corpus_format in {'Giza Alingment Format', 'Gale Alingment Format'}:
-            self.canvas.renderer = self.canvas.renderers[RenderType.alignment]  # TODO: deduce from instance
         corpus = self.known_corpus_formats[corpus_format].load(corpus_path, min_sent, max_sent)
         corp_name = basename(corpus_path)
 

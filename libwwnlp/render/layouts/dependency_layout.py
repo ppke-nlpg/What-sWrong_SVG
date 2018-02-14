@@ -152,13 +152,20 @@ class DependencyLayout(AbstractLayout):
         for edge in edges_:
             # TODO: Do that more properly!
             height = max_height_w_baseline - (depth[edge] + 1) * height_per_level + offset[edge]
-            if edge.start == edge.end:
+
+            if edge.start == edge.end:  # TODO: Forward or backward loop!
                 height -= height_per_level // 2
 
-            point1 = start[edge]
-            point2 = (point1[0], height)
-            point4 = end[edge]
-            point3 = (point4[0], height)
+                point1 = end[edge]
+                point4 = start[edge]
+                point2 = (point1[0], height)
+                point3 = (point4[0], height)
+            else:
+
+                point1 = start[edge]
+                point2 = (point1[0], height)
+                point4 = end[edge]
+                point3 = (point4[0], height)
 
             # Draw arrow and text middle
             self.r.draw_arrow_w_text_middle(scene, point1, point2, point3, point4, height, arrowsize, curve,
