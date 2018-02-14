@@ -84,22 +84,11 @@ class BokehRenderer:
             scene.add_glyph(source, glyph)
 
         
-        # # Draw arrow
-        # x_coord = (end[0] - arrowsize, end[1] - arrowsize)
-        # z_coord = (end[0] + arrowsize, end[1] - arrowsize)
-        # y_coord = (end[0], end[1])
-
-        # # Draw the arrow head
+        # Draw arrow
+        scene.line([end[0] - arrowsize, end[0], end[0] + arrowsize],
+                   [end[1] - arrowsize, end[1], end[1] - arrowsize],
+                   line_color='#{0:02x}{1:02x}{2:02x}'.format(*color))
         
-        # scene.add_patch(PathPatch(Path([x_coord, y_coord], [Path.MOVETO, Path.LINETO]),
-        #                           edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-        #                           facecolor=(1, 1, 1, 0),  # Transparent...
-        #                           linewidth=1))  # TODO Line width!
-        # scene.add_patch(PathPatch(Path([z_coord, y_coord], [Path.MOVETO, Path.LINETO]),
-        #                           edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*color),
-        #                           facecolor=(1, 1, 1, 0),  # Transparent...
-        #                           linewidth=1))  # TODO Line width!)
-
         direction = 1
         if over:
             direction = -1
@@ -185,13 +174,11 @@ class BokehRenderer:
         
     @staticmethod
     def demo():
-        xdr = DataRange1d()
-        ydr = DataRange1d()
-        plot = figure(title=None, x_range=xdr, y_range=ydr, match_aspect=True,
-                      min_border=0)
+        plot = figure(title=None, x_range=(0,1000), y_range=(0,600), match_aspect=True,
+                      min_border=0, plot_width=1000, plot_height=600)
         # BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
         # BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
-        BokehRenderer.draw_arrow_w_text_middle(plot, (0,0), (0, 20), (20, 20), (20, 0), 10, 18, True, "Text", 12, "Arial", True, (70,70,70))
+        BokehRenderer.draw_arrow_w_text_middle(plot, (0,100), (0, 0), (100,0), (100, 100), 8, 10, True, "Text", 12, "Arial", True, (70,70,70))
         show(plot)
 
         
