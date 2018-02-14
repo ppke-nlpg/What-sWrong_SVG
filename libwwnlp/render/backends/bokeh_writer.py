@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import PathPatch, Path, FancyBboxPatch, FancyArrowPatch
 from matplotlib.axes import Axes
 
-from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis
+from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis, Label
 from bokeh.models.glyphs import Line, Bezier, Text
 from bokeh.io import curdoc, show
 from bokeh.plotting import figure
@@ -109,23 +109,16 @@ class BokehRenderer:
                                    line_color: tuple, line_width: int, rounded: int,
                                    text: str, font_size: int, font_family: str):
 
-        if rounded > 0:
-            box_style = 'round'
-        else:
-            box_style = 'square'
-
-        scene.add_patch(FancyBboxPatch(origin, width, height,
-                                       facecolor='#{0:02x}{1:02x}{2:02x}'.format(*fill_color),
-                                       edgecolor='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
-                                       linewidth=line_width, boxstyle=box_style))
-
-        # write label in the middle under
-        labelx = origin[0] + width // 2
-        labely = origin[1] + height // 2 + 4  # TODO: Should be drawn in the vertical center, so + 4 not needed!
-
-        scene.text(labelx, labely, s=text, fontsize=font_size, color='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
-                   fontname=font_family)
-
+        label = Label(x=origin[0], y=origin[1],
+                      text=text, render_mode='css',
+                      border_line_color='#{0:02x}{1:02x}{2:02x}'.format(*line_color),
+                      border_line_alpha=1.0,
+                      background_fill_color='#{0:02x}{1:02x}{2:02x}'.format(*fill_color),
+                      background_fill_alpha=1.0,
+                      text_font_size=str(font_size)+"pt",
+                      text_font=font_family)
+        scene.add_layout(label)
+        
         return origin[0], origin[1], width, height
 
     @staticmethod
@@ -179,6 +172,9 @@ class BokehRenderer:
         # BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
         # BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
         BokehRenderer.draw_arrow_w_text_middle(plot, (0,100), (0, 0), (100,0), (100, 100), 8, 10, True, "Text", 12, "Arial", True, (70,70,70))
+        BokehRenderer.draw_rectangle_around_text(plot, (200,200), None, None, (255, 255, 255),
+                                                 (70, 70, 70), 10, 1, "Ez szöveg", 12,
+                                                 "Arial")
         show(plot)
 
         
