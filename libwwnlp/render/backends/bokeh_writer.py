@@ -25,19 +25,8 @@ class BokehRenderer:
         Returns:
             int: The width of the text.
         """
-        # Thx to: https://stackoverflow.com/a/22689498
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        content = Axes.text(ax, 0, 0, s=text, fontsize=size, fontname=font)
-        # Because no .get_renrerer() method
-        # import io
-        fig.canvas.print_svg(io.BytesIO())
-        renderer = fig._cachedRenderer
-
-        bounding_box = content.get_window_extent(renderer)  # fig.canvas.get_renderer()
-        plt.close(fig)
-        return bounding_box.width
-
+        return size*len(text)
+        
     @staticmethod
     def draw_line(scene: Plot, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple,
                   is_curved: bool, edge_color: tuple):
