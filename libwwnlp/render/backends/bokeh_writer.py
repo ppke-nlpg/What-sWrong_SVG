@@ -4,16 +4,10 @@
 """
 Specialised Bokeh subclasses for visualising linguistic parses with Bokeh.
 """
-import io
-import matplotlib
-matplotlib.use('svg')  # Must be before importing matplotlib.pyplot or pylab!
-import matplotlib.pyplot as plt
-from matplotlib.patches import PathPatch, Path, FancyBboxPatch, FancyArrowPatch
-from matplotlib.axes import Axes
-
-from bokeh.models import ColumnDataSource, DataRange1d, Plot, LinearAxis, Label
+from .matplotlib_writer import MPLRenderer
+from bokeh.models import ColumnDataSource, DataRange1d, Plot, Label
 from bokeh.models.glyphs import Line, Bezier, Text
-from bokeh.io import curdoc, show
+from bokeh.io import show
 from bokeh.plotting import figure
 
 class BokehRenderer:
@@ -25,7 +19,7 @@ class BokehRenderer:
         Returns:
             int: The width of the text.
         """
-        return size*len(text)
+        return MPLRenderer.get_text_width(text, size, font)
         
     @staticmethod
     def draw_line(scene: Plot, start: tuple, ctrl1: tuple, ctrl2: tuple, end: tuple,
@@ -43,7 +37,7 @@ class BokehRenderer:
             scene.add_glyph(source, glyph)
         
     @staticmethod
-    def draw_arrow_w_text_middle(scene: Axes, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
+    def draw_arrow_w_text_middle(scene: Plot, start: tuple, point1: tuple, point2: tuple, end: tuple, height: int,
                                  arrowsize: int, is_curved: bool, text: str, font_size: int, font_family: str,
                                  over: bool, color: tuple):
 
@@ -84,17 +78,17 @@ class BokehRenderer:
 
         # Write label in the middle under
         labelx = min(start[0], point2[0]) + abs(start[0] - point2[0]) // 2
-        labely = height # + direction * font_size  # TODO: Should be font height!
+        labely = height + direction * font_size  # TODO: Should be font height!
 
         source = ColumnDataSource(dict(x=[labelx], y=[labely], text=[text]))
-        glyph = Text(x="x", y="y", text="text",
+        glyph = Text(x="x", y="y", text="text", text_align="center",
                      text_color='#{0:02x}{1:02x}{2:02x}'.format(*color),
                      text_font_size=str(font_size)+"pt", text_font=font_family)
         # TODO: Here was TextToken (must align to left)
         scene.add_glyph(source, glyph)
 
     @staticmethod
-    def draw_rectangle_around_text(scene: Axes, origin: tuple, width: int, height: int, fill_color: tuple,
+    def draw_rectangle_around_text(scene: Plot, origin: tuple, width: int, height: int, fill_color: tuple,
                                    line_color: tuple, line_width: int, rounded: int,
                                    text: str, font_size: int, font_family: str):
 
@@ -107,7 +101,6 @@ class BokehRenderer:
                       text_font_size=str(font_size)+"pt",
                       text_font=font_family)
         scene.add_layout(label)
-        
         return origin[0], origin[1], width, height
 
     @staticmethod
@@ -118,11 +111,11 @@ class BokehRenderer:
                      text_font_size=str(font_size)+"pt", text_font=font_family)
         # TODO: Here was TextToken (must align to left)
         scene.add_glyph(source, glyph)
-        return scene.plot_width  # Should return bounding box
+        return MPLRenderer.get_text_width(text, font_size, font_family)
 
     @staticmethod
     def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):
-        """Render an NLPInstance into the supported formats.
+        """Render an NLPInstance.
 
         Args:
             renderer (SingleSentenceRenderer or AlignmentRenderer): The renderer object.
@@ -132,38 +125,7 @@ class BokehRenderer:
 
         Returns: The bytesting of the rendered object if needed.
         """
-        fig = plt.figure()
-        svg_scene = fig.add_subplot(111)
-        svg_scene.axis('off')
-
-        print("svg_scene:", svg_scene)
-        
-        renderer.render(filtered, svg_scene)
-        svg_scene.plot()
-
-        if filepath is not None and output_type == 'SVG':
-            fig.savefig(filepath, format='SVG')
-        elif filepath is None and output_type == 'SVG':
-            svg_bytes = io.BytesIO()
-            fig.canvas.print_svg(svg_bytes)
-            return svg_bytes.getvalue()
-        elif output_type == 'EPS':
-            fig.savefig(filepath, format='EPS')
-        elif output_type == 'PDF':
-            fig.savefig(filepath, format='PDF')
-        else:
-            raise ValueError('{0} not a supported filetype!'.format(output_type))
-        
-    @staticmethod
-    def demo():
         plot = figure(title=None, x_range=(0,1000), y_range=(0,600), match_aspect=True,
                       min_border=0, plot_width=1000, plot_height=600)
-        # BokehRenderer.draw_line(plot, (0,0), (10,10), (20, 20), (25, 25), False, (70,70,70))
-        # BokehRenderer.draw_text(plot, (0,0), "Próba", 12, "Arial", (0,0,0))
-        BokehRenderer.draw_arrow_w_text_middle(plot, (0,100), (0, 0), (100,0), (100, 100), 8, 10, True, "Text", 12, "Arial", True, (70,70,70))
-        BokehRenderer.draw_rectangle_around_text(plot, (200,200), None, None, (255, 255, 255),
-                                                 (70, 70, 70), 10, 1, "Ez szöveg", 12,
-                                                 "Arial")
+        renderer.render(filtered, plot)
         show(plot)
-
-        
