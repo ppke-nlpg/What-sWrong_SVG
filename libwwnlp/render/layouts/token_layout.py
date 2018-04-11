@@ -92,10 +92,11 @@ class TokenLayout(AbstractLayout):
 
                 props = token.get_property_names()
                 lasty = baseline + row_height*(len(props))
-                maxx = max(chain((self.r.get_text_width(token.get_property_value(prop_name), text_fontsize,
-                                                        token_font_family)
-                                  for prop_name in props),
-                                 [token_widths.get(token, 0)]), default=0)
+                maxx = token_widths.get(token, 0)
+                for prop_name in props:
+                    text_width = self.r.get_text_width(token.get_property_value(prop_name), text_fontsize,
+                                                       token_font_family)
+                    maxx = max(maxx, text_width)
                 result[token] = Bounds1D(lastx, lastx+maxx)
 
                 lastx += maxx
@@ -144,9 +145,11 @@ class TokenLayout(AbstractLayout):
             width = 1
         else:
             height = 0
+            width = 0
             lastx = 0
             from_token = 0
             to_token = len(tokens)
+            result = {}
 
             if from_split_point != -1:
                 from_token = instance.split_points[from_split_point]
@@ -160,16 +163,19 @@ class TokenLayout(AbstractLayout):
                 maxx = token_widths.get(token, 0)
                 # First comes the token, then the properties
                 colors = chain((token_color,), repeat(token_prop_color))
-                for index, (prop_name, color) in enumerate(zip(token.get_property_names(), colors), start=1):
+                for prop_name, color in zip(token.get_property_names(), colors):
                     lasty += row_height
                     text_width = self.r.draw_text(scene, (lastx + origin[0], lasty + origin[1]),
                                                   token.get_property_value(prop_name),
                                                   token_fontsize, token_font_family, color)
                     maxx = max(maxx, text_width)
+                    result[token] = Bounds1D(lastx, lastx + maxx)
 
+                lastx += maxx
                 lasty += font_desc_size
-                lastx += maxx + margin
+                width = max(width, lastx)
                 height = max(height, lasty)
+                lastx += margin
 
-            width = lastx - margin
+            width = lastx  #  - margin
         return width, height
