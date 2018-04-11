@@ -53,7 +53,7 @@ class SingleSentenceRenderer(AbstractRenderer):
         widths = self._span_layout.estimate_required_token_widths(spans, self.common_constants)
 
         # find token bounds
-        token_x_bounds, token_max_width = self._token_layout.estimate_token_bounds(instance, widths, self.tok_constants)
+        token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance, widths, self.tok_constants)
 
         # place dependencies on top
         d_width, d_height = self._dependency_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
@@ -61,7 +61,7 @@ class SingleSentenceRenderer(AbstractRenderer):
                                                                  self.common_constants)
 
         # add tokens
-        t_width, t_height = self._token_layout.layout(scene, instance, widths, self.tok_constants, (0, d_height))
+        _, t_width, t_height = self._token_layout.layout(scene, instance, widths, self.tok_constants, (0, d_height))
 
         # add spans
         s_width, s_height = 0, 0
@@ -69,4 +69,4 @@ class SingleSentenceRenderer(AbstractRenderer):
             s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds, token_max_width, self.constants,
                                                       self.common_constants, (0, d_height + t_height))
 
-        return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height, 1))  # TODO: Why +1?
+        return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height))

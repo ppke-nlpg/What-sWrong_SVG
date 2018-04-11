@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import functools
 import glob
-import os.path
+import os
 import sys
 
 from ioformats.corpus_format import CorpusFormat

@@ -44,72 +44,9 @@ class TokenLayout(AbstractLayout):
         """
         super().__init__()
 
-    def estimate_token_bounds(self, instance: NLPInstance, token_widths: dict, constants):
-        """Calculate the horizontal bounds of each token in the layout of the tokens.
-
-        Args:
-            instance (NLPInstance): The NLPInstance to layout.
-            token_widths (dict): A map that defines some minimal widths for
-                each token. The estimated bounds will fulfill the width
-                requirements specified by this map. If a token has no required
-                width its estimated width will be based on the length of its
-                textual properties.
-            constants (dict): Constants handled uniformly at an upper level
-
-        Returns:
-            dict: A mapping from tokens to estimated horizontal bounds in the
-            layout.
-            width (int): The total width of the graph that consists of all token
-            stacks next to each other.
-            height (int): The total height of the graph that consists of all token
-            stacks next to each other.
-        """
-        row_height = constants['row_height']
-        token_font_family = constants['token_font_family']
-        text_fontsize = constants['text_fontsize']
-        baseline = constants['baseline']
-        margin = constants['margin']
-        from_split_point = constants['from_split_point']
-        to_split_point = constants['to_split_point']
-
-        result = {}
-        height = 0
-        width = 0
-        tokens = instance.tokens
-
-        if len(tokens) > 0:
-            lastx = 0
-            from_token = 0
-            to_token = len(tokens)
-
-            if from_split_point != -1:
-                from_token = instance.split_points[from_split_point]
-            if to_split_point != -1:
-                to_token = instance.split_points[to_split_point]
-
-            for token_index in range(from_token, to_token):
-                token = tokens[token_index]
-
-                props = token.get_property_names()
-                lasty = baseline + row_height*(len(props))
-                maxx = token_widths.get(token, 0)
-                for prop_name in props:
-                    text_width = self.r.get_text_width(token.get_property_value(prop_name), text_fontsize,
-                                                       token_font_family)
-                    maxx = max(maxx, text_width)
-                result[token] = Bounds1D(lastx, lastx+maxx)
-
-                lastx += maxx
-                width = max(width, lastx)
-                height = max(height, lasty)
-                lastx += margin
-
-        return result, width
-
-    # TODO: This function also estimates token bounds. It's almost the same as above minus the real layout.
-    # TODO: Merge the two functions with a pseudo-scene like set() which also have add(...) to prevent double drawing
     def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
-        """Lay out all tokens in the given collection.
+        """Lay out all tokens in the given collection and calculate the
+         horizontal bounds of each token in the layout of the tokens.
 
         Lays out all tokens in the given collection as stacks of property
         values that are placed next to each other according the order of the
@@ -120,12 +57,23 @@ class TokenLayout(AbstractLayout):
             token_widths (dict): if some tokens need extra space (for example
                 because they have self loops in a DependencyLayout the space
                 they need can be provided through this map.
-            scene: The graphics object to draw to.
+                A map that defines some minimal widths for
+                each token. The estimated bounds will fulfill the width
+                requirements specified by this map. If a token has no required
+                width its estimated width will be based on the length of its
+                textual properties.
+            scene: The graphics object to draw to. Or set() if only the bounds is needed.
             origin (tuple): The origin of the layout as a pair of coordinates.
             constants (dict): Constants handled uniformly at an upper level
 
         Returns:
-            The dimension of the drawn graph.
+            dict: A mapping from tokens to estimated horizontal bounds in the
+            layout.
+            width (int): The total width of the graph that consists of all token
+            stacks next to each other.
+            height (int): The total height of the graph that consists of all token
+            stacks next to each other.
+
         """
         token_color = constants['token_color']
         token_prop_color = constants['token_prop_color']
@@ -143,6 +91,7 @@ class TokenLayout(AbstractLayout):
         if len(tokens) == 0:
             height = 1
             width = 1
+            result = {}
         else:
             height = 0
             width = 0
@@ -177,5 +126,5 @@ class TokenLayout(AbstractLayout):
                 height = max(height, lasty)
                 lastx += margin
 
-            width = lastx  #  - margin
-        return width, height
+            width = lastx
+        return result, width, height

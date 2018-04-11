@@ -142,7 +142,7 @@ class SpanLayout(AbstractLayout):
             for edge in edges_:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
-            baseline = baseline + origin[1] - 1  # TODO: Why -1?
+            baseline = baseline + origin[1]
             for depth in min_depths.values():
                 if not revert:
                     depth = max_depth - depth

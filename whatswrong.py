@@ -21,7 +21,7 @@ lisp_sexpr = True
 
 
 def test():
-    from os.path import basename
+    import os
 
     from libwwnlp.corpus_navigator import CorpusNavigator
 
@@ -29,7 +29,7 @@ def test():
         print('Testing {0}'.format(corp_format), file=sys.stderr)
         nav = CorpusNavigator()
         nav.add_corpus(fname, corp_format, 'gold', min_sent, max_sent)
-        nav.select_gold(basename(fname))
+        nav.select_gold(os.path.basename(fname))
 
         for n, inst in enumerate(nav.iter_gold()):
             nav.canvas.set_nlp_instance(inst)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from os.path import basename
+import os
 
 from ioformats.tab_processor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
@@ -59,10 +59,10 @@ class CorpusNavigator:
         else:
             raise ValueError
         corpus = self.known_corpus_formats[corpus_format].load(corpus_path, min_sent, max_sent)
-        corp_name = basename(corpus_path)
+        corp_name = os.path.basename(corpus_path)
 
         if corp_name not in corp_type_dict:
-            corp_type_dict[basename(corpus_path)] = corpus
+            corp_type_dict[os.path.basename(corpus_path)] = corpus
 
     def remove_corpus(self, corpus_type: str, corpus_name: str):
         """Removes the corpus and all diff corpora that compare the given corpus"""
