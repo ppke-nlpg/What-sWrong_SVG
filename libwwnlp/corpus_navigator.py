@@ -3,9 +3,9 @@
 
 from os.path import basename
 
-from ioFormats.TabProcessor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
+from ioformats.tab_processor import CoNLL2000, CoNLL2002, CoNLL2003, CoNLL2004, CoNLL2005, CoNLL2006, CoNLL2008, \
     CoNLL2009, MaltTab
-from ioFormats.OtherFormats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
+from ioformats.other_formats import GizaAlignmentFormat, GaleAlignmentFormat, LispSExprFormat,\
     BioNLP2009SharedTaskFormat, TheBeastFormat
 from libwwnlp.nlp_canvas import NLPCanvas
 from libwwnlp.model.nlp_instance import NLPInstance, nlp_diff

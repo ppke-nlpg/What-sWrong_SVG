@@ -20,7 +20,7 @@ class CorpusFormat:
 
     """
      * Loads a corpus from a file, starting at instance <code>from</code> and ending at instance <code>to</code>
-     * (exclusive). This method is required to call {@link com.googlecode.whatswrong.ioFormats.CorpusFormat.Monitor#
+     * (exclusive). This method is required to call {@link com.googlecode.whatswrong.ioformats.CorpusFormat.Monitor#
      progressed(int)}
      * after each instance that was processed.
      *

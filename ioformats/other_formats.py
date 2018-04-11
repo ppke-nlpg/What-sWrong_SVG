@@ -5,7 +5,7 @@ import glob
 import os.path
 import sys
 
-from ioFormats.CorpusFormat import CorpusFormat
+from ioformats.corpus_format import CorpusFormat
 from libwwnlp.model.edge import EdgeRenderType
 from libwwnlp.model.nlp_instance import NLPInstance, RenderType
 

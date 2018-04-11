@@ -7,7 +7,7 @@
 import sys
 
 from libwwnlp.model.nlp_instance import NLPInstance
-from ioFormats.CorpusFormat import CorpusFormat
+from ioformats.corpus_format import CorpusFormat
 
 """
  * A TabFormat loads data from text files where token properties are represented as white-space/tab separated values.
