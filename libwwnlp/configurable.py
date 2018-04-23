@@ -15,23 +15,38 @@ def parse_params(params, default_params):
         params: A dict or a yaml string specifying a dict.
         default_params: Default parameters as a dict.
     """
-    result = copy.deepcopy(default_params)
-    if isinstance(params, dict):
-        parsed_params = params
+    if not params:
+        return default_params
     else:
-        parsed_params = yaml.load(params)
-    result.update(parsed_params)
-    return result
+        result = copy.deepcopy(default_params)
+        if isinstance(params, dict):
+            parsed_params = params
+        else:
+            parsed_params = yaml.load(params)
+        result.update(parsed_params)
+        return result
+
     
+def params_at_path(params, path):
+    """Return params at a certain path.
+
+    Args:
+        params: A dict with string keys.
+    """
+    return {key[len(path)+1:]: val for key, val in params.items() if key.startswith(path+".")}
+
 
 class Configurable:
     """Base class for objects configurable by a parameter dict.
     """
 
     def __init__(self, params):
-        self.params = parse_params(params, self.default_params())
+        if params:
+            self.params = parse_params(params, self.default_params())
+        else:
+            self.params = self.default_params()
 
-    def default_params():
+    def default_params(self):
         raise NotImplementedError
 
     

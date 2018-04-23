@@ -11,7 +11,7 @@ from libwwnlp.model.edge import EdgeRenderType
 from libwwnlp.render.layouts.span_layout import SpanLayout
 from libwwnlp.render.layouts.dependency_layout import DependencyLayout
 from libwwnlp.render.layouts.token_layout import TokenLayout
-
+from libwwnlp.configurable import params_at_path
 
 class SingleSentenceRenderer(AbstractRenderer):
     """A SingleSentenceRenderer renders an NLPInstance as a single sentence.
@@ -24,10 +24,10 @@ class SingleSentenceRenderer(AbstractRenderer):
         _token_layout (TokenLayout): The token layout for the sentence.
     """
 
-    def __init__(self):
+    def __init__(self, params=None):
         """Initialize a SingleSentenceRenderer instance.
         """
-        super().__init__()
+        super().__init__(params)
         self._span_layout = SpanLayout()
         self._dependency_layout = DependencyLayout()
         self._token_layout = TokenLayout()
@@ -50,23 +50,21 @@ class SingleSentenceRenderer(AbstractRenderer):
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
-        widths = self._span_layout.estimate_required_token_widths(spans, self.common_constants)
+        widths = self._span_layout.estimate_required_token_widths(spans, params_at_path(self.params, "common"))
 
         # find token bounds
-        token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance, widths, self.tok_constants)
+        token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance, widths, params_at_path(self.params, "token"))
 
         # place dependencies on top
-        d_width, d_height = self._dependency_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
-                                                                 token_x_bounds, self.dependency_constants,
-                                                                 self.common_constants)
+        d_width, d_height = self._dependency_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency), token_x_bounds, params_at_path(self.params, "dependency"), params_at_path(self.params, "common"))
 
         # add tokens
-        _, t_width, t_height = self._token_layout.layout(scene, instance, widths, self.tok_constants, (0, d_height))
+        _, t_width, t_height = self._token_layout.layout(scene, instance, widths, params_at_path(self.params, "token"), (0, d_height))
 
         # add spans
         s_width, s_height = 0, 0
         if render_spans:
             s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds, token_max_width, self.constants,
-                                                      self.common_constants, (0, d_height + t_height))
+                                                      params_at_path(self.params, "common"), (0, d_height + t_height))
 
         return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height))

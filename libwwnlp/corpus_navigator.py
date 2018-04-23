@@ -32,7 +32,7 @@ class CorpusNavigator:
 
         self.canvas = canvas
 
-        self.canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2, 'ner': 3,
+        self.canvas.renderer.params['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2, 'ner': 3,
                                                     'sense': 4, 'role': 5, 'phase': 5}
         self.known_corpus_formats = {'CoNLL2000': CoNLL2000(),
                                      'CoNLL2002': CoNLL2002(),
@@ -185,6 +185,6 @@ class CorpusNavigator:
             self.canvas.filter.allowed_edge_properties.add('eval_status_FN')
             self.canvas.filter.allowed_edge_properties.add('eval_status_Match')
 
-            self.canvas.renderer.constants['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
+            self.canvas.renderer.params['orders'] = {'pos': 0, 'chunk (BIO)': 1, 'chunk': 2, 'ner (BIO)': 2,
                                                         'ner': 3, 'sense': 4, 'role': 5, 'phase': 5}
         self.canvas.fire_instance_changed()
