@@ -75,10 +75,10 @@ class TokenLayout(AbstractLayout):
             stacks next to each other.
 
         """
-        token_color = constants['token_color']
-        token_prop_color = constants['token_prop_color']
-        token_fontsize = constants['token_fontsize']
-        token_font_family = constants['token_font_family']
+        token_color = constants['color']
+        token_prop_color = constants['prop_color']
+        token_fontsize = constants['fontsize']
+        token_font_family = constants['font_family']
         baseline = constants['baseline']
         margin = constants['margin']
         from_split_point = constants['from_split_point']

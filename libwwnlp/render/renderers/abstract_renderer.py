@@ -55,22 +55,22 @@ class AbstractRenderer(Configurable):
         """
         return {
             # Common constants
-            'common:height_per_level': 15,
-            'common:vertex_extra_space': 12,
-            'common:font_size': 12,
-            'common:font_family': 'Courier New, Courier, monospace',
-            'common:curve': True,
-            'common:revert': True,
-            'common:total_text_margin': 6,  # TODO: Constants? Should mean length in 'em': 2em -> 'MM'
-            'common:property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
+            'common.height_per_level': 15,
+            'common.vertex_extra_space': 12,
+            'common.font_size': 12,
+            'common.font_family': 'Courier New, Courier, monospace',
+            'common.curve': True,
+            'common.revert': True,
+            'common.total_text_margin': 6,  # TODO: Constants? Should mean length in 'em': 2em -> 'MM'
+            'common.property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
                                        'eval_status_FN': ((255, 0, 0), 1),   # Red
                                        'eval_status_FP': ((0, 0, 255), 1),   # Blue
                                        'default_edge_color': ((0, 0, 0), 1)  # Black
             },
-            'common:from_split_point': 0,
-            'common:to_split_point': 0,
-            'common:baseline': 1,
-            'common:type_colors': {},
+            'common.from_split_point': 0,
+            'common.to_split_point': 0,
+            'common.baseline': 1,
+            'common.type_colors': {},
             # Dependency constants
             'dependency.arrowsize': 2,
             'dependency.label_over': False,

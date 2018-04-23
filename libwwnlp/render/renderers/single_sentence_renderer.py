@@ -64,7 +64,7 @@ class SingleSentenceRenderer(AbstractRenderer):
         # add spans
         s_width, s_height = 0, 0
         if render_spans:
-            s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds, token_max_width, self.constants,
+            s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds, token_max_width, self.params,
                                                       params_at_path(self.params, "common"), (0, d_height + t_height))
 
         return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height))

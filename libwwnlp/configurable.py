@@ -46,7 +46,8 @@ class Configurable:
         else:
             self.params = self.default_params()
 
-    def default_params(self):
+    @staticmethod
+    def default_params():
         raise NotImplementedError
 
     
