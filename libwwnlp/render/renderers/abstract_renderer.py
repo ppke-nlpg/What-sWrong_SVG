@@ -8,7 +8,7 @@ class AbstractRenderer(Configurable):
     """
     Abstract renderer class.
     
-    Parameteres:
+    Parameters:
         revert (bool): Should the graph be upside-down reverted.
         separation_lines (bool): Should we draw separation lines between the areas for different
             span types.
