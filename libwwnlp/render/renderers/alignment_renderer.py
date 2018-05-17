@@ -62,8 +62,8 @@ class AlignmentRenderer(AbstractRenderer):
         token_bounds2, dim2x, dim2y = self._token_layout2.layout(scene, tokens[from_token:to_token], {}, params,
                                                                  (0, dim1y + height_per_level))
 
-        self._alignment_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
-                                            (token_bounds1, token_bounds2), params_at_path(self.params, 'common'),
-                                            dim1y)
+        self._alignment_layout.layout(scene, instance.get_edges(EdgeRenderType.dependency),
+                                      (token_bounds1, token_bounds2), params_at_path(self.params, 'common'),
+                                      dim1y)
 
         return max(dim1x, dim2x), sum((dim1y, dim2y, height_per_level))

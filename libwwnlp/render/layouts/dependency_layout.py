@@ -28,7 +28,7 @@ class DependencyLayout(AbstractLayout):
     def __init__(self):
         super().__init__()
 
-    def layout_edges(self, scene, edges, bounds, constants):
+    def layout(self, scene, edges, bounds, constants):
         """Lays out the edges as directed labelled dependency links between tokens.
 
         Note on types:

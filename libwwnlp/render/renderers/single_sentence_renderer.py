@@ -58,19 +58,19 @@ class SingleSentenceRenderer(AbstractRenderer):
                                                                        params_at_path(self.params, 'token'))
 
         # place dependencies on top
-        d_width, d_height = self._dependency_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
-                                                                 token_x_bounds,
-                                                                 params_at_path(self.params, {'dependency', 'common'}))
+        d_width, d_height = self._dependency_layout.layout(scene, instance.get_edges(EdgeRenderType.dependency),
+                                                           token_x_bounds,
+                                                           params_at_path(self.params, {'dependency', 'common'}))
 
         # add tokens
-        _, t_width, t_height = self._token_layout.layout(scene, instance.tokens, widths, params_at_path(self.params, 'token'),
-                                                         (0, d_height))
+        _, t_width, t_height = self._token_layout.layout(scene, instance.tokens, widths,
+                                                         params_at_path(self.params, 'token'), (0, d_height))
 
         # add spans
         s_width, s_height = 0, 0
         if render_spans:
-            s_height = self._span_layout.layout_edges(scene, spans, token_x_bounds,
-                                                      params_at_path(self.params, {'span', 'common'}), token_max_width,
-                                                      (0, d_height + t_height))
+            s_height = self._span_layout.layout(scene, spans, token_x_bounds,
+                                                params_at_path(self.params, {'span', 'common'}), token_max_width,
+                                                (0, d_height + t_height))
 
         return max(d_width, t_width, token_max_width), sum((d_height, t_height, s_height))

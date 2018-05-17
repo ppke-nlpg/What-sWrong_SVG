@@ -44,7 +44,7 @@ class SpanLayout(AbstractLayout):
                                                                         font_family), result.get(edge.start, 0)))
         return result
 
-    def layout_edges(self, scene, edges, bounds, constants, max_width: int, origin=(0, 0)):
+    def layout(self, scene, edges, bounds, constants, max_width: int, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:

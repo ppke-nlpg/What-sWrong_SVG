@@ -26,7 +26,7 @@ class TokenLayout(AbstractLayout):
         """
         super().__init__()
 
-    def layout(self, scene, tokens, bounds: dict, constants: dict, origin=(0, 0)):
+    def layout(self, scene, tokens, bounds, constants, origin=(0, 0)):
         """Lay out all tokens in the given collection and calculate the
          horizontal bounds of each token in the layout of the tokens.
 

@@ -9,7 +9,7 @@ class AlignmentLayout(AbstractLayout):
     def __init__(self):
         super().__init__()
 
-    def layout_edges(self, scene, edges, bounds, constants, height):
+    def layout(self, scene, edges, bounds, constants, height):
         property_colors = constants['property_colors']
         height_per_level = constants['height_per_level']
         curve = constants['curve']
