@@ -44,7 +44,7 @@ class SpanLayout(AbstractLayout):
                                          result.get(edge.start, 0))
         return result
 
-    def layout_edges(self, scene, edges, bounds, max_width: int, constants, origin=(0, 0)):
+    def layout_edges(self, scene, edges, bounds, constants, max_width: int, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:
@@ -53,7 +53,6 @@ class SpanLayout(AbstractLayout):
             max_width: The maximum width computed from token bounds earlier
             scene: The graphics object to draw on.
             constants: Drawing constants, which are handled uniformly
-            common_constants: Drawing constants, which are handled uniformly
             origin: The origin coordinates.
 
         Note on types:

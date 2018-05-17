@@ -56,8 +56,9 @@ class AlignmentRenderer(AbstractRenderer):
         self.params['token.from_split_point'] = 0
         self.params['token.to_split_point'] = -1
         token_bounds2 = self._token_layout2.layout(set(), instance, {}, params_at_path(self.params, "token"))[0]
-        self._alignment_layout.layout_edges(scene, dim1y, instance.get_edges(EdgeRenderType.dependency),
-                                            token_bounds1, token_bounds2, params_at_path(self.params, 'common'))
+        self._alignment_layout.layout_edges(scene, instance.get_edges(EdgeRenderType.dependency),
+                                            (token_bounds1, token_bounds2), params_at_path(self.params, 'common'),
+                                            dim1y)
 
         self.params['token.from_split_point'] = 0
         self.params['token.to_split_point'] = -1

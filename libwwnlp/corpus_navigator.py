@@ -170,7 +170,6 @@ class CorpusNavigator:
             example.add_dependency(4, 2, 'DET', 'dep')
             example.add_dependency(4, 3, 'MOD', 'dep')
             example.add_dependency(1, 4, 'A1', 'role')
-            example.add_dependency(1, 1, 'add.1', 'sense')
             self.canvas.set_nlp_instance(example)
             self.canvas.filter.allowed_edge_types = set()
             self.canvas.filter.allowed_edge_types.add('dep')

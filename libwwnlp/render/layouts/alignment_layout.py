@@ -10,12 +10,13 @@ class AlignmentLayout(AbstractLayout):
     def __init__(self):
         super().__init__()
 
-    def layout_edges(self, scene, height, edges, token_xbounds1, token_xbounds2, common_constants):
-        property_colors = common_constants['property_colors']
-        height_per_level = common_constants['height_per_level']
-        curve = common_constants['curve']
-        type_colors = common_constants['type_colors']
+    def layout_edges(self, scene, edges, bounds, constants, height):
+        property_colors = constants['property_colors']
+        height_per_level = constants['height_per_level']
+        curve = constants['curve']
+        type_colors = constants['type_colors']
 
+        token_xbounds1, token_xbounds2 = bounds
         for edge in edges:
             bound1 = middle(token_xbounds1[edge.start])
             bound2 = middle(token_xbounds2[edge.end])
