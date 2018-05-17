@@ -54,7 +54,7 @@ class SingleSentenceRenderer(AbstractRenderer):
         widths = self._span_layout.estimate_required_token_widths(spans, params_at_path(self.params, 'common'))
 
         # find token bounds
-        token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance, widths,
+        token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance.tokens, widths,
                                                                        params_at_path(self.params, 'token'))
 
         # place dependencies on top
@@ -63,7 +63,7 @@ class SingleSentenceRenderer(AbstractRenderer):
                                                                  params_at_path(self.params, {'dependency', 'common'}))
 
         # add tokens
-        _, t_width, t_height = self._token_layout.layout(scene, instance, widths, params_at_path(self.params, 'token'),
+        _, t_width, t_height = self._token_layout.layout(scene, instance.tokens, widths, params_at_path(self.params, 'token'),
                                                          (0, d_height))
 
         # add spans

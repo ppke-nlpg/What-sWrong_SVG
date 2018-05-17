@@ -1,13 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from collections import namedtuple, Counter
-
 # Historical note: The following named tuple was introduced to eliminate the
 # use of QPoint which introduced an unnecessary dependency on QT.
+from collections import namedtuple, Counter
+
+"""This named tuple represents one dimensional bounds.
+"""
 Point = namedtuple('Point', ['x', 'y'])
+
 """This named tuple represents a point on a plane.
 """
+Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
+
+
+def middle(bounds):
+    """Return the middle of a Bounds1D instance.
+
+    Args:
+        bounds (Bounds1D): The bounds object whose middle is to be calculated.
+
+    Returns:
+        float: The mean of the elements in `values`.
+    """
+    return (bounds.start + bounds.end) // 2
 
 
 class AbstractLayout:

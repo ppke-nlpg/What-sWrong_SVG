@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from libwwnlp.render.layouts.abstract_layout import AbstractLayout
-from libwwnlp.render.layouts.token_layout import middle
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout, middle
 
 
 class AlignmentLayout(AbstractLayout):

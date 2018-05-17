@@ -3,7 +3,7 @@
 
 from collections import Counter, defaultdict
 
-from libwwnlp.render.layouts.abstract_layout import AbstractLayout
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout, Bounds1D
 
 
 class SpanLayout(AbstractLayout):
@@ -31,7 +31,7 @@ class SpanLayout(AbstractLayout):
             constants (dict):
 
         Returns:
-            Dict[Token, Integer]: A mapping from tokens with self-loops to pixel widths.
+            Dict[Token, Bounds1D]: A mapping from tokens with self-loops to pixel widths.
         """
         font_size = constants['font_size']
         font_family = constants['font_family']
@@ -39,9 +39,9 @@ class SpanLayout(AbstractLayout):
         result = {}
         for edge in edges:
             if edge.start == edge.end:
-                result[edge.start] = total_text_margin + \
-                                     max(self.r.get_text_width(edge.get_label_with_note(), font_size, font_family),
-                                         result.get(edge.start, 0))
+                result[edge.start] = Bounds1D(0, total_text_margin +
+                                              max(self.r.get_text_width(edge.get_label_with_note(), font_size,
+                                                                        font_family), result.get(edge.start, 0)))
         return result
 
     def layout_edges(self, scene, edges, bounds, constants, max_width: int, origin=(0, 0)):

@@ -2,25 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from itertools import chain, repeat
-from collections import namedtuple
-from libwwnlp.model.nlp_instance import NLPInstance
-from libwwnlp.render.layouts.abstract_layout import AbstractLayout
-
-Bounds1D = namedtuple('Bounds1D', ['start', 'end'])
-"""This named tuple represents one dimensional bounds.
-"""
-
-
-def middle(bounds):
-    """Return the middle of a Bounds1D instance.
-
-    Args:
-        bounds (Bounds1D): The bounds object whose middle is to be calculated.
-
-    Returns:
-        float: The mean of the elements in `values`.
-    """
-    return (bounds.start + bounds.end) // 2
+from libwwnlp.render.layouts.abstract_layout import AbstractLayout, Bounds1D
 
 
 class TokenLayout(AbstractLayout):
@@ -44,7 +26,7 @@ class TokenLayout(AbstractLayout):
         """
         super().__init__()
 
-    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants: dict, origin=(0, 0)):
+    def layout(self, scene, tokens, bounds: dict, constants: dict, origin=(0, 0)):
         """Lay out all tokens in the given collection and calculate the
          horizontal bounds of each token in the layout of the tokens.
 
@@ -53,8 +35,8 @@ class TokenLayout(AbstractLayout):
         tokens (as indicated by their indices).
 
         Args:
-            instance (NLPInstance): The NLPInstance to layout.
-            token_widths (dict): if some tokens need extra space (for example
+            tokens (List): The tokens to the layout.
+            bounds (dict): if some tokens need extra space (for example
                 because they have self loops in a DependencyLayout the space
                 they need can be provided through this map.
                 A map that defines some minimal widths for
@@ -81,13 +63,10 @@ class TokenLayout(AbstractLayout):
         token_font_family = constants['font_family']
         baseline = constants['baseline']
         margin = constants['margin']
-        from_split_point = constants['from_split_point']
-        to_split_point = constants['to_split_point']
 
         row_height = constants['row_height']
         font_desc_size = constants['font_desc_size']
 
-        tokens = instance.tokens
         if len(tokens) == 0:
             height = 1
             width = 1
@@ -96,20 +75,12 @@ class TokenLayout(AbstractLayout):
             height = 0
             width = 0
             lastx = 0
-            from_token = 0
-            to_token = len(tokens)
             result = {}
 
-            if from_split_point is not None:
-                from_token = instance.split_points[from_split_point]
-            if to_split_point is not None:
-                to_token = instance.split_points[to_split_point]
-
-            for token_index in range(from_token, to_token):
-                token = tokens[token_index]
+            for token in tokens:
 
                 lasty = baseline
-                maxx = token_widths.get(token, 0)
+                maxx = bounds.get(token, Bounds1D(0, 0)).end
                 # First comes the token, then the properties
                 colors = chain((token_color,), repeat(token_prop_color))
                 for prop_name, color in zip(token.get_property_names(), colors):

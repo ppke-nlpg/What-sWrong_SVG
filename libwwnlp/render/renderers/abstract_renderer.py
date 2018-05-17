@@ -32,12 +32,6 @@ class AbstractRenderer(Configurable):
             total_text_margin (int): How much space should at least be between the label of a
                 span and the right and left edges of the span.
             base_line (int): Where should we start to draw the stacks.
-            from_split_point (int): The index of the the split point at which the
-                renderer starts to draw the token sequence or None if it should
-                start from the first token.
-            to_split_point (int): The index of the the split point at which the
-                renderer stops to draw the token sequence or None if it should stop
-                at the end.
             baseline (int): Where do we start to draw.
         dependency:
             arrowsize (int): The size of the arrow.
@@ -67,8 +61,6 @@ class AbstractRenderer(Configurable):
                                        'eval_status_FP': ((0, 0, 255), 1),   # Blue
                                        'default_edge_color': ((0, 0, 0), 1)  # Black
                                        },
-            'common.from_split_point': 0,
-            'common.to_split_point': 0,
             'common.baseline': 1,
             'common.type_colors': {},
             # Dependency constants
@@ -92,8 +84,7 @@ class AbstractRenderer(Configurable):
             'token.font_desc_size': 3,  # TODO: What is this?
             'token.row_height': 14,     # TODO: Text height?
             'token.baseline': 0,        # TODO: This is 0 the other is 1 was base_line
-            'token.from_split_point': None,
-            'token.to_split_point': None}
+            }
 
     def render(self, instance, scene, render_spans=False):
         raise NotImplementedError
