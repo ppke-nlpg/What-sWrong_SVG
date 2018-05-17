@@ -115,7 +115,7 @@ class SVGWriteRenderer:
 
             scene.add(Text(text, insert=(labelx, labely), fill=rgb(*color), font_family=font_family,
                            font_size=font_size, text_rendering='inherit', alignment_baseline='central',
-                           text_anchor='middle'))
+                           text_anchor='middle'))  # TODO: alignment_baseline should be hanging or baseline!
 
     @staticmethod
     def draw_rectangle_around_text(scene: Drawing, origin: tuple, width: int, height: int, fill_color: tuple,
@@ -130,7 +130,7 @@ class SVGWriteRenderer:
 
         scene.add(Text(text, insert=(labelx, labely), fill=rgb(*line_color), font_family=font_family,
                        font_size=font_size, text_rendering='inherit', alignment_baseline='central',
-                       text_anchor='middle'))
+                       text_anchor='middle'))  # TODO: alignment_baseline should be hanging or baseline!
 
         return origin[0], origin[1], width, height
 

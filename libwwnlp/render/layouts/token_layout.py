@@ -61,7 +61,6 @@ class TokenLayout(AbstractLayout):
         token_prop_color = constants['prop_color']
         token_fontsize = constants['fontsize']
         token_font_family = constants['font_family']
-        baseline = constants['baseline']
         margin = constants['margin']
 
         row_height = constants['row_height']
@@ -79,7 +78,7 @@ class TokenLayout(AbstractLayout):
 
             for token in tokens:
 
-                lasty = baseline
+                lasty = 0
                 maxx = bounds.get(token, Bounds1D(0, 0)).end
                 # First comes the token, then the properties
                 colors = chain((token_color,), repeat(token_prop_color))

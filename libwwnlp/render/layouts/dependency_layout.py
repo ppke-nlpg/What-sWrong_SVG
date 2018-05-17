@@ -59,7 +59,6 @@ class DependencyLayout(AbstractLayout):
         vertex_extra_space = constants['vertex_extra_space']
         property_colors = constants['property_colors']
         curve = constants['curve']
-        baseline = constants['baseline']
         type_colors = constants['type_colors']
 
         edges_ = self.filter_to_visible_edges(edges)
@@ -101,8 +100,6 @@ class DependencyLayout(AbstractLayout):
         if max_depth == 0 and len(all_loops) > 0:
             max_height += height_per_level // 2  # 1 + 0.5 = 1.5
 
-        max_height_w_baseline = max_height + baseline
-
         # Eliminate crossings
         offset = Counter()
         for left in edges_wo_loops:
@@ -129,12 +126,12 @@ class DependencyLayout(AbstractLayout):
             x_coord = (token_bound_start - (vertex_extra_space // 2)) + width
 
             for loop in loops_on_vertex:
-                start[loop] = (x_coord, max_height_w_baseline)
+                start[loop] = (x_coord, max_height)
                 x_coord += width
 
             for edge in sorted(vertex2edges[token], key=functools.cmp_to_key(
                     lambda e1, e2, tok=token: self.compare_edges(e1, e2, tok))):
-                point = (x_coord, max_height_w_baseline)
+                point = (x_coord, max_height)
                 if edge.start == token:
                     start[edge] = point
                 else:
@@ -142,7 +139,7 @@ class DependencyLayout(AbstractLayout):
                 x_coord += width
 
             for loop in loops_on_vertex:
-                end[loop] = (x_coord, max_height_w_baseline)
+                end[loop] = (x_coord, max_height)
                 x_coord += width
 
         max_width = max(itertools.chain(start.values(), end.values()), key=operator.itemgetter(0), default=(0,))[0]
@@ -150,7 +147,7 @@ class DependencyLayout(AbstractLayout):
         # draw each edge
         for edge in edges_:
             # TODO: Do that more properly!
-            height = max_height_w_baseline - (depth[edge] + 1) * height_per_level + offset[edge]
+            height = max_height - (depth[edge] + 1) * height_per_level + offset[edge]
 
             if edge.start == edge.end:  # TODO: Forward or backward loop!
                 height -= height_per_level // 2

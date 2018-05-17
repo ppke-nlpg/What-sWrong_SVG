@@ -41,7 +41,8 @@ class SpanLayout(AbstractLayout):
             if edge.start == edge.end:
                 result[edge.start] = Bounds1D(0, total_text_margin +
                                               max(self.r.get_text_width(edge.get_label_with_note(), font_size,
-                                                                        font_family), result.get(edge.start, 0)))
+                                                                        font_family),
+                                                  result.get(edge.start, Bounds1D(0, 0)).end))
         return result
 
     def layout(self, scene, edges, bounds, constants, max_width: int, origin=(0, 0)):
@@ -69,7 +70,6 @@ class SpanLayout(AbstractLayout):
         property_colors = constants['property_colors']
         curve = constants['curve']
         revert = constants['revert']
-        baseline = constants['baseline']
         type_colors = constants['type_colors']
 
         buffer_height = constants['buffer_height']
@@ -115,7 +115,7 @@ class SpanLayout(AbstractLayout):
             else:
                 span_level += depth[edge]
 
-            height = baseline + max_height - span_level * height_per_level
+            height = max_height - span_level * height_per_level
             height_minus_buffer = height - buffer_height + origin[1]
             rect_height = height_per_level - 2 * buffer_height
 
@@ -141,11 +141,10 @@ class SpanLayout(AbstractLayout):
             for edge in edges_:
                 min_depths[edge.edge_type] = min(min_depths[edge.edge_type], depth[edge])
 
-            baseline = baseline + origin[1]
             for depth in min_depths.values():
                 if not revert:
                     depth = max_depth - depth
-                height = baseline + depth * height_per_level
+                height = origin[1] + depth * height_per_level
                 self.r.draw_line(scene, (origin[1], height), (), (), (max_width, height), False,
                                  edge_color=separator_line_color)
         return max_height - 2 * buffer_height

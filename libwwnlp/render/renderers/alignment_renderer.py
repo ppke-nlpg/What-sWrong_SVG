@@ -45,7 +45,6 @@ class AlignmentRenderer(AbstractRenderer):
         self._token_layout2.r = self.backend
         self._alignment_layout.r = self.backend
         height_per_level = self.params['common.height_per_level']
-
         tokens = instance.tokens
         split_point = instance.split_point
         params = params_at_path(self.params, 'token')

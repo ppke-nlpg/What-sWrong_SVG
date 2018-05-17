@@ -32,7 +32,6 @@ class AbstractRenderer(Configurable):
             total_text_margin (int): How much space should at least be between the label of a
                 span and the right and left edges of the span.
             base_line (int): Where should we start to draw the stacks.
-            baseline (int): Where do we start to draw.
         dependency:
             arrowsize (int): The size of the arrow.
             label_over (bool):
@@ -61,7 +60,6 @@ class AbstractRenderer(Configurable):
                                        'eval_status_FP': ((0, 0, 255), 1),   # Blue
                                        'default_edge_color': ((0, 0, 0), 1)  # Black
                                        },
-            'common.baseline': 1,
             'common.type_colors': {},
             # Dependency constants
             'dependency.arrowsize': 2,
@@ -81,9 +79,8 @@ class AbstractRenderer(Configurable):
             'token.color': (0, 0, 0),  # Black
             'token.prop_color': (120, 120, 120),  # Grey
             'token.margin': 20,  # Horisontal space between tokens
-            'token.font_desc_size': 3,  # TODO: What is this?
-            'token.row_height': 14,     # TODO: Text height?
-            'token.baseline': 0,        # TODO: This is 0 the other is 1 was base_line
+            'token.font_desc_size': 3,  # Space left empty under the tokens TODO:Should mean length in 'em': 2em -> 'MM'
+            'token.row_height': 14,     # Space left empty over each token row TODO:Should be in 'em': 2em -> 'MM'
             }
 
     def render(self, instance, scene, render_spans=False):
