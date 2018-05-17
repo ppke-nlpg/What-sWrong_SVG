@@ -119,7 +119,7 @@ class GizaAlignmentFormat(CorpusFormat):
     def make_instance(instance, tokens1, tokens2, alignment_edges):
         for token in tokens1:
             instance.add_token().add_property('word', token)
-        instance.split_points.append(len(instance.tokens))
+        instance.split_point = len(instance.tokens)
         for token in tokens2:
             instance.add_token().add_property('word', token)
         for alignmentEdge1, alignmentEdge2 in alignment_edges:
@@ -199,7 +199,7 @@ class GaleAlignmentFormat(CorpusFormat):
                         instance.add_token().add_property('word', token)
 
                     source_length = len(instance.tokens)
-                    instance.split_points.append(source_length)
+                    instance.split_point = source_length
                 elif line.startswith('<seg'):
                     instance = NLPInstance(render_type=RenderType.alignment)
                 elif line.startswith('<translation>'):

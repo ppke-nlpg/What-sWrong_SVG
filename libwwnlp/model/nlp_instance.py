@@ -31,7 +31,7 @@ class NLPInstance:
         render_type (RenderType): How to render this instance.
         token_map (dict[int, Token]): A mapping from sentence indices to
             tokens.
-        split_points (list): A list of token indices at which the NLP instance
+        split_point (int): A token index at which the NLP instance
             is to be split (tokens at these indices will be the first tokens of
             their respective segments). These indices can refer to sentence
             boundaries in a document, but they can also indicate that what
@@ -40,7 +40,7 @@ class NLPInstance:
     """
 
     def __init__(self, tokens: [Token]=None, edges: set or frozenset=None,
-                 render_type: RenderType=RenderType.single, split_points: tuple or list=None):
+                 render_type: RenderType=RenderType.single, split_point: int=-1):
         """Create an NLPInstance with the given tokens and edges.
 
         The passed collections will be copied and not changed.
@@ -49,19 +49,17 @@ class NLPInstance:
             tokens (tuple or list): Tokens to add to this NLPInstance.
             edges (set or frozenset): Edges to add to this NLPInstance.
             render_type (RenderType): The render type of the NLPInstance.
-            split_points (tuple or list): Where to have split points?
+            split_point (int): Where to have split points?
         """
         self.token_map = {}
         self.edges = []
         self.render_type = render_type
-        self.split_points = []
+        self.split_point = split_point
         if tokens is not None:
             for token in tokens:
                 self.token_map[token.index] = token
         if edges is not None:
             self.edges.extend(edges)
-        if split_points is not None:
-            self.split_points.extend(split_points)
 
     def add_token(self, index: int=None) -> Token:
         """Add a token at the given index.
@@ -254,7 +252,7 @@ def nlp_diff(gold_instance: NLPInstance, guess_instance: NLPInstance, match_prop
     """
     diff = NLPInstance()
     diff.render_type = gold_instance.render_type
-    diff.split_points = gold_instance.split_points[:]  # A token index at which the instance should be split.
+    diff.split_point = gold_instance.split_point
     diff.add_tokens(list(gold_instance.token_map.values()))
     gold_identities = gold_instance.get_edges()
     guess_identities = guess_instance.get_edges()

@@ -47,19 +47,14 @@ class AlignmentRenderer(AbstractRenderer):
         height_per_level = self.params['common.height_per_level']
 
         tokens = instance.tokens
+        split_point = instance.split_point
         params = params_at_path(self.params, 'token')
-        from_split_point = instance.split_points[0]  # TODO: Simplify
-        to_split_point = instance.split_points[0]
 
-        from_token = 0
-        to_token = to_split_point
         # add first token span
-        token_bounds1, dim1x, dim1y = self._token_layout1.layout(scene, tokens[from_token:to_token], {}, params)
+        token_bounds1, dim1x, dim1y = self._token_layout1.layout(scene, tokens[:split_point], {}, params)
 
-        from_token = from_split_point
-        to_token = len(tokens)
         # add second token span
-        token_bounds2, dim2x, dim2y = self._token_layout2.layout(scene, tokens[from_token:to_token], {}, params,
+        token_bounds2, dim2x, dim2y = self._token_layout2.layout(scene, tokens[split_point:len(tokens)], {}, params,
                                                                  (0, dim1y + height_per_level))
 
         self._alignment_layout.layout(scene, instance.get_edges(EdgeRenderType.dependency),

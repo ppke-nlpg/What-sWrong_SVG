@@ -255,19 +255,19 @@ class Filter:
                                    description=edge.description, properties=edge.properties))
 
         # Find new split points (have to be changed because instance has new token sequence)
-        updated_split_points = []
         new_token_index = 0
-        for old_split_point in original.split_points:
+        old_split_point = original.split_point
+        new_tok = updated_tokens[new_token_index]
+        old_token = new2old[new_tok]
+        max_index_of_updated_tokens = len(updated_tokens) - 1
+        while new_token_index < max_index_of_updated_tokens and old_token.index < old_split_point:
+            new_token_index += 1
             new_tok = updated_tokens[new_token_index]
             old_token = new2old[new_tok]
-            while new_token_index + 1 < len(updated_tokens) and old_token.index < old_split_point:
-                new_token_index += 1
-                new_tok = updated_tokens[new_token_index]
-                old_token = new2old[new_tok]
-            updated_split_points.append(new_token_index)
+        updated_split_point = new_token_index
 
         return NLPInstance(tokens=updated_tokens, edges=updated_edges, render_type=original.render_type,
-                           split_points=updated_split_points)
+                           split_point=updated_split_point)
 
     @staticmethod
     def parse_interval(text, prop_set):
