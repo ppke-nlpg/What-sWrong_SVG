@@ -48,13 +48,12 @@ class AbstractRenderer(Configurable):
         """
         return {
             # Common constants
-            'common.height_per_level': 15,
+            'common.height_per_level': 15,  # TODO: Convert more pixels to 'em'
             'common.vertex_extra_space': 12,
             'common.font_size': 12,
             'common.font_family': 'Courier New, Courier, monospace',
             'common.curve': True,
             'common.revert': True,
-            'common.total_text_margin': 6,  # TODO: Constants? Should mean length in 'em': 2em -> 'MM'
             'common.property_colors': {'eval_status_Match': ((0, 0, 0), 2),  # Black
                                        'eval_status_FN': ((255, 0, 0), 1),   # Red
                                        'eval_status_FP': ((0, 0, 255), 1),   # Blue
@@ -78,9 +77,10 @@ class AbstractRenderer(Configurable):
             'token.font_family': 'Courier New, Courier, monospace',
             'token.color': (0, 0, 0),  # Black
             'token.prop_color': (120, 120, 120),  # Grey
-            'token.margin': 20,  # Horisontal space between tokens
-            'token.font_desc_size': 3,  # Space left empty under the tokens TODO:Should mean length in 'em': 2em -> 'MM'
-            'token.row_height': 14,     # Space left empty over each token row TODO:Should be in 'em': 2em -> 'MM'
+            'token.margin': 2,                # Horisontal space between tokens in 'em': 2em -> 'MM'
+            'token.space_under_tokens': 0.7,  # Space left empty under the tokens in 'em': 2em -> 'MM'
+            'token.space_over_tokens': 1.3,   # Space left empty over tokens (each row) in 'em': 2em -> 'MM'
+            'span.total_text_margin': 2       # Length in 'em': 2em -> 'MM'
             }
 
     def render(self, instance, scene, render_spans=False):

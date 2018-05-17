@@ -35,13 +35,13 @@ class SpanLayout(AbstractLayout):
         """
         font_size = constants['font_size']
         font_family = constants['font_family']
-        total_text_margin = constants['total_text_margin']
+        total_text_margin = constants['total_text_margin'] * self.r.get_text_dims('M', font_size, font_family)[0]
         result = {}
         for edge in edges:
             if edge.start == edge.end:
                 result[edge.start] = Bounds1D(0, total_text_margin +
-                                              max(self.r.get_text_width(edge.get_label_with_note(), font_size,
-                                                                        font_family),
+                                              max(self.r.get_text_dims(edge.get_label_with_note(), font_size,
+                                                                       font_family)[0],
                                                   result.get(edge.start, Bounds1D(0, 0)).end))
         return result
 

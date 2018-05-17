@@ -16,7 +16,7 @@ from svgwrite.utils import rgb
 
 class SVGWriteRenderer:
     @staticmethod
-    def get_text_width(text: str, size: int, font: str) -> int:
+    def get_text_dims(text: str, size: int, font: str) -> int:
             """Return the width of the text.
 
             Returns:
@@ -31,9 +31,9 @@ class SVGWriteRenderer:
             ccontext.select_font_face(font, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
             ccontext.set_font_size(size)
             # xbearing, ybearing, width, height, xadvance, yadvance
-            width = ccontext.text_extents(text)[2]
+            width, height = ccontext.text_extents(text)[2:4]
 
-            return width
+            return width, height
 
     @staticmethod
     def _create_rect_arrow(scene: Drawing, start: tuple, point1: tuple, point2: tuple, end: tuple, color: tuple):
@@ -134,11 +134,12 @@ class SVGWriteRenderer:
 
         return origin[0], origin[1], width, height
 
-    def draw_text(self, scene: Drawing, origin: tuple, text: str, font_size: int, font_family: str, color: tuple):
+    def draw_text(self, scene: Drawing, origin: tuple, text: str, font_size: int, font_family: str,
+                  color: tuple=(0, 0, 0)):
         # TODO: Here was TextToken (must align to left)
         scene.add(Text(text, insert=origin, fill=rgb(*color), font_family=font_family, font_size=font_size,
                        text_rendering='inherit'))
-        return self.get_text_width(text, font_size, font_family)  # Should return bounding box
+        return self.get_text_dims(text, font_size, font_family)  # Should return bounding box
 
     @staticmethod
     def render_nlpgraphics(renderer, filtered, filepath: str=None, output_type: str='SVG'):

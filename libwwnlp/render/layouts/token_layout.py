@@ -63,8 +63,9 @@ class TokenLayout(AbstractLayout):
         token_font_family = constants['font_family']
         margin = constants['margin']
 
-        row_height = constants['row_height']
-        font_desc_size = constants['font_desc_size']
+        space_over_tokens = constants['space_over_tokens']
+        space_under_tokens = constants['space_under_tokens']
+        em_width, em_height = self.r.draw_text(set(), (0, 0), 'M', token_fontsize, token_font_family)
 
         if len(tokens) == 0:
             height = 1
@@ -83,18 +84,18 @@ class TokenLayout(AbstractLayout):
                 # First comes the token, then the properties
                 colors = chain((token_color,), repeat(token_prop_color))
                 for prop_name, color in zip(token.get_property_names(), colors):
-                    lasty += row_height
+                    lasty += space_over_tokens * em_height
                     text_width = self.r.draw_text(scene, (lastx + origin[0], lasty + origin[1]),
                                                   token.get_property_value(prop_name),
-                                                  token_fontsize, token_font_family, color)
+                                                  token_fontsize, token_font_family, color)[0]
                     maxx = max(maxx, text_width)
                     result[token] = Bounds1D(lastx, lastx + maxx)
 
                 lastx += maxx
-                lasty += font_desc_size
+                lasty += space_under_tokens * em_height
                 width = max(width, lastx)
                 height = max(height, lasty)
-                lastx += margin
+                lastx += margin * em_width
 
             width = lastx
         return result, width, height

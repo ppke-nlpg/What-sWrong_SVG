@@ -51,7 +51,8 @@ class SingleSentenceRenderer(AbstractRenderer):
         spans = instance.get_edges(EdgeRenderType.span)
 
         # get span required token widths
-        widths = self._span_layout.estimate_required_token_widths(spans, params_at_path(self.params, 'common'))
+        widths = self._span_layout.estimate_required_token_widths(spans,
+                                                                  params_at_path(self.params, {'span', 'common'}))
 
         # find token bounds
         token_x_bounds, token_max_width, _ = self._token_layout.layout(set(), instance.tokens, widths,
