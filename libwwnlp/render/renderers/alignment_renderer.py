@@ -48,21 +48,21 @@ class AlignmentRenderer(AbstractRenderer):
         self.params['token.from_split_point'] = -1  # TODO: Do this properly
         self.params['token.to_split_point'] = 0
         # add first token span
-        _, dim1x, dim1y = self._token_layout1.layout(scene, instance, {}, params_at_path(self.params, "token"))
+        _, dim1x, dim1y = self._token_layout1.layout(scene, instance, {}, params_at_path(self.params, 'token'))
 
         self.params['token.from_split_point'] = -1
         self.params['token.to_split_point'] = 0
-        token_bounds1 = self._token_layout1.layout(set(), instance, {}, params_at_path(self.params, "token"))[0]
+        token_bounds1 = self._token_layout1.layout(set(), instance, {}, params_at_path(self.params, 'token'))[0]
         self.params['token.from_split_point'] = 0
         self.params['token.to_split_point'] = -1
         token_bounds2 = self._token_layout2.layout(set(), instance, {}, params_at_path(self.params, "token"))[0]
         self._alignment_layout.layout_edges(scene, dim1y, instance.get_edges(EdgeRenderType.dependency),
-                                            token_bounds1, token_bounds2, self.common_constants)
+                                            token_bounds1, token_bounds2, params_at_path(self.params, 'common'))
 
         self.params['token.from_split_point'] = 0
         self.params['token.to_split_point'] = -1
         # add second token span
-        _, dim2x, dim2y = self._token_layout2.layout(scene, instance, {}, params_at_path(self.params, "token"),
+        _, dim2x, dim2y = self._token_layout2.layout(scene, instance, {}, params_at_path(self.params, 'token'),
                                                      (0, dim1y + height_per_level))
 
         return max(dim1x, dim2x), sum((dim1y, dim2y, height_per_level))

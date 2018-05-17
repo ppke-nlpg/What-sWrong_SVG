@@ -28,7 +28,7 @@ class DependencyLayout(AbstractLayout):
     def __init__(self):
         super().__init__()
 
-    def layout_edges(self, scene, edges, bounds, constants, common_constants):
+    def layout_edges(self, scene, edges, bounds, constants):
         """Lays out the edges as directed labelled dependency links between tokens.
 
         Note on types:
@@ -47,21 +47,20 @@ class DependencyLayout(AbstractLayout):
            bounds: Bounds of the tokens the edges connect.
            scene: Graphics object to draw on.
            constants (dict): Constants handled uniformly at an upper level
-           common_constants (dict): Constants handled uniformly at an upper level
 
         Returns:
            The dimensions of the drawn graph.
         """
         arrowsize = constants['arrowsize']
         label_over = constants['label_over']
-        height_per_level = common_constants['height_per_level']
-        font_size = common_constants['font_size']
-        font_family = common_constants['font_family']
-        vertex_extra_space = common_constants['vertex_extra_space']
-        property_colors = common_constants['property_colors']
-        curve = common_constants['curve']
-        baseline = common_constants['baseline']
-        type_colors = common_constants['type_colors']
+        height_per_level = constants['height_per_level']
+        font_size = constants['font_size']
+        font_family = constants['font_family']
+        vertex_extra_space = constants['vertex_extra_space']
+        property_colors = constants['property_colors']
+        curve = constants['curve']
+        baseline = constants['baseline']
+        type_colors = constants['type_colors']
 
         edges_ = self.filter_to_visible_edges(edges)
 

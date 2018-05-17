@@ -66,7 +66,7 @@ class AbstractRenderer(Configurable):
                                        'eval_status_FN': ((255, 0, 0), 1),   # Red
                                        'eval_status_FP': ((0, 0, 255), 1),   # Blue
                                        'default_edge_color': ((0, 0, 0), 1)  # Black
-            },
+                                       },
             'common.from_split_point': 0,
             'common.to_split_point': 0,
             'common.baseline': 1,
@@ -75,13 +75,13 @@ class AbstractRenderer(Configurable):
             'dependency.arrowsize': 2,
             'dependency.label_over': False,
             # Constants
-            'separation_lines': True,
-            'orders': {},
-            'span_curve_radius': 4,
-            'buffer_height': 2,
-            'separator_line_color': (211, 211, 211),  # Color.LIGHT_GRAY
-            'span_line_width': 1,
-            'span_fill_color': (255, 255, 255),
+            'span.separation_lines': True,
+            'span.orders': {},
+            'span.span_curve_radius': 4,
+            'span.buffer_height': 2,
+            'span.separator_line_color': (211, 211, 211),  # Color.LIGHT_GRAY
+            'span.span_line_width': 1,
+            'span.span_fill_color': (255, 255, 255),
             # Token constants
             'token.fontsize': 12,
             'token.text_fontsize': 12,

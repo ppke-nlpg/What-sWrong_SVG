@@ -44,7 +44,7 @@ class SpanLayout(AbstractLayout):
                                          result.get(edge.start, 0))
         return result
 
-    def layout_edges(self, scene, edges, bounds, max_width: int, constants, common_constants, origin=(0, 0)):
+    def layout_edges(self, scene, edges, bounds, max_width: int, constants, origin=(0, 0)):
         """Lays out the edges as spans (blocks) under or above the tokens they contain.
 
         Args:
@@ -64,12 +64,14 @@ class SpanLayout(AbstractLayout):
         Returns:
             The dimensions of the drawn graph.
         """
-        height_per_level = common_constants['height_per_level']
-        font_size = common_constants['font_size']
-        font_family = common_constants['font_family']
-        property_colors = common_constants['property_colors']
-        curve = common_constants['curve']
-        revert = common_constants['revert']
+        height_per_level = constants['height_per_level']
+        font_size = constants['font_size']
+        font_family = constants['font_family']
+        property_colors = constants['property_colors']
+        curve = constants['curve']
+        revert = constants['revert']
+        baseline = constants['baseline']
+        type_colors = constants['type_colors']
 
         buffer_height = constants['buffer_height']
         span_line_width = constants['span_line_width']
@@ -78,8 +80,6 @@ class SpanLayout(AbstractLayout):
         separation_lines = constants['separation_lines']
         separator_line_color = constants['separator_line_color']
         orders = constants['orders']
-        baseline = common_constants['baseline']
-        type_colors = common_constants['type_colors']
 
         max_width += origin[0]
 

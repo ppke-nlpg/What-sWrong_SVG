@@ -8,13 +8,20 @@ Google's seq2seq library at https://github.com/google/seq2seq.
 import yaml
 import copy
 
+
 def params_at_path(params, path):
     """Return params at a certain path.
 
     Args:
         params: A dict with string keys.
+        path: String of subparams or set of subparams
     """
-    return {key[len(path)+1:]: val for key, val in params.items() if key.startswith(path+".")}
+    if isinstance(path, str):
+        path = {path}
+
+    return {key_sub: val for (key_main, key_sub), val in
+            ((key.split('.', maxsplit=1), val) for key, val in params.items())
+            if key_main in path}
 
 
 class Configurable:
@@ -42,24 +49,16 @@ class Configurable:
             dict: The actual parameters that contain both the given params and the
                 non-overridden defaults.
         """
-        if not params:
-            return default_params
-        else:
-            result = copy.deepcopy(self.default_params())
+        result = copy.deepcopy(self.default_params())
+        parsed_params = {}
+        if params:
             if isinstance(params, dict):
                 parsed_params = params
             else:
                 parsed_params = yaml.load(params)
                 for key, value in parsed_params.items():
-                    if key in default_params.keys():
+                    if key in self.default_params():
                         parsed_params[key] = value
                     else:
-                        raise ValueError(f"Config key {key} is not allowed for class {type(self)}.")
-            return result
-
-
-    
-        
-        
-
-    
+                        raise ValueError('Config key {0} is not allowed for class {1}.'.format(key, type(self)))
+        return result.update(parsed_params)
