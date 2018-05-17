@@ -33,10 +33,10 @@ class AbstractRenderer(Configurable):
                 span and the right and left edges of the span.
             base_line (int): Where should we start to draw the stacks.
             from_split_point (int): The index of the the split point at which the
-                renderer starts to draw the token sequence or -1 if it should
+                renderer starts to draw the token sequence or None if it should
                 start from the first token.
             to_split_point (int): The index of the the split point at which the
-                renderer stops to draw the token sequence or -1 if it should stop
+                renderer stops to draw the token sequence or None if it should stop
                 at the end.
             baseline (int): Where do we start to draw.
         dependency:
@@ -92,8 +92,8 @@ class AbstractRenderer(Configurable):
             'token.font_desc_size': 3,  # TODO: What is this?
             'token.row_height': 14,     # TODO: Text height?
             'token.baseline': 0,        # TODO: This is 0 the other is 1 was base_line
-            'token.from_split_point': -1,
-            'token.to_split_point': -1}
+            'token.from_split_point': None,
+            'token.to_split_point': None}
 
     def render(self, instance, scene, render_spans=False):
         raise NotImplementedError

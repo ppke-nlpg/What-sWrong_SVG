@@ -44,7 +44,7 @@ class TokenLayout(AbstractLayout):
         """
         super().__init__()
 
-    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants, origin=(0, 0)):
+    def layout(self, scene, instance: NLPInstance, token_widths: dict, constants: dict, origin=(0, 0)):
         """Lay out all tokens in the given collection and calculate the
          horizontal bounds of each token in the layout of the tokens.
 
@@ -100,9 +100,9 @@ class TokenLayout(AbstractLayout):
             to_token = len(tokens)
             result = {}
 
-            if from_split_point != -1:
+            if from_split_point is not None:
                 from_token = instance.split_points[from_split_point]
-            if to_split_point != -1:
+            if to_split_point is not None:
                 to_token = instance.split_points[to_split_point]
 
             for token_index in range(from_token, to_token):
