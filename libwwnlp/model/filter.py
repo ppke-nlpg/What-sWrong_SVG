@@ -66,6 +66,8 @@ class Filter:
             allowed_edge_types (set): A set of prefixes that are allowed.
             allowed_token_propvals: Property values that are allowed.
         """
+        self._special_properties = {'eval_status_Match', 'eval_status_FN', 'eval_status_FP'}  # TODO: Constants?
+
         self.forbidden_token_properties = set()
         # Edge filter
         self.allowed_token_propvals = set() if allowed_token_propvals is None else allowed_token_propvals
@@ -73,14 +75,12 @@ class Filter:
         self.collapse = False
         self.propvals_whole_word = False
         self.allowed_edge_types = set() if allowed_edge_types is None else allowed_edge_types
-        self.allowed_edge_properties = {'eval_status_FN', 'eval_status_FP', 'eval_status_Match'} \
+        self.allowed_edge_properties = self._special_properties.copy() \
             if allowed_edge_properties is None else allowed_edge_properties
         self.allowed_labels = set() if allowed_labels is None else allowed_labels
         # Token filter
         self.tok_propvals_whole_word = False
         self.tok_allowed_token_propvals = set() if tok_allowed_token_propvals is None else tok_allowed_token_propvals
-
-        self._special_properties = {'eval_status_Match', 'eval_status_FN', 'eval_status_FP'}  # TODO: Constants?
 
     @staticmethod
     def _calculate_paths(edges: set) -> set:
